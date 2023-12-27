@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
+  m_Name: Cupid
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Cupid
+  <Description>k__BackingField: 
+  <Instruction>k__BackingField: 
+  <Image>k__BackingField: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2,
+    type: 3}
