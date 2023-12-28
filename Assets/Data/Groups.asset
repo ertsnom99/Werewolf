@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec2b578713680a3479f9408d7aeac95b, type: 3}
+  m_Name: Groups
+  m_EditorClassIdentifier: 
+  <Groups>k__BackingField:
+  - id: 1
+    name: Villagers
+    leader: {fileID: 0}
+  - id: 2
+    name: Werewolfs
+    leader: {fileID: 0}
+  - id: 3
+    name: White Werewolf
+    leader: {fileID: 0}
+  - id: 4
+    name: Sectarian
+    leader: {fileID: 0}
+  - id: 5
+    name: Flute Player
+    leader: {fileID: 0}
+  - id: 6
+    name: Couple
+    leader: {fileID: 0}
