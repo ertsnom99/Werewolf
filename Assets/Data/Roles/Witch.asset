@@ -17,3 +17,7 @@ MonoBehaviour:
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2,
     type: 3}
+  <Group>k__BackingField:
+  - id: 1
+    name: 
+    leader: {fileID: 0}
