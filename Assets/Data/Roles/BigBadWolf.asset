@@ -18,3 +18,5 @@ MonoBehaviour:
   <Image>k__BackingField: {fileID: 1254635199, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
     type: 3}
   <GroupIndexes>k__BackingField: 02000000
+  <NightPriorities>k__BackingField: 0d0000000f000000
+  <DayPriorities>k__BackingField: 

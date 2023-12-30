@@ -21,4 +21,10 @@ public class RoleData : ScriptableObject
 
     [field: SerializeField]
     public int[] GroupIndexes { get; private set; }
+
+    [field: SerializeField]
+    public int[] NightPriorities { get; private set; }
+
+    [field: SerializeField]
+    public int[] DayPriorities { get; private set; }
 }
