@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40f2a73507aa2964aa306ac5b2c0a3aa, type: 3}
+  m_Name: BaseRolesSetup
+  m_EditorClassIdentifier: 
+  <DefaultRole>k__BackingField: {fileID: 11400000, guid: 45130a666c3d1e443981357f0c42b1ed,
+    type: 2}
+  <MandatoryRoles>k__BackingField:
+  - Pool:
+    - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
+    - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
+    UseCount: 2
+  <AvailableRoles>k__BackingField:
+  - Pool:
+    - {fileID: 11400000, guid: bd2838db831c14b40bac723bd912f07e, type: 2}
+    UseCount: 1
+  - Pool:
+    - {fileID: 11400000, guid: 2f4b33e1175be6a43b478f692b6a2d81, type: 2}
+    UseCount: 1
+  - Pool:
+    - {fileID: 11400000, guid: ba968d9adfe66c346aa3367878b94ed3, type: 2}
+    UseCount: 1
+  - Pool:
+    - {fileID: 11400000, guid: df20f7c9173f79b49b80ee0d0d2e6278, type: 2}
+    UseCount: 1
+  - Pool:
+    - {fileID: 11400000, guid: 42cdb8e84ec451d409c8ec23ec8429c5, type: 2}
+    UseCount: 1
+  - Pool:
+    - {fileID: 11400000, guid: 87f51eac1594adf4ba6cfc537cf12a53, type: 2}
+    UseCount: 1
