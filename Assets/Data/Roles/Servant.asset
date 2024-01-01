@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Servant
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Servant
+  <Type>k__BackingField: 2
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: 1977204121, guid: 5e12bbec3b7d23045ab0fe00ff2591e1,

@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
-  m_Name: Villager
+  m_Name: VillagerVillager
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Villager
+  <Name>k__BackingField: Villager-Villager
+  <Type>k__BackingField: 0
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2,

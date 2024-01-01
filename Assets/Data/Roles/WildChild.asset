@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WildChild
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Wild Child
+  <Type>k__BackingField: 2
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: 764256565, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,

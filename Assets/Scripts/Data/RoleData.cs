@@ -3,8 +3,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Roles/Role")]
 public class RoleData : ScriptableObject
 {
+    public enum RoleType
+    {
+        Villager,
+        Werewolf,
+        Ambiguous,
+        Lonely
+    };
+
     [field: SerializeField]
     public string Name { get; private set; }
+
+    [field: SerializeField]
+    public RoleType Type { get; private set; }
 
     [field: SerializeField]
     [field: TextArea(8, 20)]

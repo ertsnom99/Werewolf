@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Comedian
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Comedian
+  <Type>k__BackingField: 2
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: 717172429, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,

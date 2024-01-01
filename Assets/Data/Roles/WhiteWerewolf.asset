@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WhiteWerewolf
   m_EditorClassIdentifier: 
   <Name>k__BackingField: White Werewolf
+  <Type>k__BackingField: 3
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: -1846022942, guid: 57e5fee1eb9618343bcdb98861e6b594,
