@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BigBadWolf
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Big Bad Wolf
+  <Type>k__BackingField: 1
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: 1254635199, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bulgar
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Bulgar
+  <Type>k__BackingField: 2
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: -1250751461, guid: bbce9110de612ae49aa0fd57f7c093d2,
