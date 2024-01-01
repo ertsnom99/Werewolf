@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f2a73507aa2964aa306ac5b2c0a3aa, type: 3}
   m_Name: BaseRolesSetup
   m_EditorClassIdentifier: 
-  <DefaultRole>k__BackingField: {fileID: 11400000, guid: 45130a666c3d1e443981357f0c42b1ed,
+  <DefaultRole>k__BackingField: {fileID: 11400000, guid: 9225c604e9fe4664eb919866d085078f,
     type: 2}
   <MandatoryRoles>k__BackingField:
   - Pool:
