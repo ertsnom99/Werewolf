@@ -45,4 +45,7 @@ public class RoleData : ScriptableObject
 
     [field: SerializeField]
     public int[] DayPriorities { get; private set; }
+
+    [field: SerializeField]
+    public RoleBehavior Behavior { get; private set; }
 }
