@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Fox
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Fox
+  <Type>k__BackingField: 0
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1,
@@ -22,3 +23,4 @@ MonoBehaviour:
   <GroupIndexes>k__BackingField: 01000000
   <NightPriorities>k__BackingField: 05000000
   <DayPriorities>k__BackingField: 
+  <Behavior>k__BackingField: {fileID: 0}
