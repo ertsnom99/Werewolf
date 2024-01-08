@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    [Header("Players")]
+    public List<RoleData> RolesToDistribute { get; private set; }
+
+    public Dictionary<RoleBehavior, RoleData[]> ReservedRoles { get; private set; }
+
+    private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new Dictionary<RoleBehavior, RoleData>();
+
+    private Player[] _players;
+
+    [Header("Layout")]
     [SerializeField]
-    private GameObject _playerPrefab;
+    private Player _playerPrefab;
 
     [SerializeField]
     private AnimationCurve _cardsOffset;
@@ -26,12 +34,6 @@ public class GameManager : MonoSingleton<GameManager>
     private RolesSetupData _debugRolesSetupData;
 #endif
 
-    private RoleData[] _rolesToDistribute;
-
-    public Dictionary<RoleBehavior, RoleData[]> ReservedRoles { get; private set; }
-
-    private Dictionary<RoleBehavior, RoleData> _tempRoleBehaviors = new Dictionary<RoleBehavior, RoleData>();
-
     public event Action OnPreRoleDistribution = delegate { };
     public event Action OnPostRoleDistribution = delegate { };
 
@@ -42,26 +44,55 @@ public class GameManager : MonoSingleton<GameManager>
     {
         base.Awake();
 
+        RolesToDistribute = new List<RoleData>();
         ReservedRoles = new Dictionary<RoleBehavior, RoleData[]>();
     }
 
     private void Start()
     {
+#if UNITY_EDITOR
         if (!_playerPrefab)
         {
             Debug.LogError("_playerPrefab of the GameManager is null");
             return;
         }
-
+#endif
         SelectRolesToDistribute(_debugRolesSetupData.MandatoryRoles, new List<RoleSetup>(_debugRolesSetupData.AvailableRoles), _debugRolesSetupData.DefaultRole, _debugPlayerCount);
-        OnPreRoleDistribution();
-        LogRoles();
         CreatePlayers(_debugPlayerCount);
+        AdjustCamera(_debugPlayerCount);
+        OnPreRoleDistribution();
+        DistributeRoles();
         OnPostRoleDistribution();
+        // TODO: Display reserved roles
+        LogRoles();
         // TODO: Start game loop
     }
 
-    #region Gameplay Loop
+    private void LogRoles()
+    {
+        Debug.Log("------------------------ROLES TO DISTRIBUTE-------------------------------------");
+
+        foreach (RoleData role in RolesToDistribute)
+        {
+            Debug.Log(role);
+        }
+
+        Debug.Log("---------------------------RESERVED ROLES-------------------------------------");
+
+        foreach (KeyValuePair<RoleBehavior, RoleData[]> reservedRole in ReservedRoles)
+        {
+            string log = $"{reservedRole.Key.gameObject.name}:";
+
+            foreach (RoleData role in reservedRole.Value)
+            {
+                log += "   [" + role.Name + "]";
+            }
+
+            Debug.Log(log);
+        }
+    }
+
+    #region Pre Gameplay Loop
 
     #region Roles selection
     private void SelectRolesToDistribute(RoleSetup[] mandatoryRoles, List<RoleSetup> availableRoles, RoleData defaultRole, int playerCount)
@@ -119,7 +150,7 @@ public class GameManager : MonoSingleton<GameManager>
             }
         }
 
-        _rolesToDistribute = rolesToDistribute.ToArray();
+        RolesToDistribute = rolesToDistribute;
     }
 
     private RoleData[] SelectRolesFromRoleSetup(RoleSetup roleSetup, ref List<RoleData> rolesToDistribute)
@@ -138,7 +169,7 @@ public class GameManager : MonoSingleton<GameManager>
         return addedRoles;
     }
     
-    private void PrepareRoleBehaviors(RoleData[] roles, ref List<RoleData> rolesToDistribute, ref List<RoleSetup> availableRoles)
+    public void PrepareRoleBehaviors(RoleData[] roles, ref List<RoleData> rolesToDistribute, ref List<RoleSetup> availableRoles)
     {
         foreach (RoleData role in roles)
         {
@@ -146,7 +177,7 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    private void PrepareRoleBehavior(RoleData role, ref List<RoleData> rolesToDistribute, ref List<RoleSetup> availableRoles)
+    public void PrepareRoleBehavior(RoleData role, ref List<RoleData> rolesToDistribute, ref List<RoleSetup> availableRoles)
     {
         if (!role.Behavior)
         {
@@ -155,15 +186,16 @@ public class GameManager : MonoSingleton<GameManager>
 
         // Temporairy store the behaviors, because they must be attributed to specific players later
         RoleBehavior roleBehavior = Instantiate(role.Behavior, transform);
-        _tempRoleBehaviors.Add(roleBehavior, role);
+        _unassignedRoleBehaviors.Add(roleBehavior, role);
 
+        roleBehavior.Init();
         roleBehavior.OnSelectedToDistribute(ref rolesToDistribute, ref availableRoles);
     }
     #endregion
 
     private void CreatePlayers(int playerCount)
     {
-        Camera.main.transform.position = Camera.main.transform.position.normalized * _cameraOffset.Evaluate(playerCount);
+        _players = new Player[playerCount];
 
         float rotationIncrement = 360.0f / playerCount;
         Vector3 startingPosition = STARTING_DIRECTION * _cardsOffset.Evaluate(playerCount);
@@ -171,38 +203,54 @@ public class GameManager : MonoSingleton<GameManager>
         for (int i = 0; i < playerCount; i++)
         {
             Quaternion rotation = Quaternion.Euler(0, rotationIncrement * i, 0);
-            Instantiate(_playerPrefab, rotation * startingPosition, rotation);
-            // TODO: Give role (in seperate function?)
+            _players[i] = Instantiate(_playerPrefab, rotation * startingPosition, rotation);
         }
     }
-    #endregion
+
+    private void AdjustCamera(int playerCount)
+    {
+        Camera.main.transform.position = Camera.main.transform.position.normalized * _cameraOffset.Evaluate(playerCount);
+    }
+
+    #region Roles distribution
+    private void DistributeRoles()
+    {
+        foreach (Player player in _players)
+        {
+            RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
+            player.SetRole(selectedRole);
+            RolesToDistribute.Remove(selectedRole);
+
+            foreach (KeyValuePair<RoleBehavior, RoleData> roleBehavior in _unassignedRoleBehaviors)
+            {
+                if (roleBehavior.Value == selectedRole)
+                {
+                    roleBehavior.Key.transform.parent = player.transform;
+                    roleBehavior.Key.transform.localPosition = Vector3.zero;
+
+                    player.SetBehavior(roleBehavior.Key);
+                    _unassignedRoleBehaviors.Remove(roleBehavior.Key);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void AddRolesToDistribute(RoleData[] roles)
+    {
+        RolesToDistribute.AddRange(roles);
+    }
+
+    public void RemoveRoleToDistribute(RoleData role)
+    {
+        RolesToDistribute.Remove(role);
+    }
 
     public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] roles)
     {
         ReservedRoles.Add(roleBehavior, roles);
     }
+    #endregion
 
-    private void LogRoles()
-    {
-        Debug.Log("-------------------------ROLES TO DISTRIBUTE-------------------------------------");
-
-        foreach (RoleData roleData in _rolesToDistribute)
-        {
-            Debug.Log(roleData);
-        }
-
-        Debug.Log("---------------------------RESERVED ROLES-------------------------------------");
-
-        foreach (KeyValuePair<RoleBehavior, RoleData[]> reservedRole in ReservedRoles)
-        {
-            string log = $"{reservedRole.Key.gameObject.name}:";
-
-            foreach (RoleData role in reservedRole.Value)
-            {
-                log += "   [" + role.Name + "]";
-            }
-
-            Debug.Log(log);
-        }
-    }
+    #endregion
 }

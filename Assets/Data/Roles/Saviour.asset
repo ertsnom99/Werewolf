@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Saviour
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Saviour
+  <Type>k__BackingField: 0
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: 357046205, guid: d27adb3f7039d1a45a0389b130f6c9c3,
@@ -22,3 +23,4 @@ MonoBehaviour:
   <GroupIndexes>k__BackingField: 01000000
   <NightPriorities>k__BackingField: 0c000000
   <DayPriorities>k__BackingField: 
+  <Behavior>k__BackingField: {fileID: 0}
