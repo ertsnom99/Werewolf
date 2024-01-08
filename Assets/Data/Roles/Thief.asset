@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
-  m_Name: Bulgar
+  m_Name: Thief
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: Bulgar
+  <Name>k__BackingField: Thief
   <Type>k__BackingField: 2
   <Description>k__BackingField: 
   <Instruction>k__BackingField: 
@@ -23,3 +23,5 @@ MonoBehaviour:
   <GroupIndexes>k__BackingField: 01000000
   <NightPriorities>k__BackingField: 01000000
   <DayPriorities>k__BackingField: 
+  <Behavior>k__BackingField: {fileID: 5255923145917458080, guid: da177854c9d03e34e85bcc603cd52c75,
+    type: 3}

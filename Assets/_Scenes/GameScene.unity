@@ -422,7 +422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15887fdbe77016f4685c28dbdf1c5804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 5195940217352434897, guid: f24d011fcf0545140acf2155b22cbb87,
+  _playerPrefab: {fileID: 3696305194398668023, guid: f24d011fcf0545140acf2155b22cbb87,
     type: 3}
   _cardsOffset:
     serializedVersion: 2

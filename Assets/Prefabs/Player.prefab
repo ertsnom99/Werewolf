@@ -93,6 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 983573561761388132}
+  - component: {fileID: 3696305194398668023}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -116,6 +117,20 @@ Transform:
   - {fileID: 6012145129244534527}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3696305194398668023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5195940217352434897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 741b46b615b9f444f86560eb70649da5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _card: {fileID: 6351410868844461125}
+  _roleImage: {fileID: 3460707345082109968}
 --- !u!1001 &6117532447447597332
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -191,6 +206,12 @@ PrefabInstance:
 --- !u!4 &6012145129244534527 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2b53cf632378ac245b73558fde825453,
+    type: 3}
+  m_PrefabInstance: {fileID: 6117532447447597332}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6351410868844461125 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2b53cf632378ac245b73558fde825453,
     type: 3}
   m_PrefabInstance: {fileID: 6117532447447597332}
   m_PrefabAsset: {fileID: 0}

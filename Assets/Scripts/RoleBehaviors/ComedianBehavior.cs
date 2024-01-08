@@ -3,7 +3,14 @@ using UnityEngine;
 
 public class ComedianBehavior : RoleBehavior
 {
+    private GameManager _gameManager;
+
     private readonly int NEEDED_ROLE_COUNT = 3;
+
+    public override void Init()
+    {
+        _gameManager = GameManager.Instance;
+    }
 
     public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetup> availableRoles)
     {
@@ -28,6 +35,9 @@ public class ComedianBehavior : RoleBehavior
             availableRolesCopy.RemoveAt(roleSetupIndex);
         }
 
+        // Roles taken from the available roles need to have their behavior instanciated
+        _gameManager.PrepareRoleBehaviors(selectedRoles.ToArray(), ref rolesToDistribute, ref availableRoles);
+
         // Take the rest from the roles to distribute
         List<RoleData> rolesToDistributeCopy = new List<RoleData>(rolesToDistribute);
 
@@ -49,11 +59,10 @@ public class ComedianBehavior : RoleBehavior
 
         if (selectedRoles.Count < NEEDED_ROLE_COUNT)
         {
-
             Debug.LogError("The comedian couldn't find enough roles to set aside!!!");
         }
 
-        GameManager.Instance.ReserveRoles(this, selectedRoles.ToArray());
+        _gameManager.ReserveRoles(this, selectedRoles.ToArray());
     }
 
     private bool CanTakeRolesFromSetup(RoleSetup roleSetup, List<RoleData> selectedRoles)
