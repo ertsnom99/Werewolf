@@ -63,15 +63,15 @@ public class ComedianBehavior : RoleBehavior
             return false;
         }
 
-        int neededValidRolesCount = roleSetup.UseCount;
+        List<RoleData> validRoles = new List<RoleData>();
 
         foreach (RoleData role in roleSetup.Pool)
         { 
-            if (IsRoleValid(role, selectedRoles))
+            if (!validRoles.Contains(role) && IsRoleValid(role, selectedRoles))
             {
-                neededValidRolesCount--;
+                validRoles.Add(role);
 
-                if (neededValidRolesCount == 0)
+                if (validRoles.Count >= roleSetup.UseCount)
                 {
                     return true;
                 }
