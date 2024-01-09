@@ -424,13 +424,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 3696305194398668023, guid: f24d011fcf0545140acf2155b22cbb87,
     type: 3}
-  _cardsOffset:
+  _playersOffset:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: -0
+      inSlope: 0
       outSlope: 0.40816328
       tangentMode: 69
       weightedMode: 0
@@ -448,6 +448,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _cardPrefab: {fileID: 5765426731064619406, guid: f1a13b5e49102a4489154c427ff896be,
+    type: 3}
   _cameraOffset:
     serializedVersion: 2
     m_Curve:
