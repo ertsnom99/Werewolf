@@ -41,6 +41,6 @@ public class ThiefBehavior : RoleBehavior
             _gameManager.RemoveRoleToDistribute(_gameManager.RolesToDistribute[randomIndex]);
         }
 
-        _gameManager.ReserveRoles(this, roles.ToArray());
+        _gameManager.ReserveRoles(this, roles.ToArray(), false);
     }
 }

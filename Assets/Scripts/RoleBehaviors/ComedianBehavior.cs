@@ -62,7 +62,12 @@ public class ComedianBehavior : RoleBehavior
             Debug.LogError("The comedian couldn't find enough roles to set aside!!!");
         }
 
-        _gameManager.ReserveRoles(this, selectedRoles.ToArray());
+        if (selectedRoles.Count <= 0)
+        {
+            return;
+        }
+
+        _gameManager.ReserveRoles(this, selectedRoles.ToArray(), true);
     }
 
     private bool CanTakeRolesFromSetup(RoleSetup roleSetup, List<RoleData> selectedRoles)
