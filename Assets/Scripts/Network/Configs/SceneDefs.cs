@@ -1,4 +1,4 @@
-namespace Werewolf.Configs
+namespace Werewolf.Network.Configs
 {
     public enum SceneDefs
     {
