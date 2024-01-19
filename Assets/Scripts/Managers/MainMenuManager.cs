@@ -47,7 +47,6 @@ namespace Werewolf
 
         public void LeaveGame()
         {
-            // TODO: Disconnect self?
             _runner.Shutdown();
         }
 
