@@ -6,6 +6,7 @@ namespace Werewolf.Network.Configs
     public class DedicatedServerConfig
     {
         public string SessionName { get; set; }
+        public int MaxPlayerCount { get; set; }
         public string Lobby { get; set; }
         public ushort Port { get; set; } = 27015;
         public ushort PublicPort { get; set; }
@@ -22,6 +23,12 @@ namespace Werewolf.Network.Configs
             if (CommandLineUtilities.TryGetArg(out string sessionName, "-session"))
             {
                 config.SessionName = sessionName;
+            }
+
+            // Max Player Count
+            if (CommandLineUtilities.TryGetArg(out string maxPlayerCountString, "-maxPlayerCount") && int.TryParse(maxPlayerCountString, out int maxPlayerCount))
+            {
+                config.MaxPlayerCount = maxPlayerCount;
             }
 
             // Server Lobby

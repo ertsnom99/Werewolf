@@ -2,6 +2,7 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Werewolf.Network
@@ -9,16 +10,12 @@ namespace Werewolf.Network
     [SimulationBehaviour(Modes = SimulationModes.Server)]
     public class ServerGameController : SimulationBehaviour, INetworkRunnerCallbacks
     {
-        private readonly List<PlayerRef> _players = new List<PlayerRef>();
-
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
         {
             if (!runner.IsServer)
             {
                 return;
             }
-
-            _players.Add(player);
 
             Log.Info($"Player joined: {player}");
         }
@@ -30,11 +27,9 @@ namespace Werewolf.Network
                 return;
             }
 
-            _players.Remove(player);
-
             Log.Info($"Player left: {player}");
 
-            if (_players.Count <= 0)
+            if (runner.ActivePlayers.Count() <= 0)
             {
                 Log.Info("Last player left, shutdown...");
 

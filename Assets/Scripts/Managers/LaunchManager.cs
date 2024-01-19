@@ -50,11 +50,11 @@ namespace Werewolf
 #endif
         }
 
-
 #if UNITY_SERVER
         private Task<StartGameResult> StartSimulation(NetworkRunner runner, DedicatedServerConfig serverConfig) => StartSimulation(
             runner,
             serverConfig.SessionName,
+            serverConfig.MaxPlayerCount,
             serverConfig.SessionProperties,
             serverConfig.Port,
             serverConfig.Lobby,
@@ -65,6 +65,7 @@ namespace Werewolf
         private Task<StartGameResult> StartSimulation(
             NetworkRunner runner,
             string SessionName,
+            int MaxPlayerCount,
             Dictionary<string, SessionProperty> customProps = null,
             ushort port = 0,
             string customLobby = null,
@@ -100,6 +101,7 @@ namespace Werewolf
             return runner.StartGame(new StartGameArgs()
             {
                 SessionName = SessionName,
+                PlayerCount = MaxPlayerCount,
                 GameMode = GameMode.Server,
                 SceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
                 Scene = scene,

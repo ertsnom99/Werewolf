@@ -47,6 +47,7 @@ namespace Werewolf
 
         public void LeaveGame()
         {
+            // TODO: Disconnect self?
             _runner.Shutdown();
         }
 
@@ -61,7 +62,6 @@ namespace Werewolf
 
         private Task<StartGameResult> ConnectToServer(NetworkRunner runner, string sessionName)
         {
-            // Create the NetworkSceneInfo
             SceneRef scene = SceneRef.FromIndex((int)SceneDefs.MENU);
             NetworkSceneInfo sceneInfo = new NetworkSceneInfo();
 
@@ -75,10 +75,52 @@ namespace Werewolf
                 SessionName = sessionName,
                 GameMode = GameMode.Client,
                 SceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
-                Scene = scene,
             });
         }
 
+        public void OnConnectedToServer(NetworkRunner runner)
+        {
+            Log.Info($"{nameof(OnConnectedToServer)}: {nameof(runner.CurrentConnectionType)}: {runner.CurrentConnectionType}, {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
+
+            DisplayRoomMenu();
+
+            // TODO: send nickname once connected
+
+            // TODO: Update player list
+        }
+
+        public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+        {
+            Log.Info($"{nameof(OnShutdown)}: {nameof(shutdownReason)}: {shutdownReason}");
+
+            switch (shutdownReason)
+            {
+                case ShutdownReason.Ok:
+                    DisplayMainMenu();
+                    _mainMenu.ResetMenu("");
+                    break;
+                default:
+                    DisplayMainMenu();
+                    _mainMenu.ResetMenu($"Runner shutdown: {shutdownReason}");
+                    break;
+            }
+        }
+
+        public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
+        {
+            Log.Info($"{nameof(OnDisconnectedFromServer)} - {reason}: {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
+
+            DisplayMainMenu();
+            _mainMenu.ResetMenu($"Disconnected from server: {reason}");
+        }
+
+        public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
+        {
+            Log.Info($"{nameof(OnConnectFailed)}: {nameof(remoteAddress)}: {remoteAddress}, {nameof(reason)}: {reason}");
+
+            DisplayMainMenu();
+            _mainMenu.ResetMenu($"Connection failed: {reason}");
+        }
         #endregion
 
         #region UI
@@ -96,6 +138,8 @@ namespace Werewolf
         #endregion
 
         #region Unused Callbacks
+        public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+
         public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
         public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
@@ -107,52 +151,6 @@ namespace Werewolf
         public void OnInput(NetworkRunner runner, NetworkInput input) { }
 
         public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-
-        public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-        {
-            Log.Info($"{nameof(OnShutdown)}: {nameof(shutdownReason)}: {shutdownReason}");
-
-            switch (shutdownReason)
-            {
-                case ShutdownReason.Ok:
-                    DisplayMainMenu();
-                    _mainMenu.ResetMenu("");
-                    break;
-                case ShutdownReason.DisconnectedByPluginLogic:
-                    DisplayMainMenu();
-                    _mainMenu.ResetMenu("The server was closed");
-                    break;
-                case ShutdownReason.GameNotFound:
-                    _mainMenu.ResetMenu($"No session named {_mainMenu.GetSessionName()} was found");
-                    break;
-            }
-        }
-
-        public void OnConnectedToServer(NetworkRunner runner)
-        {
-            Log.Info($"{nameof(OnConnectedToServer)}: {nameof(runner.CurrentConnectionType)}: {runner.CurrentConnectionType}, {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
-
-            // Join success
-            DisplayRoomMenu();
-
-            // TODO: send nickname once connected
-            // TODO: Update player list
-        }
-
-        public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
-        {
-            Log.Info($"{nameof(OnDisconnectedFromServer)} - {reason}: {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
-        }
-
-        public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
-        {
-            Log.Info($"{nameof(OnConnectRequest)}: {nameof(request.RemoteAddress)}: {request.RemoteAddress}");
-        }
-
-        public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
-        {
-            Log.Info($"{nameof(OnConnectFailed)}: {nameof(remoteAddress)}: {remoteAddress}, {nameof(reason)}: {reason}");
-        }
 
         public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 
