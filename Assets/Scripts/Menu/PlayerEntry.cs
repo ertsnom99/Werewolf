@@ -2,6 +2,7 @@ using Fusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -14,27 +15,17 @@ namespace Werewolf
         [SerializeField]
         private TMP_Text _nickname;
 
-        public PlayerRef Player { get; private set; }
+        [SerializeField]
+        private Color _currentPlayerColor = Color.yellow;
 
-        public void SetPlayer(PlayerRef player)
-        {
-            Player = player;
-            UpdateEntry();
-        }
+        [SerializeField]
+        private Color _otherPlayerColor = Color.white;
 
-        public void UpdateEntry()
+        public void SetPlayerData(PlayerData playerData, PlayerRef localPlayer)
         {
-            if (Player == null)
-            {
-                _leader.enabled = false;
-                _nickname.text = "";
-            }
-            else
-            {
-                // TODO: check for first player
-                _leader.enabled = Player.IsMasterClient;
-                _nickname.text = Player.PlayerId.ToString();
-            }
+            _nickname.text = playerData.Nickname;
+            _nickname.color = playerData.PlayerRef == localPlayer ? _currentPlayerColor : _otherPlayerColor;
+            _leader.enabled = playerData.IsFirst;
         }
     }
 }

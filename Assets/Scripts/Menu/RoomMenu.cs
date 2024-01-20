@@ -1,6 +1,8 @@
+using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -19,86 +21,66 @@ namespace Werewolf
         [SerializeField]
         private Button _leaveRoomBtn;
 
-        private int _minPlayer = -1;
+        private PlayersData _playersData;
+
+        private PlayerRef _localPlayer;
+
+        private int _minPlayer = 2;
+
+        public void SetPlayersData(PlayersData playersData, PlayerRef localPlayer)
+        {
+            _playersData = playersData;
+            _localPlayer = localPlayer;
+
+            if (!_playersData || _localPlayer == null)
+            {
+                return;
+            }
+
+            _playersData.OnPlayerNicknamesChanged += UpdatePlayerList;
+            UpdatePlayerList();
+        }
 
         public void SetMinPlayer(int minPlayer)
         {
             _minPlayer = minPlayer;
         }
 
-        // TODO
-        public void FillList()
+        private void UpdatePlayerList()
         {
-            ClearList();
-
-            /*if (PhotonNetwork.CurrentRoom == null)
+            if (_playersData == null || _localPlayer == null)
             {
                 return;
             }
 
-            foreach (KeyValuePair<int, Player> player in PhotonNetwork.CurrentRoom.Players)
-            {
-                PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
-                playerEntry.SetPlayer(player.Value);
-            }*/
-
-            UpdateButtons();
-        }
-
-        public void ClearList()
-        {
+            // Clear list
             for (int i = _playerEntries.childCount - 1; i >= 0; i--)
             {
-                Destroy(_playerEntries.GetChild(i).gameObject);
-            }
-        }
+                Transform entry = _playerEntries.GetChild(i);
 
-        // TODO
-        public void AddPlayer(Player player)
-        {
-            List<PlayerEntry> existingPlayerEntries = new List<PlayerEntry>(_playerEntries.GetComponentsInChildren<PlayerEntry>());
-
-            /*foreach (PlayerEntry existingPlayerEntry in existingPlayerEntries)
-            {
-                if (existingPlayerEntry.Player == player)
-                {
-                    return;
-                }
+                entry.transform.parent = null;
+                Destroy(entry.gameObject);
             }
 
-            PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
-            playerEntry.SetPlayer(player);*/
+            // Fill list
+            bool localPlayerIsFirst = false;
 
-            UpdateButtons();
-        }
-
-        // TODO
-        public void RemovePlayer(Player player)
-        {
-            List<PlayerEntry> existingPlayerEntries = new List<PlayerEntry>(_playerEntries.GetComponentsInChildren<PlayerEntry>());
-
-            /*foreach (PlayerEntry existingPlayerEntry in existingPlayerEntries)
+            foreach (KeyValuePair<PlayerRef, PlayerData> playerData in _playersData.PlayerDatas)
             {
-                if (existingPlayerEntry.Player == player)
-                {
-                    // Must unparent, or UpdateButtons() will use the wrong _playerEntries.childCount
-                    existingPlayerEntry.transform.parent = null;
-                    Destroy(existingPlayerEntry.gameObject);
-                }
-                else
-                {
-                    existingPlayerEntry.UpdateEntry();
-                }
-            }*/
+                PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
+                playerEntry.SetPlayerData(playerData.Value, _localPlayer);
 
-            UpdateButtons();
-        }
+                if (playerData.Value.PlayerRef == _localPlayer)
+                {
+                    localPlayerIsFirst = playerData.Value.IsFirst;
+                }
+            }
 
-        // TODO
-        private void UpdateButtons()
-        {
-            //_startGameBtn.interactable = PhotonNetwork.IsMasterClient && _minPlayer > -1 && _playerEntries.childCount >= _minPlayer;
+            // Update buttons
+            _startGameBtn.interactable = localPlayerIsFirst && _minPlayer > -1 && _playerEntries.childCount >= _minPlayer;
             _leaveRoomBtn.interactable = true;
         }
+
+
     }
 }

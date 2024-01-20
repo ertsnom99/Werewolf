@@ -2302,7 +2302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dfc02c680dba954ca4508d6c986b410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefKey: PlayerSession
+  <PrefKey>k__BackingField: PlayerSession
 --- !u!1 &1214546937
 GameObject:
   m_ObjectHideFlags: 0
@@ -2453,7 +2453,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1352829816
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3661,7 +3661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dfc02c680dba954ca4508d6c986b410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefKey: PlayerNickname
+  <PrefKey>k__BackingField: PlayerNickname
 --- !u!1 &2022268054
 GameObject:
   m_ObjectHideFlags: 0
