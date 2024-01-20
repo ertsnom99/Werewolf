@@ -4,8 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(TMP_InputField))]
 public class PlayerPrefsInputField : MonoBehaviour
 {
-    [SerializeField]
-    private string _prefKey;
+    [field : SerializeField]
+    public string PrefKey { get; private set; }
 
     private TMP_InputField _inputField;
 
@@ -20,9 +20,9 @@ public class PlayerPrefsInputField : MonoBehaviour
 
         if (_inputField != null)
         {
-            if (PlayerPrefs.HasKey(_prefKey))
+            if (PlayerPrefs.HasKey(PrefKey))
             {
-                defaultName = PlayerPrefs.GetString(_prefKey);
+                defaultName = PlayerPrefs.GetString(PrefKey);
                 _inputField.text = defaultName;
             }
         }
@@ -30,6 +30,6 @@ public class PlayerPrefsInputField : MonoBehaviour
 
     public void SetPrefString(string value)
     {
-        PlayerPrefs.SetString(_prefKey, value);
+        PlayerPrefs.SetString(PrefKey, value);
     }
 }

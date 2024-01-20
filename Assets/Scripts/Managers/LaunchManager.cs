@@ -17,6 +17,8 @@ namespace Werewolf
         [SerializeField]
         private NetworkRunner _runnerPrefab;
 
+        public const int MAX_PLAYER_COUNT = 50;
+
         private async void Start()
         {
             await Task.Yield();
@@ -25,24 +27,17 @@ namespace Werewolf
 
             Log.Info(config);
 
-            // Add a new Runner component
             NetworkRunner runner = Instantiate(_runnerPrefab);
-
-            // Start the Server
             StartGameResult result = await StartSimulation(runner, config);
 
-            // Check if all went fine
             if (result.Ok)
             {
                 Log.Info($"Runner Start DONE");
             }
             else
             {
-                // Quit the application if startup fails
                 Log.Info($"Error while starting Server: {result.ShutdownReason}");
 
-                // it can be used any error code that can be read by an external application
-                // using 0 means all went fine
                 Application.Quit(1);
             }
 #else
@@ -54,7 +49,7 @@ namespace Werewolf
         private Task<StartGameResult> StartSimulation(NetworkRunner runner, DedicatedServerConfig serverConfig) => StartSimulation(
             runner,
             serverConfig.SessionName,
-            serverConfig.MaxPlayerCount,
+            Mathf.Min(serverConfig.MaxPlayerCount, MAX_PLAYER_COUNT),
             serverConfig.SessionProperties,
             serverConfig.Port,
             serverConfig.Lobby,

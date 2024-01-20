@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using Werewolf.Network.Configs;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -23,6 +24,32 @@ namespace Werewolf
         private NetworkRunner _runnerPrefab;
 
         private NetworkRunner _runner;
+
+        private bool _waitingForPlayersDataNO = false;
+
+        private PlayersData _playersData;
+
+        private void Update()
+        {
+            if (!_waitingForPlayersDataNO)
+            {
+                return;
+            }
+
+            _playersData = FindObjectOfType<PlayersData>();
+
+            if (_playersData == null)
+            {
+                return;
+            }
+
+            _waitingForPlayersDataNO = false;
+
+            _roomMenu.SetPlayersData(_playersData, _runner.LocalPlayer);
+            _playersData.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
+
+            DisplayRoomMenu();
+        }
 
         #region Connection
         public void JoinGame()
@@ -81,11 +108,7 @@ namespace Werewolf
         {
             Log.Info($"{nameof(OnConnectedToServer)}: {nameof(runner.CurrentConnectionType)}: {runner.CurrentConnectionType}, {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
 
-            DisplayRoomMenu();
-
-            // TODO: send nickname once connected
-
-            // TODO: Update player list
+            _waitingForPlayersDataNO = true;
         }
 
         public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
