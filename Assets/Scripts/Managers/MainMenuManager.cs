@@ -25,31 +25,7 @@ namespace Werewolf
 
         private NetworkRunner _runner;
 
-        private bool _waitingForPlayersDataNO = false;
-
         private PlayersData _playersData;
-
-        private void Update()
-        {
-            if (!_waitingForPlayersDataNO)
-            {
-                return;
-            }
-
-            _playersData = FindObjectOfType<PlayersData>();
-
-            if (_playersData == null)
-            {
-                return;
-            }
-
-            _waitingForPlayersDataNO = false;
-
-            _roomMenu.SetPlayersData(_playersData, _runner.LocalPlayer);
-            _playersData.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
-
-            DisplayRoomMenu();
-        }
 
         #region Connection
         public void JoinGame()
@@ -108,7 +84,16 @@ namespace Werewolf
         {
             Log.Info($"{nameof(OnConnectedToServer)}: {nameof(runner.CurrentConnectionType)}: {runner.CurrentConnectionType}, {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
 
-            _waitingForPlayersDataNO = true;
+            _playersData = FindObjectOfType<PlayersData>();
+
+            if (_playersData != null)
+            {
+                OnPlayersDataSpawned();
+            }
+            else
+            {
+                PlayersData.OnSpawned += OnPlayersDataSpawned;
+            }
         }
 
         public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
@@ -144,6 +129,20 @@ namespace Werewolf
             _mainMenu.ResetMenu($"Connection failed: {reason}");
         }
         #endregion
+
+        private void OnPlayersDataSpawned()
+        {
+            if (_playersData == null)
+            {
+                PlayersData.OnSpawned -= OnPlayersDataSpawned;
+                _playersData = FindObjectOfType<PlayersData>();
+            }
+
+            _roomMenu.SetPlayersData(_playersData, _runner.LocalPlayer);
+            _playersData.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
+
+            DisplayRoomMenu();
+        }
 
         #region UI
         private void DisplayMainMenu()

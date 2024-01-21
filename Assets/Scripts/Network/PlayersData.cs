@@ -23,9 +23,16 @@ namespace Werewolf.Network
 
         public event Action OnPlayerNicknamesChanged;
 
+        public static event Action OnSpawned;
+
         public override void Spawned()
         {
             _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+
+            if (OnSpawned != null)
+            {
+                OnSpawned();
+            }
         }
 
         public override void Render()
