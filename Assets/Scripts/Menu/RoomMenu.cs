@@ -63,7 +63,7 @@ namespace Werewolf
             }
 
             // Fill list
-            bool localPlayerIsFirst = false;
+            bool localPlayerIsLeader = false;
 
             foreach (KeyValuePair<PlayerRef, PlayerData> playerData in _playersData.PlayerDatas)
             {
@@ -72,12 +72,12 @@ namespace Werewolf
 
                 if (playerData.Value.PlayerRef == _localPlayer)
                 {
-                    localPlayerIsFirst = playerData.Value.IsFirst;
+                    localPlayerIsLeader = playerData.Value.IsLeader;
                 }
             }
 
             // Update buttons
-            _startGameBtn.interactable = localPlayerIsFirst && _minPlayer > -1 && _playerEntries.childCount >= _minPlayer;
+            _startGameBtn.interactable = localPlayerIsLeader && _minPlayer > -1 && _playerEntries.childCount >= _minPlayer;
             _leaveRoomBtn.interactable = true;
         }
 
