@@ -27,6 +27,12 @@ namespace Werewolf
 
         private PlayersData _playersData;
 
+        private void Awake()
+        {
+            DisplayMainMenu();
+            _mainMenu.ResetMenu("");
+        }
+
         #region Connection
         public void JoinGame()
         {

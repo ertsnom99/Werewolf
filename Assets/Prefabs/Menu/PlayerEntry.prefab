@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 794884614, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b5508877261faaf47bdbaedbbee34d1b, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -86,6 +86,8 @@ GameObject:
   - component: {fileID: 565396969073970075}
   - component: {fileID: 5729827590244257670}
   - component: {fileID: 5554641062540230882}
+  - component: {fileID: 5020471657296386068}
+  - component: {fileID: 2423547039790892518}
   m_Layer: 5
   m_Name: PlayerEntry
   m_TagString: Untagged
@@ -129,8 +131,8 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Top: 10
+    m_Bottom: 10
   m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
@@ -152,10 +154,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0a86b347ebace4999b22af739b327c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _background: {fileID: 2423547039790892518}
   _leader: {fileID: 573780487070439481}
   _nickname: {fileID: 2873547591175292699}
+  _oddBackgroundColor: {r: 1, g: 1, b: 1, a: 0.3254902}
+  _evenBackgroundColor: {r: 0.4627451, g: 0.4627451, b: 0.4627451, a: 0.4117647}
   _currentPlayerColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _otherPlayerColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!222 &5020471657296386068
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3888883254202663840}
+  m_CullTransparentMesh: 1
+--- !u!114 &2423547039790892518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3888883254202663840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.15686275}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &8027273651056637134
 GameObject:
   m_ObjectHideFlags: 0
