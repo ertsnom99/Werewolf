@@ -10,6 +10,15 @@ namespace Werewolf
     {
         [Header("UI")]
         [SerializeField]
+        private Image _background;
+
+        [SerializeField]
+        private Color _oddBackgroundColor;
+
+        [SerializeField]
+        private Color _evenBackgroundColor;
+
+        [SerializeField]
         private Image _leader;
 
         [SerializeField]
@@ -23,6 +32,7 @@ namespace Werewolf
 
         public void SetPlayerData(PlayerData playerData, PlayerRef localPlayer)
         {
+            _background.color = transform.GetSiblingIndex() % 2 > 0 ? _oddBackgroundColor : _evenBackgroundColor;
             _nickname.text = playerData.Nickname;
             _nickname.color = playerData.PlayerRef == localPlayer ? _currentPlayerColor : _otherPlayerColor;
             _leader.enabled = playerData.IsFirst;
