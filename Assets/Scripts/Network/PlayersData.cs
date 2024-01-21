@@ -11,7 +11,7 @@ namespace Werewolf.Network
         public PlayerRef PlayerRef;
         [Networked, Capacity(24)]
         public string Nickname { get => default; set { } }
-        public bool IsFirst;
+        public bool IsLeader;
     }
 
     public class PlayersData : NetworkBehaviour, INetworkRunnerCallbacks
@@ -57,7 +57,7 @@ namespace Werewolf.Network
             PlayerData playerData = new PlayerData();
             playerData.PlayerRef = playerRef;
             playerData.Nickname = nickname;
-            playerData.IsFirst = PlayerDatas.Count <= 0;
+            playerData.IsLeader = PlayerDatas.Count <= 0;
 
             PlayerDatas.Set(playerRef, playerData);
         }
@@ -69,7 +69,7 @@ namespace Werewolf.Network
                 return;
             }
 
-            bool removingFirstPlayer = PlayerDatas.Get(player).IsFirst;
+            bool removingFirstPlayer = PlayerDatas.Get(player).IsLeader;
 
             PlayerDatas.Remove(player);
 
@@ -83,7 +83,7 @@ namespace Werewolf.Network
                 PlayerData newPlayerData = new PlayerData();
                 newPlayerData.PlayerRef = playerData.Value.PlayerRef;
                 newPlayerData.Nickname = playerData.Value.Nickname;
-                newPlayerData.IsFirst = true;
+                newPlayerData.IsLeader = true;
 
                 PlayerDatas.Set(playerData.Key, newPlayerData);
 

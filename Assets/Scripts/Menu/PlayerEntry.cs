@@ -35,7 +35,7 @@ namespace Werewolf
             _background.color = transform.GetSiblingIndex() % 2 > 0 ? _oddBackgroundColor : _evenBackgroundColor;
             _nickname.text = playerData.Nickname;
             _nickname.color = playerData.PlayerRef == localPlayer ? _currentPlayerColor : _otherPlayerColor;
-            _leader.enabled = playerData.IsFirst;
+            _leader.enabled = playerData.IsLeader;
         }
     }
 }
