@@ -1,3 +1,4 @@
+using Assets.Scripts.Editor.Tags;
 using System;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace Werewolf.Data
     [Serializable]
     public struct RoleSetup
     {
+        [ValidateGameplayData]
         public RoleData[] Pool;
         public int UseCount;
     }
@@ -14,6 +16,7 @@ namespace Werewolf.Data
     public class RolesSetupData : ScriptableObject
     {
         [field: SerializeField]
+        [field: ValidateGameplayData]
         public RoleData DefaultRole { get; private set; }
 
         [field: SerializeField]

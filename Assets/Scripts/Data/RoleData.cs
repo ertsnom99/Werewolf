@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Werewolf.Data
 {
     [CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Roles/Role")]
-    public class RoleData : ScriptableObject
+    public class RoleData : GameplayData
     {
         public enum RoleType
         {
@@ -14,22 +14,11 @@ namespace Werewolf.Data
         };
 
         [field: SerializeField]
-        public string Name { get; private set; }
-
-        [field: SerializeField]
         public RoleType Type { get; private set; }
 
         [field: SerializeField]
         [field: TextArea(8, 20)]
-        public string Description { get; private set; }
-
-        [field: SerializeField]
-        [field: TextArea(8, 20)]
         public string Instruction { get; private set; }
-
-        [field: SerializeField]
-        [field: PreviewSprite]
-        public Sprite Image { get; private set; }
 
         // This allows to have more than once this role in a game
         [field: SerializeField]

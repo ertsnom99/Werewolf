@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: LittleGirl
   m_EditorClassIdentifier: 
+  <GameplayTag>k__BackingField: {fileID: -5547471449306829802, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   <Name>k__BackingField: Little Girl
   <Description>k__BackingField: 
-  <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: -453538903, guid: bbce9110de612ae49aa0fd57f7c093d2,
     type: 3}
+  <Type>k__BackingField: 0
+  <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <GroupIndexes>k__BackingField: 01000000
   <NightPriorities>k__BackingField: 0d000000
   <DayPriorities>k__BackingField: 
+  <Behavior>k__BackingField: {fileID: 0}

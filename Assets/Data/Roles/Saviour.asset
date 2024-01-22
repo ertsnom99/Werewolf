@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: Saviour
   m_EditorClassIdentifier: 
+  <GameplayTag>k__BackingField: {fileID: -6932030356482755376, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   <Name>k__BackingField: Saviour
-  <Type>k__BackingField: 0
   <Description>k__BackingField: 
-  <Instruction>k__BackingField: 
   <Image>k__BackingField: {fileID: 357046205, guid: d27adb3f7039d1a45a0389b130f6c9c3,
     type: 3}
+  <Type>k__BackingField: 0
+  <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <GroupIndexes>k__BackingField: 01000000
