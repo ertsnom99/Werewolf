@@ -21,23 +21,23 @@ namespace Werewolf
         [SerializeField]
         private Button _leaveRoomBtn;
 
-        private PlayersData _playersData;
+        private GameDataManager _gameDataManager;
 
         private PlayerRef _localPlayer;
 
         private int _minPlayer = 2;
 
-        public void SetPlayersData(PlayersData playersData, PlayerRef localPlayer)
+        public void SetGameDataManager(GameDataManager gameDataManager, PlayerRef localPlayer)
         {
-            _playersData = playersData;
+            _gameDataManager = gameDataManager;
             _localPlayer = localPlayer;
 
-            if (!_playersData || _localPlayer == null)
+            if (!_gameDataManager || _localPlayer == null)
             {
                 return;
             }
 
-            _playersData.OnPlayerNicknamesChanged += UpdatePlayerList;
+            _gameDataManager.OnPlayerNicknamesChanged += UpdatePlayerList;
             UpdatePlayerList();
         }
 
@@ -48,7 +48,7 @@ namespace Werewolf
 
         private void UpdatePlayerList()
         {
-            if (_playersData == null || _localPlayer == null)
+            if (_gameDataManager == null || _localPlayer == null)
             {
                 return;
             }
@@ -65,14 +65,14 @@ namespace Werewolf
             // Fill list
             bool localPlayerIsLeader = false;
 
-            foreach (KeyValuePair<PlayerRef, PlayerData> playerData in _playersData.PlayerDatas)
+            foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
             {
                 PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
-                playerEntry.SetPlayerData(playerData.Value, _localPlayer);
+                playerEntry.SetPlayerData(playerInfo.Value, _localPlayer);
 
-                if (playerData.Value.PlayerRef == _localPlayer)
+                if (playerInfo.Value.PlayerRef == _localPlayer)
                 {
-                    localPlayerIsLeader = playerData.Value.IsLeader;
+                    localPlayerIsLeader = playerInfo.Value.IsLeader;
                 }
             }
 

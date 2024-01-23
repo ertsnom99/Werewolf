@@ -25,7 +25,7 @@ namespace Werewolf
 
         private NetworkRunner _runner;
 
-        private PlayersData _playersData;
+        private GameDataManager _gameDataManager;
 
         private void Awake()
         {
@@ -90,15 +90,15 @@ namespace Werewolf
         {
             Log.Info($"{nameof(OnConnectedToServer)}: {nameof(runner.CurrentConnectionType)}: {runner.CurrentConnectionType}, {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
 
-            _playersData = FindObjectOfType<PlayersData>();
+            _gameDataManager = FindObjectOfType<GameDataManager>();
 
-            if (_playersData != null)
+            if (_gameDataManager != null)
             {
-                OnPlayersDataSpawned();
+                OnGameDataManagerSpawned();
             }
             else
             {
-                PlayersData.OnSpawned += OnPlayersDataSpawned;
+                GameDataManager.OnSpawned += OnGameDataManagerSpawned;
             }
         }
 
@@ -136,16 +136,16 @@ namespace Werewolf
         }
         #endregion
 
-        private void OnPlayersDataSpawned()
+        private void OnGameDataManagerSpawned()
         {
-            if (_playersData == null)
+            if (_gameDataManager == null)
             {
-                PlayersData.OnSpawned -= OnPlayersDataSpawned;
-                _playersData = FindObjectOfType<PlayersData>();
+                GameDataManager.OnSpawned -= OnGameDataManagerSpawned;
+                _gameDataManager = FindObjectOfType<GameDataManager>();
             }
 
-            _roomMenu.SetPlayersData(_playersData, _runner.LocalPlayer);
-            _playersData.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
+            _roomMenu.SetGameDataManager(_gameDataManager, _runner.LocalPlayer);
+            _gameDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
 
             DisplayRoomMenu();
         }

@@ -476,7 +476,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   _useDebug: 1
   _debugPlayerCount: 10
-  _debugRolesSetupData: {fileID: 11400000, guid: 007e3777ae91394438b45dfbe9558e7b,
+  _debugGameSetupData: {fileID: 11400000, guid: b7e2f730992ed2b459990faf349d762a,
     type: 2}
 --- !u!1 &740883197
 GameObject:

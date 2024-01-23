@@ -1,8 +1,9 @@
+using Assets.Scripts.Data;
 using UnityEngine;
 
 namespace Werewolf.Data
 {
-    [CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Roles/Role")]
+    [CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Role")]
     public class RoleData : GameplayData
     {
         public enum RoleType

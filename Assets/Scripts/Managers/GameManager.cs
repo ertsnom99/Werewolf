@@ -1,3 +1,4 @@
+using Fusion;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +29,7 @@ namespace Werewolf
         [SerializeField]
         private AnimationCurve _cameraOffset;
 
-        //#if UNITY_EDITOR
+#if UNITY_EDITOR
         [Header("Debug")]
         [SerializeField]
         private bool _useDebug;
@@ -37,8 +38,8 @@ namespace Werewolf
         private int _debugPlayerCount = 10;
 
         [SerializeField]
-        private RolesSetupData _debugRolesSetupData;
-        //#endif
+        private GameSetupData _debugGameSetupData;
+#endif
 
         public event Action OnPreRoleDistribution = delegate { };
         public event Action OnPostRoleDistribution = delegate { };
@@ -57,17 +58,36 @@ namespace Werewolf
 
         private void Start()
         {
+            int playerCount = 0;
+
+            RolesSetup rolesSetup;
+            rolesSetup.DefaultRole = null;
+            rolesSetup.MandatoryRoles = new RoleSetupData[0];
+            rolesSetup.AvailableRoles = new RoleSetupData[0];
+            rolesSetup.MinPlayerCount = 0;
+
 #if UNITY_EDITOR
             if (!_playerPrefab)
             {
                 Debug.LogError("_playerPrefab of the GameManager is null");
                 return;
             }
-#endif
-            SelectRolesToDistribute(_debugRolesSetupData.MandatoryRoles, new List<RoleSetup>(_debugRolesSetupData.AvailableRoles), _debugRolesSetupData.DefaultRole, _debugPlayerCount);
 
-            CreatePlayers(_debugPlayerCount);
-            AdjustCamera(_debugPlayerCount);
+            if (_useDebug && _debugGameSetupData)
+            {
+                rolesSetup.DefaultRole = _debugGameSetupData.DefaultRole;
+                rolesSetup.MandatoryRoles = _debugGameSetupData.MandatoryRoles;
+                rolesSetup.AvailableRoles = _debugGameSetupData.AvailableRoles;
+                rolesSetup.MinPlayerCount = _debugGameSetupData.MinPlayerCount;
+            }
+
+            playerCount = _debugPlayerCount;
+#endif
+
+            SelectRolesToDistribute(rolesSetup, playerCount);
+
+            CreatePlayers(playerCount);
+            AdjustCamera(playerCount);
 
             OnPreRoleDistribution();
             DistributeRoles();
@@ -79,20 +99,28 @@ namespace Werewolf
         }
 
         #region Pre Gameplay Loop
-
+[Serializable]
+public struct RolesSetup
+{
+    public RoleData DefaultRole;
+    public RoleSetupData[] MandatoryRoles;
+    public RoleSetupData[] AvailableRoles;
+    public int MinPlayerCount;
+}
         #region Roles selection
-        private void SelectRolesToDistribute(RoleSetup[] mandatoryRoles, List<RoleSetup> availableRoles, RoleData defaultRole, int playerCount)
+        private void SelectRolesToDistribute(RolesSetup rolesSetup, int playerCount)
         {
             List<RoleData> rolesToDistribute = new List<RoleData>();
+            List<RoleSetupData> availableRoles = new List<RoleSetupData>(rolesSetup.AvailableRoles);
 
             // Add all mandatory roles first
-            foreach (RoleSetup roleSetup in mandatoryRoles)
+            foreach (RoleSetupData roleSetup in rolesSetup.MandatoryRoles)
             {
                 RoleData[] addedRoles = SelectRolesFromRoleSetup(roleSetup, ref rolesToDistribute);
                 PrepareRoleBehaviors(addedRoles, ref rolesToDistribute, ref availableRoles);
             }
 
-            List<RoleSetup> excludedRuleSetups = new List<RoleSetup>();
+            List<RoleSetupData> excludedRuleSetups = new List<RoleSetupData>();
             int attempts = 0;
 
             // Complete with available roles at random or default role
@@ -102,14 +130,14 @@ namespace Werewolf
 
                 if (availableRoles.Count <= 0 || attempts >= AVAILABLE_ROLES_MAX_ATTEMPT_COUNT)
                 {
-                    rolesToDistribute.Add(defaultRole);
-                    PrepareRoleBehavior(defaultRole, ref rolesToDistribute, ref availableRoles);
+                    rolesToDistribute.Add(rolesSetup.DefaultRole);
+                    PrepareRoleBehavior(rolesSetup.DefaultRole, ref rolesToDistribute, ref availableRoles);
 
                     continue;
                 }
 
                 int randomIndex = UnityEngine.Random.Range(0, availableRoles.Count);
-                RoleSetup roleSetup = availableRoles[randomIndex];
+                RoleSetupData roleSetup = availableRoles[randomIndex];
 
                 // Do not use roles setup that would add too many roles 
                 if (excludedRuleSetups.Contains(roleSetup))
@@ -139,7 +167,7 @@ namespace Werewolf
             RolesToDistribute = rolesToDistribute;
         }
 
-        private RoleData[] SelectRolesFromRoleSetup(RoleSetup roleSetup, ref List<RoleData> rolesToDistribute)
+        private RoleData[] SelectRolesFromRoleSetup(RoleSetupData roleSetup, ref List<RoleData> rolesToDistribute)
         {
             List<RoleData> rolePool = new List<RoleData>(roleSetup.Pool);
             RoleData[] addedRoles = new RoleData[roleSetup.UseCount];
@@ -155,7 +183,7 @@ namespace Werewolf
             return addedRoles;
         }
 
-        public void PrepareRoleBehaviors(RoleData[] roles, ref List<RoleData> rolesToDistribute, ref List<RoleSetup> availableRoles)
+        public void PrepareRoleBehaviors(RoleData[] roles, ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles)
         {
             foreach (RoleData role in roles)
             {
@@ -163,7 +191,7 @@ namespace Werewolf
             }
         }
 
-        public void PrepareRoleBehavior(RoleData role, ref List<RoleData> rolesToDistribute, ref List<RoleSetup> availableRoles)
+        public void PrepareRoleBehavior(RoleData role, ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles)
         {
             if (!role.Behavior)
             {

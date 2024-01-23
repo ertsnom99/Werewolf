@@ -1,3 +1,4 @@
+using Assets.Scripts.Data;
 using Assets.Scripts.Editor.Tags;
 using UnityEditor;
 using UnityEngine;

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Werewolf.Network
 {
     [Serializable]
-    public struct PlayerData : INetworkStruct
+    public struct PlayerInfo : INetworkStruct
     {
         public PlayerRef PlayerRef;
         [Networked, Capacity(24)]
@@ -14,10 +14,29 @@ namespace Werewolf.Network
         public bool IsLeader;
     }
 
-    public class PlayersData : NetworkBehaviour, INetworkRunnerCallbacks
+    /*[Serializable]
+    public struct RoleSetup : INetworkStruct
+    {
+        [Networked, Capacity(5)]
+        public NetworkArray<int> Pool { get; }
+        public int UseCount;
+    }
+
+    [Serializable]
+    public struct RolesSetup : INetworkStruct
+    {
+        public int DefaultRole;
+        [Networked, Capacity(100)]
+        public NetworkArray<RoleSetup> MandatoryRoles { get; }
+        [Networked, Capacity(100)]
+        public NetworkArray<RoleSetup> AvailableRoles { get; }
+        public int MinPlayerCount;
+    }*/
+
+    public class GameDataManager : NetworkBehaviour, INetworkRunnerCallbacks
     {
         [Networked, Capacity(LaunchManager.MAX_PLAYER_COUNT)]
-        public NetworkDictionary<PlayerRef, PlayerData> PlayerDatas { get; }
+        public NetworkDictionary<PlayerRef, PlayerInfo> PlayerInfos { get; }
 
         private ChangeDetector _changeDetector;
 
@@ -41,7 +60,7 @@ namespace Werewolf.Network
             {
                 switch (change)
                 {
-                    case nameof(PlayerDatas):
+                    case nameof(PlayerInfos):
                         if (OnPlayerNicknamesChanged != null)
                         {
                             OnPlayerNicknamesChanged();
@@ -50,42 +69,48 @@ namespace Werewolf.Network
                 }
             }
         }
-
+        // TODO: Test with RpcSources.Proxies
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
         public void RPC_SetPlayerNickname(PlayerRef playerRef, string nickname)
         {
-            PlayerData playerData = new PlayerData();
+            PlayerInfo playerData = new PlayerInfo();
             playerData.PlayerRef = playerRef;
             playerData.Nickname = nickname;
-            playerData.IsLeader = PlayerDatas.Count <= 0;
+            playerData.IsLeader = PlayerInfos.Count <= 0;
 
-            PlayerDatas.Set(playerRef, playerData);
+            PlayerInfos.Set(playerRef, playerData);
+        }
+
+        [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+        public void RPC_SetRolesSetup()
+        {
+            // TODO: Store game setup
         }
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {
-            if (!HasStateAuthority || !PlayerDatas.ContainsKey(player))
+            if (!HasStateAuthority || !PlayerInfos.ContainsKey(player))
             {
                 return;
             }
 
-            bool removingFirstPlayer = PlayerDatas.Get(player).IsLeader;
+            bool removingFirstPlayer = PlayerInfos.Get(player).IsLeader;
 
-            PlayerDatas.Remove(player);
+            PlayerInfos.Remove(player);
 
             if (!removingFirstPlayer)
             {
                 return;
             }
 
-            foreach (KeyValuePair<PlayerRef, PlayerData> playerData in PlayerDatas)
+            foreach (KeyValuePair<PlayerRef, PlayerInfo> playerData in PlayerInfos)
             {
-                PlayerData newPlayerData = new PlayerData();
+                PlayerInfo newPlayerData = new PlayerInfo();
                 newPlayerData.PlayerRef = playerData.Value.PlayerRef;
                 newPlayerData.Nickname = playerData.Value.Nickname;
                 newPlayerData.IsLeader = true;
 
-                PlayerDatas.Set(playerData.Key, newPlayerData);
+                PlayerInfos.Set(playerData.Key, newPlayerData);
 
                 break;
             }
