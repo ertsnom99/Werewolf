@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameplayDatabaseManager : MonoSingleton<GameplayDatabaseManager>
 {
     [SerializeField]
-    private string[] _foldersToload;
+    private string[] _foldersToLoad;
 
     private Dictionary<int, GameplayData> _IDtoGameplayData = new Dictionary<int, GameplayData>();
 
@@ -26,7 +26,7 @@ public class GameplayDatabaseManager : MonoSingleton<GameplayDatabaseManager>
 
         _IDtoGameplayData.Clear();
 
-        foreach (string folder in _foldersToload)
+        foreach (string folder in _foldersToLoad)
         {
             LoadGameplayDatas(folder);
         }
