@@ -30,12 +30,12 @@ namespace Werewolf
         [SerializeField]
         private Color _otherPlayerColor = Color.white;
 
-        public void SetPlayerData(PlayerData playerData, PlayerRef localPlayer)
+        public void SetPlayerData(PlayerInfo playerInfo, PlayerRef localPlayer)
         {
             _background.color = transform.GetSiblingIndex() % 2 > 0 ? _oddBackgroundColor : _evenBackgroundColor;
-            _nickname.text = playerData.Nickname;
-            _nickname.color = playerData.PlayerRef == localPlayer ? _currentPlayerColor : _otherPlayerColor;
-            _leader.enabled = playerData.IsLeader;
+            _nickname.text = playerInfo.Nickname;
+            _nickname.color = playerInfo.PlayerRef == localPlayer ? _currentPlayerColor : _otherPlayerColor;
+            _leader.enabled = playerInfo.IsLeader;
         }
     }
 }

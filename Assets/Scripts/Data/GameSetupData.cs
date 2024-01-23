@@ -5,24 +5,27 @@ using UnityEngine;
 namespace Werewolf.Data
 {
     [Serializable]
-    public struct RoleSetup
+    public struct RoleSetupData
     {
         [ValidateGameplayData]
         public RoleData[] Pool;
         public int UseCount;
     }
 
-    [CreateAssetMenu(fileName = "RolesSetup", menuName = "ScriptableObjects/Roles/RolesSetup")]
-    public class RolesSetupData : ScriptableObject
+    [CreateAssetMenu(fileName = "GameSetup", menuName = "ScriptableObjects/GameSetup")]
+    public class GameSetupData : ScriptableObject
     {
         [field: SerializeField]
         [field: ValidateGameplayData]
         public RoleData DefaultRole { get; private set; }
 
         [field: SerializeField]
-        public RoleSetup[] MandatoryRoles { get; private set; }
+        public RoleSetupData[] MandatoryRoles { get; private set; }
 
         [field: SerializeField]
-        public RoleSetup[] AvailableRoles { get; private set; }
+        public RoleSetupData[] AvailableRoles { get; private set; }
+
+        [field: SerializeField]
+        public int MinPlayerCount { get; private set; }
     }
 }

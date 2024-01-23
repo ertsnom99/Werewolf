@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40f2a73507aa2964aa306ac5b2c0a3aa, type: 3}
-  m_Name: TestRolesSetup
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 0}
+  m_Name: TestGameSetup
+  m_EditorClassIdentifier: Assembly-CSharp:Werewolf.Data:GameSetupData
   <DefaultRole>k__BackingField: {fileID: 11400000, guid: 9225c604e9fe4664eb919866d085078f,
     type: 2}
   <MandatoryRoles>k__BackingField:
@@ -20,26 +20,24 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
     UseCount: 2
   - Pool:
+    - {fileID: 11400000, guid: 07a1c61a9fe67c74696bb302edfcdfc1, type: 2}
+    UseCount: 1
+  - Pool:
     - {fileID: 11400000, guid: 42cdb8e84ec451d409c8ec23ec8429c5, type: 2}
     UseCount: 1
+  <AvailableRoles>k__BackingField:
   - Pool:
     - {fileID: 11400000, guid: 487a3d6743b9ccd4f8af37c479c3365c, type: 2}
     - {fileID: 11400000, guid: 487a3d6743b9ccd4f8af37c479c3365c, type: 2}
     - {fileID: 11400000, guid: 487a3d6743b9ccd4f8af37c479c3365c, type: 2}
     UseCount: 3
   - Pool:
-    - {fileID: 11400000, guid: 07a1c61a9fe67c74696bb302edfcdfc1, type: 2}
-    UseCount: 1
-  <AvailableRoles>k__BackingField:
-  - Pool:
-    - {fileID: 11400000, guid: 7ac908ee88d1bfe46a54ee85727d69ae, type: 2}
-    UseCount: 1
-  - Pool:
-    - {fileID: 11400000, guid: bd74ac91c284e0c44a2afdb8a0478c79, type: 2}
-    UseCount: 1
-  - Pool:
     - {fileID: 11400000, guid: 2f4b33e1175be6a43b478f692b6a2d81, type: 2}
     UseCount: 1
   - Pool:
     - {fileID: 11400000, guid: 87ca120de9ad22b41b08f1b85fbe7dd3, type: 2}
     UseCount: 1
+  - Pool:
+    - {fileID: 11400000, guid: bd74ac91c284e0c44a2afdb8a0478c79, type: 2}
+    UseCount: 1
+  <MinPlayerCount>k__BackingField: 10

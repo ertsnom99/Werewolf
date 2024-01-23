@@ -8,6 +8,6 @@ namespace Werewolf
     {
         public abstract void Init();
 
-        public abstract void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetup> availableRoles);
+        public abstract void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles);
     }
 }

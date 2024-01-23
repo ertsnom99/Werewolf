@@ -12,7 +12,7 @@ namespace Werewolf.Network
     public class ServerGameController : SimulationBehaviour, INetworkRunnerCallbacks
     {
         [SerializeField]
-        private PlayersData _playersDataPrefab;
+        private GameDataManager _gameDataManagerPrefab;
 
         public void OnSceneLoadDone(NetworkRunner runner)
         {
@@ -21,8 +21,8 @@ namespace Werewolf.Network
                 return;
             }
 
-            PlayersData playersData = runner.Spawn(_playersDataPrefab, Vector3.zero, Quaternion.identity);
-            runner.AddCallbacks(playersData);
+            GameDataManager gameDataManager = runner.Spawn(_gameDataManagerPrefab, Vector3.zero, Quaternion.identity);
+            runner.AddCallbacks(gameDataManager);
         }
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)

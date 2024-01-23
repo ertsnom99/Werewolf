@@ -15,12 +15,12 @@ namespace Werewolf
             _gameManager = GameManager.Instance;
         }
 
-        public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetup> availableRoles)
+        public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles)
         {
             List<RoleData> selectedRoles = new List<RoleData>();
 
             // Try to take the roles from the available roles first
-            List<RoleSetup> availableRolesCopy = new List<RoleSetup>(availableRoles);
+            List<RoleSetupData> availableRolesCopy = new List<RoleSetupData>(availableRoles);
 
             while (availableRolesCopy.Count > 0 && selectedRoles.Count < NEEDED_ROLE_COUNT)
             {
@@ -73,7 +73,7 @@ namespace Werewolf
             _gameManager.ReserveRoles(this, selectedRoles.ToArray(), true);
         }
 
-        private bool CanTakeRolesFromSetup(RoleSetup roleSetup, List<RoleData> selectedRoles)
+        private bool CanTakeRolesFromSetup(RoleSetupData roleSetup, List<RoleData> selectedRoles)
         {
             if (NEEDED_ROLE_COUNT - selectedRoles.Count < roleSetup.UseCount)
             {
@@ -103,7 +103,7 @@ namespace Werewolf
             return !selectedRoles.Contains(role) && role.Type == RoleData.RoleType.Villager && role.Behavior && !role.Behavior.GetType().Equals(GetType());
         }
 
-        private void SelectRolesFromRoleSetup(RoleSetup roleSetup, ref List<RoleData> selectedRoles)
+        private void SelectRolesFromRoleSetup(RoleSetupData roleSetup, ref List<RoleData> selectedRoles)
         {
             int rolesSelectedCount = 0;
             int indexOffset = Random.Range(0, roleSetup.UseCount);
