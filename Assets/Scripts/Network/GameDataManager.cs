@@ -69,8 +69,8 @@ namespace Werewolf.Network
                 }
             }
         }
-        // TODO: Test with RpcSources.Proxies
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+
+        [Rpc(RpcSources.Proxies, RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
         public void RPC_SetPlayerNickname(PlayerRef playerRef, string nickname)
         {
             PlayerInfo playerData = new PlayerInfo();
@@ -81,7 +81,7 @@ namespace Werewolf.Network
             PlayerInfos.Set(playerRef, playerData);
         }
 
-        [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
         public void RPC_SetRolesSetup()
         {
             // TODO: Store game setup
