@@ -1,8 +1,8 @@
-using Fusion;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -60,11 +60,7 @@ namespace Werewolf
         {
             int playerCount = 0;
 
-            RolesSetup rolesSetup;
-            rolesSetup.DefaultRole = null;
-            rolesSetup.MandatoryRoles = new RoleSetupData[0];
-            rolesSetup.AvailableRoles = new RoleSetupData[0];
-            rolesSetup.MinPlayerCount = 0;
+            RolesSetup rolesSetup = new();
 
 #if UNITY_EDITOR
             if (!_playerPrefab)
@@ -75,16 +71,13 @@ namespace Werewolf
 
             if (_useDebug && _debugGameSetupData)
             {
-                rolesSetup.DefaultRole = _debugGameSetupData.DefaultRole;
-                rolesSetup.MandatoryRoles = _debugGameSetupData.MandatoryRoles;
-                rolesSetup.AvailableRoles = _debugGameSetupData.AvailableRoles;
-                rolesSetup.MinPlayerCount = _debugGameSetupData.MinPlayerCount;
+                rolesSetup = GameDataManager.ConvertToRolesSetup(_debugGameSetupData);
             }
 
             playerCount = _debugPlayerCount;
 #endif
 
-            SelectRolesToDistribute(rolesSetup, playerCount);
+            /*SelectRolesToDistribute(rolesSetup, playerCount);
 
             CreatePlayers(playerCount);
             AdjustCamera(playerCount);
@@ -93,22 +86,15 @@ namespace Werewolf
             DistributeRoles();
             OnPostRoleDistribution();
 
-            PlaceReservedRolesRows();
+            PlaceReservedRolesRows();*/
 
             // TODO: Start game loop
         }
 
         #region Pre Gameplay Loop
-[Serializable]
-public struct RolesSetup
-{
-    public RoleData DefaultRole;
-    public RoleSetupData[] MandatoryRoles;
-    public RoleSetupData[] AvailableRoles;
-    public int MinPlayerCount;
-}
+
         #region Roles selection
-        private void SelectRolesToDistribute(RolesSetup rolesSetup, int playerCount)
+        /*private void SelectRolesToDistribute(RolesSetupTest rolesSetup, int playerCount)
         {
             List<RoleData> rolesToDistribute = new List<RoleData>();
             List<RoleSetupData> availableRoles = new List<RoleSetupData>(rolesSetup.AvailableRoles);
@@ -165,7 +151,7 @@ public struct RolesSetup
             }
 
             RolesToDistribute = rolesToDistribute;
-        }
+        }*/
 
         private RoleData[] SelectRolesFromRoleSetup(RoleSetupData roleSetup, ref List<RoleData> rolesToDistribute)
         {

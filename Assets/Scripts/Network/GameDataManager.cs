@@ -2,6 +2,8 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Werewolf.Data;
 
 namespace Werewolf.Network
 {
@@ -14,7 +16,7 @@ namespace Werewolf.Network
         public bool IsLeader;
     }
 
-    /*[Serializable]
+    [Serializable]
     public struct RoleSetup : INetworkStruct
     {
         [Networked, Capacity(5)]
@@ -30,8 +32,7 @@ namespace Werewolf.Network
         public NetworkArray<RoleSetup> MandatoryRoles { get; }
         [Networked, Capacity(100)]
         public NetworkArray<RoleSetup> AvailableRoles { get; }
-        public int MinPlayerCount;
-    }*/
+    }
 
     public class GameDataManager : NetworkBehaviour, INetworkRunnerCallbacks
     {
@@ -39,6 +40,9 @@ namespace Werewolf.Network
         public NetworkDictionary<PlayerRef, PlayerInfo> PlayerInfos { get; }
 
         private ChangeDetector _changeDetector;
+
+        [SerializeField]
+        private RolesSetup _rolesSetup;
 
         public event Action OnPlayerNicknamesChanged;
 
@@ -82,9 +86,53 @@ namespace Werewolf.Network
         }
 
         [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-        public void RPC_SetRolesSetup()
+        public void RPC_SetRolesSetup(RolesSetup rolesSetup, RpcInfo info = default)
         {
-            // TODO: Store game setup
+            if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader)
+            {
+                return;
+            }
+
+            _rolesSetup = rolesSetup;
+
+            // In an other scripts
+            // TODO: Lock the room
+            // TODO: Switch scene
+            // TODO: Start game loop
+        }
+
+        public static RolesSetup ConvertToRolesSetup(GameSetupData gameSetupData)
+        {
+            RolesSetup rolesSetup = new()
+            {
+                DefaultRole = gameSetupData.DefaultRole.GameplayTag.CompactTagId,
+            };
+
+            for (int i = 0; i < gameSetupData.MandatoryRoles.Length; i++)
+            {
+                rolesSetup.MandatoryRoles.Set(i, ConvertToRoleSetup(gameSetupData.MandatoryRoles[i]));
+            }
+
+            for (int i = 0; i < gameSetupData.AvailableRoles.Length; i++)
+            {
+                rolesSetup.AvailableRoles.Set(i, ConvertToRoleSetup(gameSetupData.AvailableRoles[i]));
+            }
+
+            return rolesSetup;
+        }
+
+        public static RoleSetup ConvertToRoleSetup(RoleSetupData roleSetupData)
+        {
+            RoleSetup roleSetup = new RoleSetup();
+
+            for (int i = 0; i < roleSetupData.Pool.Length; i++)
+            {
+                roleSetup.Pool.Set(i, roleSetupData.Pool[i].GameplayTag.CompactTagId);
+            }
+
+            roleSetup.UseCount = roleSetupData.UseCount;
+
+            return roleSetup;
         }
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)

@@ -2026,6 +2026,8 @@ MonoBehaviour:
   _roomMenu: {fileID: 1238084737}
   _runnerPrefab: {fileID: 8059850406413701510, guid: 798564b38f16326479b3647e6ed5fafd,
     type: 3}
+  _debugGameSetupData: {fileID: 11400000, guid: b7e2f730992ed2b459990faf349d762a,
+    type: 2}
 --- !u!1 &1159110556
 GameObject:
   m_ObjectHideFlags: 0
@@ -2517,7 +2519,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1352829818}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1126110458}
+        m_TargetAssemblyTypeName: Werewolf.MainMenuManager, Assembly-CSharp
+        m_MethodName: StartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1352829818
 MonoBehaviour:
   m_ObjectHideFlags: 0
