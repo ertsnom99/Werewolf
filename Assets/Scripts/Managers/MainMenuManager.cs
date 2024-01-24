@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using Werewolf.Network.Configs;
 using Werewolf.Network;
+using Werewolf.Data;
 
 namespace Werewolf
 {
@@ -23,6 +24,11 @@ namespace Werewolf
         [SerializeField]
         private NetworkRunner _runnerPrefab;
 
+        // TODO: when complete workflow is integrated, add a UNITY_EDITOR region
+        [Header("Debug")]
+        [SerializeField]
+        private GameSetupData _debugGameSetupData;
+
         private NetworkRunner _runner;
 
         private GameDataManager _gameDataManager;
@@ -33,7 +39,6 @@ namespace Werewolf
             _mainMenu.ResetMenu("");
         }
 
-        #region Connection
         public void JoinGame()
         {
             if (!_mainMenu)
@@ -59,6 +64,31 @@ namespace Werewolf
             _runner.Shutdown();
         }
 
+        public void StartGame()
+        {
+            if (!_gameDataManager)
+            {
+                return;
+            }
+
+            _gameDataManager.RPC_SetRolesSetup(GameDataManager.ConvertToRolesSetup(_debugGameSetupData));
+        }
+
+        private void OnGameDataManagerSpawned()
+        {
+            if (_gameDataManager == null)
+            {
+                GameDataManager.OnSpawned -= OnGameDataManagerSpawned;
+                _gameDataManager = FindObjectOfType<GameDataManager>();
+            }
+
+            _roomMenu.SetGameDataManager(_gameDataManager, _runner.LocalPlayer);
+            _gameDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
+
+            DisplayRoomMenu();
+        }
+
+        #region Connection
         private NetworkRunner GetRunner(string name)
         {
             var runner = Instantiate(_runnerPrefab);
@@ -135,20 +165,6 @@ namespace Werewolf
             _mainMenu.ResetMenu($"Connection failed: {reason}");
         }
         #endregion
-
-        private void OnGameDataManagerSpawned()
-        {
-            if (_gameDataManager == null)
-            {
-                GameDataManager.OnSpawned -= OnGameDataManagerSpawned;
-                _gameDataManager = FindObjectOfType<GameDataManager>();
-            }
-
-            _roomMenu.SetGameDataManager(_gameDataManager, _runner.LocalPlayer);
-            _gameDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
-
-            DisplayRoomMenu();
-        }
 
         #region UI
         private void DisplayMainMenu()
