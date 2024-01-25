@@ -61,6 +61,11 @@ namespace Werewolf
 
         public void LeaveGame()
         {
+            if (_gameDataManager)
+            {
+                _gameDataManager.OnGameDataReadyChanged -= OnGameDataReadyChanged;
+            }
+
             _runner.Shutdown();
         }
 
@@ -71,21 +76,32 @@ namespace Werewolf
                 return;
             }
 
-            _gameDataManager.RPC_SetRolesSetup(GameDataManager.ConvertToRolesSetup(_debugGameSetupData));
+            _roomMenu.ClearWarning();
+            // TODO : send the selected game setup
+            _gameDataManager.RPC_SetRolesSetup(GameDataManager.ConvertToRolesSetup(_debugGameSetupData), _debugGameSetupData.MinPlayerCount);
         }
 
         private void OnGameDataManagerSpawned()
         {
-            if (_gameDataManager == null)
+            if (!_gameDataManager)
             {
                 GameDataManager.OnSpawned -= OnGameDataManagerSpawned;
                 _gameDataManager = FindObjectOfType<GameDataManager>();
             }
 
+            _gameDataManager.OnGameDataReadyChanged += OnGameDataReadyChanged;
             _roomMenu.SetGameDataManager(_gameDataManager, _runner.LocalPlayer);
+            // TODO : Change min player everytime the leader select a new game setup
+            _roomMenu.SetMinPlayer(_debugGameSetupData.MinPlayerCount);
+
             _gameDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
 
             DisplayRoomMenu();
+        }
+
+        private void OnGameDataReadyChanged()
+        {
+            _roomMenu.UpdatePlayerList();
         }
 
         #region Connection
@@ -122,7 +138,7 @@ namespace Werewolf
 
             _gameDataManager = FindObjectOfType<GameDataManager>();
 
-            if (_gameDataManager != null)
+            if (_gameDataManager)
             {
                 OnGameDataManagerSpawned();
             }
@@ -211,5 +227,15 @@ namespace Werewolf
 
         public void OnSceneLoadStart(NetworkRunner runner) { }
         #endregion
+
+        private void OnDisable()
+        {
+            if (!_gameDataManager)
+            {
+                return;
+            }
+
+            _gameDataManager.OnGameDataReadyChanged -= OnGameDataReadyChanged;
+        }
     }
 }

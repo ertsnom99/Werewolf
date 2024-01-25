@@ -1,5 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Werewolf.Network;
@@ -16,6 +17,9 @@ namespace Werewolf
         private PlayerEntry _playerEntryPrefab;
 
         [SerializeField]
+        private TMP_Text _warningText;
+
+        [SerializeField]
         private Button _startGameBtn;
 
         [SerializeField]
@@ -25,7 +29,7 @@ namespace Werewolf
 
         private PlayerRef _localPlayer;
 
-        private int _minPlayer = 2;
+        private int _minPlayer = -1;
 
         public void SetGameDataManager(GameDataManager gameDataManager, PlayerRef localPlayer)
         {
@@ -38,6 +42,7 @@ namespace Werewolf
             }
 
             _gameDataManager.OnPlayerNicknamesChanged += UpdatePlayerList;
+            _gameDataManager.OnInvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
             UpdatePlayerList();
         }
 
@@ -46,9 +51,9 @@ namespace Werewolf
             _minPlayer = minPlayer;
         }
 
-        private void UpdatePlayerList()
+        public void UpdatePlayerList()
         {
-            if (_gameDataManager == null || _localPlayer == null)
+            if (!_gameDataManager || _localPlayer == null)
             {
                 return;
             }
@@ -56,31 +61,52 @@ namespace Werewolf
             // Clear list
             for (int i = _playerEntries.childCount - 1; i >= 0; i--)
             {
-                Transform entry = _playerEntries.GetChild(i);
-
-                entry.transform.parent = null;
-                Destroy(entry.gameObject);
+                Destroy(_playerEntries.GetChild(i).gameObject);
             }
 
             // Fill list
+            bool isOdd = true;
             bool localPlayerIsLeader = false;
 
             foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
             {
                 PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
-                playerEntry.SetPlayerData(playerInfo.Value, _localPlayer);
+                playerEntry.SetPlayerData(playerInfo.Value, _localPlayer, isOdd);
 
                 if (playerInfo.Value.PlayerRef == _localPlayer)
                 {
                     localPlayerIsLeader = playerInfo.Value.IsLeader;
                 }
+
+                isOdd = !isOdd;
             }
 
             // Update buttons
-            _startGameBtn.interactable = localPlayerIsLeader && _minPlayer > -1 && _playerEntries.childCount >= _minPlayer;
-            _leaveRoomBtn.interactable = true;
+            _startGameBtn.interactable = localPlayerIsLeader && _minPlayer > -1 && _gameDataManager.PlayerInfos.Count >= _minPlayer && !_gameDataManager.GameDataReady;
+            _leaveRoomBtn.interactable = !_gameDataManager.GameDataReady;
         }
 
+        private void ShowInvalidRolesSetupWarning()
+        {
+            _warningText.text = "An invalid roles setup was sent to the server";
+        }
 
+        public void ClearWarning()
+        {
+            _warningText.text = "";
+        }
+
+        private void OnDisable()
+        {
+            ClearWarning();
+            
+            if (!_gameDataManager)
+            {
+                return;
+            }
+
+            _gameDataManager.OnPlayerNicknamesChanged -= UpdatePlayerList;
+            _gameDataManager.OnInvalidRolesSetupReceived -= ShowInvalidRolesSetupWarning;
+        }
     }
 }

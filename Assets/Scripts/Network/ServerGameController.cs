@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Werewolf.Network.Configs;
 
 namespace Werewolf.Network
@@ -14,6 +15,8 @@ namespace Werewolf.Network
         [SerializeField]
         private GameDataManager _gameDataManagerPrefab;
 
+        private GameDataManager _gameDataManager;
+
         public void OnSceneLoadDone(NetworkRunner runner)
         {
             if (runner.SceneManager.MainRunnerScene.buildIndex != (int)SceneDefs.MENU)
@@ -21,8 +24,23 @@ namespace Werewolf.Network
                 return;
             }
 
-            GameDataManager gameDataManager = runner.Spawn(_gameDataManagerPrefab, Vector3.zero, Quaternion.identity);
-            runner.AddCallbacks(gameDataManager);
+            _gameDataManager = runner.Spawn(_gameDataManagerPrefab, Vector3.zero, Quaternion.identity);
+            runner.AddCallbacks(_gameDataManager);
+
+            _gameDataManager.OnGameDataReadyChanged += OnGameDataReadyChanged;
+        }
+
+        private void OnGameDataReadyChanged()
+        {
+            if (!_gameDataManager.GameDataReady)
+            {
+                return;
+            }
+
+            _gameDataManager.OnGameDataReadyChanged -= OnGameDataReadyChanged;
+
+            Runner.SessionInfo.IsOpen = false;
+            Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.GAME), LoadSceneMode.Single);
         }
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)

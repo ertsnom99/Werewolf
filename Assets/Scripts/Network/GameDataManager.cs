@@ -39,14 +39,26 @@ namespace Werewolf.Network
         [Networked, Capacity(LaunchManager.MAX_PLAYER_COUNT)]
         public NetworkDictionary<PlayerRef, PlayerInfo> PlayerInfos { get; }
 
-        private ChangeDetector _changeDetector;
-
         [SerializeField]
         private RolesSetup _rolesSetup;
 
+        [Networked]
+        public bool GameDataReady { get; set; }
+
+        private ChangeDetector _changeDetector;
+
         public event Action OnPlayerNicknamesChanged;
 
+        public event Action OnInvalidRolesSetupReceived;
+
+        public event Action OnGameDataReadyChanged;
+
         public static event Action OnSpawned;
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
 
         public override void Spawned()
         {
@@ -70,6 +82,12 @@ namespace Werewolf.Network
                             OnPlayerNicknamesChanged();
                         }
                         break;
+                    case nameof(GameDataReady):
+                        if (OnGameDataReadyChanged != null)
+                        {
+                            OnGameDataReadyChanged();
+                        }
+                        break;
                 }
             }
         }
@@ -86,19 +104,38 @@ namespace Werewolf.Network
         }
 
         [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-        public void RPC_SetRolesSetup(RolesSetup rolesSetup, RpcInfo info = default)
+        public void RPC_SetRolesSetup(RolesSetup rolesSetup, int minPlayerCount, RpcInfo info = default)
         {
-            if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader)
+            if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader
+                || GameDataReady
+                || PlayerInfos.Count < minPlayerCount)
             {
                 return;
             }
 
-            _rolesSetup = rolesSetup;
+            if (!IsSetupValid(rolesSetup, minPlayerCount))
+            {
+                RPC_WarnInvalidRolesSetup(info.Source);
+                return;
+            }
 
-            // In an other scripts
-            // TODO: Lock the room
-            // TODO: Switch scene
-            // TODO: Start game loop
+            _rolesSetup = rolesSetup;
+            GameDataReady = true;
+        }
+
+        private bool IsSetupValid(RolesSetup rolesSetup, int minPlayerCount)
+        {
+            //TODO: Check if setup is valid
+            return true;
+        }
+
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_WarnInvalidRolesSetup([RpcTarget] PlayerRef player)
+        {
+            if (OnInvalidRolesSetupReceived != null)
+            {
+                OnInvalidRolesSetupReceived();
+            }
         }
 
         public static RolesSetup ConvertToRolesSetup(GameSetupData gameSetupData)
