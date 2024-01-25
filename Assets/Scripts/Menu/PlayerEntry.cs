@@ -22,7 +22,7 @@ namespace Werewolf
         private Image _leader;
 
         [SerializeField]
-        private TMP_Text _nickname;
+        private TMP_Text _nicknameText;
 
         [SerializeField]
         private Color _currentPlayerColor = Color.yellow;
@@ -30,11 +30,11 @@ namespace Werewolf
         [SerializeField]
         private Color _otherPlayerColor = Color.white;
 
-        public void SetPlayerData(PlayerInfo playerInfo, PlayerRef localPlayer)
+        public void SetPlayerData(PlayerInfo playerInfo, PlayerRef localPlayer, bool isOdd)
         {
-            _background.color = transform.GetSiblingIndex() % 2 > 0 ? _oddBackgroundColor : _evenBackgroundColor;
-            _nickname.text = playerInfo.Nickname;
-            _nickname.color = playerInfo.PlayerRef == localPlayer ? _currentPlayerColor : _otherPlayerColor;
+            _background.color = isOdd ? _oddBackgroundColor : _evenBackgroundColor;
+            _nicknameText.text = playerInfo.Nickname;
+            _nicknameText.color = playerInfo.PlayerRef == localPlayer ? _currentPlayerColor : _otherPlayerColor;
             _leader.enabled = playerInfo.IsLeader;
         }
     }

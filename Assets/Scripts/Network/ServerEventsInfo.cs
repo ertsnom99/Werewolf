@@ -20,7 +20,7 @@ namespace Werewolf.Network
             {
                 TIME_COUNTER = TIMEOUT;
 
-                if (Runner != null && Runner.IsServer)
+                if (Runner && Runner.IsServer)
                 {
                     string msg = $"Total Players: {Runner.ActivePlayers.Count()}";
 
