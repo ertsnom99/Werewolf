@@ -6,7 +6,7 @@ using Werewolf.Network;
 
 namespace Werewolf
 {
-    public class GameManager : MonoSingleton<GameManager>
+    public class GameManager : NetworkBehaviourSingleton<GameManager>
     {
         public List<RoleData> RolesToDistribute { get; private set; }
 
