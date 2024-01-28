@@ -1,3 +1,5 @@
+using Fusion;
+using TMPro;
 using UnityEngine;
 using Werewolf.Data;
 
@@ -9,7 +11,13 @@ namespace Werewolf
         private float _thickness = 0.026f;
 
         [SerializeField]
+        private Transform _card;
+
+        [SerializeField]
         private SpriteRenderer _roleImage;
+
+        [SerializeField]
+        private TMP_Text _nicknameText;
 
         [field: SerializeField]
         [field: ReadOnly]
@@ -17,11 +25,11 @@ namespace Werewolf
 
         [field: SerializeField]
         [field: ReadOnly]
-        public RoleData Role { get; private set; }
+        public PlayerRef Player { get; private set; }
 
         [field: SerializeField]
         [field: ReadOnly]
-        public RoleBehavior Behavior { get; private set; }
+        public RoleData Role { get; private set; }
 
 #if UNITY_EDITOR
         private void Awake()
@@ -34,15 +42,21 @@ namespace Werewolf
             IsFaceUp = false;
         }
 #endif
+
+        public void SetPlayer(PlayerRef player)
+        {
+            Player = player;
+        }
+
         public void SetRole(RoleData role)
         {
             Role = role;
             _roleImage.sprite = role.Image;
         }
 
-        public void SetBehavior(RoleBehavior behavior)
+        public void SetNickname(string nickname)
         {
-            Behavior = behavior;
+            _nicknameText.text = nickname;
         }
 
         public void Flip()
@@ -58,8 +72,8 @@ namespace Werewolf
                 direction = Vector3.down;
             }
 
-            transform.position += direction * _thickness;
-            transform.rotation *= Quaternion.AngleAxis(180, Vector3.forward);
+            _card.position += direction * _thickness;
+            _card.rotation *= Quaternion.AngleAxis(180, Vector3.forward);
 
             IsFaceUp = !IsFaceUp;
         }
