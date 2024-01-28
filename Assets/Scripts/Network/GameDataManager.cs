@@ -39,8 +39,8 @@ namespace Werewolf.Network
         [Networked, Capacity(LaunchManager.MAX_PLAYER_COUNT)]
         public NetworkDictionary<PlayerRef, PlayerInfo> PlayerInfos { get; }
 
-        [SerializeField]
-        private RolesSetup _rolesSetup;
+        [field:SerializeField]
+        public RolesSetup RolesSetup { get; private set; }
 
         [Networked]
         public bool GameDataReady { get; set; }
@@ -119,7 +119,7 @@ namespace Werewolf.Network
                 return;
             }
 
-            _rolesSetup = rolesSetup;
+            RolesSetup = rolesSetup;
             GameDataReady = true;
         }
 
@@ -138,6 +138,7 @@ namespace Werewolf.Network
             }
         }
 
+        #region Convertion Methods
         public static RolesSetup ConvertToRolesSetup(GameSetupData gameSetupData)
         {
             RolesSetup rolesSetup = new()
@@ -171,6 +172,35 @@ namespace Werewolf.Network
 
             return roleSetup;
         }
+
+        public static void ConvertToRoleSetupDatas(NetworkArray<RoleSetup> roleSetups, out List<RoleSetupData> roleSetupDatas)
+        {
+            GameplayDatabaseManager _gameplayDatabaseManager = GameplayDatabaseManager.Instance;
+
+            roleSetupDatas = new List<RoleSetupData>();
+
+            foreach (RoleSetup roleSetup in roleSetups)
+            {
+                if (roleSetup.UseCount <= 0)
+                {
+                    return;
+                }
+
+                RoleData[] Pool = new RoleData[roleSetup.UseCount];
+
+                for (int i = 0; i < roleSetup.UseCount; i++)
+                {
+                    Pool[i] = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleSetup.Pool[i]);
+                }
+
+                roleSetupDatas.Add(new RoleSetupData
+                {
+                    Pool = Pool,
+                    UseCount = roleSetup.UseCount
+                });
+            }
+        }
+        #endregion
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {

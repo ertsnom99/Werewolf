@@ -19,15 +19,17 @@ namespace Werewolf.Network
 
         public void OnSceneLoadDone(NetworkRunner runner)
         {
-            if (runner.SceneManager.MainRunnerScene.buildIndex != (int)SceneDefs.MENU)
+            switch (runner.SceneManager.MainRunnerScene.buildIndex)
             {
-                return;
+                case (int)SceneDefs.MENU:
+                    _gameDataManager = runner.Spawn(_gameDataManagerPrefab, Vector3.zero, Quaternion.identity);
+                    _gameDataManager.OnGameDataReadyChanged += OnGameDataReadyChanged;
+                    runner.AddCallbacks(_gameDataManager);
+                    break;
+                case (int)SceneDefs.GAME:
+                    GameManager.Instance.StartGame(_gameDataManager.RolesSetup);
+                    break;
             }
-
-            _gameDataManager = runner.Spawn(_gameDataManagerPrefab, Vector3.zero, Quaternion.identity);
-            runner.AddCallbacks(_gameDataManager);
-
-            _gameDataManager.OnGameDataReadyChanged += OnGameDataReadyChanged;
         }
 
         private void OnGameDataReadyChanged()
@@ -60,6 +62,7 @@ namespace Werewolf.Network
                 return;
             }
 
+            // TODO: If a player leave after the game started, give him a mark for death
             Log.Info($"Player left: {player}");
 
             if (runner.ActivePlayers.Count() > 0)
