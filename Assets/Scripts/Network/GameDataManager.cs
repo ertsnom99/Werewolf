@@ -92,7 +92,7 @@ namespace Werewolf.Network
             }
         }
 
-        [Rpc(RpcSources.Proxies, RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
         public void RPC_SetPlayerNickname(PlayerRef playerRef, string nickname)
         {
             PlayerInfo playerData = new PlayerInfo();
@@ -186,16 +186,21 @@ namespace Werewolf.Network
                     return;
                 }
 
-                RoleData[] Pool = new RoleData[roleSetup.UseCount];
+                List<RoleData> Pool = new List<RoleData>();
 
-                for (int i = 0; i < roleSetup.UseCount; i++)
+                foreach(int role in roleSetup.Pool)
                 {
-                    Pool[i] = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleSetup.Pool[i]);
+                    if (role <= 0)
+                    {
+                        continue;
+                    }
+
+                    Pool.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(role));
                 }
 
                 roleSetupDatas.Add(new RoleSetupData
                 {
-                    Pool = Pool,
+                    Pool = Pool.ToArray(),
                     UseCount = roleSetup.UseCount
                 });
             }
