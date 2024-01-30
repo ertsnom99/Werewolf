@@ -1,30 +1,21 @@
 using Fusion;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Werewolf.Data;
 using Werewolf.Network;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 namespace Werewolf
 {
     public class GameManager : NetworkBehaviourSingleton<GameManager>
     {
-        private struct IndexedReservedRoles
-        {
-            public RoleData[] Roles;
-            public RoleBehavior[] Behaviors;
-            public int networkIndex;
-        }
+        #region Server variables
+        public List<RoleData> RolesToDistribute { get; private set; }
 
-        [Serializable]
-        public struct RolesContainer : INetworkStruct
-        {
-            [Networked, Capacity(5)]
-            public NetworkArray<int> Roles { get; }
-        }
+        private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new Dictionary<RoleBehavior, RoleData>();
+
+        private Dictionary<PlayerRef, PlayerRole> _playerRoles = new Dictionary<PlayerRef, PlayerRole>();
 
         private struct PlayerRole
         {
@@ -32,21 +23,33 @@ namespace Werewolf
             public RoleBehavior Behavior;
         }
 
-        public List<RoleData> RolesToDistribute { get; private set; }
-
-        private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new Dictionary<RoleBehavior, RoleData>();
-
         private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new Dictionary<RoleBehavior, IndexedReservedRoles>();
 
+        private struct IndexedReservedRoles
+        {
+            public RoleData[] Roles;
+            public RoleBehavior[] Behaviors;
+            public int networkIndex;
+        }
+#if UNITY_SERVER && UNITY_EDITOR
+        private Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new Dictionary<RoleBehavior, Card[]>();
+#endif
+        #endregion
+
+        #region Networked variables
         [Networked, Capacity(5)]
         public NetworkArray<RolesContainer> ReservedRoles { get; }
 
-        private Dictionary<PlayerRef, PlayerRole> _playerRoles = new Dictionary<PlayerRef, PlayerRole>();
+        [Serializable]
+        public struct RolesContainer : INetworkStruct
+        {
+            public int RoleCount;
+            [Networked, Capacity(5)]
+            public NetworkArray<int> Roles { get; }
+        }
+        #endregion
 
-        private GameDataManager _gameDataManager;
-
-#if !UNITY_SERVER || UNITY_EDITOR
-        [Header("Layout")]
+        [Header("Visual")]
         [SerializeField]
         private Card _cardPrefab;
 
@@ -56,10 +59,10 @@ namespace Werewolf
         [SerializeField]
         private AnimationCurve _cameraOffset;
 
-        private Card[] _cards;
+        private Dictionary<PlayerRef, Card> _playerCards = new Dictionary<PlayerRef, Card>();
+        private Card[][] _reservedRolesCards;
 
-        private Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new Dictionary<RoleBehavior, Card[]>();
-#endif
+        private GameDataManager _gameDataManager;
 
         public event Action OnPreRoleDistribution = delegate { };
         public event Action OnPostRoleDistribution = delegate { };
@@ -74,12 +77,7 @@ namespace Werewolf
 
             RolesToDistribute = new List<RoleData>();
         }
-        private void Start()
-        {
-            CreatePlayerCards();
-            CreateReservedRoleCards();
-            AdjustCamera();
-        }
+
         public void StartGame(RolesSetup rolesSetup)
         {
             GetGameDataManager();
@@ -90,13 +88,26 @@ namespace Werewolf
             DistributeRoles();
             OnPostRoleDistribution();
 
-#if UNITY_EDITOR
-            CreatePlayerCards();
-            CreateReservedRoleCards();
+#if UNITY_SERVER && UNITY_EDITOR
+            CreatePlayerCardsForServer();
+            CreateReservedRoleCardsForServer();
             AdjustCamera();
 #endif
-            // TODO: Tell all player what role they have. They only instanciate all the cards at that moment
+
+            // TODO: better solution then waiting 3 sec to be sure scene change happened for clients
+            StartCoroutine(WaitCall(3));
+
             // TODO: Start game loop
+        }
+
+        private IEnumerator WaitCall(float waitTime)
+        {
+            yield return new WaitForSeconds(waitTime);
+
+            foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
+            {
+                RPC_TellPlayerRole(playerInfo.Key, _playerRoles[playerInfo.Key].Data.GameplayTag.CompactTagId);
+            }
         }
 
         #region Pre Gameplay Loop
@@ -251,6 +262,8 @@ namespace Werewolf
             RolesContainer rolesContainer = new();
             RoleBehavior[] behaviors = new RoleBehavior[roles.Length];
 
+            rolesContainer.RoleCount = roles.Length;
+
             for (int i = 0; i < roles.Length; i++)
             {
                 rolesContainer.Roles.Set(i, AreFaceUp ? roles[i].GameplayTag.CompactTagId : -1);
@@ -270,14 +283,27 @@ namespace Werewolf
             _reservedRolesByBehavior.Add(roleBehavior, new IndexedReservedRoles { Roles = roles, Behaviors = behaviors, networkIndex = _reservedRolesByBehavior.Count });
         }
         #endregion
+        #endregion
 
+        #region RPC calls
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_TellPlayerRole([RpcTarget] PlayerRef player, int role)
+        {
+            if (!_gameDataManager)
+            {
+                GetGameDataManager();
+            }
+
+            CreatePlayerCards(player, GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(role));
+            CreateReservedRoleCards();
+            AdjustCamera();
+        }
         #endregion
 
         #region Visual
-        private void CreatePlayerCards()
+#if UNITY_SERVER && UNITY_EDITOR
+        private void CreatePlayerCardsForServer()
         {
-            _cards = new Card[_playerRoles.Count];
-
             float rotationIncrement = 360.0f / _playerRoles.Count;
             Vector3 startingPosition = STARTING_DIRECTION * _cardsOffset.Evaluate(_playerRoles.Count);
 
@@ -296,8 +322,6 @@ namespace Werewolf
                 card.SetNickname(_gameDataManager.PlayerInfos[playerRole.Key].Nickname);
                 card.Flip();
 
-                _cards[counter] = card;
-
                 if (!playerRole.Value.Behavior)
                 {
                     continue;
@@ -309,7 +333,7 @@ namespace Werewolf
             }
         }
 
-        private void CreateReservedRoleCards()
+        private void CreateReservedRoleCardsForServer()
         {
             int rowCounter = 0;
 
@@ -329,7 +353,6 @@ namespace Werewolf
                     card.SetRole(role);
                     card.Flip();
 
-                    _cards[columnCounter] = card;
                     columnCounter++;
                 }
 
@@ -337,10 +360,115 @@ namespace Werewolf
                 rowCounter++;
             }
         }
+#endif
+        private void CreatePlayerCards(PlayerRef bottomPlayer, RoleData playerRole)
+        {
+            NetworkDictionary<PlayerRef, PlayerInfo> playerInfos = _gameDataManager.PlayerInfos;
+            int playerCount = playerInfos.Count;
+            
+            int counter = -1;
+            int rotationOffset = -1;
+
+            float rotationIncrement = 360.0f / playerCount;
+            Vector3 startingPosition = STARTING_DIRECTION * _cardsOffset.Evaluate(playerCount);
+
+            // Offset the rotation to keep bottomPlayer at the bottom
+            foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in playerInfos)
+            {
+                if (playerInfo.Key == bottomPlayer)
+                {
+                    break;
+                }
+
+                rotationOffset--;
+            }
+
+            // Create cards
+            foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in playerInfos)
+            {
+                counter++;
+                rotationOffset++;
+
+                Quaternion rotation = Quaternion.Euler(0, rotationIncrement * rotationOffset, 0);
+
+                Card card = Instantiate(_cardPrefab, rotation * startingPosition, rotation);
+
+                card.SetPlayer(playerInfo.Key);
+                card.SetNickname(playerInfo.Value.Nickname);
+
+                if (playerInfo.Key == bottomPlayer)
+                {
+                    card.SetRole(playerRole);
+                    card.Flip();
+                }
+
+                _playerCards.Add(playerInfo.Key, card);
+            }
+        }
+
+        private void CreateReservedRoleCards()
+        {
+            // Must figure out how many actual row are in the networked data
+            int rowCount = 0;
+
+            foreach (RolesContainer rolesContainer in ReservedRoles)
+            {
+                if (rolesContainer.RoleCount <= 0)
+                {
+                    break;
+                }
+
+                rowCount++;
+            }
+
+            _reservedRolesCards = new Card[rowCount][];
+
+            int rowCounter = 0;
+
+            // Create the reserved cards
+            foreach (RolesContainer reservedRole in ReservedRoles)
+            {
+                _reservedRolesCards[rowCounter] = new Card[reservedRole.RoleCount];
+
+                Vector3 rowPosition = (Vector3.back * rowCounter * RESERVED_ROLES_SPACING) + (Vector3.forward * (rowCount - 1) * RESERVED_ROLES_SPACING / 2.0f);
+                
+                int columnCounter = 0;
+
+                foreach (int roleGameplayTagID in reservedRole.Roles)
+                {
+                    Vector3 columnPosition = (Vector3.right * columnCounter * RESERVED_ROLES_SPACING) + (Vector3.left * (reservedRole.RoleCount - 1) * RESERVED_ROLES_SPACING / 2.0f);
+
+                    Card card = Instantiate(_cardPrefab, rowPosition + columnPosition, Quaternion.identity);
+
+                    if (roleGameplayTagID > 0)
+                    {
+                        RoleData role = GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(roleGameplayTagID);
+                        card.SetRole(role);
+                        card.Flip();
+                    }
+
+                    _reservedRolesCards[rowCounter][columnCounter] = card;
+
+                    columnCounter++;
+
+                    if (columnCounter >= reservedRole.RoleCount)
+                    {
+                        break;
+                    }
+                }
+
+                rowCounter++;
+
+                if (rowCounter >= rowCount)
+                {
+                    break;
+                }
+            }
+        }
 
         private void AdjustCamera()
         {
-            Camera.main.transform.position = Camera.main.transform.position.normalized * _cameraOffset.Evaluate(_playerRoles.Count);
+            Camera.main.transform.position = Camera.main.transform.position.normalized * _cameraOffset.Evaluate(_gameDataManager.PlayerInfos.Count);
         }
         #endregion
     }
