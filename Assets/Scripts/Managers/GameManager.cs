@@ -34,6 +34,10 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
         private Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new Dictionary<RoleBehavior, Card[]>();
 #endif
+        private List<PlayerRef> _playersReady = new List<PlayerRef>();
+
+        private bool _rolesDistributionDone = false;
+        private bool _allPlayersReady = false;
         #endregion
 
         #region Networked variables
@@ -93,20 +97,12 @@ namespace Werewolf
             CreateReservedRoleCardsForServer();
             AdjustCamera();
 #endif
-
-            // TODO: better solution then waiting 3 sec to be sure scene change happened for clients
-            StartCoroutine(WaitCall(3));
-
-            // TODO: Start game loop
-        }
-
-        private IEnumerator WaitCall(float waitTime)
-        {
-            yield return new WaitForSeconds(waitTime);
-
-            foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
+            _rolesDistributionDone = true;
+            
+            if (_allPlayersReady)
             {
-                RPC_TellPlayerRole(playerInfo.Key, _playerRoles[playerInfo.Key].Data.GameplayTag.CompactTagId);
+                // TODO: Start game loop
+                SendPlayerRoles();
             }
         }
 
@@ -254,6 +250,14 @@ namespace Werewolf
         {
             RolesToDistribute.Remove(role);
         }
+
+        private void SendPlayerRoles()
+        {
+            foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
+            {
+                RPC_TellPlayerRole(playerInfo.Key, _playerRoles[playerInfo.Key].Data.GameplayTag.CompactTagId);
+            }
+        }
         #endregion
 
         #region Roles reservation
@@ -286,6 +290,30 @@ namespace Werewolf
         #endregion
 
         #region RPC calls
+        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+        public void RPC_ConfirmPlayerReady(RpcInfo info = default)
+        {
+            if (_playersReady.Contains(info.Source))
+            {
+                return;
+            }
+
+            _playersReady.Add(info.Source);
+
+            if (!_gameDataManager)
+            {
+                GetGameDataManager();
+            }
+
+            _allPlayersReady = true;
+
+            if (_rolesDistributionDone)
+            {
+                // TODO: Start game loop
+                SendPlayerRoles();
+            }
+        }
+
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
         public void RPC_TellPlayerRole([RpcTarget] PlayerRef player, int role)
         {
