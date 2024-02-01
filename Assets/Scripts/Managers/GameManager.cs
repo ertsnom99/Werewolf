@@ -1,7 +1,7 @@
 using Fusion;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
@@ -51,6 +51,8 @@ namespace Werewolf
             [Networked, Capacity(5)]
             public NetworkArray<int> Roles { get; }
         }
+
+        private PlayerRef[][] _nightCalls;
         #endregion
 
         [Header("Visual")]
@@ -92,18 +94,15 @@ namespace Werewolf
             DistributeRoles();
             OnPostRoleDistribution();
 
+            DetermineNightCalls();
 #if UNITY_SERVER && UNITY_EDITOR
             CreatePlayerCardsForServer();
             CreateReservedRoleCardsForServer();
             AdjustCamera();
+            LogNightCalls();
 #endif
             _rolesDistributionDone = true;
-            
-            if (_allPlayersReady)
-            {
-                // TODO: Start game loop
-                SendPlayerRoles();
-            }
+            CheckGameReadyToStart();
         }
 
         #region Pre Gameplay Loop
@@ -251,6 +250,81 @@ namespace Werewolf
             RolesToDistribute.Remove(role);
         }
 
+        private void DetermineNightCalls()
+        {
+            // Remove any players that do not need to be called at night
+            List<PlayerRef> players = _playerRoles.Keys.ToList();
+
+            for (int i = players.Count - 1; i >= 0; i--)
+            {
+                if (_playerRoles[players[i]].Data.NightPriorities.Length > 0)
+                {
+                    continue;
+                }
+
+                players.RemoveAt(i);
+            }
+
+            // Make a list of all different priorities
+            List<int> priorities = new List<int>();
+
+            foreach (PlayerRef player in players)
+            {
+                foreach (int priority in _playerRoles[player].Data.NightPriorities)
+                {
+                    if (priorities.Contains(priority))
+                    {
+                        continue;
+                    }
+
+                    priorities.Add(priority);
+                }
+            }
+
+            priorities.Sort();
+
+            // Loop threw the priorities and store all players with similare priorities together
+            _nightCalls = new PlayerRef[priorities.Count][];
+
+            for (int i = 0; i < priorities.Count; i++)
+            {
+                List<PlayerRef> playersToCall = new List<PlayerRef>();
+
+                foreach (PlayerRef player in players)
+                {
+                    foreach (int priority in _playerRoles[player].Data.NightPriorities)
+                    {
+                        if (priority == priorities[i])
+                        {
+                            playersToCall.Add(player);
+                            break;
+                        }
+                    }
+                }
+
+                _nightCalls[i] = playersToCall.ToArray();
+            }
+        }
+#if UNITY_SERVER && UNITY_EDITOR
+        private void LogNightCalls()
+        {
+            Debug.Log("----------------------Night Calls----------------------");
+             
+            foreach (PlayerRef[] nightCall in _nightCalls)
+            {
+                string roles = "";
+
+                foreach (PlayerRef player in nightCall)
+                {
+                    roles += _playerRoles[player].Data.Name + " || ";
+                }
+
+                Debug.Log(roles);
+            }
+
+            Debug.Log("-------------------------------------------------------");
+        }
+#endif
         private void SendPlayerRoles()
         {
             foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
@@ -287,6 +361,15 @@ namespace Werewolf
             _reservedRolesByBehavior.Add(roleBehavior, new IndexedReservedRoles { Roles = roles, Behaviors = behaviors, networkIndex = _reservedRolesByBehavior.Count });
         }
         #endregion
+
+        private void CheckGameReadyToStart()
+        {
+            if (_rolesDistributionDone && _allPlayersReady)
+            {
+                SendPlayerRoles();
+                // TODO: Start game loop
+            }
+        }
         #endregion
 
         #region RPC calls
@@ -306,12 +389,7 @@ namespace Werewolf
             }
 
             _allPlayersReady = true;
-
-            if (_rolesDistributionDone)
-            {
-                // TODO: Start game loop
-                SendPlayerRoles();
-            }
+            CheckGameReadyToStart();
         }
 
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
