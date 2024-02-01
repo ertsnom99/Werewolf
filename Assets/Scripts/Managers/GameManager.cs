@@ -52,7 +52,7 @@ namespace Werewolf
             public NetworkArray<int> Roles { get; }
         }
 
-        private PlayerRef[][] _nightCalls;
+        private List<List<PlayerRef>> _nightCalls = new List<List<PlayerRef>>();
         #endregion
 
         [Header("Visual")]
@@ -284,8 +284,6 @@ namespace Werewolf
             priorities.Sort();
 
             // Loop threw the priorities and store all players with similare priorities together
-            _nightCalls = new PlayerRef[priorities.Count][];
-
             for (int i = 0; i < priorities.Count; i++)
             {
                 List<PlayerRef> playersToCall = new List<PlayerRef>();
@@ -302,7 +300,7 @@ namespace Werewolf
                     }
                 }
 
-                _nightCalls[i] = playersToCall.ToArray();
+                _nightCalls.Add(playersToCall);
             }
         }
 #if UNITY_SERVER && UNITY_EDITOR
@@ -310,7 +308,7 @@ namespace Werewolf
         {
             Debug.Log("----------------------Night Calls----------------------");
              
-            foreach (PlayerRef[] nightCall in _nightCalls)
+            foreach (List<PlayerRef> nightCall in _nightCalls)
             {
                 string roles = "";
 
