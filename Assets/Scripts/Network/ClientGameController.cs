@@ -12,23 +12,33 @@ namespace Werewolf.Network
     public class ClientGameController : MonoBehaviour, INetworkRunnerCallbacks
     {
         [SerializeField]
-        private float _confirmReadyDelay = .1f;
+        private float _confirmReadyToReceiveRoleDelay = .1f;
+        [SerializeField]
+        private float _confirmReadyToPlayDelay = 10.0f;
 
         public void OnSceneLoadDone(NetworkRunner runner)
         {
             switch (runner.SceneManager.MainRunnerScene.buildIndex)
             {
                 case (int)SceneDefs.GAME:
-                    StartCoroutine(ConfirmReady());
+                    StartCoroutine(ConfirmReadyToReceiveRole());
+                    StartCoroutine(ConfirmReadyToPlay());
                     break;
             }
         }
 
-        private IEnumerator ConfirmReady()
+        private IEnumerator ConfirmReadyToReceiveRole()
         {
-            yield return new WaitForSeconds(_confirmReadyDelay);
+            yield return new WaitForSeconds(_confirmReadyToReceiveRoleDelay);
 
-            GameManager.Instance.RPC_ConfirmPlayerReady();
+            GameManager.Instance.RPC_ConfirmPlayerReadyToReceiveRole();
+        }
+
+        private IEnumerator ConfirmReadyToPlay()
+        {
+            yield return new WaitForSeconds(_confirmReadyToPlayDelay);
+
+            GameManager.Instance.RPC_ConfirmPlayerReadyToPlay();
         }
 
         #region Unused Callbacks

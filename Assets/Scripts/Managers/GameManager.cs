@@ -37,7 +37,9 @@ namespace Werewolf
         private List<PlayerRef> _playersReady = new List<PlayerRef>();
 
         private bool _rolesDistributionDone = false;
-        private bool _allPlayersReady = false;
+        private bool _allPlayersReadyToReceiveRole = false;
+        private bool _allRolesSent = false;
+        private bool _allPlayersReadyToPlay = false;
         #endregion
 
         #region Networked variables
@@ -101,8 +103,7 @@ namespace Werewolf
             AdjustCamera();
             LogNightCalls();
 #endif
-            _rolesDistributionDone = true;
-            CheckGameReadyToStart();
+            CheckPreGameplayLoopProgress();
         }
 
         #region Pre Gameplay Loop
@@ -238,6 +239,8 @@ namespace Werewolf
 
                 _playerRoles.Add(playerInfo.Key, new PlayerRole { Data = selectedRole, Behavior = selectedBehavior });
             }
+
+            _rolesDistributionDone = true;
         }
 
         public void AddRolesToDistribute(RoleData[] roles)
@@ -329,6 +332,8 @@ namespace Werewolf
             {
                 RPC_TellPlayerRole(playerInfo.Key, _playerRoles[playerInfo.Key].Data.GameplayTag.CompactTagId);
             }
+
+            _allRolesSent = true;
         }
         #endregion
 
@@ -360,34 +365,33 @@ namespace Werewolf
         }
         #endregion
 
-        private void CheckGameReadyToStart()
+        private void CheckPreGameplayLoopProgress()
         {
-            if (_rolesDistributionDone && _allPlayersReady)
+            if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
             {
                 SendPlayerRoles();
+            }
+            else if (_allRolesSent && _allPlayersReadyToPlay)
+            {
                 // TODO: Start game loop
+                Debug.LogError("GAME STARTS!!!");
             }
         }
         #endregion
 
         #region RPC calls
         [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-        public void RPC_ConfirmPlayerReady(RpcInfo info = default)
+        public void RPC_ConfirmPlayerReadyToReceiveRole(RpcInfo info = default)
         {
-            if (_playersReady.Contains(info.Source))
+            if (!AddPlayerReady(info.Source))
             {
                 return;
             }
 
-            _playersReady.Add(info.Source);
+            _allPlayersReadyToReceiveRole = true;
+            _playersReady.Clear();
 
-            if (!_gameDataManager)
-            {
-                GetGameDataManager();
-            }
-
-            _allPlayersReady = true;
-            CheckGameReadyToStart();
+            CheckPreGameplayLoopProgress();
         }
 
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -402,7 +406,42 @@ namespace Werewolf
             CreateReservedRoleCards();
             AdjustCamera();
         }
+
+        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+        public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
+        {
+            if (!AddPlayerReady(info.Source))
+            {
+                return;
+            }
+
+            _allPlayersReadyToPlay = true;
+
+            CheckPreGameplayLoopProgress();
+        }
         #endregion
+
+        private bool AddPlayerReady(PlayerRef player)
+        {
+            if (_playersReady.Contains(player))
+            {
+                return false;
+            }
+
+            _playersReady.Add(player);
+
+            if (!_gameDataManager)
+            {
+                GetGameDataManager();
+            }
+
+            if (_playersReady.Count < _gameDataManager.PlayerInfos.Count)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         #region Visual
 #if UNITY_SERVER && UNITY_EDITOR
