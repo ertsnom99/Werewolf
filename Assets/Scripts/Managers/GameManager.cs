@@ -72,8 +72,12 @@ namespace Werewolf
 
         private GameDataManager _gameDataManager;
 
+        // Server events
         public event Action OnPreRoleDistribution = delegate { };
         public event Action OnPostRoleDistribution = delegate { };
+
+        // Client events
+        public event Action OnRoleReceived = delegate { };
 
         private readonly int AVAILABLE_ROLES_MAX_ATTEMPT_COUNT = 100;
         private readonly Vector3 STARTING_DIRECTION = Vector3.back;
@@ -391,6 +395,8 @@ namespace Werewolf
             _allPlayersReadyToReceiveRole = true;
             _playersReady.Clear();
 
+            Log.Info("All players are ready!");
+
             CheckPreGameplayLoopProgress();
         }
 
@@ -405,6 +411,8 @@ namespace Werewolf
             CreatePlayerCards(player, GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(role));
             CreateReservedRoleCards();
             AdjustCamera();
+
+            OnRoleReceived();
         }
 
         [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -429,6 +437,8 @@ namespace Werewolf
             }
 
             _playersReady.Add(player);
+
+            Log.Info($"{player} is ready!");
 
             if (!_gameDataManager)
             {

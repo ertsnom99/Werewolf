@@ -57,3 +57,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df4d7bab43a54a548bffd2a48df2f033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _confirmReadyToReceiveRoleDelay: 1
+  _confirmReadyToPlayDelay: 2

@@ -12,17 +12,28 @@ namespace Werewolf.Network
     public class ClientGameController : MonoBehaviour, INetworkRunnerCallbacks
     {
         [SerializeField]
-        private float _confirmReadyToReceiveRoleDelay = .1f;
+        private float _confirmReadyToReceiveRoleDelay = 1.0f;
         [SerializeField]
         private float _confirmReadyToPlayDelay = 10.0f;
+
+        private LoadingScreen _loadingScreen;
 
         public void OnSceneLoadDone(NetworkRunner runner)
         {
             switch (runner.SceneManager.MainRunnerScene.buildIndex)
             {
                 case (int)SceneDefs.GAME:
+                    _loadingScreen = FindObjectOfType<LoadingScreen>();
+
+                    if (!_loadingScreen)
+                    {
+                        Debug.LogError("ClientGameController could not find a LoadingScreen object in the main scene");
+                        return;
+                    }
+
+                    // TODO: Check if a more realible way exist
                     StartCoroutine(ConfirmReadyToReceiveRole());
-                    StartCoroutine(ConfirmReadyToPlay());
+                    GameManager.Instance.OnRoleReceived += StartLoadingFade;
                     break;
             }
         }
@@ -30,14 +41,18 @@ namespace Werewolf.Network
         private IEnumerator ConfirmReadyToReceiveRole()
         {
             yield return new WaitForSeconds(_confirmReadyToReceiveRoleDelay);
-
             GameManager.Instance.RPC_ConfirmPlayerReadyToReceiveRole();
         }
 
-        private IEnumerator ConfirmReadyToPlay()
+        private void StartLoadingFade()
         {
-            yield return new WaitForSeconds(_confirmReadyToPlayDelay);
+            _loadingScreen.OnFadeInOver += ConfirmReadyToPlay;
+            _loadingScreen.FadeIn();
+        }
 
+        private void ConfirmReadyToPlay()
+        {
+            _loadingScreen.OnFadeInOver -= ConfirmReadyToPlay;
             GameManager.Instance.RPC_ConfirmPlayerReadyToPlay();
         }
 
