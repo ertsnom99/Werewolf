@@ -53,7 +53,7 @@ namespace Werewolf.Network
 
         public event Action OnGameDataReadyChanged;
 
-        public static event Action OnSpawned;
+        public static event Action OnSpawned = delegate { };
 
         private void Awake()
         {
@@ -64,10 +64,7 @@ namespace Werewolf.Network
         {
             _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
-            if (OnSpawned != null)
-            {
-                OnSpawned();
-            }
+            OnSpawned();
         }
 
         public override void Render()
