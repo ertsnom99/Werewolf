@@ -11,11 +11,6 @@ namespace Werewolf.Network
     [SimulationBehaviour(Modes = SimulationModes.Client)]
     public class ClientGameController : MonoBehaviour, INetworkRunnerCallbacks
     {
-        [SerializeField]
-        private float _confirmReadyToReceiveRoleDelay = 1.0f;
-        [SerializeField]
-        private float _confirmReadyToPlayDelay = 10.0f;
-
         private LoadingScreen _loadingScreen;
 
         public void OnSceneLoadDone(NetworkRunner runner)
@@ -31,16 +26,32 @@ namespace Werewolf.Network
                         return;
                     }
 
-                    // TODO: Check if a more realible way exist
-                    StartCoroutine(ConfirmReadyToReceiveRole());
-                    GameManager.Instance.OnRoleReceived += StartLoadingFade;
+                    if (!GameManager.spawned)
+                    {
+                        GameManager.OnSpawned += OnGameManagerSpawned;
+                    }
+                    else
+                    {
+                        OnGameManagerSpawned();
+                    }
+
                     break;
             }
         }
 
+        private void OnGameManagerSpawned()
+        {
+            StartCoroutine(ConfirmReadyToReceiveRole());
+            GameManager.Instance.OnRoleReceived += StartLoadingFade;
+        }
+
         private IEnumerator ConfirmReadyToReceiveRole()
         {
-            yield return new WaitForSeconds(_confirmReadyToReceiveRoleDelay);
+            while (!GameManager.Instance.Object.IsValid)
+            {
+                yield return 0;
+            }
+
             GameManager.Instance.RPC_ConfirmPlayerReadyToReceiveRole();
         }
 

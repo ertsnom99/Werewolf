@@ -72,6 +72,9 @@ namespace Werewolf
 
         private GameDataManager _gameDataManager;
 
+        public static event Action OnSpawned = delegate { };
+        public static bool spawned = false;
+
         // Server events
         public event Action OnPreRoleDistribution = delegate { };
         public event Action OnPostRoleDistribution = delegate { };
@@ -88,6 +91,12 @@ namespace Werewolf
             base.Awake();
 
             RolesToDistribute = new List<RoleData>();
+        }
+
+        public override void Spawned()
+        {
+            spawned = true;
+            OnSpawned();
         }
 
         public void StartGame(RolesSetup rolesSetup)
