@@ -39,6 +39,19 @@ namespace Werewolf
             _mainMenu.ResetMenu("");
         }
 
+        private void Start()
+        {
+            if (CommandLineUtilities.TryGetArg(out string nickname, "-nickname"))
+            {
+                _mainMenu.SetNickname(nickname);
+            }
+
+            if (CommandLineUtilities.TryGetArg(out string sessionName, "-sessionName"))
+            {
+                _mainMenu.SetSessionName(sessionName);
+            }
+        }
+
         public void JoinGame()
         {
             if (!_mainMenu)

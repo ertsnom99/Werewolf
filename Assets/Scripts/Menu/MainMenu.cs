@@ -59,6 +59,11 @@ namespace Werewolf
             return _nicknameInputField.text;
         }
 
+        public void SetNickname(string nickname)
+        {
+            _nicknameInputField.text = nickname;
+        }
+
         public string GetSessionName()
         {
             if (!_sessionNameInputField)
@@ -67,6 +72,11 @@ namespace Werewolf
             }
 
             return _sessionNameInputField.text;
+        }
+
+        public void SetSessionName(string sessionName)
+        {
+            _sessionNameInputField.text = sessionName;
         }
     }
 }
