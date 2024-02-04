@@ -26,7 +26,7 @@ namespace Werewolf.Network
                         return;
                     }
 
-                    if (!GameManager.spawned)
+                    if (!GameManager.HasSpawned)
                     {
                         GameManager.OnSpawned += OnGameManagerSpawned;
                     }

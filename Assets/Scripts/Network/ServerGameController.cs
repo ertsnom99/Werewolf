@@ -27,7 +27,7 @@ namespace Werewolf.Network
                     runner.AddCallbacks(_gameDataManager);
                     break;
                 case (int)SceneDefs.GAME:
-                    GameManager.Instance.StartGame(_gameDataManager.RolesSetup);
+                    GameManager.Instance.PrepareGame(_gameDataManager.RolesSetup);
                     break;
             }
         }
