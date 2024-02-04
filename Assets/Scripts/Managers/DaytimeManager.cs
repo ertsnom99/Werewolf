@@ -23,6 +23,8 @@ namespace Werewolf
         public Daytime CurrentDaytime { get; private set; }
         private bool _inTransition = false;
 
+        private UIManager _UIManager;
+
         protected override void Awake()
         {
             base.Awake();
@@ -37,6 +39,8 @@ namespace Werewolf
 
         private void Start()
         {
+            _UIManager = UIManager.Instance;
+
             SetDaytime(CurrentDaytime);
         }
 
@@ -68,6 +72,7 @@ namespace Werewolf
             _inTransition = true;
 
             StartCoroutine(TransitionDaytime());
+            StartCoroutine(TransitionTitle(_gameConfig.NightTransitionText));
         }
 
         private IEnumerator TransitionDaytime()
@@ -89,6 +94,15 @@ namespace Werewolf
 
                 yield return 0;
             }
+        }
+
+        private IEnumerator TransitionTitle(string text)
+        {
+            _UIManager.ShowTitleUI(text, _gameConfig.UITransitionDuration);
+
+            yield return new WaitForSeconds(_gameConfig.UITransitionDuration + _gameConfig.DaytimeTransitionDuration);
+
+            _UIManager.HideTitleUI(_gameConfig.UITransitionDuration);
 
             _inTransition = false;
         }
