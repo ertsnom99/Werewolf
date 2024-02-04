@@ -455,42 +455,27 @@ namespace Werewolf
         private void StartGame()
         {
             // TODO
+            RPC_TransitionToNight();
+#if UNITY_SERVER && UNITY_EDITOR
             StartCoroutine(TransitionToNight());
+#endif
         }
 
         private IEnumerator TransitionToNight()
         {
-            RPC_ChangeDayTime(Daytime.Night);
-            RPC_ShowTitleUI(_gameConfig.NightTransitionText, _gameConfig.UITransitionDuration);
-#if UNITY_SERVER && UNITY_EDITOR
             _daytimeManager.ChangeDaytime(Daytime.Night);
             _UIManager.ShowTitleUI(_gameConfig.NightTransitionText, _gameConfig.UITransitionDuration);
-#endif
+
             yield return new WaitForSeconds(_gameConfig.UITransitionDuration + _gameConfig.DaytimeTransitionDuration);
             
-            RPC_HideTitleUI(_gameConfig.UITransitionDuration);
-#if UNITY_SERVER && UNITY_EDITOR
-            _UIManager.HideTitleUI(_gameConfig.UITransitionDuration);
-#endif      
+            _UIManager.HideTitleUI(_gameConfig.UITransitionDuration);     
         }
 
         #region RPC calls
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_ChangeDayTime(Daytime dayTime)
+        public void RPC_TransitionToNight()
         {
-            _daytimeManager.ChangeDaytime(dayTime);
-        }
-
-        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_ShowTitleUI(string text, float transitionDuration)
-        {
-            _UIManager.ShowTitleUI(text, transitionDuration);
-        }
-
-        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_HideTitleUI(float transitionDuration)
-        {
-            _UIManager.HideTitleUI(transitionDuration);
+            StartCoroutine(TransitionToNight());
         }
         #endregion
         #endregion
