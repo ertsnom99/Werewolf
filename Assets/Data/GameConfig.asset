@@ -12,14 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b4fe5951b970f43a2fcd1087386345, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  <DaytimeTransitionDuration>k__BackingField: 3
-  <DayColor>k__BackingField: {r: 1, g: 1, b: 1, a: 0}
-  <DayTemperature>k__BackingField: 5000
-  <NightColor>k__BackingField: {r: 0.2, g: 0.23529412, b: 0.36862746, a: 1}
-  <NightTemperature>k__BackingField: 19354
-  <UITransitionDuration>k__BackingField: 0.3
-  <LoadingScreenText>k__BackingField: Waiting for server...
-  <NightTransitionText>k__BackingField: The sun is setting, the village goes to sleep...
+  <AvailableRolesMaxAttemptCount>k__BackingField: 100
   <CardsOffset>k__BackingField:
     serializedVersion: 2
     m_Curve:
@@ -53,6 +46,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  <ReservedRolesSpacing>k__BackingField: 1.5
   <CameraOffset>k__BackingField:
     serializedVersion: 2
     m_Curve:
@@ -86,3 +80,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  <DaytimeTransitionDuration>k__BackingField: 3
+  <DayColor>k__BackingField: {r: 1, g: 1, b: 1, a: 0}
+  <DayTemperature>k__BackingField: 5000
+  <NightColor>k__BackingField: {r: 0.2, g: 0.23529412, b: 0.36862746, a: 1}
+  <NightTemperature>k__BackingField: 19354
+  <UITransitionDuration>k__BackingField: 0.3
+  <LoadingScreenText>k__BackingField: Waiting for server...
+  <NightTransitionText>k__BackingField: The sun is setting, the village goes to sleep...

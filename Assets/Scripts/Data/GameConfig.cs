@@ -5,6 +5,20 @@ namespace Werewolf.Data
     [CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/GameConfig")]
     public class GameConfig : ScriptableObject
     {
+        [field: Header("Role Distribution")]
+        [field: SerializeField]
+        public int AvailableRolesMaxAttemptCount { get; private set; }
+
+        [field:Header("Visual")]
+        [field: SerializeField]
+        public AnimationCurve CardsOffset { get; private set; }
+
+        [field: SerializeField]
+        public float ReservedRolesSpacing { get; private set; }
+
+        [field: SerializeField]
+        public AnimationCurve CameraOffset { get; private set; }
+
         [field: Header("Daytime")]
         [field:SerializeField]
         public float DaytimeTransitionDuration { get; private set; }
@@ -26,12 +40,5 @@ namespace Werewolf.Data
         public string LoadingScreenText { get; private set; }
         [field: SerializeField]
         public string NightTransitionText { get; private set; }
-
-        [field:Header("Visual")]
-        [field: SerializeField]
-        public AnimationCurve CardsOffset { get; private set; }
-
-        [field: SerializeField]
-        public AnimationCurve CameraOffset { get; private set; }
     }
 }

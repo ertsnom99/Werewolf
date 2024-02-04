@@ -84,9 +84,7 @@ namespace Werewolf
         // Client events
         public event Action OnRoleReceived = delegate { };
 
-        private readonly int AVAILABLE_ROLES_MAX_ATTEMPT_COUNT = 100;
         private readonly Vector3 STARTING_DIRECTION = Vector3.back;
-        private readonly float RESERVED_ROLES_SPACING = 1.5f;
 
         protected override void Awake()
         {
@@ -163,7 +161,7 @@ namespace Werewolf
             {
                 int startingRoleCount = rolesToDistribute.Count;
 
-                if (availableRoles.Count <= 0 || attempts >= AVAILABLE_ROLES_MAX_ATTEMPT_COUNT)
+                if (availableRoles.Count <= 0 || attempts >= _gameConfig.AvailableRolesMaxAttemptCount)
                 {
                     rolesToDistribute.Add(defaultRole);
                     PrepareRoleBehavior(defaultRole, ref rolesToDistribute, ref availableRoles);
@@ -543,14 +541,14 @@ namespace Werewolf
 
             foreach (KeyValuePair<RoleBehavior, IndexedReservedRoles> reservedRoleByBehavior in _reservedRolesByBehavior)
             {
-                Vector3 rowPosition = (Vector3.back * rowCounter * RESERVED_ROLES_SPACING) + (Vector3.forward * (_reservedRolesByBehavior.Count - 1) * RESERVED_ROLES_SPACING / 2.0f);
+                Vector3 rowPosition = (Vector3.back * rowCounter * _gameConfig.ReservedRolesSpacing) + (Vector3.forward * (_reservedRolesByBehavior.Count - 1) * _gameConfig.ReservedRolesSpacing / 2.0f);
                 Card[] cards = new Card[reservedRoleByBehavior.Value.Roles.Length];
 
                 int columnCounter = 0;
 
                 foreach (RoleData role in reservedRoleByBehavior.Value.Roles)
                 {
-                    Vector3 columnPosition = (Vector3.right * columnCounter * RESERVED_ROLES_SPACING) + (Vector3.left * (reservedRoleByBehavior.Value.Roles.Length - 1) * RESERVED_ROLES_SPACING / 2.0f);
+                    Vector3 columnPosition = (Vector3.right * columnCounter * _gameConfig.ReservedRolesSpacing) + (Vector3.left * (reservedRoleByBehavior.Value.Roles.Length - 1) * _gameConfig.ReservedRolesSpacing / 2.0f);
 
                     Card card = Instantiate(_cardPrefab, rowPosition + columnPosition, Quaternion.identity);
 
@@ -634,13 +632,13 @@ namespace Werewolf
             {
                 _reservedRolesCards[rowCounter] = new Card[reservedRole.RoleCount];
 
-                Vector3 rowPosition = (Vector3.back * rowCounter * RESERVED_ROLES_SPACING) + (Vector3.forward * (rowCount - 1) * RESERVED_ROLES_SPACING / 2.0f);
+                Vector3 rowPosition = (Vector3.back * rowCounter * _gameConfig.ReservedRolesSpacing) + (Vector3.forward * (rowCount - 1) * _gameConfig.ReservedRolesSpacing / 2.0f);
                 
                 int columnCounter = 0;
 
                 foreach (int roleGameplayTagID in reservedRole.Roles)
                 {
-                    Vector3 columnPosition = (Vector3.right * columnCounter * RESERVED_ROLES_SPACING) + (Vector3.left * (reservedRole.RoleCount - 1) * RESERVED_ROLES_SPACING / 2.0f);
+                    Vector3 columnPosition = (Vector3.right * columnCounter * _gameConfig.ReservedRolesSpacing) + (Vector3.left * (reservedRole.RoleCount - 1) * _gameConfig.ReservedRolesSpacing / 2.0f);
 
                     Card card = Instantiate(_cardPrefab, rowPosition + columnPosition, Quaternion.identity);
 
