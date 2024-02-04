@@ -80,6 +80,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  <TransitionToNightDuration>k__BackingField: 4
   <DaytimeTransitionDuration>k__BackingField: 3
   <DayColor>k__BackingField: {r: 1, g: 1, b: 1, a: 0}
   <DayTemperature>k__BackingField: 5000

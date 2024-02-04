@@ -11,6 +11,18 @@ namespace Werewolf
 {
     public class GameManager : NetworkBehaviourSingleton<GameManager>
     {
+        private enum GameplayLoopStep
+        {
+            NightTransition = 0,
+            RoleCall,
+            DayTransition,
+            DeathReveal,
+            Debate,
+            Vote,
+            Execution,
+            Count,
+        }
+
         #region Server variables
         public List<RoleData> RolesToDistribute { get; private set; }
 
@@ -66,15 +78,16 @@ namespace Werewolf
         [field: SerializeField]
         private Card _cardPrefab;
 
+        public static event Action OnSpawned = delegate { };
+        public static bool HasSpawned { get; private set; }
+
         private Dictionary<PlayerRef, Card> _playerCards = new Dictionary<PlayerRef, Card>();
         private Card[][] _reservedRolesCards;
 
-        private GameDataManager _gameDataManager;
-        private UIManager _UIManager;
-        private DaytimeManager _daytimeManager;
+        private GameplayLoopStep _currentGameplayLoopStep;
 
-        public static event Action OnSpawned = delegate { };
-        public static bool HasSpawned { get; private set; }
+        private GameDataManager _gameDataManager;
+        private DaytimeManager _daytimeManager;
 
         // Server events
         public event Action OnPreRoleDistribution = delegate { };
@@ -100,7 +113,6 @@ namespace Werewolf
 
         private void Start()
         {
-            _UIManager = UIManager.Instance;
             _daytimeManager = DaytimeManager.Instance;
         }
 
@@ -435,49 +447,6 @@ namespace Werewolf
         }
         #endregion
 
-        private void CheckPreGameplayLoopProgress()
-        {
-            if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
-            {
-                SendPlayerRoles();
-            }
-            else if (_allRolesSent && _allPlayersReadyToPlay)
-            {
-                OnPreStartGame();
-                StartGame();
-            }
-        }
-        #endregion
-
-        #region Gameplay Loop
-        private void StartGame()
-        {
-            // TODO
-            RPC_TransitionToNight();
-#if UNITY_SERVER && UNITY_EDITOR
-            StartCoroutine(TransitionToNight());
-#endif
-        }
-
-        private IEnumerator TransitionToNight()
-        {
-            _daytimeManager.ChangeDaytime(Daytime.Night);
-            _UIManager.ShowTitleUI(_gameConfig.NightTransitionText, _gameConfig.UITransitionDuration);
-
-            yield return new WaitForSeconds(_gameConfig.UITransitionDuration + _gameConfig.DaytimeTransitionDuration);
-            
-            _UIManager.HideTitleUI(_gameConfig.UITransitionDuration);     
-        }
-
-        #region RPC calls
-        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_TransitionToNight()
-        {
-            StartCoroutine(TransitionToNight());
-        }
-        #endregion
-        #endregion
-
         private bool AddPlayerReady(PlayerRef player)
         {
             if (_playersReady.Contains(player))
@@ -501,6 +470,84 @@ namespace Werewolf
 
             return true;
         }
+
+        private void CheckPreGameplayLoopProgress()
+        {
+            if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
+            {
+                SendPlayerRoles();
+            }
+            else if (_allRolesSent && _allPlayersReadyToPlay)
+            {
+                OnPreStartGame();
+                StartGame();
+            }
+        }
+        #endregion
+
+        #region Gameplay Loop
+        private void StartGame()
+        {
+            _currentGameplayLoopStep = GameplayLoopStep.NightTransition;
+            StartCoroutine(TransitionToNight());
+        }
+
+        #region Gameplay Loop Steps
+        private void MoveToNextStep()
+        {
+            _currentGameplayLoopStep++;
+
+            if (_currentGameplayLoopStep == GameplayLoopStep.Count)
+            {
+                _currentGameplayLoopStep = 0;
+            }
+
+            switch (_currentGameplayLoopStep)
+            {
+                case GameplayLoopStep.NightTransition:
+                    StartCoroutine(TransitionToNight());
+                    break;
+                case GameplayLoopStep.RoleCall:
+                    // TODO: Role call
+                    break;
+                case GameplayLoopStep.DayTransition:
+
+                    break;
+                case GameplayLoopStep.DeathReveal:
+
+                    break;
+                case GameplayLoopStep.Debate:
+
+                    break;
+                case GameplayLoopStep.Vote:
+
+                    break;
+                case GameplayLoopStep.Execution:
+
+                    break;
+            }
+        }
+
+        private IEnumerator TransitionToNight()
+        {
+            RPC_TransitionToNight();
+#if UNITY_SERVER && UNITY_EDITOR
+            _daytimeManager.ChangeDaytime(Daytime.Night);
+#endif
+            yield return new WaitForSeconds(_gameConfig.TransitionToNightDuration);
+
+            MoveToNextStep();
+        }
+        #endregion
+
+        #region RPC calls
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_TransitionToNight()
+        {
+            _daytimeManager.ChangeDaytime(Daytime.Night);
+        }
+        #endregion
+        #endregion
 
         #region Visual
 #if UNITY_SERVER && UNITY_EDITOR
