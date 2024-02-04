@@ -12,20 +12,21 @@ namespace Werewolf
         [SerializeField]
         private TMP_Text _loading;
 
-        [SerializeField]
-        private string _loadingText = "Waiting for server...";
-
         public event Action OnFadeInOver = delegate { };
 
         private void Start()
         {
 #if UNITY_SERVER
             _imageFade.SetFade(.0f);
-            _loading.text = "";
 #else
             _imageFade.SetFade(1.0f);
-            _loading.text = _loadingText;
 #endif
+            _loading.text = "";
+        }
+
+        public void SetText(string text)
+        {
+            _loading.text = text;
         }
 
         public void FadeIn()

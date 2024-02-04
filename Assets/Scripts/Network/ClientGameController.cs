@@ -5,12 +5,17 @@ using System;
 using UnityEngine;
 using Werewolf.Network.Configs;
 using System.Collections;
+using Werewolf.Data;
 
 namespace Werewolf.Network
 {
     [SimulationBehaviour(Modes = SimulationModes.Client)]
     public class ClientGameController : MonoBehaviour, INetworkRunnerCallbacks
     {
+        [Header("Config")]
+        [SerializeField]
+        private GameConfig _gameConfig;
+
         private LoadingScreen _loadingScreen;
 
         public void OnSceneLoadDone(NetworkRunner runner)
@@ -18,13 +23,10 @@ namespace Werewolf.Network
             switch (runner.SceneManager.MainRunnerScene.buildIndex)
             {
                 case (int)SceneDefs.GAME:
-                    _loadingScreen = FindObjectOfType<LoadingScreen>();
+                    _loadingScreen = UIManager.Instance.LoadingScreen;
 
-                    if (!_loadingScreen)
-                    {
-                        Debug.LogError("ClientGameController could not find a LoadingScreen object in the main scene");
-                        return;
-                    }
+                    _loadingScreen.SetText(_gameConfig.LoadingScreenText);
+                    _loadingScreen.gameObject.SetActive(true);
 
                     if (!GameManager.HasSpawned)
                     {

@@ -1,5 +1,6 @@
 using Fusion;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -69,6 +70,7 @@ namespace Werewolf
         private Card[][] _reservedRolesCards;
 
         private GameDataManager _gameDataManager;
+        private UIManager _UIManager;
         private DaytimeManager _daytimeManager;
 
         public static event Action OnSpawned = delegate { };
@@ -100,6 +102,7 @@ namespace Werewolf
 
         private void Start()
         {
+            _UIManager = UIManager.Instance;
             _daytimeManager = DaytimeManager.Instance;
         }
 
@@ -452,10 +455,23 @@ namespace Werewolf
         private void StartGame()
         {
             // TODO
+            StartCoroutine(TransitionToNight());
+        }
+
+        private IEnumerator TransitionToNight()
+        {
             RPC_ChangeDayTime(Daytime.Night);
+            RPC_ShowTitleUI(_gameConfig.NightTransitionText, _gameConfig.UITransitionDuration);
 #if UNITY_SERVER && UNITY_EDITOR
             _daytimeManager.ChangeDaytime(Daytime.Night);
+            _UIManager.ShowTitleUI(_gameConfig.NightTransitionText, _gameConfig.UITransitionDuration);
 #endif
+            yield return new WaitForSeconds(_gameConfig.UITransitionDuration + _gameConfig.DaytimeTransitionDuration);
+            
+            RPC_HideTitleUI(_gameConfig.UITransitionDuration);
+#if UNITY_SERVER && UNITY_EDITOR
+            _UIManager.HideTitleUI(_gameConfig.UITransitionDuration);
+#endif      
         }
 
         #region RPC calls
@@ -463,6 +479,18 @@ namespace Werewolf
         public void RPC_ChangeDayTime(Daytime dayTime)
         {
             _daytimeManager.ChangeDaytime(dayTime);
+        }
+
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_ShowTitleUI(string text, float transitionDuration)
+        {
+            _UIManager.ShowTitleUI(text, transitionDuration);
+        }
+
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_HideTitleUI(float transitionDuration)
+        {
+            _UIManager.HideTitleUI(transitionDuration);
         }
         #endregion
         #endregion
