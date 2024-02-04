@@ -57,27 +57,27 @@ namespace Werewolf
         private List<List<PlayerRef>> _nightCalls = new List<List<PlayerRef>>();
         #endregion
 
-        [Header("Visual")]
+        [Header("Config")]
         [SerializeField]
+        private GameConfig _gameConfig;
+
+        [field: Header("Visual")]
+        [field: SerializeField]
         private Card _cardPrefab;
-
-        [SerializeField]
-        private AnimationCurve _cardsOffset;
-
-        [SerializeField]
-        private AnimationCurve _cameraOffset;
 
         private Dictionary<PlayerRef, Card> _playerCards = new Dictionary<PlayerRef, Card>();
         private Card[][] _reservedRolesCards;
 
         private GameDataManager _gameDataManager;
+        private DaytimeManager _daytimeManager;
 
         public static event Action OnSpawned = delegate { };
-        public static bool spawned = false;
+        public static bool HasSpawned { get; private set; }
 
         // Server events
         public event Action OnPreRoleDistribution = delegate { };
         public event Action OnPostRoleDistribution = delegate { };
+        public event Action OnPreStartGame = delegate { };
 
         // Client events
         public event Action OnRoleReceived = delegate { };
@@ -91,15 +91,25 @@ namespace Werewolf
             base.Awake();
 
             RolesToDistribute = new List<RoleData>();
+
+            if (!_gameConfig)
+            {
+                Debug.LogError("The GameConfig of the GameManager is not defined");
+            }
+        }
+
+        private void Start()
+        {
+            _daytimeManager = DaytimeManager.Instance;
         }
 
         public override void Spawned()
         {
-            spawned = true;
+            HasSpawned = true;
             OnSpawned();
         }
 
-        public void StartGame(RolesSetup rolesSetup)
+        public void PrepareGame(RolesSetup rolesSetup)
         {
             GetGameDataManager();
 
@@ -378,20 +388,6 @@ namespace Werewolf
         }
         #endregion
 
-        private void CheckPreGameplayLoopProgress()
-        {
-            if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
-            {
-                SendPlayerRoles();
-            }
-            else if (_allRolesSent && _allPlayersReadyToPlay)
-            {
-                // TODO: Start game loop
-                Debug.LogError("GAME STARTS!!!");
-            }
-        }
-        #endregion
-
         #region RPC calls
         [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
         public void RPC_ConfirmPlayerReadyToReceiveRole(RpcInfo info = default)
@@ -438,6 +434,39 @@ namespace Werewolf
         }
         #endregion
 
+        private void CheckPreGameplayLoopProgress()
+        {
+            if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
+            {
+                SendPlayerRoles();
+            }
+            else if (_allRolesSent && _allPlayersReadyToPlay)
+            {
+                OnPreStartGame();
+                StartGame();
+            }
+        }
+        #endregion
+
+        #region Gameplay Loop
+        private void StartGame()
+        {
+            // TODO
+            RPC_ChangeDayTime(Daytime.Night);
+#if UNITY_SERVER && UNITY_EDITOR
+            _daytimeManager.ChangeDaytime(Daytime.Night);
+#endif
+        }
+
+        #region RPC calls
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_ChangeDayTime(Daytime dayTime)
+        {
+            _daytimeManager.ChangeDaytime(dayTime);
+        }
+        #endregion
+        #endregion
+
         private bool AddPlayerReady(PlayerRef player)
         {
             if (_playersReady.Contains(player))
@@ -467,7 +496,7 @@ namespace Werewolf
         private void CreatePlayerCardsForServer()
         {
             float rotationIncrement = 360.0f / _playerRoles.Count;
-            Vector3 startingPosition = STARTING_DIRECTION * _cardsOffset.Evaluate(_playerRoles.Count);
+            Vector3 startingPosition = STARTING_DIRECTION * _gameConfig.CardsOffset.Evaluate(_playerRoles.Count);
 
             int counter = -1;
 
@@ -532,7 +561,7 @@ namespace Werewolf
             int rotationOffset = -1;
 
             float rotationIncrement = 360.0f / playerCount;
-            Vector3 startingPosition = STARTING_DIRECTION * _cardsOffset.Evaluate(playerCount);
+            Vector3 startingPosition = STARTING_DIRECTION * _gameConfig.CardsOffset.Evaluate(playerCount);
 
             // Offset the rotation to keep bottomPlayer at the bottom
             foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in playerInfos)
@@ -630,7 +659,7 @@ namespace Werewolf
 
         private void AdjustCamera()
         {
-            Camera.main.transform.position = Camera.main.transform.position.normalized * _cameraOffset.Evaluate(_gameDataManager.PlayerInfos.Count);
+            Camera.main.transform.position = Camera.main.transform.position.normalized * _gameConfig.CameraOffset.Evaluate(_gameDataManager.PlayerInfos.Count);
         }
         #endregion
     }
