@@ -17,6 +17,16 @@ namespace Werewolf.Data
         [field: SerializeField]
         public float NightTemperature { get; private set; }
 
+        [field: Header("UI")]
+        [field: SerializeField]
+        public float UITransitionDuration { get; private set; }
+
+        [field: Header("UI Text")]
+        [field: SerializeField]
+        public string LoadingScreenText { get; private set; }
+        [field: SerializeField]
+        public string NightTransitionText { get; private set; }
+
         [field:Header("Visual")]
         [field: SerializeField]
         public AnimationCurve CardsOffset { get; private set; }
