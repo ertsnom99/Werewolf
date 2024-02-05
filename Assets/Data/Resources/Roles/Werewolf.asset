@@ -23,7 +23,9 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 1
   <MandatoryCount>k__BackingField: 1
   <GroupIndexes>k__BackingField: 02000000
-  <NightPriorities>k__BackingField: 0d000000
-  <DayPriorities>k__BackingField: 
+  <NightPriorities>k__BackingField:
+  - index: 13
+    alias: {fileID: 0}
+  <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 3074801793367905639, guid: 6694e99a28c90ac4b807cd526dec6b0b,
     type: 3}
