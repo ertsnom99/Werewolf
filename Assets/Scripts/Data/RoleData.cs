@@ -1,4 +1,5 @@
 using Assets.Scripts.Data;
+using System;
 using UnityEngine;
 
 namespace Werewolf.Data
@@ -12,6 +13,13 @@ namespace Werewolf.Data
             Werewolf,
             Ambiguous,
             Lonely
+        };
+
+        [Serializable]
+        public struct Priority
+        {
+            public int index;
+            public RoleData alias;
         };
 
         [field: SerializeField]
@@ -33,11 +41,11 @@ namespace Werewolf.Data
         public int[] GroupIndexes { get; private set; }
 
         [field: SerializeField]
-        public int[] NightPriorities { get; private set; }
+        public Priority[] NightPriorities { get; private set; }
 
         [field: SerializeField]
-        public int[] DayPriorities { get; private set; }
-
+        public Priority[] DayPriorities { get; private set; }
+        
         [field: SerializeField]
         public RoleBehavior Behavior { get; private set; }
     }

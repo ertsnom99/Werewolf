@@ -1,8 +1,10 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
@@ -11,18 +13,6 @@ namespace Werewolf
 {
     public class GameManager : NetworkBehaviourSingleton<GameManager>
     {
-        private enum GameplayLoopStep
-        {
-            NightTransition = 0,
-            RoleCall,
-            DayTransition,
-            DeathReveal,
-            Debate,
-            Vote,
-            Execution,
-            Count,
-        }
-
         #region Server variables
         public List<RoleData> RolesToDistribute { get; private set; }
 
@@ -47,12 +37,22 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
         private Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new Dictionary<RoleBehavior, Card[]>();
 #endif
+        private List<NightCall> _nightCalls = new List<NightCall>();
+
+        private struct NightCall
+        {
+            public int PriorityIndex;
+            public List<PlayerRef> Players;
+        }
+
         private List<PlayerRef> _playersReady = new List<PlayerRef>();
 
         private bool _rolesDistributionDone = false;
         private bool _allPlayersReadyToReceiveRole = false;
         private bool _allRolesSent = false;
         private bool _allPlayersReadyToPlay = false;
+
+        private int _waitingForCount;
         #endregion
 
         #region Networked variables
@@ -66,8 +66,6 @@ namespace Werewolf
             [Networked, Capacity(5)]
             public NetworkArray<int> Roles { get; }
         }
-
-        private List<List<PlayerRef>> _nightCalls = new List<List<PlayerRef>>();
         #endregion
 
         [Header("Config")]
@@ -84,9 +82,23 @@ namespace Werewolf
         private Dictionary<PlayerRef, Card> _playerCards = new Dictionary<PlayerRef, Card>();
         private Card[][] _reservedRolesCards;
 
+        private enum GameplayLoopStep
+        {
+            NightTransition = 0,
+            RoleCall,
+            DayTransition,
+            DeathReveal,
+            Debate,
+            Vote,
+            Execution,
+            Count,
+        }
+
         private GameplayLoopStep _currentGameplayLoopStep;
 
         private GameDataManager _gameDataManager;
+        private GameplayDatabaseManager _gameplayDatabaseManager;
+        private UIManager _uiManager;
         private DaytimeManager _daytimeManager;
 
         // Server events
@@ -113,6 +125,8 @@ namespace Werewolf
 
         private void Start()
         {
+            _gameplayDatabaseManager = GameplayDatabaseManager.Instance;
+            _uiManager = UIManager.Instance;
             _daytimeManager = DaytimeManager.Instance;
         }
 
@@ -152,7 +166,7 @@ namespace Werewolf
         private void SelectRolesToDistribute(RolesSetup rolesSetup)
         {
             // Convert GameplayTagIDs to RoleData
-            RoleData defaultRole = GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(rolesSetup.DefaultRole);
+            RoleData defaultRole = _gameplayDatabaseManager.GetGameplayData<RoleData>(rolesSetup.DefaultRole);
             GameDataManager.ConvertToRoleSetupDatas(rolesSetup.MandatoryRoles, out List<RoleSetupData> mandatoryRoles);
             GameDataManager.ConvertToRoleSetupDatas(rolesSetup.AvailableRoles, out List<RoleSetupData> availableRoles);
 
@@ -291,12 +305,14 @@ namespace Werewolf
 
         private void DetermineNightCalls()
         {
-            // Remove any players that do not need to be called at night
+            // Remove any players that do not need to be called at night OR that do not have a behavior prefab
             List<PlayerRef> players = _playerRoles.Keys.ToList();
 
             for (int i = players.Count - 1; i >= 0; i--)
             {
-                if (_playerRoles[players[i]].Data.NightPriorities.Length > 0)
+                RoleData roleData = _playerRoles[players[i]].Data;
+
+                if (roleData.NightPriorities?.Length > 0 && roleData.Behavior)
                 {
                     continue;
                 }
@@ -309,14 +325,14 @@ namespace Werewolf
 
             foreach (PlayerRef player in players)
             {
-                foreach (int priority in _playerRoles[player].Data.NightPriorities)
+                foreach (RoleData.Priority priority in _playerRoles[player].Data.NightPriorities)
                 {
-                    if (priorities.Contains(priority))
+                    if (priorities.Contains(priority.index))
                     {
                         continue;
                     }
 
-                    priorities.Add(priority);
+                    priorities.Add(priority.index);
                 }
             }
 
@@ -329,9 +345,9 @@ namespace Werewolf
 
                 foreach (PlayerRef player in players)
                 {
-                    foreach (int priority in _playerRoles[player].Data.NightPriorities)
+                    foreach (RoleData.Priority priority in _playerRoles[player].Data.NightPriorities)
                     {
-                        if (priority == priorities[i])
+                        if (priority.index == priorities[i])
                         {
                             playersToCall.Add(player);
                             break;
@@ -339,7 +355,7 @@ namespace Werewolf
                     }
                 }
 
-                _nightCalls.Add(playersToCall);
+                _nightCalls.Add(new NightCall { PriorityIndex = priorities[i], Players = playersToCall });
             }
         }
 #if UNITY_SERVER && UNITY_EDITOR
@@ -347,13 +363,13 @@ namespace Werewolf
         {
             Debug.Log("----------------------Night Calls----------------------");
              
-            foreach (List<PlayerRef> nightCall in _nightCalls)
+            foreach (NightCall nightCall in _nightCalls)
             {
-                string roles = "";
+                string roles = $"Priority: {nightCall.PriorityIndex} || ";
 
-                foreach (PlayerRef player in nightCall)
+                foreach (PlayerRef player in nightCall.Players)
                 {
-                    roles += _playerRoles[player].Data.Name + " || ";
+                    roles += $"{_playerRoles[player].Data.Name} || ";
                 }
 
                 Debug.Log(roles);
@@ -426,7 +442,7 @@ namespace Werewolf
                 GetGameDataManager();
             }
 
-            CreatePlayerCards(player, GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(role));
+            CreatePlayerCards(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(role));
             CreateReservedRoleCards();
             AdjustCamera();
 
@@ -493,7 +509,7 @@ namespace Werewolf
         }
 
         #region Gameplay Loop Steps
-        private void MoveToNextStep()
+        private void MoveToNextGameplayLoopStep()
         {
             _currentGameplayLoopStep++;
 
@@ -508,7 +524,7 @@ namespace Werewolf
                     StartCoroutine(TransitionToNight());
                     break;
                 case GameplayLoopStep.RoleCall:
-                    // TODO: Role call
+                    StartCoroutine(CallRoles());
                     break;
                 case GameplayLoopStep.DayTransition:
 
@@ -536,7 +552,43 @@ namespace Werewolf
 #endif
             yield return new WaitForSeconds(_gameConfig.TransitionToNightDuration);
 
-            MoveToNextStep();
+            MoveToNextGameplayLoopStep();
+        }
+
+        private IEnumerator CallRoles()
+        {
+            foreach (NightCall nightCall in _nightCalls)
+            {
+                int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(nightCall);
+
+                foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
+                {
+                    if (nightCall.Players.Contains(playerRole.Key))
+                    {
+                        // TODO: Skip if the player is dead
+
+                        // TODO: Has a list of player instead, to prevent random player faking that someone has finished
+                        _waitingForCount++;
+                        // TODO: Call role
+                    }
+                    else
+                    {
+                        RPC_DisplayRolePlaying(playerRole.Key, displayRoleGameplayTagID);
+                    }
+                }
+#if UNITY_SERVER && UNITY_EDITOR
+                DisplayRolePlaying(displayRoleGameplayTagID);
+#endif
+                // Wait until all roles are done
+                while (_waitingForCount > 0)
+                {
+                    yield return 0;
+                }
+
+                RPC_HideRolePlaying();
+            }
+
+            MoveToNextGameplayLoopStep();
         }
         #endregion
 
@@ -546,7 +598,52 @@ namespace Werewolf
         {
             _daytimeManager.ChangeDaytime(Daytime.Night);
         }
+
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_DisplayRolePlaying([RpcTarget] PlayerRef player, int roleGameplayTagID)
+        {
+            DisplayRolePlaying(roleGameplayTagID);
+        }
+
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_HideRolePlaying()
+        {
+            // TODO: UI of all player should disappear (What about players that were playing?)
+        }
         #endregion
+
+        private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
+        {
+            RoleData firstPlayerRole = _playerRoles[nightCall.Players[0]].Data;
+            RoleData alias = null;
+
+            foreach (RoleData.Priority nightPriority in firstPlayerRole.NightPriorities)
+            {
+                if (nightPriority.index != nightCall.PriorityIndex)
+                {
+                    continue;
+                }
+
+                alias = nightPriority.alias;
+                break;
+            }
+
+            if (alias)
+            {
+                return alias.GameplayTag.CompactTagId;
+            }
+            else
+            {
+                return firstPlayerRole.GameplayTag.CompactTagId;
+            }
+        }
+
+        private void DisplayRolePlaying(int roleGameplayTagID)
+        {
+            RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
+            string text = roleData.CanHaveMultiples ? _gameConfig.RolePlayingTextPlurial : _gameConfig.RolePlayingTextSingular;
+            _uiManager.ShowTitleImageUI(roleData.Image, string.Format(text, roleData.Name.ToLower()), _gameConfig.UITransitionDuration);
+        }
         #endregion
 
         #region Visual
@@ -672,6 +769,11 @@ namespace Werewolf
 
             _reservedRolesCards = new Card[rowCount][];
 
+            if (rowCount <= 0)
+            {
+                return;
+            }
+
             int rowCounter = 0;
 
             // Create the reserved cards
@@ -691,7 +793,7 @@ namespace Werewolf
 
                     if (roleGameplayTagID > 0)
                     {
-                        RoleData role = GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(roleGameplayTagID);
+                        RoleData role = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
                         card.SetRole(role);
                         card.Flip();
                     }
