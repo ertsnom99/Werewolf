@@ -50,6 +50,11 @@ namespace Werewolf
             {
                 _mainMenu.SetSessionName(sessionName);
             }
+
+            if (CommandLineUtilities.TryGetArg(out string _, "_autoJoin"))
+            {
+                JoinGame();
+            }
         }
 
         public void JoinGame()
