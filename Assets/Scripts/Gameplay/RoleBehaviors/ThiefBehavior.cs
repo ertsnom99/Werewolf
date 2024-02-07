@@ -46,5 +46,15 @@ namespace Werewolf
 
             _gameManager.ReserveRoles(this, roles.ToArray(), false);
         }
+
+        public override void OnRoleCall()
+        {
+            if (!_gameManager.MakePlayerChooseReservedRole(this))
+            {
+                // TODO: Immediatly end turn
+            }
+        }
+
+        // TODO: 6. Add a callback that will react to the choice of the player
     }
 }

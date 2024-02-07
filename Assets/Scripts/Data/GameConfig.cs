@@ -34,24 +34,29 @@ namespace Werewolf.Data
         public float DayTemperature { get; private set; }
 
         [field: SerializeField]
+        public string DayTransitionText { get; private set; }
+
+        [field: SerializeField]
         public Color NightColor { get; private set; }
 
         [field: SerializeField]
         public float NightTemperature { get; private set; }
+
+        [field: SerializeField]
+        public string NightTransitionText { get; private set; }
+
+        [field: Header("Loading Screen")]
+        [field: SerializeField]
+        public string LoadingScreenText { get; private set; }
+
+        [field: SerializeField]
+        public float LoadingScreenTransitionDuration { get; private set; }
 
         [field: Header("UI")]
         [field: SerializeField]
         public float UITransitionDuration { get; private set; }
 
         [field: Header("UI Text")]
-        [field: SerializeField]
-        public string LoadingScreenText { get; private set; }
-
-        [field: SerializeField]
-        public string NightTransitionText { get; private set; }
-
-        [field: SerializeField]
-        public string DayTransitionText { get; private set; }
 
         [field: SerializeField]
         public string RolePlayingTextSingular { get; private set; }
