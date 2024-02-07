@@ -9,7 +9,7 @@ namespace Werewolf
     {
         [field: SerializeField]
         [field: ReadOnly]
-        protected PlayerRef Player { get; private set; }
+        public PlayerRef Player { get; private set; }
 
         public void SetPlayer(PlayerRef player)
         {
@@ -19,5 +19,7 @@ namespace Werewolf
         public abstract void Init();
 
         public abstract void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles);
+
+        public abstract void OnRoleCall();
     }
 }

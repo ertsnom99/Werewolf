@@ -52,7 +52,7 @@ namespace Werewolf
         private bool _allRolesSent = false;
         private bool _allPlayersReadyToPlay = false;
 
-        private int _waitingForCount;
+        private List<PlayerRef> _playerWaitingFor = new List<PlayerRef>();
         #endregion
 
         #region Networked variables
@@ -98,7 +98,7 @@ namespace Werewolf
 
         private GameDataManager _gameDataManager;
         private GameplayDatabaseManager _gameplayDatabaseManager;
-        private UIManager _uiManager;
+        private UIManager _UIManager;
         private DaytimeManager _daytimeManager;
 
         // Server events
@@ -126,7 +126,7 @@ namespace Werewolf
         private void Start()
         {
             _gameplayDatabaseManager = GameplayDatabaseManager.Instance;
-            _uiManager = UIManager.Instance;
+            _UIManager = UIManager.Instance;
             _daytimeManager = DaytimeManager.Instance;
         }
 
@@ -389,7 +389,6 @@ namespace Werewolf
         }
         #endregion
 
-        #region Roles reservation
         public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] roles, bool AreFaceUp)
         {
             RolesContainer rolesContainer = new();
@@ -415,8 +414,7 @@ namespace Werewolf
             ReservedRoles.Set(_reservedRolesByBehavior.Count, rolesContainer);
             _reservedRolesByBehavior.Add(roleBehavior, new IndexedReservedRoles { Roles = roles, Behaviors = behaviors, networkIndex = _reservedRolesByBehavior.Count });
         }
-        #endregion
-
+        
         #region RPC calls
         [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
         public void RPC_ConfirmPlayerReadyToReceiveRole(RpcInfo info = default)
@@ -567,9 +565,8 @@ namespace Werewolf
                     {
                         // TODO: Skip if the player is dead
 
-                        // TODO: Has a list of player instead, to prevent random player faking that someone has finished
-                        _waitingForCount++;
-                        // TODO: Call role
+                        _playerWaitingFor.Add(playerRole.Key);
+                        _playerRoles[playerRole.Key].Behavior.OnRoleCall();
                     }
                     else
                     {
@@ -580,12 +577,26 @@ namespace Werewolf
                 DisplayRolePlaying(displayRoleGameplayTagID);
 #endif
                 // Wait until all roles are done
-                while (_waitingForCount > 0)
+                while (_playerWaitingFor.Count > 0)
                 {
                     yield return 0;
                 }
 
-                RPC_HideRolePlaying();
+                foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
+                {
+                    if (nightCall.Players.Contains(playerRole.Key))
+                    {
+                        // TODO: Tell playing role to hide their UI?
+                    }
+                    else
+                    {
+                        RPC_HideRolePlaying();
+                    }
+                }
+#if UNITY_SERVER && UNITY_EDITOR
+                HideRolePlaying();
+#endif
+                yield return new WaitForSeconds(_gameConfig.UITransitionDuration);
             }
 
             MoveToNextGameplayLoopStep();
@@ -608,9 +619,44 @@ namespace Werewolf
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
         public void RPC_HideRolePlaying()
         {
-            // TODO: UI of all player should disappear (What about players that were playing?)
+            HideRolePlaying();
+        }
+
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_MakePlayerChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer)
+        {
+            // TODO: 4. Display choice UI (hook to choice callback -> RPC_GiveReservedRoleChoice)
+        }
+
+        [Rpc(targets: RpcTargets.Proxies, sources: RpcSources.StateAuthority, Channel = RpcChannel.Reliable)]
+        public void RPC_GiveReservedRoleChoice(int role, RpcInfo info = default)
+        {
+            // TODO: 5. Tell correct behavior what choice was made by using the variable dictionnary<PlayerRef, Callback>
+            //info.Source
         }
         #endregion
+
+        // TODO: 3. When called, a callback MUST be given and then stored in a variable dictionnary<PlayerRef, Callback>
+        // Returns if their is any reserved roles the player can choose from
+        public bool MakePlayerChooseReservedRole(RoleBehavior ReservedRoleOwner)
+        {
+            if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner))
+            {
+                return false;
+            }
+
+            RoleData[] roleDatas = _reservedRolesByBehavior[ReservedRoleOwner].Roles;
+            RolesContainer rolesContainer = new RolesContainer { RoleCount = roleDatas.Length };
+
+            for (int i = 0; i < roleDatas.Length; i++)
+            {
+                rolesContainer.Roles.Set(i, roleDatas[i].GameplayTag.CompactTagId);
+            }
+
+            RPC_MakePlayerChooseReservedRole(ReservedRoleOwner.Player, rolesContainer);
+
+            return true;
+        }
 
         private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
         {
@@ -642,11 +688,18 @@ namespace Werewolf
         {
             RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
             string text = roleData.CanHaveMultiples ? _gameConfig.RolePlayingTextPlurial : _gameConfig.RolePlayingTextSingular;
-            _uiManager.ShowTitleImageUI(roleData.Image, string.Format(text, roleData.Name.ToLower()), _gameConfig.UITransitionDuration);
-        }
-        #endregion
 
-        #region Visual
+            _UIManager.ImageScreen.Config(roleData.Image, string.Format(text, roleData.Name.ToLower()));
+            _UIManager.ImageScreen.FadeIn(_gameConfig.UITransitionDuration);
+        }
+
+        private void HideRolePlaying()
+        {
+            _UIManager.ImageScreen.FadeOut(_gameConfig.UITransitionDuration);
+        }
+#endregion
+
+#region Visual
 #if UNITY_SERVER && UNITY_EDITOR
         private void CreatePlayerCardsForServer()
         {
@@ -821,6 +874,6 @@ namespace Werewolf
         {
             Camera.main.transform.position = Camera.main.transform.position.normalized * _gameConfig.CameraOffset.Evaluate(_gameDataManager.PlayerInfos.Count);
         }
-        #endregion
+#endregion
     }
 }

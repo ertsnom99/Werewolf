@@ -16,17 +16,18 @@ namespace Werewolf.Network
         [SerializeField]
         private GameConfig _gameConfig;
 
-        private LoadingScreen _loadingScreen;
+        private UIManager _UIManager;
 
         public void OnSceneLoadDone(NetworkRunner runner)
         {
             switch (runner.SceneManager.MainRunnerScene.buildIndex)
             {
                 case (int)SceneDefs.GAME:
-                    _loadingScreen = UIManager.Instance.LoadingScreen;
+                    _UIManager = UIManager.Instance;
 
-                    _loadingScreen.SetText(_gameConfig.LoadingScreenText);
-                    _loadingScreen.gameObject.SetActive(true);
+                    _UIManager.LoadingScreen.gameObject.SetActive(true);
+                    _UIManager.LoadingScreen.Config(_gameConfig.LoadingScreenText);
+                    _UIManager.LoadingScreen.SetFade(1.0f);
 
                     if (!GameManager.HasSpawned)
                     {
@@ -59,13 +60,14 @@ namespace Werewolf.Network
 
         private void StartLoadingFade()
         {
-            _loadingScreen.OnFadeInOver += ConfirmReadyToPlay;
-            _loadingScreen.FadeIn();
+            _UIManager.LoadingScreen.OnFadeOver += ConfirmReadyToPlay;
+            _UIManager.LoadingScreen.Config("");
+            _UIManager.LoadingScreen.FadeOut(_gameConfig.LoadingScreenTransitionDuration);
         }
 
         private void ConfirmReadyToPlay()
         {
-            _loadingScreen.OnFadeInOver -= ConfirmReadyToPlay;
+            _UIManager.LoadingScreen.OnFadeOver -= ConfirmReadyToPlay;
             GameManager.Instance.RPC_ConfirmPlayerReadyToPlay();
         }
 

@@ -98,11 +98,12 @@ namespace Werewolf
 
         private IEnumerator TransitionTitle(string text)
         {
-            _UIManager.ShowTitleUI(text, _gameConfig.UITransitionDuration);
+            _UIManager.TitleScreen.Config(text);
+            _UIManager.TitleScreen.FadeIn(_gameConfig.UITransitionDuration);
 
             yield return new WaitForSeconds(_gameConfig.UITransitionDuration + _gameConfig.DaytimeTransitionDuration);
 
-            _UIManager.HideTitleUI(_gameConfig.UITransitionDuration);
+            _UIManager.TitleScreen.FadeOut(_gameConfig.UITransitionDuration);
 
             _inTransition = false;
         }

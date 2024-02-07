@@ -124,5 +124,7 @@ namespace Werewolf
                 }
             }
         }
+
+        public override void OnRoleCall() { }
     }
 }

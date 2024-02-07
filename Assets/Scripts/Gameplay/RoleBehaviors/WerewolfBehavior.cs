@@ -8,5 +8,7 @@ namespace Werewolf
         public override void Init() { }
 
         public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
+
+        public override void OnRoleCall() { }
     }
 }
