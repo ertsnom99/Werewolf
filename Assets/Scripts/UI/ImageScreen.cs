@@ -18,11 +18,5 @@ namespace Werewolf.UI
             _image.sprite = image;
             _text.text = title;
         }
-
-        protected override void UpdateFade(float opacity)
-        {
-            SetImageOpacity(_image, opacity);
-            SetTextOpacity(_text, opacity);
-        }
     }
 }

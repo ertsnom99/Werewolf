@@ -49,12 +49,28 @@ namespace Werewolf
 
         public override void OnRoleCall()
         {
-            if (!_gameManager.MakePlayerChooseReservedRole(this))
+            if (_gameManager.MakePlayerChooseReservedRole(this, OnRoleSelected))
             {
-                // TODO: Immediatly end turn
+                return;
             }
+
+            // TODO: Tell gameloop that role is done
         }
 
-        // TODO: 6. Add a callback that will react to the choice of the player
+        private void OnRoleSelected(int roleGameplayTagID)
+        {
+            // TODO: Remove reserved roles
+            // TODO: Change role
+            // TODO: Tell gameloop that role is done
+
+            if (roleGameplayTagID > -1)
+            {
+                Debug.Log("Choose: " + GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(roleGameplayTagID).Name);
+            }
+            else
+            {
+                Debug.Log("Didn't choose anything");
+            }
+        }
     }
 }
