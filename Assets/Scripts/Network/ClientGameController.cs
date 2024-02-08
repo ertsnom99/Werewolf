@@ -25,7 +25,6 @@ namespace Werewolf.Network
                 case (int)SceneDefs.GAME:
                     _UIManager = UIManager.Instance;
 
-                    _UIManager.LoadingScreen.gameObject.SetActive(true);
                     _UIManager.LoadingScreen.Config(_gameConfig.LoadingScreenText);
                     _UIManager.LoadingScreen.SetFade(1.0f);
 

@@ -13,10 +13,5 @@ namespace Werewolf.UI
         {
             _text.text = title;
         }
-
-        protected override void UpdateFade(float opacity)
-        {
-            SetTextOpacity(_text, opacity);
-        }
     }
 }

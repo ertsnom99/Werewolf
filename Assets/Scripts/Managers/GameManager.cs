@@ -1,13 +1,12 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using Werewolf.UI;
 
 namespace Werewolf
 {
@@ -53,6 +52,8 @@ namespace Werewolf
         private bool _allPlayersReadyToPlay = false;
 
         private List<PlayerRef> _playerWaitingFor = new List<PlayerRef>();
+
+        private Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new Dictionary<PlayerRef, Action<int>>();
         #endregion
 
         #region Networked variables
@@ -625,22 +626,47 @@ namespace Werewolf
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
         public void RPC_MakePlayerChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer)
         {
-            // TODO: 4. Display choice UI (hook to choice callback -> RPC_GiveReservedRoleChoice)
+            List<Choice.ChoiceData> choices = new List<Choice.ChoiceData>();
+
+            foreach (int roleGameplayTag in rolesContainer.Roles)
+            {
+                if (roleGameplayTag <= 0)
+                {
+                    break;
+                }
+
+                RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
+                choices.Add(new Choice.ChoiceData { Image = roleData.Image, Value = roleGameplayTag });
+            }
+
+            _UIManager.ChoiceScreen.OnConfirmChoice += (int choice) =>
+            {
+                RPC_GiveReservedRoleChoice(choice);
+            };
+
+            _UIManager.ChoiceScreen.Config(_gameConfig.ChooseRoleText, choices.ToArray());
+            _UIManager.ChoiceScreen.FadeIn(_gameConfig.UITransitionDuration);
         }
 
-        [Rpc(targets: RpcTargets.Proxies, sources: RpcSources.StateAuthority, Channel = RpcChannel.Reliable)]
-        public void RPC_GiveReservedRoleChoice(int role, RpcInfo info = default)
+        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+        public void RPC_GiveReservedRoleChoice(int roleGameplayTagID, RpcInfo info = default)
         {
-            // TODO: 5. Tell correct behavior what choice was made by using the variable dictionnary<PlayerRef, Callback>
-            //info.Source
+            if (!_chooseReservedRoleCallbacks.ContainsKey(info.Source))
+            {
+                return;
+            }
+
+            _chooseReservedRoleCallbacks[info.Source](roleGameplayTagID);
+            _chooseReservedRoleCallbacks.Remove(info.Source);
+
+            // TODO: Hide Choice screen
         }
         #endregion
 
-        // TODO: 3. When called, a callback MUST be given and then stored in a variable dictionnary<PlayerRef, Callback>
-        // Returns if their is any reserved roles the player can choose from
-        public bool MakePlayerChooseReservedRole(RoleBehavior ReservedRoleOwner)
+        // Returns if their is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
+        public bool MakePlayerChooseReservedRole(RoleBehavior ReservedRoleOwner, Action<int> callback)
         {
-            if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner))
+            if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
             {
                 return false;
             }
@@ -653,6 +679,7 @@ namespace Werewolf
                 rolesContainer.Roles.Set(i, roleDatas[i].GameplayTag.CompactTagId);
             }
 
+            _chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
             RPC_MakePlayerChooseReservedRole(ReservedRoleOwner.Player, rolesContainer);
 
             return true;

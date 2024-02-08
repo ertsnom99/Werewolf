@@ -1,17 +1,22 @@
 using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Werewolf.UI
 {
+    [RequireComponent(typeof(CanvasGroup))]
     public abstract class FadingScreen : MonoBehaviour
     {
-        private float _opacity;
         private IEnumerator _coroutine;
 
+        private CanvasGroup _canvasGroup;
+
         public event Action OnFadeOver = delegate { };
+
+        private void Awake()
+        {
+            _canvasGroup = GetComponent<CanvasGroup>();
+        }
 
         public void FadeIn(float transitionDuration)
         {
@@ -36,16 +41,14 @@ namespace Werewolf.UI
 
         private IEnumerator TransitionUI(float targetOpacity, float transitionDuration)
         {
-            float startingOpacity = _opacity;
+            float startingOpacity = _canvasGroup.alpha;
             float transitionProgress = .0f;
 
             while (transitionProgress < transitionDuration)
             {
                 transitionProgress += Time.deltaTime;
                 float progressRatio = Mathf.Clamp01(transitionProgress / transitionDuration);
-                _opacity = Mathf.Lerp(startingOpacity, targetOpacity, progressRatio);
-
-                UpdateFade(_opacity);
+                _canvasGroup.alpha = Mathf.Lerp(startingOpacity, targetOpacity, progressRatio);
 
                 yield return 0;
             }
@@ -55,22 +58,9 @@ namespace Werewolf.UI
             OnFadeOver();
         }
 
-        protected abstract void UpdateFade(float opacity);
-
-        protected void SetTextOpacity(TMP_Text text, float opacity)
-        {
-            text.color = new Color { r = text.color.r, g = text.color.g, b = text.color.b, a = opacity };
-        }
-
-        protected void SetImageOpacity(Image image, float opacity)
-        {
-            image.color = new Color { r = image.color.r, g = image.color.g, b = image.color.b, a = opacity };
-        }
-
         public void SetFade(float opacity)
         {
-            _opacity = Mathf.Clamp01(opacity);
-            UpdateFade(_opacity);
+            _canvasGroup.alpha = Mathf.Clamp01(opacity);
         }
     }
 }

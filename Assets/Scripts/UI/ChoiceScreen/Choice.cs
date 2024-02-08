@@ -1,6 +1,6 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Werewolf.Data;
 
 namespace Werewolf.UI
 {
@@ -11,14 +11,47 @@ namespace Werewolf.UI
         private Image _image;
 
         [SerializeField]
+        private GameObject _highlight;
+
+        [SerializeField]
         private Button _button;
 
-        private int _roleID;
+        public int Value { get; private set; }
 
-        public void SetRole(RoleData role)
+        public event Action<Choice> OnSelected = delegate { };
+
+        public struct ChoiceData
         {
-            _roleID = role.GameplayTag.CompactTagId;
-            _image.sprite = role.Image;
+            public Sprite Image;
+            public int Value;
+        }
+
+        public void Start()
+        {
+            SetHighlighted(false);
+
+            _button.onClick.AddListener(() =>
+            {
+                SetHighlighted(!_highlight.activeSelf);
+                OnSelected(this);
+            });
+        }
+
+        public void SetChoice(ChoiceData choice)
+        {
+            _image.sprite = choice.Image;
+            Value = choice.Value;
+        }
+
+        public void SetHighlighted(bool highlight)
+        {
+            _highlight.SetActive(highlight);
+        }
+
+        public void Disable()
+        {
+            _button.onClick.RemoveAllListeners();
+            _button.interactable = false;
         }
     }
 }
