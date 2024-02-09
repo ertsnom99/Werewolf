@@ -26,7 +26,7 @@ namespace Werewolf.UI
 
         public event Action<int> OnConfirmChoice = delegate { };
 
-        public void Config(string text, Choice.ChoiceData[] choices)
+        public void Config(string text, Choice.ChoiceData[] choices, bool mustChooseOne)
         {
             _text.text = text;
 
@@ -49,6 +49,11 @@ namespace Werewolf.UI
 
             _confirmButton.onClick.AddListener(() =>
             {
+                if (mustChooseOne && _SelectedChoice == null)
+                {
+                    return;
+                }
+
                 ConfirmChoice();
             });
 
