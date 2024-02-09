@@ -49,7 +49,26 @@ namespace Werewolf
 
         public override void OnRoleCall()
         {
-            if (_gameManager.MakePlayerChooseReservedRole(this, OnRoleSelected))
+            RoleData[] roles = _gameManager.GetReservedRoles(this);
+
+            if (roles == null || roles.Length < 0)
+            {
+                // TODO: Tell gameloop that role is done
+                return;
+            }
+
+            bool reservedOnlyWerewolfs = true;
+
+            foreach (RoleData role in roles)
+            {
+                if (role.Type != RoleData.RoleType.Werewolf)
+                {
+                    reservedOnlyWerewolfs = false;
+                    break;
+                }
+            }
+
+            if (_gameManager.MakePlayerChooseReservedRole(this, reservedOnlyWerewolfs, OnRoleSelected))
             {
                 return;
             }
@@ -59,10 +78,6 @@ namespace Werewolf
 
         private void OnRoleSelected(int roleGameplayTagID)
         {
-            // TODO: Remove reserved roles
-            // TODO: Change role
-            // TODO: Tell gameloop that role is done
-
             if (roleGameplayTagID > -1)
             {
                 Debug.Log("Choose: " + GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(roleGameplayTagID).Name);
@@ -71,6 +86,12 @@ namespace Werewolf
             {
                 Debug.Log("Didn't choose anything");
             }
+
+            // TODO: Change role
+
+            _gameManager.RemoveReservedRoles(this, new int[0]);
+
+            // TODO: Tell gameloop that role is done
         }
     }
 }

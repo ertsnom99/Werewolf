@@ -57,7 +57,7 @@ namespace Werewolf
         #endregion
 
         #region Networked variables
-        [Networked, Capacity(5)]
+        [Networked, Capacity(5), SerializeField]
         public NetworkArray<RolesContainer> ReservedRoles { get; }
 
         [Serializable]
@@ -390,6 +390,7 @@ namespace Werewolf
         }
         #endregion
 
+        #region Roles reservation
         public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] roles, bool AreFaceUp)
         {
             RolesContainer rolesContainer = new();
@@ -415,7 +416,19 @@ namespace Werewolf
             ReservedRoles.Set(_reservedRolesByBehavior.Count, rolesContainer);
             _reservedRolesByBehavior.Add(roleBehavior, new IndexedReservedRoles { Roles = roles, Behaviors = behaviors, networkIndex = _reservedRolesByBehavior.Count });
         }
-        
+
+        public RoleData[] GetReservedRoles(RoleBehavior roleBehavior)
+        {
+            RoleData[] roles = null;
+
+            if (_reservedRolesByBehavior.ContainsKey(roleBehavior))
+            {
+                roles = _reservedRolesByBehavior[roleBehavior].Roles;
+            }
+
+            return roles;
+        }
+        #endregion
         #region RPC calls
         [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
         public void RPC_ConfirmPlayerReadyToReceiveRole(RpcInfo info = default)
@@ -624,7 +637,7 @@ namespace Werewolf
         }
 
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_MakePlayerChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer)
+        public void RPC_MakePlayerChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer, bool mustChooseOne)
         {
             List<Choice.ChoiceData> choices = new List<Choice.ChoiceData>();
 
@@ -644,7 +657,7 @@ namespace Werewolf
                 RPC_GiveReservedRoleChoice(choice);
             };
 
-            _UIManager.ChoiceScreen.Config(_gameConfig.ChooseRoleText, choices.ToArray());
+            _UIManager.ChoiceScreen.Config(mustChooseOne ? _gameConfig.ChooseRoleTextObligatory : _gameConfig.ChooseRoleText, choices.ToArray(), mustChooseOne);
             _UIManager.ChoiceScreen.FadeIn(_gameConfig.UITransitionDuration);
         }
 
@@ -656,6 +669,8 @@ namespace Werewolf
                 return;
             }
 
+            // TODO: Validate that the roleGameplayTagID is not invalid (not a role that is reserved by the behavior)
+
             _chooseReservedRoleCallbacks[info.Source](roleGameplayTagID);
             _chooseReservedRoleCallbacks.Remove(info.Source);
 
@@ -664,7 +679,7 @@ namespace Werewolf
         #endregion
 
         // Returns if their is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
-        public bool MakePlayerChooseReservedRole(RoleBehavior ReservedRoleOwner, Action<int> callback)
+        public bool MakePlayerChooseReservedRole(RoleBehavior ReservedRoleOwner, bool mustChooseOne, Action<int> callback)
         {
             if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
             {
@@ -680,9 +695,119 @@ namespace Werewolf
             }
 
             _chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-            RPC_MakePlayerChooseReservedRole(ReservedRoleOwner.Player, rolesContainer);
+            RPC_MakePlayerChooseReservedRole(ReservedRoleOwner.Player, rolesContainer, mustChooseOne);
 
             return true;
+        }
+
+        public void RemoveReservedRoles(RoleBehavior ReservedRoleOwner, int[] specificRoles)
+        {
+            if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner))
+            {
+                return;
+            }
+
+            int networkIndex = _reservedRolesByBehavior[ReservedRoleOwner].networkIndex;
+            bool mustRemoveEntry = true;
+
+            if (specificRoles.Length > 0)
+            {
+                foreach (int specificRole in specificRoles)
+                {
+                    int specificRoleIndex = -1;
+
+                    // Update server variables
+                    for (int i = 0; i < _reservedRolesByBehavior[ReservedRoleOwner].Roles.Length; i++)
+                    {
+                        RoleData role = _reservedRolesByBehavior[ReservedRoleOwner].Roles[i];
+
+                        if (role && role.GameplayTag.CompactTagId != specificRole)
+                        {
+                            continue;
+                        }
+
+                        _reservedRolesByBehavior[ReservedRoleOwner].Roles[i] = null;
+                        if (_reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i])
+                        {
+                            Destroy(_reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i].gameObject);
+                        }
+                        _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i] = null;
+#if UNITY_SERVER && UNITY_EDITOR
+                        if (_reservedCardsByBehavior[ReservedRoleOwner][i])
+                        {
+                            Destroy(_reservedCardsByBehavior[ReservedRoleOwner][i].gameObject);
+                        }
+                        _reservedCardsByBehavior[ReservedRoleOwner][i] = null;
+#endif
+                        specificRoleIndex = i;
+                        break;
+                    }
+
+                    if (specificRoleIndex <= -1)
+                    {
+                        Debug.LogError($"{specificRole} is not one of the reserved role!");
+                        continue;
+                    }
+
+                    // Update networked variable
+                    // Networked data and server data should ALWAYS be aligned, therefore no need to loop to find the corresponding role
+                    RolesContainer rolesContainer = new();
+                    rolesContainer.RoleCount = ReservedRoles[networkIndex].RoleCount;
+
+                    for (int i = 0; i < rolesContainer.Roles.Length; i++)
+                    {
+                        if (i == specificRoleIndex)
+                        {
+                            continue;
+                        }
+
+                        rolesContainer.Roles.Set(i, ReservedRoles[networkIndex].Roles.Get(i));
+                    }
+
+                    ReservedRoles.Set(networkIndex, rolesContainer);
+
+                    // Check if the entry is now empty and can be removed
+                    for (int i = 0; i < _reservedRolesByBehavior[ReservedRoleOwner].Roles.Length; i++)
+                    {
+                        if (_reservedRolesByBehavior[ReservedRoleOwner].Roles[i])
+                        {
+                            mustRemoveEntry = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Update server variables
+                for (int i = 0; i < _reservedRolesByBehavior[ReservedRoleOwner].Roles.Length; i++)
+                {
+                    if (_reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i])
+                    {
+                        Destroy(_reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i].gameObject);
+                    }
+#if UNITY_SERVER && UNITY_EDITOR
+                    if (_reservedCardsByBehavior[ReservedRoleOwner][i])
+                    {
+                        Destroy(_reservedCardsByBehavior[ReservedRoleOwner][i].gameObject);
+                    }
+#endif
+                }
+
+                // Update networked variable
+                RolesContainer rolesContainer = new();
+                ReservedRoles.Set(networkIndex, rolesContainer);
+            }
+
+            // Update server variable entry
+            if (mustRemoveEntry)
+            {
+                _reservedRolesByBehavior.Remove(ReservedRoleOwner);
+#if UNITY_SERVER && UNITY_EDITOR
+                _reservedCardsByBehavior.Remove(ReservedRoleOwner);
+#endif
+            }
+
+            // TODO: Tell clients to update reserved roles of networkIndex
         }
 
         private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
@@ -778,6 +903,8 @@ namespace Werewolf
 
                     card.SetRole(role);
                     card.Flip();
+
+                    cards[columnCounter] = card;
 
                     columnCounter++;
                 }
