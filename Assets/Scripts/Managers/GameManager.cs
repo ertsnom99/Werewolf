@@ -22,12 +22,12 @@ namespace Werewolf
         private struct PlayerRole
         {
             public RoleData Data;
-            public RoleBehavior Behavior;
+            public List<RoleBehavior> Behaviors;
         }
 
         private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new Dictionary<RoleBehavior, IndexedReservedRoles>();
 
-        private struct IndexedReservedRoles
+        public struct IndexedReservedRoles
         {
             public RoleData[] Roles;
             public RoleBehavior[] Behaviors;
@@ -51,6 +51,7 @@ namespace Werewolf
         private bool _allRolesSent = false;
         private bool _allPlayersReadyToPlay = false;
 
+        private int _currentNightCallIndex = 0;
         private List<PlayerRef> _playerWaitingFor = new List<PlayerRef>();
 
         private Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new Dictionary<PlayerRef, Action<int>>();
@@ -137,6 +138,7 @@ namespace Werewolf
             OnSpawned();
         }
 
+        #region Pre Gameplay Loop
         public void PrepareGame(RolesSetup rolesSetup)
         {
             GetGameDataManager();
@@ -157,13 +159,12 @@ namespace Werewolf
             CheckPreGameplayLoopProgress();
         }
 
-        #region Pre Gameplay Loop
         private void GetGameDataManager()
         {
             _gameDataManager = FindObjectOfType<GameDataManager>();
         }
 
-        #region Roles selection
+        #region Roles Selection
         private void SelectRolesToDistribute(RolesSetup rolesSetup)
         {
             // Convert GameplayTagIDs to RoleData
@@ -260,6 +261,13 @@ namespace Werewolf
 
             // Temporairy store the behaviors, because they must be attributed to specific players later
             RoleBehavior roleBehavior = Instantiate(role.Behavior, transform);
+
+            foreach (RoleData.Priority nightPriority in role.NightPriorities)
+            {
+                roleBehavior.AddNightPriority(nightPriority.index);
+                roleBehavior.SetIsPrimaryBehavior(true);
+            }
+
             _unassignedRoleBehaviors.Add(roleBehavior, role);
 
             roleBehavior.Init();
@@ -267,7 +275,7 @@ namespace Werewolf
         }
         #endregion
 
-        #region Roles distribution
+        #region Roles Distribution
         private void DistributeRoles()
         {
             foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
@@ -275,20 +283,21 @@ namespace Werewolf
                 RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
                 RolesToDistribute.Remove(selectedRole);
 
-                RoleBehavior selectedBehavior = null;
+                List<RoleBehavior> selectedBehaviors = new List<RoleBehavior>();
 
                 foreach (KeyValuePair<RoleBehavior, RoleData> unassignedRoleBehavior in _unassignedRoleBehaviors)
                 {
                     if (unassignedRoleBehavior.Value == selectedRole)
                     {
-                        selectedBehavior = unassignedRoleBehavior.Key;
+                        RoleBehavior selectedBehavior = unassignedRoleBehavior.Key;
                         selectedBehavior.SetPlayer(playerInfo.Key);
+                        selectedBehaviors.Add(selectedBehavior);
                         _unassignedRoleBehaviors.Remove(unassignedRoleBehavior.Key);
                         break;
                     }
                 }
 
-                _playerRoles.Add(playerInfo.Key, new PlayerRole { Data = selectedRole, Behavior = selectedBehavior });
+                _playerRoles.Add(playerInfo.Key, new PlayerRole { Data = selectedRole, Behaviors = selectedBehaviors });
             }
 
             _rolesDistributionDone = true;
@@ -383,98 +392,31 @@ namespace Werewolf
         {
             foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
             {
-                RPC_TellPlayerRole(playerInfo.Key, _playerRoles[playerInfo.Key].Data.GameplayTag.CompactTagId);
+                RPC_GivePlayerRole(playerInfo.Key, _playerRoles[playerInfo.Key].Data.GameplayTag.CompactTagId);
             }
 
             _allRolesSent = true;
         }
-        #endregion
 
-        #region Roles reservation
-        public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] roles, bool AreFaceUp)
-        {
-            RolesContainer rolesContainer = new();
-            RoleBehavior[] behaviors = new RoleBehavior[roles.Length];
-
-            rolesContainer.RoleCount = roles.Length;
-
-            for (int i = 0; i < roles.Length; i++)
-            {
-                rolesContainer.Roles.Set(i, AreFaceUp ? roles[i].GameplayTag.CompactTagId : -1);
-
-                foreach (KeyValuePair<RoleBehavior, RoleData> unassignedRoleBehavior in _unassignedRoleBehaviors)
-                {
-                    if (unassignedRoleBehavior.Value == roles[i])
-                    {
-                        behaviors[i] = unassignedRoleBehavior.Key;
-                        _unassignedRoleBehaviors.Remove(unassignedRoleBehavior.Key);
-                        break;
-                    }
-                }
-            }
-
-            ReservedRoles.Set(_reservedRolesByBehavior.Count, rolesContainer);
-            _reservedRolesByBehavior.Add(roleBehavior, new IndexedReservedRoles { Roles = roles, Behaviors = behaviors, networkIndex = _reservedRolesByBehavior.Count });
-        }
-
-        public RoleData[] GetReservedRoles(RoleBehavior roleBehavior)
-        {
-            RoleData[] roles = null;
-
-            if (_reservedRolesByBehavior.ContainsKey(roleBehavior))
-            {
-                roles = _reservedRolesByBehavior[roleBehavior].Roles;
-            }
-
-            return roles;
-        }
-        #endregion
         #region RPC calls
-        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-        public void RPC_ConfirmPlayerReadyToReceiveRole(RpcInfo info = default)
-        {
-            if (!AddPlayerReady(info.Source))
-            {
-                return;
-            }
-
-            _allPlayersReadyToReceiveRole = true;
-            _playersReady.Clear();
-
-            Log.Info("All players are ready!");
-
-            CheckPreGameplayLoopProgress();
-        }
-
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_TellPlayerRole([RpcTarget] PlayerRef player, int role)
+        public void RPC_GivePlayerRole([RpcTarget] PlayerRef player, int roleGameplayTagID)
         {
             if (!_gameDataManager)
             {
                 GetGameDataManager();
             }
 
-            CreatePlayerCards(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(role));
+            CreatePlayerCards(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
             CreateReservedRoleCards();
             AdjustCamera();
 
             OnRoleReceived();
         }
-
-        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-        public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
-        {
-            if (!AddPlayerReady(info.Source))
-            {
-                return;
-            }
-
-            _allPlayersReadyToPlay = true;
-
-            CheckPreGameplayLoopProgress();
-        }
+        #endregion
         #endregion
 
+        #region Loop Progress
         private bool AddPlayerReady(PlayerRef player)
         {
             if (_playersReady.Contains(player))
@@ -511,6 +453,38 @@ namespace Werewolf
                 StartGame();
             }
         }
+
+        #region RPC Calls
+        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+        public void RPC_ConfirmPlayerReadyToReceiveRole(RpcInfo info = default)
+        {
+            if (!AddPlayerReady(info.Source))
+            {
+                return;
+            }
+
+            _allPlayersReadyToReceiveRole = true;
+            _playersReady.Clear();
+
+            Log.Info("All players are ready!");
+
+            CheckPreGameplayLoopProgress();
+        }
+
+        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+        public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
+        {
+            if (!AddPlayerReady(info.Source))
+            {
+                return;
+            }
+
+            _allPlayersReadyToPlay = true;
+
+            CheckPreGameplayLoopProgress();
+        }
+        #endregion
+        #endregion
         #endregion
 
         #region Gameplay Loop
@@ -569,8 +543,11 @@ namespace Werewolf
 
         private IEnumerator CallRoles()
         {
-            foreach (NightCall nightCall in _nightCalls)
+            _currentNightCallIndex = 0;
+
+            while (_currentNightCallIndex < _nightCalls.Count)
             {
+                NightCall nightCall = _nightCalls[_currentNightCallIndex];
                 int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(nightCall);
 
                 foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
@@ -579,8 +556,20 @@ namespace Werewolf
                     {
                         // TODO: Skip if the player is dead
 
-                        _playerWaitingFor.Add(playerRole.Key);
-                        _playerRoles[playerRole.Key].Behavior.OnRoleCall();
+                        foreach (RoleBehavior behavior in _playerRoles[playerRole.Key].Behaviors)
+                        {
+                            if (behavior.NightPriorities.Contains(nightCall.PriorityIndex))
+                            {
+                                _playerWaitingFor.Add(playerRole.Key);
+                                behavior.OnRoleCall();
+                                break;
+                            }
+                        }
+
+                        if (!_playerWaitingFor.Contains(playerRole.Key))
+                        {
+                            Debug.LogError($"{playerRole.Key} is suppose to play, he has no behavior with the PriorityIndex {nightCall.PriorityIndex}");
+                        }
                     }
                     else
                     {
@@ -610,6 +599,8 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
                 HideRolePlaying();
 #endif
+                _currentNightCallIndex++;
+
                 yield return new WaitForSeconds(_gameConfig.UITransitionDuration);
             }
 
@@ -617,87 +608,220 @@ namespace Werewolf
         }
         #endregion
 
-        #region RPC calls
+        #region RPC Calls
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
         public void RPC_TransitionToNight()
         {
             _daytimeManager.ChangeDaytime(Daytime.Night);
         }
+        #endregion
+        #endregion
 
-        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_DisplayRolePlaying([RpcTarget] PlayerRef player, int roleGameplayTagID)
+        #region Role Change
+        public void ChangeRole(PlayerRef player, RoleData roleData, RoleBehavior roleBehavior)
         {
-            DisplayRolePlaying(roleGameplayTagID);
-        }
+            // Change player role
+            PlayerRole playerRole = new() { Data = roleData };
+            playerRole.Behaviors = _playerRoles[player].Behaviors;
+            _playerRoles[player] = playerRole;
 
-        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_HideRolePlaying()
-        {
-            HideRolePlaying();
-        }
-
-        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_MakePlayerChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer, bool mustChooseOne)
-        {
-            List<Choice.ChoiceData> choices = new List<Choice.ChoiceData>();
-
-            foreach (int roleGameplayTag in rolesContainer.Roles)
+#if UNITY_SERVER && UNITY_EDITOR
+            _playerCards[player].SetRole(roleData);
+#endif
+            // Remove the primary behavior
+            foreach (RoleBehavior behavior in _playerRoles[player].Behaviors)
             {
-                if (roleGameplayTag <= 0)
+                if (!behavior.IsPrimaryBehavior)
                 {
-                    break;
+                    continue;
                 }
 
-                RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
-                choices.Add(new Choice.ChoiceData { Image = roleData.Image, Value = roleGameplayTag });
+                RemoveBehavior(player, behavior);
+                break;
             }
 
-            _UIManager.ChoiceScreen.OnConfirmChoice += (int choice) =>
+            if (roleBehavior)
             {
-                RPC_GiveReservedRoleChoice(choice);
-            };
+                AddBehavior(player, roleBehavior);
+                roleBehavior.SetIsPrimaryBehavior(true);
+            }
 
-            _UIManager.ChoiceScreen.Config(mustChooseOne ? _gameConfig.ChooseRoleTextObligatory : _gameConfig.ChooseRoleText, choices.ToArray(), mustChooseOne);
-            _UIManager.ChoiceScreen.FadeIn(_gameConfig.UITransitionDuration);
+            RPC_ChangePlayerRole(player, roleData.GameplayTag.CompactTagId);
         }
 
-        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-        public void RPC_GiveReservedRoleChoice(int roleGameplayTagID, RpcInfo info = default)
+        #region RPC Calls
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_ChangePlayerRole([RpcTarget] PlayerRef player, int roleGameplayTagID)
         {
-            if (!_chooseReservedRoleCallbacks.ContainsKey(info.Source))
+            _playerCards[player].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
+        }
+        #endregion
+        #endregion
+
+        #region Behavior Change
+        public void AddBehavior(PlayerRef player, RoleBehavior behavior)
+        {
+            // Remove any contradicting behaviors
+            List<RoleBehavior> behaviorsToRemove = FindNightCallBehaviors(player, behavior.NightPriorities.ToArray());
+
+            foreach (RoleBehavior behaviorToRemove in behaviorsToRemove)
             {
-                return;
+                RemoveBehavior(player, behaviorToRemove);
             }
 
-            // TODO: Validate that the roleGameplayTagID is not invalid (not a role that is reserved by the behavior)
+            // Add the new behavior
+            foreach (int priority in behavior.NightPriorities)
+            {
+                AddPlayerToNightCall(priority, player);
+            }
 
-            _chooseReservedRoleCallbacks[info.Source](roleGameplayTagID);
-            _chooseReservedRoleCallbacks.Remove(info.Source);
+            _playerRoles[player].Behaviors.Add(behavior);
 
-            // TODO: Hide Choice screen
+            behavior.SetPlayer(player);
+#if UNITY_SERVER && UNITY_EDITOR
+            behavior.transform.position = _playerCards[player].transform.position;
+#endif
+        }
+
+        public void RemoveBehavior(PlayerRef player, RoleBehavior behavior)
+        {
+            foreach (int priority in behavior.NightPriorities)
+            {
+                RemovePlayerFromNightCall(priority, player);
+            }
+
+            for (int i = _playerRoles[player].Behaviors.Count - 1; i >= 0; i--)
+            {
+                if (_playerRoles[player].Behaviors[i] != behavior)
+                {
+                    continue;
+                }
+
+                _playerRoles[player].Behaviors.RemoveAt(i);
+                break;
+            }
+
+            Destroy(behavior.gameObject);
+        }
+
+        // Returns all the RoleBehavior that are called during a night call and that have at least one of the prioritiesIndex
+        private List<RoleBehavior> FindNightCallBehaviors(PlayerRef player, int[] prioritiesIndex)
+        {
+            List<RoleBehavior> behaviorsToRemove = new List<RoleBehavior>();
+
+            foreach (RoleBehavior behavior in _playerRoles[player].Behaviors)
+            {
+                foreach (int behaviorNightPriority in behavior.NightPriorities)
+                {
+                    if (prioritiesIndex.Contains(behaviorNightPriority) && !behaviorsToRemove.Contains(behavior))
+                    {
+                        behaviorsToRemove.Add(behavior);
+                        break;
+                    }
+                }
+            }
+
+            return behaviorsToRemove;
         }
         #endregion
 
-        // Returns if their is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
-        public bool MakePlayerChooseReservedRole(RoleBehavior ReservedRoleOwner, bool mustChooseOne, Action<int> callback)
+        #region Night Call Change
+        private void RemovePlayerFromNightCall(int priorityIndex, PlayerRef player)
         {
-            if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
+            for (int i = 0; i < _nightCalls.Count; i++)
             {
-                return false;
+                if (_nightCalls[i].PriorityIndex != priorityIndex)
+                {
+                    continue;
+                }
+
+                _nightCalls[i].Players.Remove(player);
+
+                if (_nightCalls[i].Players.Count <= 0)
+                {
+                    _nightCalls.RemoveAt(i);
+
+                    if (i <= _currentNightCallIndex)
+                    {
+                        _currentNightCallIndex--;
+                    }
+                }
+
+                break;
+            }
+        }
+
+        private void AddPlayerToNightCall(int priorityIndex, PlayerRef player)
+        {
+            for (int i = 0; i < _nightCalls.Count; i++)
+            {
+                if (_nightCalls[i].PriorityIndex == priorityIndex)
+                {
+                    if (_nightCalls[i].Players.Contains(player))
+                    {
+                        Debug.LogError("Tried to add duplicated player to a night call");
+                        return;
+                    }
+
+                    _nightCalls[i].Players.Add(player);
+                    break;
+                }
+                else if (_nightCalls[i].PriorityIndex > priorityIndex)
+                {
+                    NightCall nightCall = new();
+                    nightCall.PriorityIndex = priorityIndex;
+                    nightCall.Players.Add(player);
+
+                    _nightCalls.Insert(i, nightCall);
+
+                    if (i <= _currentNightCallIndex)
+                    {
+                        _currentNightCallIndex++;
+                    }
+
+                    break;
+                }
+            }
+        }
+        #endregion
+
+        #region Roles Reservation
+        public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] roles, bool AreFaceUp)
+        {
+            RolesContainer rolesContainer = new();
+            RoleBehavior[] behaviors = new RoleBehavior[roles.Length];
+
+            rolesContainer.RoleCount = roles.Length;
+
+            for (int i = 0; i < roles.Length; i++)
+            {
+                rolesContainer.Roles.Set(i, AreFaceUp ? roles[i].GameplayTag.CompactTagId : -1);
+
+                foreach (KeyValuePair<RoleBehavior, RoleData> unassignedRoleBehavior in _unassignedRoleBehaviors)
+                {
+                    if (unassignedRoleBehavior.Value == roles[i])
+                    {
+                        behaviors[i] = unassignedRoleBehavior.Key;
+                        _unassignedRoleBehaviors.Remove(unassignedRoleBehavior.Key);
+                        break;
+                    }
+                }
             }
 
-            RoleData[] roleDatas = _reservedRolesByBehavior[ReservedRoleOwner].Roles;
-            RolesContainer rolesContainer = new RolesContainer { RoleCount = roleDatas.Length };
+            ReservedRoles.Set(_reservedRolesByBehavior.Count, rolesContainer);
+            _reservedRolesByBehavior.Add(roleBehavior, new IndexedReservedRoles { Roles = roles, Behaviors = behaviors, networkIndex = _reservedRolesByBehavior.Count });
+        }
 
-            for (int i = 0; i < roleDatas.Length; i++)
+        public IndexedReservedRoles GetReservedRoles(RoleBehavior roleBehavior)
+        {
+            IndexedReservedRoles reservedRoles = new();
+
+            if (_reservedRolesByBehavior.ContainsKey(roleBehavior))
             {
-                rolesContainer.Roles.Set(i, roleDatas[i].GameplayTag.CompactTagId);
+                reservedRoles = _reservedRolesByBehavior[roleBehavior];
             }
 
-            _chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-            RPC_MakePlayerChooseReservedRole(ReservedRoleOwner.Player, rolesContainer, mustChooseOne);
-
-            return true;
+            return reservedRoles;
         }
 
         public void RemoveReservedRoles(RoleBehavior ReservedRoleOwner, int[] specificRoles)
@@ -727,9 +851,12 @@ namespace Werewolf
                         }
 
                         _reservedRolesByBehavior[ReservedRoleOwner].Roles[i] = null;
-                        if (_reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i])
+
+                        RoleBehavior behavior = _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i];
+
+                        if (behavior && behavior.Player == null)
                         {
-                            Destroy(_reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i].gameObject);
+                            Destroy(behavior.gameObject);
                         }
                         _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i] = null;
 #if UNITY_SERVER && UNITY_EDITOR
@@ -781,9 +908,11 @@ namespace Werewolf
                 // Update server variables
                 for (int i = 0; i < _reservedRolesByBehavior[ReservedRoleOwner].Roles.Length; i++)
                 {
-                    if (_reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i])
+                    RoleBehavior behavior = _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i];
+
+                    if (behavior && behavior.Player == null)
                     {
-                        Destroy(_reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i].gameObject);
+                        Destroy(behavior.gameObject);
                     }
 #if UNITY_SERVER && UNITY_EDITOR
                     if (_reservedCardsByBehavior[ReservedRoleOwner][i])
@@ -807,7 +936,104 @@ namespace Werewolf
 #endif
             }
 
-            // TODO: Tell clients to update reserved roles of networkIndex
+            // Tell clients to update visual on there side
+            RPC_UpdateDisplayedReservedRole(networkIndex);
+        }
+
+        // Returns if their is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
+        public bool MakePlayerChooseReservedRole(RoleBehavior ReservedRoleOwner, bool mustChooseOne, Action<int> callback)
+        {
+            if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
+            {
+                return false;
+            }
+
+            RoleData[] roleDatas = _reservedRolesByBehavior[ReservedRoleOwner].Roles;
+            RolesContainer rolesContainer = new RolesContainer { RoleCount = roleDatas.Length };
+
+            for (int i = 0; i < roleDatas.Length; i++)
+            {
+                rolesContainer.Roles.Set(i, roleDatas[i].GameplayTag.CompactTagId);
+            }
+
+            _chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
+            RPC_MakePlayerChooseReservedRole(ReservedRoleOwner.Player, rolesContainer, mustChooseOne);
+
+            return true;
+        }
+
+        #region RPC Calls
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_MakePlayerChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer, bool mustChooseOne)
+        {
+            List<Choice.ChoiceData> choices = new List<Choice.ChoiceData>();
+
+            foreach (int roleGameplayTag in rolesContainer.Roles)
+            {
+                if (roleGameplayTag <= 0)
+                {
+                    break;
+                }
+
+                RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
+                choices.Add(new Choice.ChoiceData { Image = roleData.Image, Value = roleGameplayTag });
+            }
+
+            _UIManager.ChoiceScreen.OnConfirmChoice += (int choice) =>
+            {
+                RPC_GiveReservedRoleChoice(choice);
+            };
+
+            _UIManager.ChoiceScreen.Config(mustChooseOne ? _gameConfig.ChooseRoleTextObligatory : _gameConfig.ChooseRoleText, choices.ToArray(), mustChooseOne);
+            _UIManager.ChoiceScreen.FadeIn(_gameConfig.UITransitionDuration);
+        }
+
+        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+        public void RPC_GiveReservedRoleChoice(int roleGameplayTagID, RpcInfo info = default)
+        {
+            if (!_chooseReservedRoleCallbacks.ContainsKey(info.Source))
+            {
+                return;
+            }
+
+            // TODO: Validate that the roleGameplayTagID is not invalid (not a role that is reserved by the behavior)
+
+            _chooseReservedRoleCallbacks[info.Source](roleGameplayTagID);
+            _chooseReservedRoleCallbacks.Remove(info.Source);
+
+            // TODO: Hide Choice screen
+        }
+
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_UpdateDisplayedReservedRole(int networkIndex)
+        {
+            RolesContainer rolesContainer = ReservedRoles[networkIndex];
+            for (int i = 0; i < rolesContainer.Roles.Count(); i++)
+            {
+                if (rolesContainer.Roles[i] != 0 || _reservedRolesCards[networkIndex].Length <= i || !_reservedRolesCards[networkIndex][i])
+                {
+                    continue;
+                }
+
+                Destroy(_reservedRolesCards[networkIndex][i].gameObject);
+            }
+        }
+        #endregion
+        #endregion
+
+        #region UI
+        private void DisplayRolePlaying(int roleGameplayTagID)
+        {
+            RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
+            string text = roleData.CanHaveMultiples ? _gameConfig.RolePlayingTextPlurial : _gameConfig.RolePlayingTextSingular;
+
+            _UIManager.ImageScreen.Config(roleData.Image, string.Format(text, roleData.Name.ToLower()));
+            _UIManager.ImageScreen.FadeIn(_gameConfig.UITransitionDuration);
+        }
+
+        private void HideRolePlaying()
+        {
+            _UIManager.ImageScreen.FadeOut(_gameConfig.UITransitionDuration);
         }
 
         private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
@@ -836,22 +1062,22 @@ namespace Werewolf
             }
         }
 
-        private void DisplayRolePlaying(int roleGameplayTagID)
+        #region RPC Calls
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_DisplayRolePlaying([RpcTarget] PlayerRef player, int roleGameplayTagID)
         {
-            RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
-            string text = roleData.CanHaveMultiples ? _gameConfig.RolePlayingTextPlurial : _gameConfig.RolePlayingTextSingular;
-
-            _UIManager.ImageScreen.Config(roleData.Image, string.Format(text, roleData.Name.ToLower()));
-            _UIManager.ImageScreen.FadeIn(_gameConfig.UITransitionDuration);
+            DisplayRolePlaying(roleGameplayTagID);
         }
 
-        private void HideRolePlaying()
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_HideRolePlaying()
         {
-            _UIManager.ImageScreen.FadeOut(_gameConfig.UITransitionDuration);
+            HideRolePlaying();
         }
-#endregion
+        #endregion
+        #endregion
 
-#region Visual
+        #region Visual
 #if UNITY_SERVER && UNITY_EDITOR
         private void CreatePlayerCardsForServer()
         {
@@ -873,14 +1099,17 @@ namespace Werewolf
                 card.SetNickname(_gameDataManager.PlayerInfos[playerRole.Key].Nickname);
                 card.Flip();
 
-                if (!playerRole.Value.Behavior)
+                _playerCards.Add(playerRole.Key, card);
+
+                if (playerRole.Value.Behaviors.Count <= 0)
                 {
                     continue;
                 }
 
-                Transform roleBehaviorTransform = playerRole.Value.Behavior.transform;
-                roleBehaviorTransform.parent = card.transform;
-                roleBehaviorTransform.localPosition = Vector3.zero;
+                foreach (RoleBehavior behavior in playerRole.Value.Behaviors)
+                {
+                    behavior.transform.position = card.transform.position;
+                }
             }
         }
 
@@ -1028,6 +1257,6 @@ namespace Werewolf
         {
             Camera.main.transform.position = Camera.main.transform.position.normalized * _gameConfig.CameraOffset.Evaluate(_gameDataManager.PlayerInfos.Count);
         }
-#endregion
+        #endregion
     }
 }

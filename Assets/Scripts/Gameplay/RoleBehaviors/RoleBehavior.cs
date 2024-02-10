@@ -11,9 +11,34 @@ namespace Werewolf
         [field: ReadOnly]
         public PlayerRef Player { get; private set; }
 
+        [field: SerializeField]
+        [field: ReadOnly]
+        public List<int> NightPriorities { get; private set; }
+
+        [field: SerializeField]
+        [field: ReadOnly]
+        public bool IsPrimaryBehavior { get; private set; }
+
         public void SetPlayer(PlayerRef player)
         {
             Player = player;
+        }
+
+        public void AddNightPriority(int nightPriority)
+        {
+            if (NightPriorities == null)
+            {
+                NightPriorities = new List<int> { nightPriority };
+            }
+            else
+            {
+                NightPriorities.Add(nightPriority);
+            }
+        }
+
+        public void SetIsPrimaryBehavior(bool isPrimaryBehavior)
+        {
+            IsPrimaryBehavior = isPrimaryBehavior;
         }
 
         public abstract void Init();
