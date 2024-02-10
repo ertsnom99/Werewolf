@@ -49,7 +49,7 @@ namespace Werewolf
 
         public override void OnRoleCall()
         {
-            RoleData[] roles = _gameManager.GetReservedRoles(this);
+            RoleData[] roles = _gameManager.GetReservedRoles(this).Roles;
 
             if (roles == null || roles.Length < 0)
             {
@@ -80,18 +80,26 @@ namespace Werewolf
         {
             if (roleGameplayTagID > -1)
             {
-                Debug.Log("Choose: " + GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(roleGameplayTagID).Name);
-            }
-            else
-            {
-                Debug.Log("Didn't choose anything");
-            }
+                GameManager.IndexedReservedRoles roles = _gameManager.GetReservedRoles(this);
+                int roleIndex = 0;
 
-            // TODO: Change role
+                foreach (RoleData role in roles.Roles)
+                {
+                    if (role.GameplayTag.CompactTagId != roleGameplayTagID)
+                    {
+                        roleIndex++;
+                        continue;
+                    }
+
+                    _gameManager.ChangeRole(Player, GameplayDatabaseManager.Instance.GetGameplayData<RoleData>(roleGameplayTagID), roles.Behaviors[roleIndex]);
+                }
+            }
 
             _gameManager.RemoveReservedRoles(this, new int[0]);
 
             // TODO: Tell gameloop that role is done
+
+            Destroy(gameObject);
         }
     }
 }
