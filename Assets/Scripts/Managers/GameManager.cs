@@ -956,7 +956,7 @@ namespace Werewolf
             RPC_UpdateDisplayedReservedRole(networkIndex);
         }
 
-        // Returns if their is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
+        // Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
         public bool MakePlayerChooseReservedRole(RoleBehavior ReservedRoleOwner, bool mustChooseOne, Action<int> callback)
         {
             if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
@@ -1012,12 +1012,8 @@ namespace Werewolf
                 return;
             }
 
-            // TODO: Validate that the roleGameplayTagID is not invalid (not a role that is reserved by the behavior)
-
             _chooseReservedRoleCallbacks[info.Source](roleGameplayTagID);
             _chooseReservedRoleCallbacks.Remove(info.Source);
-
-            // TODO: Show final choice
         }
 
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
