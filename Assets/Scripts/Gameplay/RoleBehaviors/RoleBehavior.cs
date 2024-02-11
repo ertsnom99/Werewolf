@@ -19,6 +19,8 @@ namespace Werewolf
         [field: ReadOnly]
         public bool IsPrimaryBehavior { get; private set; }
 
+        protected bool _timedOut = false;
+
         public void SetPlayer(PlayerRef player)
         {
             Player = player;
@@ -45,6 +47,14 @@ namespace Werewolf
 
         public abstract void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles);
 
-        public abstract void OnRoleCall();
+        public virtual void OnRoleCall()
+        {
+            _timedOut = false;
+        }
+
+        public virtual void OnRoleTimeOut()
+        {
+            _timedOut = true;
+        }
     }
 }

@@ -19,9 +19,18 @@ namespace Werewolf.Data
         [field: SerializeField]
         public AnimationCurve CameraOffset { get; private set; }
 
-        [field: Header("Gameplay Loop Steps")]
+        [field: Header("Gameplay Loop")]
         [field: SerializeField]
         public float TransitionToNightDuration { get; private set; }
+
+        [field: SerializeField]
+        public float NightCallMinimumDuration { get; private set; }
+
+        [field: SerializeField]
+        public float NightCallMaximumDuration { get; private set; }
+
+        [field: SerializeField]
+        public float NightCallChangeDuration { get; private set; }
 
         [field: Header("Daytime")]
         [field:SerializeField]
