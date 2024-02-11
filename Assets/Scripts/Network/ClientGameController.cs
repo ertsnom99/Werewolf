@@ -61,7 +61,7 @@ namespace Werewolf.Network
         {
             _UIManager.LoadingScreen.OnFadeOver += ConfirmReadyToPlay;
             _UIManager.LoadingScreen.Config("");
-            _UIManager.LoadingScreen.FadeOut(_gameConfig.LoadingScreenTransitionDuration);
+            _UIManager.FadeOut(_UIManager.LoadingScreen, _gameConfig.LoadingScreenTransitionDuration);
         }
 
         private void ConfirmReadyToPlay()

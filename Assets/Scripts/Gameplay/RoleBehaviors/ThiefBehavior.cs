@@ -53,7 +53,7 @@ namespace Werewolf
 
             if (roles == null || roles.Length < 0)
             {
-                // TODO: Tell gameloop that role is done
+                _gameManager.StopWaintingForPlayer(Player);
                 return;
             }
 
@@ -73,7 +73,7 @@ namespace Werewolf
                 return;
             }
 
-            // TODO: Tell gameloop that role is done
+            _gameManager.StopWaintingForPlayer(Player);
         }
 
         private void OnRoleSelected(int roleGameplayTagID)
@@ -96,8 +96,7 @@ namespace Werewolf
             }
 
             _gameManager.RemoveReservedRoles(this, new int[0]);
-
-            // TODO: Tell gameloop that role is done
+            _gameManager.StopWaintingForPlayer(Player);
 
             Destroy(gameObject);
         }
