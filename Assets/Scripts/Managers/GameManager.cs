@@ -52,7 +52,7 @@ namespace Werewolf
         private bool _allPlayersReadyToPlay = false;
 
         private int _currentNightCallIndex = 0;
-        private List<PlayerRef> _playerWaitingFor = new List<PlayerRef>();
+        private List<PlayerRef> _playersWaitingFor = new List<PlayerRef>();
 
         private Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new Dictionary<PlayerRef, Action<int>>();
         #endregion
@@ -560,13 +560,13 @@ namespace Werewolf
                         {
                             if (behavior.NightPriorities.Contains(nightCall.PriorityIndex))
                             {
-                                _playerWaitingFor.Add(playerRole.Key);
+                                _playersWaitingFor.Add(playerRole.Key);
                                 behavior.OnRoleCall();
                                 break;
                             }
                         }
 
-                        if (!_playerWaitingFor.Contains(playerRole.Key))
+                        if (!_playersWaitingFor.Contains(playerRole.Key))
                         {
                             Debug.LogError($"{playerRole.Key} is suppose to play, he has no behavior with the PriorityIndex {nightCall.PriorityIndex}");
                         }
@@ -579,23 +579,13 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
                 DisplayRolePlaying(displayRoleGameplayTagID);
 #endif
-                // Wait until all roles are done
-                while (_playerWaitingFor.Count > 0)
+                // Wait until all players are done
+                while (_playersWaitingFor.Count > 0)
                 {
                     yield return 0;
                 }
 
-                foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
-                {
-                    if (nightCall.Players.Contains(playerRole.Key))
-                    {
-                        // TODO: Tell playing role to hide their UI?
-                    }
-                    else
-                    {
-                        RPC_HideRolePlaying();
-                    }
-                }
+                RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
                 HideRolePlaying();
 #endif
@@ -605,6 +595,16 @@ namespace Werewolf
             }
 
             MoveToNextGameplayLoopStep();
+        }
+
+        public void StopWaintingForPlayer(PlayerRef player)
+        {
+            if (!_playersWaitingFor.Contains(player))
+            {
+                return;
+            }
+
+            _playersWaitingFor.Remove(player);
         }
         #endregion
 
@@ -985,7 +985,7 @@ namespace Werewolf
             };
 
             _UIManager.ChoiceScreen.Config(mustChooseOne ? _gameConfig.ChooseRoleTextObligatory : _gameConfig.ChooseRoleText, choices.ToArray(), mustChooseOne);
-            _UIManager.ChoiceScreen.FadeIn(_gameConfig.UITransitionDuration);
+            _UIManager.FadeIn(_UIManager.ChoiceScreen, _gameConfig.UITransitionDuration);
         }
 
         [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -1001,7 +1001,7 @@ namespace Werewolf
             _chooseReservedRoleCallbacks[info.Source](roleGameplayTagID);
             _chooseReservedRoleCallbacks.Remove(info.Source);
 
-            // TODO: Hide Choice screen
+            // TODO: Show final choice
         }
 
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -1028,12 +1028,7 @@ namespace Werewolf
             string text = roleData.CanHaveMultiples ? _gameConfig.RolePlayingTextPlurial : _gameConfig.RolePlayingTextSingular;
 
             _UIManager.ImageScreen.Config(roleData.Image, string.Format(text, roleData.Name.ToLower()));
-            _UIManager.ImageScreen.FadeIn(_gameConfig.UITransitionDuration);
-        }
-
-        private void HideRolePlaying()
-        {
-            _UIManager.ImageScreen.FadeOut(_gameConfig.UITransitionDuration);
+            _UIManager.FadeIn(_UIManager.ImageScreen, _gameConfig.UITransitionDuration);
         }
 
         private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
@@ -1062,6 +1057,11 @@ namespace Werewolf
             }
         }
 
+        private void HideRolePlaying()
+        {
+            _UIManager.FadeOut(_UIManager.ImageScreen, _gameConfig.UITransitionDuration);
+        }
+
         #region RPC Calls
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
         public void RPC_DisplayRolePlaying([RpcTarget] PlayerRef player, int roleGameplayTagID)
@@ -1073,6 +1073,12 @@ namespace Werewolf
         public void RPC_HideRolePlaying()
         {
             HideRolePlaying();
+        }
+
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        public void RPC_HideUI()
+        {
+            _UIManager.FadeOut(_gameConfig.UITransitionDuration);
         }
         #endregion
         #endregion

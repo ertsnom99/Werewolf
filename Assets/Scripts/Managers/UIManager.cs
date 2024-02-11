@@ -17,5 +17,39 @@ namespace Werewolf
 
         [field: SerializeField]
         public ChoiceScreen ChoiceScreen { get; private set; }
+
+        private FadingScreen _currentFadingScreen;
+
+        public void FadeIn(FadingScreen fadingScreen, float transitionDuration)
+        {
+            _currentFadingScreen = fadingScreen;
+            fadingScreen.FadeIn(transitionDuration);
+        }
+
+        public void FadeIn(float transitionDuration)
+        {
+            if (!_currentFadingScreen)
+            {
+                return;
+            }
+
+            _currentFadingScreen.FadeIn(transitionDuration);
+        }
+
+        public void FadeOut(FadingScreen fadingScreen, float transitionDuration)
+        {
+            _currentFadingScreen = fadingScreen;
+            fadingScreen.FadeOut(transitionDuration);
+        }
+
+        public void FadeOut(float transitionDuration)
+        {
+            if (!_currentFadingScreen)
+            {
+                return;
+            }
+
+            _currentFadingScreen.FadeOut(transitionDuration);
+        }
     }
 }
