@@ -550,6 +550,8 @@ namespace Werewolf
                 NightCall nightCall = _nightCalls[_currentNightCallIndex];
                 int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(nightCall);
 
+                Dictionary<PlayerRef, RoleBehavior> actifBehaviors = new Dictionary<PlayerRef, RoleBehavior>();
+
                 foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
                 {
                     if (nightCall.Players.Contains(playerRole.Key))
@@ -562,6 +564,7 @@ namespace Werewolf
                             {
                                 _playersWaitingFor.Add(playerRole.Key);
                                 behavior.OnRoleCall();
+                                actifBehaviors.Add(playerRole.Key, behavior);
                                 break;
                             }
                         }
@@ -579,10 +582,23 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
                 DisplayRolePlaying(displayRoleGameplayTagID);
 #endif
-                // Wait until all players are done
-                while (_playersWaitingFor.Count > 0)
+                float elapsedTime = .0f;
+
+                // Wait until all players are done and the minimum amount of time is reached OR the maximum amount of time is reached
+                while ((_playersWaitingFor.Count > 0 || elapsedTime < _gameConfig.NightCallMinimumDuration) && elapsedTime < _gameConfig.NightCallMaximumDuration)
                 {
+                    elapsedTime += Time.deltaTime;
                     yield return 0;
+                }
+
+                if (_playersWaitingFor.Count > 0)
+                {
+                    foreach (PlayerRef player in _playersWaitingFor)
+                    {
+                        actifBehaviors[player].OnRoleTimeOut();
+                    }
+
+                    _playersWaitingFor.Clear();
                 }
 
                 RPC_HideUI();
@@ -591,7 +607,7 @@ namespace Werewolf
 #endif
                 _currentNightCallIndex++;
 
-                yield return new WaitForSeconds(_gameConfig.UITransitionDuration);
+                yield return new WaitForSeconds(_gameConfig.NightCallChangeDuration);
             }
 
             MoveToNextGameplayLoopStep();

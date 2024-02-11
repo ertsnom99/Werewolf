@@ -49,6 +49,8 @@ namespace Werewolf
 
         public override void OnRoleCall()
         {
+            base.OnRoleCall();
+
             RoleData[] roles = _gameManager.GetReservedRoles(this).Roles;
 
             if (roles == null || roles.Length < 0)
@@ -78,6 +80,11 @@ namespace Werewolf
 
         private void OnRoleSelected(int roleGameplayTagID)
         {
+            if (_timedOut)
+            {
+                return;
+            }
+
             if (roleGameplayTagID > -1)
             {
                 GameManager.IndexedReservedRoles roles = _gameManager.GetReservedRoles(this);
@@ -99,6 +106,13 @@ namespace Werewolf
             _gameManager.StopWaintingForPlayer(Player);
 
             Destroy(gameObject);
+        }
+
+        public override void OnRoleTimeOut()
+        {
+            base.OnRoleTimeOut();
+
+            _gameManager.RemoveReservedRoles(this, new int[0]);
         }
     }
 }

@@ -81,6 +81,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   <TransitionToNightDuration>k__BackingField: 4
+  <NightCallMinimumDuration>k__BackingField: 5
+  <NightCallMaximumDuration>k__BackingField: 10
+  <NightCallChangeDuration>k__BackingField: 2
   <DaytimeTransitionDuration>k__BackingField: 3
   <DayColor>k__BackingField: {r: 1, g: 1, b: 1, a: 0}
   <DayTemperature>k__BackingField: 5000
