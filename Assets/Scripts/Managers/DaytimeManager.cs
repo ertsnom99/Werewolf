@@ -14,7 +14,7 @@ namespace Werewolf
     {
         [Header("Config")]
         [SerializeField]
-        private GameConfig _gameConfig;
+        private DaytimeConfig _config;
 
         [Header("Lighting")]
         [SerializeField]
@@ -29,7 +29,7 @@ namespace Werewolf
         {
             base.Awake();
 
-            if (!_gameConfig)
+            if (!_config)
             {
                 Debug.LogError("The GameConfig of the DayTimeManager is not defined");
             }
@@ -51,12 +51,12 @@ namespace Werewolf
             switch (daytime)
             {
                 case Daytime.Day:
-                    _light.color = _gameConfig.DayColor;
-                    _light.colorTemperature = _gameConfig.DayTemperature;
+                    _light.color = _config.DayColor;
+                    _light.colorTemperature = _config.DayTemperature;
                     break;
                 case Daytime.Night:
-                    _light.color = _gameConfig.NightColor;
-                    _light.colorTemperature = _gameConfig.NightTemperature;
+                    _light.color = _config.NightColor;
+                    _light.colorTemperature = _config.NightTemperature;
                     break;
             }
         }
@@ -72,22 +72,22 @@ namespace Werewolf
             _inTransition = true;
 
             StartCoroutine(TransitionDaytime());
-            StartCoroutine(TransitionTitle(_gameConfig.NightTransitionText));
+            StartCoroutine(TransitionTitle(_config.NightTransitionText));
         }
 
         private IEnumerator TransitionDaytime()
         {
             Color startingColor = _light.color;
             float startingTemperature = _light.colorTemperature;
-            Color targetColor = CurrentDaytime == Daytime.Day ? _gameConfig.DayColor : _gameConfig.NightColor;
-            float targetTemperature = CurrentDaytime == Daytime.Day ? _gameConfig.DayTemperature : _gameConfig.NightTemperature;
+            Color targetColor = CurrentDaytime == Daytime.Day ? _config.DayColor : _config.NightColor;
+            float targetTemperature = CurrentDaytime == Daytime.Day ? _config.DayTemperature : _config.NightTemperature;
 
             float transitionProgress = .0f;
 
-            while (transitionProgress < _gameConfig.DaytimeTransitionDuration)
+            while (transitionProgress < _config.DaytimeTransitionDuration)
             {
                 transitionProgress += Time.deltaTime;
-                float progressRatio = Mathf.Clamp01(transitionProgress / _gameConfig.DaytimeTransitionDuration);
+                float progressRatio = Mathf.Clamp01(transitionProgress / _config.DaytimeTransitionDuration);
 
                 _light.color = Color.Lerp(startingColor, targetColor, progressRatio);
                 _light.colorTemperature = Mathf.Lerp(startingTemperature, targetTemperature, progressRatio);
@@ -99,11 +99,14 @@ namespace Werewolf
         private IEnumerator TransitionTitle(string text)
         {
             _UIManager.TitleScreen.Config(text);
-            _UIManager.FadeIn(_UIManager.TitleScreen, _gameConfig.UITransitionDuration);
 
-            yield return new WaitForSeconds(_gameConfig.UITransitionDuration + _gameConfig.DaytimeTransitionDuration);
+            yield return new WaitForSeconds(_config.TextFadeInDelay);
 
-            _UIManager.FadeOut(_gameConfig.UITransitionDuration);
+            _UIManager.FadeIn(_UIManager.TitleScreen, _config.TextTransitionDuration);
+
+            yield return new WaitForSeconds(_config.TextHoldDelay);
+
+            _UIManager.FadeOut(_config.TextTransitionDuration);
 
             _inTransition = false;
         }

@@ -70,9 +70,9 @@ namespace Werewolf
         }
         #endregion
 
-        [Header("Config")]
-        [SerializeField]
-        private GameConfig _gameConfig;
+        [field: Header("Config")]
+        [field: SerializeField]
+        public GameConfig Config { get; private set; }
 
         [field: Header("Visual")]
         [field: SerializeField]
@@ -119,7 +119,7 @@ namespace Werewolf
 
             RolesToDistribute = new List<RoleData>();
 
-            if (!_gameConfig)
+            if (!Config)
             {
                 Debug.LogError("The GameConfig of the GameManager is not defined");
             }
@@ -189,7 +189,7 @@ namespace Werewolf
             {
                 int startingRoleCount = rolesToDistribute.Count;
 
-                if (availableRoles.Count <= 0 || attempts >= _gameConfig.AvailableRolesMaxAttemptCount)
+                if (availableRoles.Count <= 0 || attempts >= Config.AvailableRolesMaxAttemptCount)
                 {
                     rolesToDistribute.Add(defaultRole);
                     PrepareRoleBehavior(defaultRole, ref rolesToDistribute, ref availableRoles);
@@ -536,7 +536,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
             _daytimeManager.ChangeDaytime(Daytime.Night);
 #endif
-            yield return new WaitForSeconds(_gameConfig.TransitionToNightDuration);
+            yield return new WaitForSeconds(Config.DaytimeTransitionStepDuration);
 
             MoveToNextGameplayLoopStep();
         }
@@ -585,7 +585,7 @@ namespace Werewolf
                 float elapsedTime = .0f;
 
                 // Wait until all players are done and the minimum amount of time is reached OR the maximum amount of time is reached
-                while ((_playersWaitingFor.Count > 0 || elapsedTime < _gameConfig.NightCallMinimumDuration) && elapsedTime < _gameConfig.NightCallMaximumDuration)
+                while ((_playersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration) && elapsedTime < Config.NightCallMaximumDuration)
                 {
                     elapsedTime += Time.deltaTime;
                     yield return 0;
@@ -607,7 +607,7 @@ namespace Werewolf
 #endif
                 _currentNightCallIndex++;
 
-                yield return new WaitForSeconds(_gameConfig.NightCallChangeDuration);
+                yield return new WaitForSeconds(Config.NightCallChangeDuration);
             }
 
             MoveToNextGameplayLoopStep();
@@ -742,6 +742,47 @@ namespace Werewolf
         #endregion
 
         #region Night Call Change
+        private void AddPlayerToNightCall(int priorityIndex, PlayerRef player)
+        {
+            NightCall nightCall;
+
+            for (int i = 0; i < _nightCalls.Count; i++)
+            {
+                if (_nightCalls[i].PriorityIndex == priorityIndex)
+                {
+                    if (_nightCalls[i].Players.Contains(player))
+                    {
+                        Debug.LogError("Tried to add duplicated player to a night call");
+                        return;
+                    }
+
+                    _nightCalls[i].Players.Add(player);
+                    return;
+                }
+                else if (_nightCalls[i].PriorityIndex > priorityIndex)
+                {
+                    nightCall = new();
+                    nightCall.PriorityIndex = priorityIndex;
+                    nightCall.Players = new List<PlayerRef> { player };
+
+                    _nightCalls.Insert(i, nightCall);
+
+                    if (i <= _currentNightCallIndex)
+                    {
+                        _currentNightCallIndex++;
+                    }
+
+                    return;
+                }
+            }
+
+            nightCall = new();
+            nightCall.PriorityIndex = priorityIndex;
+            nightCall.Players = new List<PlayerRef> { player };
+
+            _nightCalls.Add(nightCall);
+        }
+
         private void RemovePlayerFromNightCall(int priorityIndex, PlayerRef player)
         {
             for (int i = 0; i < _nightCalls.Count; i++)
@@ -764,39 +805,6 @@ namespace Werewolf
                 }
 
                 break;
-            }
-        }
-
-        private void AddPlayerToNightCall(int priorityIndex, PlayerRef player)
-        {
-            for (int i = 0; i < _nightCalls.Count; i++)
-            {
-                if (_nightCalls[i].PriorityIndex == priorityIndex)
-                {
-                    if (_nightCalls[i].Players.Contains(player))
-                    {
-                        Debug.LogError("Tried to add duplicated player to a night call");
-                        return;
-                    }
-
-                    _nightCalls[i].Players.Add(player);
-                    break;
-                }
-                else if (_nightCalls[i].PriorityIndex > priorityIndex)
-                {
-                    NightCall nightCall = new();
-                    nightCall.PriorityIndex = priorityIndex;
-                    nightCall.Players.Add(player);
-
-                    _nightCalls.Insert(i, nightCall);
-
-                    if (i <= _currentNightCallIndex)
-                    {
-                        _currentNightCallIndex++;
-                    }
-
-                    break;
-                }
             }
         }
         #endregion
@@ -1000,8 +1008,8 @@ namespace Werewolf
                 RPC_GiveReservedRoleChoice(choice);
             };
 
-            _UIManager.ChoiceScreen.Config(mustChooseOne ? _gameConfig.ChooseRoleTextObligatory : _gameConfig.ChooseRoleText, choices.ToArray(), mustChooseOne);
-            _UIManager.FadeIn(_UIManager.ChoiceScreen, _gameConfig.UITransitionDuration);
+            _UIManager.ChoiceScreen.Config(mustChooseOne ? Config.ChooseRoleTextObligatory : Config.ChooseRoleText, choices.ToArray(), mustChooseOne);
+            _UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionDuration);
         }
 
         [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -1037,10 +1045,10 @@ namespace Werewolf
         private void DisplayRolePlaying(int roleGameplayTagID)
         {
             RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
-            string text = roleData.CanHaveMultiples ? _gameConfig.RolePlayingTextPlurial : _gameConfig.RolePlayingTextSingular;
+            string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
 
             _UIManager.ImageScreen.Config(roleData.Image, string.Format(text, roleData.Name.ToLower()));
-            _UIManager.FadeIn(_UIManager.ImageScreen, _gameConfig.UITransitionDuration);
+            _UIManager.FadeIn(_UIManager.ImageScreen, Config.UITransitionDuration);
         }
 
         private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
@@ -1071,7 +1079,7 @@ namespace Werewolf
 
         private void HideRolePlaying()
         {
-            _UIManager.FadeOut(_UIManager.ImageScreen, _gameConfig.UITransitionDuration);
+            _UIManager.FadeOut(_UIManager.ImageScreen, Config.UITransitionDuration);
         }
 
         #region RPC Calls
@@ -1090,7 +1098,7 @@ namespace Werewolf
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
         public void RPC_HideUI()
         {
-            _UIManager.FadeOut(_gameConfig.UITransitionDuration);
+            _UIManager.FadeOut(Config.UITransitionDuration);
         }
         #endregion
         #endregion
@@ -1100,7 +1108,7 @@ namespace Werewolf
         private void CreatePlayerCardsForServer()
         {
             float rotationIncrement = 360.0f / _playerRoles.Count;
-            Vector3 startingPosition = STARTING_DIRECTION * _gameConfig.CardsOffset.Evaluate(_playerRoles.Count);
+            Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(_playerRoles.Count);
 
             int counter = -1;
 
@@ -1137,14 +1145,14 @@ namespace Werewolf
 
             foreach (KeyValuePair<RoleBehavior, IndexedReservedRoles> reservedRoleByBehavior in _reservedRolesByBehavior)
             {
-                Vector3 rowPosition = (Vector3.back * rowCounter * _gameConfig.ReservedRolesSpacing) + (Vector3.forward * (_reservedRolesByBehavior.Count - 1) * _gameConfig.ReservedRolesSpacing / 2.0f);
+                Vector3 rowPosition = (Vector3.back * rowCounter * Config.ReservedRolesSpacing) + (Vector3.forward * (_reservedRolesByBehavior.Count - 1) * Config.ReservedRolesSpacing / 2.0f);
                 Card[] cards = new Card[reservedRoleByBehavior.Value.Roles.Length];
 
                 int columnCounter = 0;
 
                 foreach (RoleData role in reservedRoleByBehavior.Value.Roles)
                 {
-                    Vector3 columnPosition = (Vector3.right * columnCounter * _gameConfig.ReservedRolesSpacing) + (Vector3.left * (reservedRoleByBehavior.Value.Roles.Length - 1) * _gameConfig.ReservedRolesSpacing / 2.0f);
+                    Vector3 columnPosition = (Vector3.right * columnCounter * Config.ReservedRolesSpacing) + (Vector3.left * (reservedRoleByBehavior.Value.Roles.Length - 1) * Config.ReservedRolesSpacing / 2.0f);
 
                     Card card = Instantiate(_cardPrefab, rowPosition + columnPosition, Quaternion.identity);
 
@@ -1170,7 +1178,7 @@ namespace Werewolf
             int rotationOffset = -1;
 
             float rotationIncrement = 360.0f / playerCount;
-            Vector3 startingPosition = STARTING_DIRECTION * _gameConfig.CardsOffset.Evaluate(playerCount);
+            Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(playerCount);
 
             // Offset the rotation to keep bottomPlayer at the bottom
             foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in playerInfos)
@@ -1235,13 +1243,13 @@ namespace Werewolf
             {
                 _reservedRolesCards[rowCounter] = new Card[reservedRole.RoleCount];
 
-                Vector3 rowPosition = (Vector3.back * rowCounter * _gameConfig.ReservedRolesSpacing) + (Vector3.forward * (rowCount - 1) * _gameConfig.ReservedRolesSpacing / 2.0f);
+                Vector3 rowPosition = (Vector3.back * rowCounter * Config.ReservedRolesSpacing) + (Vector3.forward * (rowCount - 1) * Config.ReservedRolesSpacing / 2.0f);
                 
                 int columnCounter = 0;
 
                 foreach (int roleGameplayTagID in reservedRole.Roles)
                 {
-                    Vector3 columnPosition = (Vector3.right * columnCounter * _gameConfig.ReservedRolesSpacing) + (Vector3.left * (reservedRole.RoleCount - 1) * _gameConfig.ReservedRolesSpacing / 2.0f);
+                    Vector3 columnPosition = (Vector3.right * columnCounter * Config.ReservedRolesSpacing) + (Vector3.left * (reservedRole.RoleCount - 1) * Config.ReservedRolesSpacing / 2.0f);
 
                     Card card = Instantiate(_cardPrefab, rowPosition + columnPosition, Quaternion.identity);
 
@@ -1273,7 +1281,7 @@ namespace Werewolf
 
         private void AdjustCamera()
         {
-            Camera.main.transform.position = Camera.main.transform.position.normalized * _gameConfig.CameraOffset.Evaluate(_gameDataManager.PlayerInfos.Count);
+            Camera.main.transform.position = Camera.main.transform.position.normalized * Config.CameraOffset.Evaluate(_gameDataManager.PlayerInfos.Count);
         }
         #endregion
     }

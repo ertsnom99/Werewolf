@@ -18,9 +18,8 @@ MonoBehaviour:
   - Pool:
     - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
     - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
-    - {fileID: 11400000, guid: 05239335259f3b44aa386de01ec5d91a, type: 2}
-    - {fileID: 11400000, guid: ee7234f8af68730449300332fd198326, type: 2}
-    UseCount: 4
+    - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
+    UseCount: 3
   - Pool:
     - {fileID: 11400000, guid: 42cdb8e84ec451d409c8ec23ec8429c5, type: 2}
     UseCount: 1

@@ -12,10 +12,7 @@ namespace Werewolf.Network
     [SimulationBehaviour(Modes = SimulationModes.Client)]
     public class ClientGameController : MonoBehaviour, INetworkRunnerCallbacks
     {
-        [Header("Config")]
-        [SerializeField]
-        private GameConfig _gameConfig;
-
+        private GameManager _gameManager;
         private UIManager _UIManager;
 
         public void OnSceneLoadDone(NetworkRunner runner)
@@ -24,8 +21,6 @@ namespace Werewolf.Network
             {
                 case (int)SceneDefs.GAME:
                     _UIManager = UIManager.Instance;
-
-                    _UIManager.LoadingScreen.Config(_gameConfig.LoadingScreenText);
                     _UIManager.LoadingScreen.SetFade(1.0f);
 
                     if (!GameManager.HasSpawned)
@@ -43,31 +38,34 @@ namespace Werewolf.Network
 
         private void OnGameManagerSpawned()
         {
+            _gameManager = GameManager.Instance;
+            _UIManager.LoadingScreen.Config(_gameManager.Config.LoadingScreenText);
+
             StartCoroutine(ConfirmReadyToReceiveRole());
-            GameManager.Instance.OnRoleReceived += StartLoadingFade;
+            _gameManager.OnRoleReceived += StartLoadingFade;
         }
 
         private IEnumerator ConfirmReadyToReceiveRole()
         {
-            while (!GameManager.Instance.Object.IsValid)
+            while (!_gameManager.Object.IsValid)
             {
                 yield return 0;
             }
 
-            GameManager.Instance.RPC_ConfirmPlayerReadyToReceiveRole();
+            _gameManager.RPC_ConfirmPlayerReadyToReceiveRole();
         }
 
         private void StartLoadingFade()
         {
             _UIManager.LoadingScreen.OnFadeOver += ConfirmReadyToPlay;
             _UIManager.LoadingScreen.Config("");
-            _UIManager.FadeOut(_UIManager.LoadingScreen, _gameConfig.LoadingScreenTransitionDuration);
+            _UIManager.FadeOut(_UIManager.LoadingScreen, _gameManager.Config.LoadingScreenTransitionDuration);
         }
 
         private void ConfirmReadyToPlay()
         {
             _UIManager.LoadingScreen.OnFadeOver -= ConfirmReadyToPlay;
-            GameManager.Instance.RPC_ConfirmPlayerReadyToPlay();
+            _gameManager.RPC_ConfirmPlayerReadyToPlay();
         }
 
         #region Unused Callbacks

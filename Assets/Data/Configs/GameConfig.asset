@@ -80,20 +80,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <TransitionToNightDuration>k__BackingField: 4
+  <DaytimeTransitionStepDuration>k__BackingField: 4.5
   <NightCallMinimumDuration>k__BackingField: 5
   <NightCallMaximumDuration>k__BackingField: 10
   <NightCallChangeDuration>k__BackingField: 2
-  <DaytimeTransitionDuration>k__BackingField: 3
-  <DayColor>k__BackingField: {r: 1, g: 1, b: 1, a: 0}
-  <DayTemperature>k__BackingField: 5000
-  <DayTransitionText>k__BackingField: The sun is rising, the village wakes up...
-  <NightColor>k__BackingField: {r: 0.2, g: 0.23529412, b: 0.36862746, a: 1}
-  <NightTemperature>k__BackingField: 19354
-  <NightTransitionText>k__BackingField: The sun is setting, the village goes to sleep...
   <LoadingScreenText>k__BackingField: Waiting for server...
   <LoadingScreenTransitionDuration>k__BackingField: 2
-  <UITransitionDuration>k__BackingField: 0.3
+  <UITransitionDuration>k__BackingField: 0.75
   <RolePlayingTextSingular>k__BackingField: The {0} is playing...
   <RolePlayingTextPlurial>k__BackingField: The {0}s are playing...
   <ChooseRoleText>k__BackingField: Choose a role
