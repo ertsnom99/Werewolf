@@ -103,6 +103,7 @@ namespace Werewolf
                     }
 
                     validGameplayTagID = true;
+                    break;
                 }
             }
 

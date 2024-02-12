@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Werewolf.Data
 {
-    [CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/GameConfig")]
+    [CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/Config/GameConfig")]
     public class GameConfig : ScriptableObject
     {
         [field: Header("Role Distribution")]
@@ -21,7 +21,7 @@ namespace Werewolf.Data
 
         [field: Header("Gameplay Loop")]
         [field: SerializeField]
-        public float TransitionToNightDuration { get; private set; }
+        public float DaytimeTransitionStepDuration { get; private set; }
 
         [field: SerializeField]
         public float NightCallMinimumDuration { get; private set; }
@@ -31,28 +31,6 @@ namespace Werewolf.Data
 
         [field: SerializeField]
         public float NightCallChangeDuration { get; private set; }
-
-        [field: Header("Daytime")]
-        [field:SerializeField]
-        public float DaytimeTransitionDuration { get; private set; }
-
-        [field: SerializeField]
-        public Color DayColor { get; private set; }
-
-        [field: SerializeField]
-        public float DayTemperature { get; private set; }
-
-        [field: SerializeField]
-        public string DayTransitionText { get; private set; }
-
-        [field: SerializeField]
-        public Color NightColor { get; private set; }
-
-        [field: SerializeField]
-        public float NightTemperature { get; private set; }
-
-        [field: SerializeField]
-        public string NightTransitionText { get; private set; }
 
         [field: Header("Loading Screen")]
         [field: SerializeField]
