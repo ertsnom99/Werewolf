@@ -82,34 +82,16 @@ namespace Werewolf
             _gameManager.StopWaintingForPlayer(Player);
         }
 
-        private void OnRoleSelected(int roleGameplayTagID)
+        private void OnRoleSelected(int choiceIndex)
         {
             if (_timedOut)
             {
                 return;
             }
 
-            bool validGameplayTagID = false;
-            int roleIndex = 0;
-
-            if (roleGameplayTagID > -1)
+            if (choiceIndex > -1)
             {
-                foreach (RoleData role in _reservedRoles.Roles)
-                {
-                    if (role.GameplayTag.CompactTagId != roleGameplayTagID)
-                    {
-                        roleIndex++;
-                        continue;
-                    }
-
-                    validGameplayTagID = true;
-                    break;
-                }
-            }
-
-            if (validGameplayTagID)
-            {
-                _gameManager.ChangeRole(Player, _reservedRoles.Roles[roleIndex], _reservedRoles.Behaviors[roleIndex]);
+                _gameManager.ChangeRole(Player, _reservedRoles.Roles[choiceIndex], _reservedRoles.Behaviors[choiceIndex]);
             }
             else if (_reservedOnlyWerewolfs)
             {
@@ -119,7 +101,7 @@ namespace Werewolf
             _gameManager.RemoveReservedRoles(this, new int[0]);
             _gameManager.StopWaintingForPlayer(Player);
 
-            if (validGameplayTagID || _reservedOnlyWerewolfs)
+            if (choiceIndex > -1 || _reservedOnlyWerewolfs)
             {
                 Destroy(gameObject);
             }

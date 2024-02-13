@@ -88,7 +88,7 @@ namespace Werewolf.UI
             _confirmButton.onClick.RemoveAllListeners();
             _confirmButton.interactable = false;
 
-            OnConfirmChoice(_SelectedChoice != null ? _SelectedChoice.Value : -1);
+            OnConfirmChoice(_SelectedChoice != null ? Array.IndexOf(_choices, _SelectedChoice) : -1);
         }
     }
 }
