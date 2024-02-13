@@ -848,7 +848,7 @@ namespace Werewolf
             return reservedRoles;
         }
 
-        public void RemoveReservedRoles(RoleBehavior ReservedRoleOwner, int[] specificRoles)
+        public void RemoveReservedRoles(RoleBehavior ReservedRoleOwner, int[] specificIndexes)
         {
             if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner))
             {
@@ -858,48 +858,27 @@ namespace Werewolf
             int networkIndex = _reservedRolesByBehavior[ReservedRoleOwner].networkIndex;
             bool mustRemoveEntry = true;
 
-            if (specificRoles.Length > 0)
+            if (specificIndexes.Length > 0)
             {
-                foreach (int specificRole in specificRoles)
+                foreach (int specificIndex in specificIndexes)
                 {
-                    int specificRoleIndex = -1;
+                    RoleBehavior behavior = _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[specificIndex];
 
-                    // Update server variables
-                    for (int i = 0; i < _reservedRolesByBehavior[ReservedRoleOwner].Roles.Length; i++)
+                    if (behavior && behavior.Player == null)
                     {
-                        RoleData role = _reservedRolesByBehavior[ReservedRoleOwner].Roles[i];
+                        Destroy(behavior.gameObject);
+                    }
 
-                        if (role && role.GameplayTag.CompactTagId != specificRole)
-                        {
-                            continue;
-                        }
-
-                        _reservedRolesByBehavior[ReservedRoleOwner].Roles[i] = null;
-
-                        RoleBehavior behavior = _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i];
-
-                        if (behavior && behavior.Player == null)
-                        {
-                            Destroy(behavior.gameObject);
-                        }
-                        _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i] = null;
+                    _reservedRolesByBehavior[ReservedRoleOwner].Roles[specificIndex] = null;
+                    _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[specificIndex] = null;
 #if UNITY_SERVER && UNITY_EDITOR
-                        if (_reservedCardsByBehavior[ReservedRoleOwner][i])
-                        {
-                            Destroy(_reservedCardsByBehavior[ReservedRoleOwner][i].gameObject);
-                        }
-                        _reservedCardsByBehavior[ReservedRoleOwner][i] = null;
-#endif
-                        specificRoleIndex = i;
-                        break;
-                    }
-
-                    if (specificRoleIndex <= -1)
+                    if (_reservedCardsByBehavior[ReservedRoleOwner][specificIndex])
                     {
-                        Debug.LogError($"{specificRole} is not one of the reserved role!");
-                        continue;
+                        Destroy(_reservedCardsByBehavior[ReservedRoleOwner][specificIndex].gameObject);
                     }
 
+                    _reservedCardsByBehavior[ReservedRoleOwner][specificIndex] = null;
+#endif
                     // Update networked variable
                     // Networked data and server data should ALWAYS be aligned, therefore no need to loop to find the corresponding role
                     RolesContainer rolesContainer = new();
@@ -907,7 +886,7 @@ namespace Werewolf
 
                     for (int i = 0; i < rolesContainer.Roles.Length; i++)
                     {
-                        if (i == specificRoleIndex)
+                        if (i == specificIndex)
                         {
                             continue;
                         }
