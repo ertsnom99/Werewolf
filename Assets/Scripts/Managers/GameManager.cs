@@ -1008,7 +1008,7 @@ namespace Werewolf
                 RPC_GiveReservedRoleChoice(choice);
             };
 
-            _UIManager.ChoiceScreen.Config(mustChooseOne ? Config.ChooseRoleTextObligatory : Config.ChooseRoleText, choices.ToArray(), mustChooseOne);
+            _UIManager.ChoiceScreen.Config(mustChooseOne ? Config.ChooseRoleObligatoryText : Config.ChooseRoleText, Config.ChoosedRoleText, choices.ToArray(), mustChooseOne);
             _UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionDuration);
         }
 

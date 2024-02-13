@@ -55,6 +55,9 @@ namespace Werewolf.Data
         public string ChooseRoleText { get; private set; }
 
         [field: SerializeField]
-        public string ChooseRoleTextObligatory { get; private set; }
+        public string ChooseRoleObligatoryText { get; private set; }
+
+        [field: SerializeField]
+        public string ChoosedRoleText { get; private set; }
     }
 }

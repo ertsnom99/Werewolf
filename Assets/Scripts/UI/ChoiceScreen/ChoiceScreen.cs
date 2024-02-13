@@ -23,12 +23,14 @@ namespace Werewolf.UI
         private Choice[] _choices;
 
         private Choice _SelectedChoice;
+        private string _choosedText;
 
         public event Action<int> OnConfirmChoice = delegate { };
 
-        public void Config(string text, Choice.ChoiceData[] choices, bool mustChooseOne)
+        public void Config(string chooseText, string choosedText, Choice.ChoiceData[] choices, bool mustChooseOne)
         {
-            _text.text = text;
+            _text.text = chooseText;
+            _choosedText = choosedText;
 
             foreach (Transform choice in _choicesContainer.transform)
             {
@@ -80,9 +82,19 @@ namespace Werewolf.UI
 
         public void ConfirmChoice()
         {
-            foreach(Choice choice in _choices)
+            _text.text = _choosedText;
+
+            foreach (Choice choice in _choices)
             {
-                choice.Disable();
+                choice.OnSelected -= OnChoiceSelected;
+
+                if (choice == _SelectedChoice)
+                {
+                    choice.Disable();
+                    continue;
+                }
+
+                Destroy(choice.gameObject);
             }
 
             _confirmButton.onClick.RemoveAllListeners();
