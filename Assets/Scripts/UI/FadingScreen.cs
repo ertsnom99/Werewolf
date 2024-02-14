@@ -41,6 +41,11 @@ namespace Werewolf.UI
 
         private IEnumerator TransitionUI(float targetOpacity, float transitionDuration)
         {
+            if (targetOpacity > .0f)
+            {
+                _canvasGroup.blocksRaycasts = true;
+            }
+
             float startingOpacity = _canvasGroup.alpha;
             float transitionProgress = .0f;
 
@@ -51,6 +56,11 @@ namespace Werewolf.UI
                 _canvasGroup.alpha = Mathf.Lerp(startingOpacity, targetOpacity, progressRatio);
 
                 yield return 0;
+            }
+
+            if (targetOpacity <= .0f)
+            {
+                _canvasGroup.blocksRaycasts = false;
             }
 
             _coroutine = null;
