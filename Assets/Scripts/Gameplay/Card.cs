@@ -5,7 +5,7 @@ using Werewolf.Data;
 
 namespace Werewolf
 {
-    public class Card : MonoBehaviour
+    public class Card : MonoBehaviour, MouseDetectionListener
     {
         [SerializeField]
         private float _thickness = 0.026f;
@@ -77,5 +77,17 @@ namespace Werewolf
 
             IsFaceUp = !IsFaceUp;
         }
+
+        #region MouseDetectionListener methods
+        public void MouseEntered() { }
+
+        public void MouseOver(Vector3 MousePosition) { }
+
+        public void MouseExited() { }
+
+        public void MousePressed(Vector3 MousePosition) { }
+
+        public void MouseReleased(Vector3 MousePosition) { }
+        #endregion
     }
 }
