@@ -246,7 +246,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8955739781091521638}
   - component: {fileID: 2092366821852372363}
-  m_Layer: 0
+  - component: {fileID: 3039488389016798652}
+  m_Layer: 6
   m_Name: Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,6 +289,27 @@ MonoBehaviour:
   _nicknameText: {fileID: 5055316256550651190}
   <IsFaceUp>k__BackingField: 0
   <Role>k__BackingField: {fileID: 0}
+--- !u!65 &3039488389016798652
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4242641526295142619}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.025, z: 1}
+  m_Center: {x: 0, y: 0.0125, z: 0}
 --- !u!1 &9112611831262783244
 GameObject:
   m_ObjectHideFlags: 0
