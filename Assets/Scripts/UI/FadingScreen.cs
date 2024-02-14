@@ -35,6 +35,13 @@ namespace Werewolf.UI
                 StopCoroutine(_coroutine);
             }
 
+            if (_canvasGroup.alpha == targetOpacity)
+            {
+                _coroutine = null;
+                OnFadeOver();
+                return;
+            }
+
             _coroutine = TransitionUI(targetOpacity, transitionDuration);
             StartCoroutine(_coroutine);
         }
