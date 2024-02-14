@@ -125,14 +125,11 @@ namespace Werewolf
             }
         }
 
-        public override void OnRoleCall()
+        public override bool OnRoleCall()
         {
-            base.OnRoleCall();
+            return true;
         }
 
-        public override void OnRoleTimeOut()
-        {
-            base.OnRoleTimeOut();
-        }
+        public override void OnRoleTimeOut() { }
     }
 }

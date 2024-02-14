@@ -552,62 +552,82 @@ namespace Werewolf
 
                 Dictionary<PlayerRef, RoleBehavior> actifBehaviors = new Dictionary<PlayerRef, RoleBehavior>();
 
+                // Role call all the roles that must play
                 foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
                 {
                     if (nightCall.Players.Contains(playerRole.Key))
                     {
                         // TODO: Skip if the player is dead
+                        bool skipPlayer = false;
 
                         foreach (RoleBehavior behavior in _playerRoles[playerRole.Key].Behaviors)
                         {
                             if (behavior.NightPriorities.Contains(nightCall.PriorityIndex))
                             {
-                                _playersWaitingFor.Add(playerRole.Key);
-                                behavior.OnRoleCall();
-                                actifBehaviors.Add(playerRole.Key, behavior);
+                                behavior.SetTimedOut(false);
+                                skipPlayer = !behavior.OnRoleCall();
+
+                                if (!skipPlayer)
+                                {
+                                    _playersWaitingFor.Add(playerRole.Key);
+                                    actifBehaviors.Add(playerRole.Key, behavior);
+                                }
+
                                 break;
                             }
                         }
 
-                        if (!_playersWaitingFor.Contains(playerRole.Key))
+                        if (!skipPlayer && !_playersWaitingFor.Contains(playerRole.Key))
                         {
-                            Debug.LogError($"{playerRole.Key} is suppose to play, he has no behavior with the PriorityIndex {nightCall.PriorityIndex}");
+                            Debug.LogError($"{playerRole.Key} is suppose to play, but he has no behavior with the PriorityIndex {nightCall.PriorityIndex}");
                         }
                     }
-                    else
-                    {
-                        RPC_DisplayRolePlaying(playerRole.Key, displayRoleGameplayTagID);
-                    }
-                }
-#if UNITY_SERVER && UNITY_EDITOR
-                DisplayRolePlaying(displayRoleGameplayTagID);
-#endif
-                float elapsedTime = .0f;
-
-                // Wait until all players are done and the minimum amount of time is reached OR the maximum amount of time is reached
-                while ((_playersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration) && elapsedTime < Config.NightCallMaximumDuration)
-                {
-                    elapsedTime += Time.deltaTime;
-                    yield return 0;
                 }
 
                 if (_playersWaitingFor.Count > 0)
                 {
-                    foreach (PlayerRef player in _playersWaitingFor)
+                    // Tell the players that are not playing, which role is playing
+                    foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
                     {
-                        actifBehaviors[player].OnRoleTimeOut();
+                        if (_playersWaitingFor.Contains(playerRole.Key))
+                        {
+                            continue;
+                        }
+
+                        RPC_DisplayRolePlaying(playerRole.Key, displayRoleGameplayTagID);
+                    }
+#if UNITY_SERVER && UNITY_EDITOR
+                    DisplayRolePlaying(displayRoleGameplayTagID);
+#endif
+                    float elapsedTime = .0f;
+
+                    // Wait until all players are done and the minimum amount of time is reached OR the maximum amount of time is reached
+                    while ((_playersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration) && elapsedTime < Config.NightCallMaximumDuration)
+                    {
+                        elapsedTime += Time.deltaTime;
+                        yield return 0;
                     }
 
-                    _playersWaitingFor.Clear();
+                    // End the turn of all players that are still not done playing
+                    if (_playersWaitingFor.Count > 0)
+                    {
+                        foreach (PlayerRef player in _playersWaitingFor)
+                        {
+                            actifBehaviors[player].SetTimedOut(true);
+                            actifBehaviors[player].OnRoleTimeOut();
+                        }
+
+                        _playersWaitingFor.Clear();
+                    }
+
+                    RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+                    HideRolePlaying();
+#endif
+                    yield return new WaitForSeconds(Config.NightCallChangeDuration);
                 }
 
-                RPC_HideUI();
-#if UNITY_SERVER && UNITY_EDITOR
-                HideRolePlaying();
-#endif
                 _currentNightCallIndex++;
-
-                yield return new WaitForSeconds(Config.NightCallChangeDuration);
             }
 
             MoveToNextGameplayLoopStep();

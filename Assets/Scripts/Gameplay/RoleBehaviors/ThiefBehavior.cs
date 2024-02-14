@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 using Werewolf.Data;
 
@@ -12,6 +11,8 @@ namespace Werewolf
 
         private GameManager.IndexedReservedRoles _reservedRoles;
         private bool _reservedOnlyWerewolfs;
+
+        private bool _hasSelectedRole = false;
 
         private GameManager _gameManager;
 
@@ -51,16 +52,18 @@ namespace Werewolf
             _gameManager.ReserveRoles(this, roles.ToArray(), false);
         }
 
-        public override void OnRoleCall()
+        public override bool OnRoleCall()
         {
-            base.OnRoleCall();
+            if (_hasSelectedRole)
+            {
+                return false;
+            }
 
             _reservedRoles = _gameManager.GetReservedRoles(this);
 
             if (_reservedRoles.Roles == null || _reservedRoles.Roles.Length < 0)
             {
-                _gameManager.StopWaintingForPlayer(Player);
-                return;
+                return false;
             }
 
             _reservedOnlyWerewolfs = true;
@@ -74,12 +77,12 @@ namespace Werewolf
                 }
             }
 
-            if (_gameManager.MakePlayerChooseReservedRole(this, _reservedOnlyWerewolfs, OnRoleSelected))
+            if (!_gameManager.MakePlayerChooseReservedRole(this, _reservedOnlyWerewolfs, OnRoleSelected))
             {
-                return;
+                return false;
             }
 
-            _gameManager.StopWaintingForPlayer(Player);
+            return true;
         }
 
         private void OnRoleSelected(int choiceIndex)
@@ -101,6 +104,8 @@ namespace Werewolf
             _gameManager.RemoveReservedRoles(this, new int[0]);
             _gameManager.StopWaintingForPlayer(Player);
 
+            _hasSelectedRole = true;
+
             if (choiceIndex > -1 || _reservedOnlyWerewolfs)
             {
                 Destroy(gameObject);
@@ -109,14 +114,14 @@ namespace Werewolf
 
         public override void OnRoleTimeOut()
         {
-            base.OnRoleTimeOut();
-
             if (_reservedOnlyWerewolfs)
             {
                 ChangeForRandomRole();
             }
 
             _gameManager.RemoveReservedRoles(this, new int[0]);
+
+            _hasSelectedRole = true;
 
             if (_reservedOnlyWerewolfs)
             {

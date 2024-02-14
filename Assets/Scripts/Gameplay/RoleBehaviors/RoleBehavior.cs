@@ -47,14 +47,13 @@ namespace Werewolf
 
         public abstract void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles);
 
-        public virtual void OnRoleCall()
+        public void SetTimedOut(bool timedOut)
         {
-            _timedOut = false;
+            _timedOut = timedOut;
         }
 
-        public virtual void OnRoleTimeOut()
-        {
-            _timedOut = true;
-        }
+        public abstract bool OnRoleCall();
+
+        public abstract void OnRoleTimeOut();
     }
 }
