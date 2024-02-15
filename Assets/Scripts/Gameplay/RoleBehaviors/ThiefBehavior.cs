@@ -12,8 +12,6 @@ namespace Werewolf
         private GameManager.IndexedReservedRoles _reservedRoles;
         private bool _reservedOnlyWerewolfs;
 
-        private bool _hasSelectedRole = false;
-
         private GameManager _gameManager;
 
         public override void Init()
@@ -54,11 +52,6 @@ namespace Werewolf
 
         public override bool OnRoleCall()
         {
-            if (_hasSelectedRole)
-            {
-                return false;
-            }
-
             _reservedRoles = _gameManager.GetReservedRoles(this);
 
             if (_reservedRoles.Roles == null || _reservedRoles.Roles.Length < 0)
@@ -102,9 +95,8 @@ namespace Werewolf
             }
 
             _gameManager.RemoveReservedRoles(this, new int[0]);
+            _gameManager.RemovePlayerFromNightCall(NightPriorities[0], Player);
             _gameManager.StopWaintingForPlayer(Player);
-
-            _hasSelectedRole = true;
 
             if (choiceIndex > -1 || _reservedOnlyWerewolfs)
             {
@@ -120,8 +112,7 @@ namespace Werewolf
             }
 
             _gameManager.RemoveReservedRoles(this, new int[0]);
-
-            _hasSelectedRole = true;
+            _gameManager.RemovePlayerFromNightCall(NightPriorities[0], Player);
 
             if (_reservedOnlyWerewolfs)
             {
