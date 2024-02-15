@@ -803,7 +803,7 @@ namespace Werewolf
             _nightCalls.Add(nightCall);
         }
 
-        private void RemovePlayerFromNightCall(int priorityIndex, PlayerRef player)
+        public void RemovePlayerFromNightCall(int priorityIndex, PlayerRef player)
         {
             for (int i = 0; i < _nightCalls.Count; i++)
             {
