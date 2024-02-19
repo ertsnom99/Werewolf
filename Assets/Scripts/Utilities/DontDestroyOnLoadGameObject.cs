@@ -2,15 +2,15 @@
 
 public class DontDestroyOnLoadGameObject : MonoBehaviour
 {
-	protected virtual void Awake ()
-    {
-        GameObject[] objects = GameObject.FindGameObjectsWithTag(gameObject.tag);
-        
-        if (objects.Length > 1)
-        {
-            Destroy(gameObject);
-        }
+	protected virtual void Awake()
+	{
+		GameObject[] objects = GameObject.FindGameObjectsWithTag(gameObject.tag);
 
-        DontDestroyOnLoad(this);
+		if (objects.Length > 1)
+		{
+			Destroy(gameObject);
+		}
+
+		DontDestroyOnLoad(this);
 	}
 }

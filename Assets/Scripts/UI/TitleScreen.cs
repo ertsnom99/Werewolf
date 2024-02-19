@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace Werewolf.UI
 {
-    public class TitleScreen : FadingScreen
-    {
-        [Header("UI")]
-        [SerializeField]
-        private TMP_Text _text;
+	public class TitleScreen : FadingScreen
+	{
+		[Header("UI")]
+		[SerializeField]
+		private TMP_Text _text;
 
-        public void Initialize(string title)
-        {
-            _text.text = title;
-        }
-    }
+		public void Initialize(string title)
+		{
+			_text.text = title;
+		}
+	}
 }

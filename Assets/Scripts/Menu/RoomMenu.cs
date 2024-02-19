@@ -7,106 +7,106 @@ using Werewolf.Network;
 
 namespace Werewolf
 {
-    public class RoomMenu : MonoBehaviour
-    {
-        [Header("UI")]
-        [SerializeField]
-        private Transform _playerEntries;
+	public class RoomMenu : MonoBehaviour
+	{
+		[Header("UI")]
+		[SerializeField]
+		private Transform _playerEntries;
 
-        [SerializeField]
-        private PlayerEntry _playerEntryPrefab;
+		[SerializeField]
+		private PlayerEntry _playerEntryPrefab;
 
-        [SerializeField]
-        private TMP_Text _warningText;
+		[SerializeField]
+		private TMP_Text _warningText;
 
-        [SerializeField]
-        private Button _startGameBtn;
+		[SerializeField]
+		private Button _startGameBtn;
 
-        [SerializeField]
-        private Button _leaveRoomBtn;
+		[SerializeField]
+		private Button _leaveRoomBtn;
 
-        private GameDataManager _gameDataManager;
+		private GameDataManager _gameDataManager;
 
-        private PlayerRef _localPlayer;
+		private PlayerRef _localPlayer;
 
-        private int _minPlayer = -1;
+		private int _minPlayer = -1;
 
-        public void SetGameDataManager(GameDataManager gameDataManager, PlayerRef localPlayer)
-        {
-            _gameDataManager = gameDataManager;
-            _localPlayer = localPlayer;
+		public void SetGameDataManager(GameDataManager gameDataManager, PlayerRef localPlayer)
+		{
+			_gameDataManager = gameDataManager;
+			_localPlayer = localPlayer;
 
-            if (!_gameDataManager || _localPlayer == null)
-            {
-                return;
-            }
+			if (!_gameDataManager || _localPlayer == null)
+			{
+				return;
+			}
 
-            _gameDataManager.OnPlayerNicknamesChanged += UpdatePlayerList;
-            _gameDataManager.OnInvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
-            UpdatePlayerList();
-        }
+			_gameDataManager.OnPlayerNicknamesChanged += UpdatePlayerList;
+			_gameDataManager.OnInvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
+			UpdatePlayerList();
+		}
 
-        public void SetMinPlayer(int minPlayer)
-        {
-            _minPlayer = minPlayer;
-        }
+		public void SetMinPlayer(int minPlayer)
+		{
+			_minPlayer = minPlayer;
+		}
 
-        public void UpdatePlayerList()
-        {
-            if (!_gameDataManager || _localPlayer == null)
-            {
-                return;
-            }
+		public void UpdatePlayerList()
+		{
+			if (!_gameDataManager || _localPlayer == null)
+			{
+				return;
+			}
 
-            // Clear list
-            for (int i = _playerEntries.childCount - 1; i >= 0; i--)
-            {
-                Destroy(_playerEntries.GetChild(i).gameObject);
-            }
+			// Clear list
+			for (int i = _playerEntries.childCount - 1; i >= 0; i--)
+			{
+				Destroy(_playerEntries.GetChild(i).gameObject);
+			}
 
-            // Fill list
-            bool isOdd = true;
-            bool localPlayerIsLeader = false;
+			// Fill list
+			bool isOdd = true;
+			bool localPlayerIsLeader = false;
 
-            foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
-            {
-                PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
-                playerEntry.SetPlayerData(playerInfo.Value, _localPlayer, isOdd);
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
+			{
+				PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
+				playerEntry.SetPlayerData(playerInfo.Value, _localPlayer, isOdd);
 
-                if (playerInfo.Value.PlayerRef == _localPlayer)
-                {
-                    localPlayerIsLeader = playerInfo.Value.IsLeader;
-                }
+				if (playerInfo.Value.PlayerRef == _localPlayer)
+				{
+					localPlayerIsLeader = playerInfo.Value.IsLeader;
+				}
 
-                isOdd = !isOdd;
-            }
+				isOdd = !isOdd;
+			}
 
-            // Update buttons
-            _startGameBtn.interactable = localPlayerIsLeader && _minPlayer > -1 && _gameDataManager.PlayerInfos.Count >= _minPlayer && !_gameDataManager.GameDataReady;
-            _leaveRoomBtn.interactable = !_gameDataManager.GameDataReady;
-        }
+			// Update buttons
+			_startGameBtn.interactable = localPlayerIsLeader && _minPlayer > -1 && _gameDataManager.PlayerInfos.Count >= _minPlayer && !_gameDataManager.GameDataReady;
+			_leaveRoomBtn.interactable = !_gameDataManager.GameDataReady;
+		}
 
-        private void ShowInvalidRolesSetupWarning()
-        {
-            _warningText.text = "An invalid roles setup was sent to the server";
-        }
+		private void ShowInvalidRolesSetupWarning()
+		{
+			_warningText.text = "An invalid roles setup was sent to the server";
+		}
 
-        public void ClearWarning()
-        {
-            _warningText.text = "";
-        }
+		public void ClearWarning()
+		{
+			_warningText.text = "";
+		}
 
-        private void OnDisable()
-        {
-            ClearWarning();
-            
-            if (!_gameDataManager)
-            {
-                return;
-            }
+		private void OnDisable()
+		{
+			ClearWarning();
 
-            _gameDataManager.OnPlayerNicknamesChanged -= UpdatePlayerList;
-            _gameDataManager.OnInvalidRolesSetupReceived -= ShowInvalidRolesSetupWarning;
-        }
-    }
+			if (!_gameDataManager)
+			{
+				return;
+			}
+
+			_gameDataManager.OnPlayerNicknamesChanged -= UpdatePlayerList;
+			_gameDataManager.OnInvalidRolesSetupReceived -= ShowInvalidRolesSetupWarning;
+		}
+	}
 }

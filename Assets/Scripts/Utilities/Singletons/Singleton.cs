@@ -10,20 +10,20 @@
 /// </remarks>
 public abstract class Singleton<T> where T : class
 {
-    private static T _instance;
+	private static T _instance;
 
-    public static T Instance()
-    {
-        if (_instance == null)
-        {
-            _instance = CreateInstanceOfT();
-        }
+	public static T Instance()
+	{
+		if (_instance == null)
+		{
+			_instance = CreateInstanceOfT();
+		}
 
-        return _instance;
-    }
+		return _instance;
+	}
 
-    private static T CreateInstanceOfT()
-    {
-        return Activator.CreateInstance(typeof(T), true) as T;
-    }
+	private static T CreateInstanceOfT()
+	{
+		return Activator.CreateInstance(typeof(T), true) as T;
+	}
 }
