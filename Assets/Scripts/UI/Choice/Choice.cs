@@ -16,7 +16,9 @@ namespace Werewolf.UI
         [SerializeField]
         private Button _button;
 
-        public int Value { get; private set; }
+		private bool _isSelected;
+
+		public int Value { get; private set; }
 
         public event Action<Choice> OnSelected = delegate { };
 
@@ -28,11 +30,11 @@ namespace Werewolf.UI
 
         public void Start()
         {
-            SetHighlighted(false);
+            SetSelected(false);
 
             _button.onClick.AddListener(() =>
             {
-                SetHighlighted(!_highlight.activeSelf);
+                SetSelected(!_isSelected);
                 OnSelected(this);
             });
         }
@@ -43,9 +45,10 @@ namespace Werewolf.UI
             Value = choice.Value;
         }
 
-        public void SetHighlighted(bool highlight)
-        {
-            _highlight.SetActive(highlight);
+        public void SetSelected(bool isSelected)
+		{
+			_isSelected = isSelected;
+			_highlight.SetActive(isSelected);
         }
 
         public void Disable()

@@ -14,7 +14,7 @@ namespace Werewolf.UI
         [SerializeField]
         private TMP_Text _loading;
 
-        public void Config(string text, Sprite image = null)
+        public void Initialize(string text, Sprite image = null)
         {
             _loading.text = text;
 

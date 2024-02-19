@@ -18,7 +18,10 @@ namespace Werewolf
         [field: SerializeField]
         public ChoiceScreen ChoiceScreen { get; private set; }
 
-        private FadingScreen _currentFadingScreen;
+		[field: SerializeField]
+		public VoteScreen VoteScreen { get; private set; }
+
+		private FadingScreen _currentFadingScreen;
 
         public void FadeIn(FadingScreen fadingScreen, float transitionDuration)
         {
