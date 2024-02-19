@@ -7,268 +7,268 @@ using Werewolf.Data;
 
 namespace Werewolf.Network
 {
-    [Serializable]
-    public struct PlayerInfo : INetworkStruct
-    {
-        public PlayerRef PlayerRef;
-        [Networked, Capacity(24)]
-        public string Nickname { get => default; set { } }
-        public bool IsLeader;
-    }
+	[Serializable]
+	public struct PlayerInfo : INetworkStruct
+	{
+		public PlayerRef PlayerRef;
+		[Networked, Capacity(24)]
+		public string Nickname { get => default; set { } }
+		public bool IsLeader;
+	}
 
-    [Serializable]
-    public struct RoleSetup : INetworkStruct
-    {
-        [Networked, Capacity(5)]
-        public NetworkArray<int> Pool { get; }
-        public int UseCount;
-    }
+	[Serializable]
+	public struct RoleSetup : INetworkStruct
+	{
+		[Networked, Capacity(5)]
+		public NetworkArray<int> Pool { get; }
+		public int UseCount;
+	}
 
-    [Serializable]
-    public struct RolesSetup : INetworkStruct
-    {
-        public int DefaultRole;
-        [Networked, Capacity(100)]
-        public NetworkArray<RoleSetup> MandatoryRoles { get; }
-        [Networked, Capacity(100)]
-        public NetworkArray<RoleSetup> AvailableRoles { get; }
-    }
+	[Serializable]
+	public struct RolesSetup : INetworkStruct
+	{
+		public int DefaultRole;
+		[Networked, Capacity(100)]
+		public NetworkArray<RoleSetup> MandatoryRoles { get; }
+		[Networked, Capacity(100)]
+		public NetworkArray<RoleSetup> AvailableRoles { get; }
+	}
 
-    public class GameDataManager : NetworkBehaviour, INetworkRunnerCallbacks
-    {
-        [Networked, Capacity(LaunchManager.MAX_PLAYER_COUNT)]
-        public NetworkDictionary<PlayerRef, PlayerInfo> PlayerInfos { get; }
+	public class GameDataManager : NetworkBehaviour, INetworkRunnerCallbacks
+	{
+		[Networked, Capacity(GameConfig.MAX_PLAYER_COUNT)]
+		public NetworkDictionary<PlayerRef, PlayerInfo> PlayerInfos { get; }
 
-        [field:SerializeField]
-        public RolesSetup RolesSetup { get; private set; }
+		[field: SerializeField]
+		public RolesSetup RolesSetup { get; private set; }
 
-        [Networked]
-        public bool GameDataReady { get; set; }
+		[Networked]
+		public bool GameDataReady { get; set; }
 
-        private ChangeDetector _changeDetector;
+		private ChangeDetector _changeDetector;
 
-        public event Action OnPlayerNicknamesChanged;
+		public event Action OnPlayerNicknamesChanged;
 
-        public event Action OnInvalidRolesSetupReceived;
+		public event Action OnInvalidRolesSetupReceived;
 
-        public event Action OnGameDataReadyChanged;
+		public event Action OnGameDataReadyChanged;
 
-        public static event Action OnSpawned = delegate { };
+		public static event Action OnSpawned = delegate { };
 
-        private void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
+		private void Awake()
+		{
+			DontDestroyOnLoad(gameObject);
+		}
 
-        public override void Spawned()
-        {
-            _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+		public override void Spawned()
+		{
+			_changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
-            OnSpawned();
-        }
+			OnSpawned();
+		}
 
-        public override void Render()
-        {
-            foreach (var change in _changeDetector.DetectChanges(this))
-            {
-                switch (change)
-                {
-                    case nameof(PlayerInfos):
-                        if (OnPlayerNicknamesChanged != null)
-                        {
-                            OnPlayerNicknamesChanged();
-                        }
-                        break;
-                    case nameof(GameDataReady):
-                        if (OnGameDataReadyChanged != null)
-                        {
-                            OnGameDataReadyChanged();
-                        }
-                        break;
-                }
-            }
-        }
+		public override void Render()
+		{
+			foreach (var change in _changeDetector.DetectChanges(this))
+			{
+				switch (change)
+				{
+					case nameof(PlayerInfos):
+						if (OnPlayerNicknamesChanged != null)
+						{
+							OnPlayerNicknamesChanged();
+						}
+						break;
+					case nameof(GameDataReady):
+						if (OnGameDataReadyChanged != null)
+						{
+							OnGameDataReadyChanged();
+						}
+						break;
+				}
+			}
+		}
 
-        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-        public void RPC_SetPlayerNickname(PlayerRef playerRef, string nickname)
-        {
-            PlayerInfo playerData = new PlayerInfo();
-            playerData.PlayerRef = playerRef;
-            playerData.Nickname = nickname;
-            playerData.IsLeader = PlayerInfos.Count <= 0;
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_SetPlayerNickname(PlayerRef playerRef, string nickname)
+		{
+			PlayerInfo playerData = new();
+			playerData.PlayerRef = playerRef;
+			playerData.Nickname = nickname;
+			playerData.IsLeader = PlayerInfos.Count <= 0;
 
-            PlayerInfos.Set(playerRef, playerData);
-        }
+			PlayerInfos.Set(playerRef, playerData);
+		}
 
-        [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-        public void RPC_SetRolesSetup(RolesSetup rolesSetup, int minPlayerCount, RpcInfo info = default)
-        {
-            if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader
-                || GameDataReady
-                || PlayerInfos.Count < minPlayerCount)
-            {
-                return;
-            }
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_SetRolesSetup(RolesSetup rolesSetup, int minPlayerCount, RpcInfo info = default)
+		{
+			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader
+				|| GameDataReady
+				|| PlayerInfos.Count < minPlayerCount)
+			{
+				return;
+			}
 
-            if (!IsSetupValid(rolesSetup, minPlayerCount))
-            {
-                RPC_WarnInvalidRolesSetup(info.Source);
-                return;
-            }
+			if (!IsSetupValid(rolesSetup, minPlayerCount))
+			{
+				RPC_WarnInvalidRolesSetup(info.Source);
+				return;
+			}
 
-            RolesSetup = rolesSetup;
-            GameDataReady = true;
-        }
+			RolesSetup = rolesSetup;
+			GameDataReady = true;
+		}
 
-        private bool IsSetupValid(RolesSetup rolesSetup, int minPlayerCount)
-        {
-            //TODO: Check if setup is valid
-            return true;
-        }
+		private bool IsSetupValid(RolesSetup rolesSetup, int minPlayerCount)
+		{
+			//TODO: Check if setup is valid
+			return true;
+		}
 
-        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-        public void RPC_WarnInvalidRolesSetup([RpcTarget] PlayerRef player)
-        {
-            if (OnInvalidRolesSetupReceived != null)
-            {
-                OnInvalidRolesSetupReceived();
-            }
-        }
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_WarnInvalidRolesSetup([RpcTarget] PlayerRef player)
+		{
+			if (OnInvalidRolesSetupReceived != null)
+			{
+				OnInvalidRolesSetupReceived();
+			}
+		}
 
-        #region Convertion Methods
-        public static RolesSetup ConvertToRolesSetup(GameSetupData gameSetupData)
-        {
-            RolesSetup rolesSetup = new()
-            {
-                DefaultRole = gameSetupData.DefaultRole.GameplayTag.CompactTagId,
-            };
+		#region Convertion Methods
+		public static RolesSetup ConvertToRolesSetup(GameSetupData gameSetupData)
+		{
+			RolesSetup rolesSetup = new()
+			{
+				DefaultRole = gameSetupData.DefaultRole.GameplayTag.CompactTagId,
+			};
 
-            for (int i = 0; i < gameSetupData.MandatoryRoles.Length; i++)
-            {
-                rolesSetup.MandatoryRoles.Set(i, ConvertToRoleSetup(gameSetupData.MandatoryRoles[i]));
-            }
+			for (int i = 0; i < gameSetupData.MandatoryRoles.Length; i++)
+			{
+				rolesSetup.MandatoryRoles.Set(i, ConvertToRoleSetup(gameSetupData.MandatoryRoles[i]));
+			}
 
-            for (int i = 0; i < gameSetupData.AvailableRoles.Length; i++)
-            {
-                rolesSetup.AvailableRoles.Set(i, ConvertToRoleSetup(gameSetupData.AvailableRoles[i]));
-            }
+			for (int i = 0; i < gameSetupData.AvailableRoles.Length; i++)
+			{
+				rolesSetup.AvailableRoles.Set(i, ConvertToRoleSetup(gameSetupData.AvailableRoles[i]));
+			}
 
-            return rolesSetup;
-        }
+			return rolesSetup;
+		}
 
-        public static RoleSetup ConvertToRoleSetup(RoleSetupData roleSetupData)
-        {
-            RoleSetup roleSetup = new RoleSetup();
+		public static RoleSetup ConvertToRoleSetup(RoleSetupData roleSetupData)
+		{
+			RoleSetup roleSetup = new();
 
-            for (int i = 0; i < roleSetupData.Pool.Length; i++)
-            {
-                roleSetup.Pool.Set(i, roleSetupData.Pool[i].GameplayTag.CompactTagId);
-            }
+			for (int i = 0; i < roleSetupData.Pool.Length; i++)
+			{
+				roleSetup.Pool.Set(i, roleSetupData.Pool[i].GameplayTag.CompactTagId);
+			}
 
-            roleSetup.UseCount = roleSetupData.UseCount;
+			roleSetup.UseCount = roleSetupData.UseCount;
 
-            return roleSetup;
-        }
+			return roleSetup;
+		}
 
-        public static void ConvertToRoleSetupDatas(NetworkArray<RoleSetup> roleSetups, out List<RoleSetupData> roleSetupDatas)
-        {
-            GameplayDatabaseManager _gameplayDatabaseManager = GameplayDatabaseManager.Instance;
+		public static void ConvertToRoleSetupDatas(NetworkArray<RoleSetup> roleSetups, out List<RoleSetupData> roleSetupDatas)
+		{
+			GameplayDatabaseManager _gameplayDatabaseManager = GameplayDatabaseManager.Instance;
 
-            roleSetupDatas = new List<RoleSetupData>();
+			roleSetupDatas = new();
 
-            foreach (RoleSetup roleSetup in roleSetups)
-            {
-                if (roleSetup.UseCount <= 0)
-                {
-                    return;
-                }
+			foreach (RoleSetup roleSetup in roleSetups)
+			{
+				if (roleSetup.UseCount <= 0)
+				{
+					return;
+				}
 
-                List<RoleData> Pool = new List<RoleData>();
+				List<RoleData> Pool = new();
 
-                foreach(int role in roleSetup.Pool)
-                {
-                    if (role <= 0)
-                    {
-                        continue;
-                    }
+				foreach (int role in roleSetup.Pool)
+				{
+					if (role <= 0)
+					{
+						continue;
+					}
 
-                    Pool.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(role));
-                }
+					Pool.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(role));
+				}
 
-                roleSetupDatas.Add(new RoleSetupData
-                {
-                    Pool = Pool.ToArray(),
-                    UseCount = roleSetup.UseCount
-                });
-            }
-        }
-        #endregion
+				roleSetupDatas.Add(new()
+				{
+					Pool = Pool.ToArray(),
+					UseCount = roleSetup.UseCount
+				});
+			}
+		}
+		#endregion
 
-        public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-        {
-            if (!HasStateAuthority || !PlayerInfos.ContainsKey(player))
-            {
-                return;
-            }
+		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+		{
+			if (!HasStateAuthority || !PlayerInfos.ContainsKey(player))
+			{
+				return;
+			}
 
-            bool removingFirstPlayer = PlayerInfos.Get(player).IsLeader;
+			bool removingFirstPlayer = PlayerInfos.Get(player).IsLeader;
 
-            PlayerInfos.Remove(player);
+			PlayerInfos.Remove(player);
 
-            if (!removingFirstPlayer)
-            {
-                return;
-            }
+			if (!removingFirstPlayer)
+			{
+				return;
+			}
 
-            foreach (KeyValuePair<PlayerRef, PlayerInfo> playerData in PlayerInfos)
-            {
-                PlayerInfo newPlayerData = new PlayerInfo();
-                newPlayerData.PlayerRef = playerData.Value.PlayerRef;
-                newPlayerData.Nickname = playerData.Value.Nickname;
-                newPlayerData.IsLeader = true;
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerData in PlayerInfos)
+			{
+				PlayerInfo newPlayerData = new();
+				newPlayerData.PlayerRef = playerData.Value.PlayerRef;
+				newPlayerData.Nickname = playerData.Value.Nickname;
+				newPlayerData.IsLeader = true;
 
-                PlayerInfos.Set(playerData.Key, newPlayerData);
+				PlayerInfos.Set(playerData.Key, newPlayerData);
 
-                break;
-            }
-        }
+				break;
+			}
+		}
 
-        #region Unused Callbacks
-        public void OnSceneLoadDone(NetworkRunner runner) { }
+		#region Unused Callbacks
+		public void OnSceneLoadDone(NetworkRunner runner) { }
 
-        public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
 
-        public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
 
-        public void OnConnectedToServer(NetworkRunner runner) { }
+		public void OnConnectedToServer(NetworkRunner runner) { }
 
-        public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
 
-        public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
 
-        public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
+		public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
 
-        public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
+		public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
 
-        public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+		public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
 
-        public void OnInput(NetworkRunner runner, NetworkInput input) { }
+		public void OnInput(NetworkRunner runner, NetworkInput input) { }
 
-        public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+		public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
 
-        public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+		public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
-        public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+		public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
-        public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+		public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
 
-        public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
+		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
 
-        public void OnSceneLoadStart(NetworkRunner runner) { }
+		public void OnSceneLoadStart(NetworkRunner runner) { }
 
-        public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
 
-        public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
-        #endregion
-    }
+		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
+		#endregion
+	}
 }

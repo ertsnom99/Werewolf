@@ -15,9 +15,9 @@ namespace Werewolf
         #region Server variables
         public List<RoleData> RolesToDistribute { get; private set; }
 
-        private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new Dictionary<RoleBehavior, RoleData>();
+        private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
 
-        private Dictionary<PlayerRef, PlayerRole> _playerRoles = new Dictionary<PlayerRef, PlayerRole>();
+        private Dictionary<PlayerRef, PlayerRole> _playerRoles = new();
 
         private struct PlayerRole
         {
@@ -25,7 +25,7 @@ namespace Werewolf
             public List<RoleBehavior> Behaviors;
         }
 
-        private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new Dictionary<RoleBehavior, IndexedReservedRoles>();
+        private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
 
         public struct IndexedReservedRoles
         {
@@ -34,9 +34,9 @@ namespace Werewolf
             public int networkIndex;
         }
 #if UNITY_SERVER && UNITY_EDITOR
-        private Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new Dictionary<RoleBehavior, Card[]>();
+        private Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new();
 #endif
-        private List<NightCall> _nightCalls = new List<NightCall>();
+        private List<NightCall> _nightCalls = new();
 
         private struct NightCall
         {
@@ -44,7 +44,7 @@ namespace Werewolf
             public List<PlayerRef> Players;
         }
 
-        private List<PlayerRef> _playersReady = new List<PlayerRef>();
+        private List<PlayerRef> _playersReady = new();
 
         private bool _rolesDistributionDone = false;
         private bool _allPlayersReadyToReceiveRole = false;
@@ -52,9 +52,9 @@ namespace Werewolf
         private bool _allPlayersReadyToPlay = false;
 
         private int _currentNightCallIndex = 0;
-        private List<PlayerRef> _playersWaitingFor = new List<PlayerRef>();
+        private List<PlayerRef> _playersWaitingFor = new();
 
-        private Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new Dictionary<PlayerRef, Action<int>>();
+        private Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new();
         #endregion
 
         #region Networked variables
@@ -81,7 +81,7 @@ namespace Werewolf
         public static event Action OnSpawned = delegate { };
         public static bool HasSpawned { get; private set; }
 
-        private Dictionary<PlayerRef, Card> _playerCards = new Dictionary<PlayerRef, Card>();
+        private Dictionary<PlayerRef, Card> _playerCards = new();
         private Card[][] _reservedRolesCards;
 
         private enum GameplayLoopStep
@@ -102,6 +102,7 @@ namespace Werewolf
         private GameplayDatabaseManager _gameplayDatabaseManager;
         private UIManager _UIManager;
         private DaytimeManager _daytimeManager;
+        private VoteManager _voteManager;
 
         // Server events
         public event Action OnPreRoleDistribution = delegate { };
@@ -117,7 +118,7 @@ namespace Werewolf
         {
             base.Awake();
 
-            RolesToDistribute = new List<RoleData>();
+            RolesToDistribute = new();
 
             if (!Config)
             {
@@ -127,10 +128,16 @@ namespace Werewolf
 
         private void Start()
         {
+            _playerCards = new();
+
             _gameplayDatabaseManager = GameplayDatabaseManager.Instance;
             _UIManager = UIManager.Instance;
             _daytimeManager = DaytimeManager.Instance;
-        }
+            _voteManager = VoteManager.Instance;
+
+            _voteManager.SetConfig(Config);
+            _UIManager.VoteScreen.SetConfig(Config);
+		}
 
         public override void Spawned()
         {
@@ -172,7 +179,7 @@ namespace Werewolf
             GameDataManager.ConvertToRoleSetupDatas(rolesSetup.MandatoryRoles, out List<RoleSetupData> mandatoryRoles);
             GameDataManager.ConvertToRoleSetupDatas(rolesSetup.AvailableRoles, out List<RoleSetupData> availableRoles);
 
-            List<RoleData> rolesToDistribute = new List<RoleData>();
+            List<RoleData> rolesToDistribute = new();
 
             // Add all mandatory roles first
             foreach (RoleSetupData roleSetup in mandatoryRoles)
@@ -181,7 +188,7 @@ namespace Werewolf
                 PrepareRoleBehaviors(addedRoles, ref rolesToDistribute, ref availableRoles);
             }
 
-            List<RoleSetupData> excludedRuleSetups = new List<RoleSetupData>();
+            List<RoleSetupData> excludedRuleSetups = new();
             int attempts = 0;
 
             // Complete with available roles at random or default role
@@ -230,7 +237,7 @@ namespace Werewolf
 
         private RoleData[] SelectRolesFromRoleSetup(RoleSetupData roleSetup, ref List<RoleData> rolesToDistribute)
         {
-            List<RoleData> rolePool = new List<RoleData>(roleSetup.Pool);
+            List<RoleData> rolePool = new(roleSetup.Pool);
             RoleData[] addedRoles = new RoleData[roleSetup.UseCount];
 
             for (int i = 0; i < roleSetup.UseCount; i++)
@@ -283,7 +290,7 @@ namespace Werewolf
                 RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
                 RolesToDistribute.Remove(selectedRole);
 
-                List<RoleBehavior> selectedBehaviors = new List<RoleBehavior>();
+                List<RoleBehavior> selectedBehaviors = new();
 
                 foreach (KeyValuePair<RoleBehavior, RoleData> unassignedRoleBehavior in _unassignedRoleBehaviors)
                 {
@@ -297,7 +304,7 @@ namespace Werewolf
                     }
                 }
 
-                _playerRoles.Add(playerInfo.Key, new PlayerRole { Data = selectedRole, Behaviors = selectedBehaviors });
+                _playerRoles.Add(playerInfo.Key, new() { Data = selectedRole, Behaviors = selectedBehaviors });
             }
 
             _rolesDistributionDone = true;
@@ -331,7 +338,7 @@ namespace Werewolf
             }
 
             // Make a list of all different priorities
-            List<int> priorities = new List<int>();
+            List<int> priorities = new();
 
             foreach (PlayerRef player in players)
             {
@@ -351,7 +358,7 @@ namespace Werewolf
             // Loop threw the priorities and store all players with similare priorities together
             for (int i = 0; i < priorities.Count; i++)
             {
-                List<PlayerRef> playersToCall = new List<PlayerRef>();
+                List<PlayerRef> playersToCall = new();
 
                 foreach (PlayerRef player in players)
                 {
@@ -365,7 +372,7 @@ namespace Werewolf
                     }
                 }
 
-                _nightCalls.Add(new NightCall { PriorityIndex = priorities[i], Players = playersToCall });
+                _nightCalls.Add(new() { PriorityIndex = priorities[i], Players = playersToCall });
             }
         }
 #if UNITY_SERVER && UNITY_EDITOR
@@ -550,7 +557,7 @@ namespace Werewolf
                 NightCall nightCall = _nightCalls[_currentNightCallIndex];
                 int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(nightCall);
 
-                Dictionary<PlayerRef, RoleBehavior> actifBehaviors = new Dictionary<PlayerRef, RoleBehavior>();
+                Dictionary<PlayerRef, RoleBehavior> actifBehaviors = new();
 
                 // Role call all the roles that must play
                 foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
@@ -599,10 +606,16 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
                     DisplayRolePlaying(displayRoleGameplayTagID);
 #endif
+                    // Start the vote if it has been prepared
+                    if (_voteManager.IsPreparingToVote())
+                    {
+                        _voteManager.StartVote();
+                    }
+
                     float elapsedTime = .0f;
 
-                    // Wait until all players are done and the minimum amount of time is reached OR the maximum amount of time is reached
-                    while ((_playersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration) && elapsedTime < Config.NightCallMaximumDuration)
+                    // Wait for the current vote ends (if there is one) and until all players are done and the minimum amount of time is reached OR the maximum amount of time is reached
+                    while (_voteManager.IsVoting() || ((_playersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration) && elapsedTime < Config.NightCallMaximumDuration))
                     {
                         elapsedTime += Time.deltaTime;
                         yield return 0;
@@ -743,7 +756,7 @@ namespace Werewolf
         // Returns all the RoleBehavior that are called during a night call and that have at least one of the prioritiesIndex
         private List<RoleBehavior> FindNightCallBehaviors(PlayerRef player, int[] prioritiesIndex)
         {
-            List<RoleBehavior> behaviorsToRemove = new List<RoleBehavior>();
+            List<RoleBehavior> behaviorsToRemove = new();
 
             foreach (RoleBehavior behavior in _playerRoles[player].Behaviors)
             {
@@ -783,7 +796,7 @@ namespace Werewolf
                 {
                     nightCall = new();
                     nightCall.PriorityIndex = priorityIndex;
-                    nightCall.Players = new List<PlayerRef> { player };
+                    nightCall.Players = new() { player };
 
                     _nightCalls.Insert(i, nightCall);
 
@@ -798,7 +811,7 @@ namespace Werewolf
 
             nightCall = new();
             nightCall.PriorityIndex = priorityIndex;
-            nightCall.Players = new List<PlayerRef> { player };
+            nightCall.Players = new() { player };
 
             _nightCalls.Add(nightCall);
         }
@@ -853,7 +866,7 @@ namespace Werewolf
             }
 
             ReservedRoles.Set(_reservedRolesByBehavior.Count, rolesContainer);
-            _reservedRolesByBehavior.Add(roleBehavior, new IndexedReservedRoles { Roles = roles, Behaviors = behaviors, networkIndex = _reservedRolesByBehavior.Count });
+            _reservedRolesByBehavior.Add(roleBehavior, new() { Roles = roles, Behaviors = behaviors, networkIndex = _reservedRolesByBehavior.Count });
         }
 
         public IndexedReservedRoles GetReservedRoles(RoleBehavior roleBehavior)
@@ -972,7 +985,7 @@ namespace Werewolf
             }
 
             RoleData[] roleDatas = _reservedRolesByBehavior[ReservedRoleOwner].Roles;
-            RolesContainer rolesContainer = new RolesContainer { RoleCount = roleDatas.Length };
+            RolesContainer rolesContainer = new() { RoleCount = roleDatas.Length };
 
             for (int i = 0; i < roleDatas.Length; i++)
             {
@@ -989,7 +1002,7 @@ namespace Werewolf
         [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
         public void RPC_MakePlayerChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer, bool mustChooseOne)
         {
-            List<Choice.ChoiceData> choices = new List<Choice.ChoiceData>();
+            List<Choice.ChoiceData> choices = new();
 
             foreach (int roleGameplayTag in rolesContainer.Roles)
             {
@@ -999,7 +1012,7 @@ namespace Werewolf
                 }
 
                 RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
-                choices.Add(new Choice.ChoiceData { Image = roleData.Image, Value = roleGameplayTag });
+                choices.Add(new() { Image = roleData.Image, Value = roleGameplayTag });
             }
 
             _UIManager.ChoiceScreen.OnConfirmChoice += (int choice) =>
@@ -1007,7 +1020,7 @@ namespace Werewolf
                 RPC_GiveReservedRoleChoice(choice);
             };
 
-            _UIManager.ChoiceScreen.Config(mustChooseOne ? Config.ChooseRoleObligatoryText : Config.ChooseRoleText, Config.ChoosedRoleText, Config.DidNotChoosedRoleText, choices.ToArray(), mustChooseOne);
+            _UIManager.ChoiceScreen.Initialize(mustChooseOne ? Config.ChooseRoleObligatoryText : Config.ChooseRoleText, Config.ChoosedRoleText, Config.DidNotChoosedRoleText, choices.ToArray(), mustChooseOne);
             _UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionDuration);
         }
 
@@ -1046,7 +1059,7 @@ namespace Werewolf
             RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
             string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
 
-            _UIManager.ImageScreen.Config(roleData.Image, string.Format(text, roleData.Name.ToLower()));
+            _UIManager.ImageScreen.Initialize(roleData.Image, string.Format(text, roleData.Name.ToLower()));
             _UIManager.FadeIn(_UIManager.ImageScreen, Config.UITransitionDuration);
         }
 
@@ -1099,10 +1112,10 @@ namespace Werewolf
         {
             _UIManager.FadeOut(Config.UITransitionDuration);
         }
-        #endregion
-        #endregion
+		#endregion
+		#endregion
 
-        #region Visual
+		#region Visual
 #if UNITY_SERVER && UNITY_EDITOR
         private void CreatePlayerCardsForServer()
         {
@@ -1117,7 +1130,7 @@ namespace Werewolf
 
                 Quaternion rotation = Quaternion.Euler(0, rotationIncrement * counter, 0);
 
-                Card card = Instantiate(_cardPrefab, rotation * startingPosition, rotation);
+                Card card = Instantiate(_cardPrefab, rotation * startingPosition, Quaternion.identity);
 
                 card.SetPlayer(playerRole.Key);
                 card.SetRole(playerRole.Value.Data);
@@ -1136,6 +1149,8 @@ namespace Werewolf
                     behavior.transform.position = card.transform.position;
                 }
             }
+
+            _voteManager.SetPlayerCards(_playerCards);
         }
 
         private void CreateReservedRoleCardsForServer()
@@ -1168,7 +1183,7 @@ namespace Werewolf
             }
         }
 #endif
-        private void CreatePlayerCards(PlayerRef bottomPlayer, RoleData playerRole)
+		private void CreatePlayerCards(PlayerRef bottomPlayer, RoleData playerRole)
         {
             NetworkDictionary<PlayerRef, PlayerInfo> playerInfos = _gameDataManager.PlayerInfos;
             int playerCount = playerInfos.Count;
@@ -1198,7 +1213,7 @@ namespace Werewolf
 
                 Quaternion rotation = Quaternion.Euler(0, rotationIncrement * rotationOffset, 0);
 
-                Card card = Instantiate(_cardPrefab, rotation * startingPosition, rotation);
+                Card card = Instantiate(_cardPrefab, rotation * startingPosition, Quaternion.identity);
 
                 card.SetPlayer(playerInfo.Key);
                 card.SetNickname(playerInfo.Value.Nickname);
@@ -1211,6 +1226,9 @@ namespace Werewolf
 
                 _playerCards.Add(playerInfo.Key, card);
             }
+
+            // The VoteManager needs to know the player cards
+            _voteManager.SetPlayerCards(_playerCards);
         }
 
         private void CreateReservedRoleCards()

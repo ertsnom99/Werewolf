@@ -22,13 +22,13 @@ namespace Werewolf.UI
 
         private Choice[] _choices;
 
-        private Choice _SelectedChoice;
+        private Choice _selectedChoice;
         private string _choosedText;
         private string _didNotChoosedText;
 
         public event Action<int> OnConfirmChoice = delegate { };
 
-        public void Config(string chooseText, string choosedText, string didNotChoosedText, Choice.ChoiceData[] choices, bool mustChooseOne)
+        public void Initialize(string chooseText, string choosedText, string didNotChoosedText, Choice.ChoiceData[] choices, bool mustChooseOne)
         {
             _text.text = chooseText;
             _choosedText = choosedText;
@@ -53,7 +53,7 @@ namespace Werewolf.UI
 
             _confirmButton.onClick.AddListener(() =>
             {
-                if (mustChooseOne && _SelectedChoice == null)
+                if (mustChooseOne && _selectedChoice == null)
                 {
                     return;
                 }
@@ -66,31 +66,31 @@ namespace Werewolf.UI
 
         private void OnChoiceSelected(Choice choice)
         {
-            if (_SelectedChoice)
+            if (_selectedChoice)
             {
-                if (_SelectedChoice == choice)
+                if (_selectedChoice == choice)
                 {
-                    _SelectedChoice = null;
+                    _selectedChoice = null;
                     return;
                 }
                 else
                 {
-                    _SelectedChoice.SetHighlighted(false);
+                    _selectedChoice.SetSelected(false);
                 }
             }
 
-            _SelectedChoice = choice;
+            _selectedChoice = choice;
         }
 
         public void ConfirmChoice()
         {
-            _text.text = _SelectedChoice ? _choosedText : _didNotChoosedText;
+            _text.text = _selectedChoice ? _choosedText : _didNotChoosedText;
 
             foreach (Choice choice in _choices)
             {
                 choice.OnSelected -= OnChoiceSelected;
 
-                if (choice == _SelectedChoice)
+                if (choice == _selectedChoice)
                 {
                     choice.Disable();
                     continue;
@@ -102,7 +102,7 @@ namespace Werewolf.UI
             _confirmButton.onClick.RemoveAllListeners();
             _confirmButton.interactable = false;
 
-            OnConfirmChoice(_SelectedChoice != null ? Array.IndexOf(_choices, _SelectedChoice) : -1);
+            OnConfirmChoice(_selectedChoice != null ? Array.IndexOf(_choices, _selectedChoice) : -1);
         }
     }
 }

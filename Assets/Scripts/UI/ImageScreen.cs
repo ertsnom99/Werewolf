@@ -13,7 +13,7 @@ namespace Werewolf.UI
         [SerializeField]
         private TMP_Text _text;
 
-        public void Config(Sprite image, string title)
+        public void Initialize(Sprite image, string title)
         {
             _image.sprite = image;
             _text.text = title;

@@ -9,7 +9,7 @@ namespace Werewolf.UI
         [SerializeField]
         private TMP_Text _text;
 
-        public void Config(string title)
+        public void Initialize(string title)
         {
             _text.text = title;
         }

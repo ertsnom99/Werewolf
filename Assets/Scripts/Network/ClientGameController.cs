@@ -39,7 +39,7 @@ namespace Werewolf.Network
         private void OnGameManagerSpawned()
         {
             _gameManager = GameManager.Instance;
-            _UIManager.LoadingScreen.Config(_gameManager.Config.LoadingScreenText);
+            _UIManager.LoadingScreen.Initialize(_gameManager.Config.LoadingScreenText);
 
             StartCoroutine(ConfirmReadyToReceiveRole());
             _gameManager.OnRoleReceived += StartLoadingFade;
@@ -58,7 +58,7 @@ namespace Werewolf.Network
         private void StartLoadingFade()
         {
             _UIManager.LoadingScreen.OnFadeOver += ConfirmReadyToPlay;
-            _UIManager.LoadingScreen.Config("");
+            _UIManager.LoadingScreen.Initialize("");
             _UIManager.FadeOut(_UIManager.LoadingScreen, _gameManager.Config.LoadingScreenTransitionDuration);
         }
 
