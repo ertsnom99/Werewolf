@@ -9,7 +9,7 @@ namespace Werewolf
 	{
 		[field: SerializeField]
 		[field: ReadOnly]
-		public PlayerRef Player { get; private set; }
+		public PrimaryRoleType PrimaryRoleType { get; private set; }
 
 		[field: SerializeField]
 		[field: ReadOnly]
@@ -19,12 +19,12 @@ namespace Werewolf
 		[field: ReadOnly]
 		public bool IsPrimaryBehavior { get; private set; }
 
-		protected bool _timedOut = false;
+		[field: SerializeField]
+		[field: ReadOnly]
+		public PlayerRef Player { get; private set; }
 
-		public void SetPlayer(PlayerRef player)
-		{
-			Player = player;
-		}
+
+		protected bool _timedOut = false;
 
 		public void AddNightPriority(int nightPriority)
 		{
@@ -41,6 +41,16 @@ namespace Werewolf
 		public void SetIsPrimaryBehavior(bool isPrimaryBehavior)
 		{
 			IsPrimaryBehavior = isPrimaryBehavior;
+		}
+
+		public void SetPrimaryRoleType(PrimaryRoleType primaryRoleType)
+		{
+			PrimaryRoleType = primaryRoleType;
+		}
+
+		public void SetPlayer(PlayerRef player)
+		{
+			Player = player;
 		}
 
 		public abstract void Init();

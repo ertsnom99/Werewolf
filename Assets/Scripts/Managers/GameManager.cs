@@ -269,6 +269,8 @@ namespace Werewolf
 			// Temporairy store the behaviors, because they must be attributed to specific players later
 			RoleBehavior roleBehavior = Instantiate(role.Behavior, transform);
 
+			roleBehavior.SetPrimaryRoleType(role.PrimaryType);
+
 			foreach (RoleData.Priority nightPriority in role.NightPriorities)
 			{
 				roleBehavior.AddNightPriority(nightPriority.index);
