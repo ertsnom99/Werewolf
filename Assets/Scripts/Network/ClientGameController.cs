@@ -5,7 +5,6 @@ using System;
 using UnityEngine;
 using Werewolf.Network.Configs;
 using System.Collections;
-using Werewolf.Data;
 
 namespace Werewolf.Network
 {

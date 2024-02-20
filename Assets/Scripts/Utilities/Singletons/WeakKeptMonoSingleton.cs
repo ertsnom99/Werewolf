@@ -13,7 +13,7 @@
 public class WeakKeptMonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
 	private static System.WeakReference _instance = null;
-	private static object _lock = new object();
+	private static object _lock = new();
 	private static bool _applicationIsQuitting = false;
 
 	public static T Instance
@@ -33,7 +33,7 @@ public class WeakKeptMonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 				{
 					if (_instance == null)
 					{
-						_instance = new System.WeakReference((T)FindObjectOfType(typeof(T)));
+						_instance = new((T)FindObjectOfType(typeof(T)));
 					}
 					else
 					{
@@ -48,7 +48,7 @@ public class WeakKeptMonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 
 					if ((T)_instance.Target == null || !_instance.IsAlive)
 					{
-						GameObject singleton = new GameObject();
+						GameObject singleton = new();
 						_instance.Target = singleton.AddComponent<T>();
 						singleton.name = "(singleton) " + typeof(T).ToString();
 
@@ -86,7 +86,7 @@ public class WeakKeptMonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 	{
 		if (_instance == null)
 		{
-			_instance = new System.WeakReference(this);
+			_instance = new(this);
 			DontDestroyOnLoad(gameObject);
 		}
 		else if ((T)_instance.Target != null && _instance.IsAlive && (T)_instance.Target != this)

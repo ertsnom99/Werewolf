@@ -20,7 +20,7 @@ public class CommandLineUtilities
 	/// <returns>List of tuples with argument name and argument value</returns>
 	public static List<(string, string)> GetArgumentList(string prefix)
 	{
-		List<(string, string)> output = new List<(string, string)>();
+		List<(string, string)> output = new();
 
 		string[] args = Environment.GetCommandLineArgs();
 

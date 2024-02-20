@@ -80,6 +80,6 @@ public class ImageFade : MonoBehaviour
 
 	public void SetFade(float fade)
 	{
-		_image.color = new Color { r = _image.color.r, g = _image.color.g, b = _image.color.b, a = fade };
+		_image.color = new() { r = _image.color.r, g = _image.color.g, b = _image.color.b, a = fade };
 	}
 }

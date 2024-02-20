@@ -11,7 +11,7 @@
 public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
 	private static T _instance;
-	private static object _lock = new object();
+	private static object _lock = new();
 	private static bool _applicationIsQuitting = false;
 
 	public static T Instance
@@ -38,7 +38,7 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 
 					if (_instance == null)
 					{
-						GameObject singleton = new GameObject();
+						GameObject singleton = new();
 						_instance = singleton.AddComponent<T>();
 						singleton.name = "(singleton) " + typeof(T).ToString();
 
