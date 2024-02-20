@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Lonely.Sectarian
+  m_Name: Role.Villager.Lonely.Sectarian
   m_EditorClassIdentifier: 
-  _compactTagId: 197121
+  _compactTagId: 50462977
 --- !u!114 &-8990609715730411089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23,9 +23,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Crow
+  m_Name: Role.Villager.None.Crow
   m_EditorClassIdentifier: 
-  _compactTagId: 197377
+  _compactTagId: 50528513
 --- !u!114 &-8001139337927534559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,9 +36,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.FortuneTeller
+  m_Name: Role.Villager.None.FortuneTeller
   m_EditorClassIdentifier: 
-  _compactTagId: 328449
+  _compactTagId: 84082945
 --- !u!114 &-7706619751368653676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,9 +49,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.BearRider
+  m_Name: Role.Villager.None.BearRider
   m_EditorClassIdentifier: 
-  _compactTagId: 131841
+  _compactTagId: 33751297
 --- !u!114 &-7602664661658529974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,9 +62,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.VillagerVillager
+  m_Name: Role.Villager.None.VillagerVillager
   m_EditorClassIdentifier: 
-  _compactTagId: 1245953
+  _compactTagId: 318963969
 --- !u!114 &-7226050190254201797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,9 +75,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Villager
+  m_Name: Role.Villager.None.Villager
   m_EditorClassIdentifier: 
-  _compactTagId: 1180417
+  _compactTagId: 302186753
 --- !u!114 &-6932030356482755376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,9 +88,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Saviour
+  m_Name: Role.Villager.None.Saviour
   m_EditorClassIdentifier: 
-  _compactTagId: 852737
+  _compactTagId: 218300673
 --- !u!114 &-6653758457213997753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,9 +101,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Ambiguous.WildChild
+  m_Name: Role.Villager.Ambiguous.WildChild
   m_EditorClassIdentifier: 
-  _compactTagId: 327937
+  _compactTagId: 83951873
 --- !u!114 &-5616936199980762825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,9 +114,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Werewolf.BigBadWolf
+  m_Name: Role.Werewolf.None.BigBadWolf
   m_EditorClassIdentifier: 
-  _compactTagId: 66561
+  _compactTagId: 16908801
 --- !u!114 &-5547471449306829802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,9 +127,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.LittleGirl
+  m_Name: Role.Villager.None.LittleGirl
   m_EditorClassIdentifier: 
-  _compactTagId: 721665
+  _compactTagId: 184746241
 --- !u!114 &-4213155426070918043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,9 +140,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Ambiguous.Comedian
+  m_Name: Role.Villager.Ambiguous.Comedian
   m_EditorClassIdentifier: 
-  _compactTagId: 65793
+  _compactTagId: 16843009
 --- !u!114 &-2503317683888758085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,9 +153,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Ambiguous.Servant
+  m_Name: Role.Villager.Ambiguous.Servant
   m_EditorClassIdentifier: 
-  _compactTagId: 196865
+  _compactTagId: 50397441
 --- !u!114 &-2420311931908136977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,10 +166,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Witch
+  m_Name: Role.Villager.None.Witch
   m_EditorClassIdentifier: 
-  _compactTagId: 1311489
---- !u!114 &-2206519433839310991
+  _compactTagId: 335741185
+--- !u!114 &-2183545869754039743
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -179,9 +179,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Lonely
+  m_Name: Role.Villager.None
   m_EditorClassIdentifier: 
-  _compactTagId: 513
+  _compactTagId: 196865
+--- !u!114 &-1884873266834036162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Role.Villager.Lonely
+  m_EditorClassIdentifier: 
+  _compactTagId: 131329
 --- !u!114 &-1852563882059163371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,9 +205,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Werewolf.FoulFatherWolf
+  m_Name: Role.Werewolf.None.FoulFatherWolf
   m_EditorClassIdentifier: 
-  _compactTagId: 132097
+  _compactTagId: 33686017
 --- !u!114 &-738164676928455692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,9 +218,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Scapegoat
+  m_Name: Role.Villager.None.Scapegoat
   m_EditorClassIdentifier: 
-  _compactTagId: 918273
+  _compactTagId: 235077889
 --- !u!114 &-535318216189129561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,9 +231,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Ambiguous.DogWolf
+  m_Name: Role.Villager.Ambiguous.DogWolf
   m_EditorClassIdentifier: 
-  _compactTagId: 131329
+  _compactTagId: 33620225
 --- !u!114 &-526955281746026370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,9 +244,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.KnightRustySword
+  m_Name: Role.Villager.None.KnightRustySword
   m_EditorClassIdentifier: 
-  _compactTagId: 656129
+  _compactTagId: 167969025
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,18 +261,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameplayTags:
   - {fileID: 3472346779470064033}
-  - {fileID: 7206632662089259466}
+  - {fileID: 3670115825574939499}
+  - {fileID: 2561787173178258685}
   - {fileID: -4213155426070918043}
   - {fileID: -535318216189129561}
   - {fileID: -2503317683888758085}
   - {fileID: 6665825862911437471}
   - {fileID: -6653758457213997753}
-  - {fileID: -2206519433839310991}
+  - {fileID: -1884873266834036162}
   - {fileID: 1136116219714361880}
   - {fileID: 1901381684086208853}
   - {fileID: -9112512702752326507}
-  - {fileID: 3558111247057105200}
-  - {fileID: 3670115825574939499}
+  - {fileID: -2183545869754039743}
   - {fileID: 6369716799392596581}
   - {fileID: -7706619751368653676}
   - {fileID: -8990609715730411089}
@@ -281,9 +294,25 @@ MonoBehaviour:
   - {fileID: -7602664661658529974}
   - {fileID: -2420311931908136977}
   - {fileID: 8189838678897902939}
+  - {fileID: 957768035278547275}
+  - {fileID: 3558111247057105200}
+  - {fileID: 1557777365195631459}
   - {fileID: -5616936199980762825}
   - {fileID: -1852563882059163371}
   - {fileID: 2652096941984701936}
+--- !u!114 &957768035278547275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Role.Werewolf.Lonely
+  m_EditorClassIdentifier: 
+  _compactTagId: 66049
 --- !u!114 &1136116219714361880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,9 +323,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Lonely.Angel
+  m_Name: Role.Villager.Lonely.Angel
   m_EditorClassIdentifier: 
-  _compactTagId: 66049
+  _compactTagId: 16908545
+--- !u!114 &1557777365195631459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Role.Werewolf.None
+  m_EditorClassIdentifier: 
+  _compactTagId: 131585
 --- !u!114 &1901381684086208853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,9 +349,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Lonely.FlutePlayer
+  m_Name: Role.Villager.Lonely.FlutePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 131585
+  _compactTagId: 33685761
+--- !u!114 &2561787173178258685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Role.Villager.Ambiguous
+  m_EditorClassIdentifier: 
+  _compactTagId: 65793
 --- !u!114 &2652096941984701936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,9 +375,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Werewolf.Werewolf
+  m_Name: Role.Werewolf.None.Werewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 197633
+  _compactTagId: 50463233
 --- !u!114 &2754782463931255244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,9 +388,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Gypsy
+  m_Name: Role.Villager.None.Gypsy
   m_EditorClassIdentifier: 
-  _compactTagId: 459521
+  _compactTagId: 117637377
 --- !u!114 &3472346779470064033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,9 +414,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Lonely.WhiteWerewolf
+  m_Name: Role.Werewolf.Lonely.WhiteWerewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 262657
+  _compactTagId: 16843265
 --- !u!114 &3670115825574939499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,7 +429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager
   m_EditorClassIdentifier: 
-  _compactTagId: 769
+  _compactTagId: 257
 --- !u!114 &4216874847919846777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,9 +440,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.VillageIdiot
+  m_Name: Role.Villager.None.VillageIdiot
   m_EditorClassIdentifier: 
-  _compactTagId: 1114881
+  _compactTagId: 285409537
 --- !u!114 &4907134351945679693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,9 +453,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Judge
+  m_Name: Role.Villager.None.Judge
   m_EditorClassIdentifier: 
-  _compactTagId: 590593
+  _compactTagId: 151191809
 --- !u!114 &5771913067030864782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,9 +466,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Cupid
+  m_Name: Role.Villager.None.Cupid
   m_EditorClassIdentifier: 
-  _compactTagId: 262913
+  _compactTagId: 67305729
 --- !u!114 &6221425419385585584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,9 +479,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.TripletBrothers
+  m_Name: Role.Villager.None.TripletBrothers
   m_EditorClassIdentifier: 
-  _compactTagId: 983809
+  _compactTagId: 251855105
 --- !u!114 &6369716799392596581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,9 +492,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Ancient
+  m_Name: Role.Villager.None.Ancient
   m_EditorClassIdentifier: 
-  _compactTagId: 66305
+  _compactTagId: 16974081
 --- !u!114 &6540031303376373709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,9 +505,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.TwinSisters
+  m_Name: Role.Villager.None.TwinSisters
   m_EditorClassIdentifier: 
-  _compactTagId: 1049345
+  _compactTagId: 268632321
 --- !u!114 &6665825862911437471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,22 +518,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Ambiguous.Thief
+  m_Name: Role.Villager.Ambiguous.Thief
   m_EditorClassIdentifier: 
-  _compactTagId: 262401
---- !u!114 &7206632662089259466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Ambiguous
-  m_EditorClassIdentifier: 
-  _compactTagId: 257
+  _compactTagId: 67174657
 --- !u!114 &7649568454011052203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -489,9 +531,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Fox
+  m_Name: Role.Villager.None.Fox
   m_EditorClassIdentifier: 
-  _compactTagId: 393985
+  _compactTagId: 100860161
 --- !u!114 &8189838678897902939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,7 +546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Werewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 1025
+  _compactTagId: 513
 --- !u!114 &8467833512799127069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,9 +557,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Pyromaniac
+  m_Name: Role.Villager.None.Pyromaniac
   m_EditorClassIdentifier: 
-  _compactTagId: 787201
+  _compactTagId: 201523457
 --- !u!114 &8950718465599024891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -528,6 +570,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Role.Villager.Hunter
+  m_Name: Role.Villager.None.Hunter
   m_EditorClassIdentifier: 
-  _compactTagId: 525057
+  _compactTagId: 134414593

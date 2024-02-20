@@ -63,7 +63,7 @@ namespace Werewolf
 
 			foreach (RoleData role in _reservedRoles.Roles)
 			{
-				if (role.Type != RoleData.RoleType.Werewolf)
+				if (role.PrimaryType != RoleData.PrimaryRoleType.Werewolf)
 				{
 					_reservedOnlyWerewolfs = false;
 					break;

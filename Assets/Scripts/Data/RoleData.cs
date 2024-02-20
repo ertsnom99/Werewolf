@@ -7,14 +7,6 @@ namespace Werewolf.Data
 	[CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Role")]
 	public class RoleData : GameplayData
 	{
-		public enum RoleType
-		{
-			Villager,
-			Werewolf,
-			Ambiguous,
-			Lonely
-		};
-
 		[Serializable]
 		public struct Priority
 		{
@@ -23,7 +15,23 @@ namespace Werewolf.Data
 		};
 
 		[field: SerializeField]
-		public RoleType Type { get; private set; }
+		public PrimaryRoleType PrimaryType { get; private set; }
+
+		public enum PrimaryRoleType
+		{
+			Villager,
+			Werewolf
+		};
+
+		[field: SerializeField]
+		public SecondaryRoleType SecondaryType { get; private set; }
+
+		public enum SecondaryRoleType
+		{
+			None,
+			Ambiguous,
+			Lonely
+		};
 
 		[field: SerializeField]
 		[field: TextArea(8, 20)]
