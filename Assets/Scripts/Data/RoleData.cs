@@ -4,6 +4,19 @@ using UnityEngine;
 
 namespace Werewolf.Data
 {
+	public enum PrimaryRoleType
+	{
+		Villager,
+		Werewolf
+	};
+
+	public enum SecondaryRoleType
+	{
+		None,
+		Ambiguous,
+		Lonely
+	};
+
 	[CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Role")]
 	public class RoleData : GameplayData
 	{
@@ -17,21 +30,8 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public PrimaryRoleType PrimaryType { get; private set; }
 
-		public enum PrimaryRoleType
-		{
-			Villager,
-			Werewolf
-		};
-
 		[field: SerializeField]
 		public SecondaryRoleType SecondaryType { get; private set; }
-
-		public enum SecondaryRoleType
-		{
-			None,
-			Ambiguous,
-			Lonely
-		};
 
 		[field: SerializeField]
 		[field: TextArea(8, 20)]
