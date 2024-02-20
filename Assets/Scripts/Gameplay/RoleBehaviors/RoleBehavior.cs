@@ -30,7 +30,7 @@ namespace Werewolf
 		{
 			if (NightPriorities == null)
 			{
-				NightPriorities = new List<int> { nightPriority };
+				NightPriorities = new() { nightPriority };
 			}
 			else
 			{

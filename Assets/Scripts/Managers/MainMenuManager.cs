@@ -135,14 +135,14 @@ namespace Werewolf
 		private Task<StartGameResult> ConnectToServer(NetworkRunner runner, string sessionName)
 		{
 			SceneRef scene = SceneRef.FromIndex((int)SceneDefs.MENU);
-			NetworkSceneInfo sceneInfo = new NetworkSceneInfo();
+			NetworkSceneInfo sceneInfo = new();
 
 			if (scene.IsValid)
 			{
 				sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
 			}
 
-			return runner.StartGame(new StartGameArgs()
+			return runner.StartGame(new()
 			{
 				SessionName = sessionName,
 				GameMode = GameMode.Client,

@@ -29,7 +29,7 @@ public class AutoResizeGridLayoutGroup : GridLayoutGroup
 					break;
 			}
 
-			cellSize = new Vector2(cellWidth, cellHeight);
+			cellSize = new(cellWidth, cellHeight);
 		}
 
 		base.SetLayoutVertical();

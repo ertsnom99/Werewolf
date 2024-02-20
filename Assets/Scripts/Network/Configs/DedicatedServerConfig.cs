@@ -11,13 +11,13 @@ namespace Werewolf.Network.Configs
 		public ushort Port { get; set; } = 27015;
 		public ushort PublicPort { get; set; }
 		public string PublicIP { get; set; }
-		public Dictionary<string, SessionProperty> SessionProperties { get; private set; } = new Dictionary<string, SessionProperty>();
+		public Dictionary<string, SessionProperty> SessionProperties { get; private set; } = new();
 
 		private DedicatedServerConfig() { }
 
 		public static DedicatedServerConfig FillConfig()
 		{
-			DedicatedServerConfig config = new DedicatedServerConfig();
+			DedicatedServerConfig config = new();
 
 			// Session Name
 			if (CommandLineUtilities.TryGetArg(out string sessionName, "-session"))

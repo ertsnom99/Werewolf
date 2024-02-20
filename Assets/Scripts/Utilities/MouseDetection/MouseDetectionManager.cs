@@ -31,7 +31,7 @@ public class MouseDetectionManager : MonoSingleton<MouseDetectionManager>
 			return;
 		}
 
-		_pointerEventData = new PointerEventData(_eventSystem);
+		_pointerEventData = new(_eventSystem);
 	}
 
 	private void Start()
@@ -42,7 +42,7 @@ public class MouseDetectionManager : MonoSingleton<MouseDetectionManager>
 	private void Update()
 	{
 		MouseDetectionListener currentMouseDetectionListener = null;
-		List<RaycastResult> results = new List<RaycastResult>();
+		List<RaycastResult> results = new();
 
 		// Raycast for UI
 		if (_graphicRaycaster && _eventSystem)
@@ -51,7 +51,7 @@ public class MouseDetectionManager : MonoSingleton<MouseDetectionManager>
 			_graphicRaycaster.Raycast(_pointerEventData, results);
 		}
 
-		RaycastHit hit = new RaycastHit();
+		RaycastHit hit = new();
 
 		if (results.Count == 0)
 		{

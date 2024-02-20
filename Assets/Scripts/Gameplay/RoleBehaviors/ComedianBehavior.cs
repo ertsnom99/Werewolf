@@ -17,10 +17,10 @@ namespace Werewolf
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles)
 		{
-			List<RoleData> selectedRoles = new List<RoleData>();
+			List<RoleData> selectedRoles = new();
 
 			// Try to take the roles from the available roles first
-			List<RoleSetupData> availableRolesCopy = new List<RoleSetupData>(availableRoles);
+			List<RoleSetupData> availableRolesCopy = new(availableRoles);
 
 			while (availableRolesCopy.Count > 0 && selectedRoles.Count < NEEDED_ROLE_COUNT)
 			{
@@ -42,7 +42,7 @@ namespace Werewolf
 			_gameManager.PrepareRoleBehaviors(selectedRoles.ToArray(), ref rolesToDistribute, ref availableRoles);
 
 			// Take the rest from the roles to distribute
-			List<RoleData> rolesToDistributeCopy = new List<RoleData>(rolesToDistribute);
+			List<RoleData> rolesToDistributeCopy = new(rolesToDistribute);
 
 			while (rolesToDistributeCopy.Count > 0 && selectedRoles.Count < NEEDED_ROLE_COUNT)
 			{
@@ -80,7 +80,7 @@ namespace Werewolf
 				return false;
 			}
 
-			List<RoleData> validRoles = new List<RoleData>();
+			List<RoleData> validRoles = new();
 
 			foreach (RoleData role in roleSetup.Pool)
 			{

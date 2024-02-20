@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class MonoSingletonSubscribable<T, U> : MonoSingleton<U> where U : MonoBehaviour
 {
-	protected List<T> Subscribers = new List<T>();
+	protected List<T> Subscribers = new();
 
 	public virtual void Subscribe(T subscriber)
 	{

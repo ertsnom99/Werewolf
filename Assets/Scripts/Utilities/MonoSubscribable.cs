@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class MonoSubscribable<T> : MonoBehaviour
 {
-	protected List<T> Subscribers = new List<T>();
+	protected List<T> Subscribers = new();
 
 	public virtual void Subscribe(T subscriber)
 	{

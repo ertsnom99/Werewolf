@@ -31,7 +31,7 @@ namespace Werewolf
 
 		private void OnPostRoleDistribution()
 		{
-			List<RoleData> roles = new List<RoleData>();
+			List<RoleData> roles = new();
 
 			for (int i = 0; i < _rolesToAdd.Length; i++)
 			{
