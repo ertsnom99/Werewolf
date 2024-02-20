@@ -100,7 +100,11 @@ namespace Werewolf
 
 		private bool IsRoleValid(RoleData role, List<RoleData> selectedRoles)
 		{
-			return !selectedRoles.Contains(role) && role.Type == RoleData.RoleType.Villager && role.Behavior && !role.Behavior.GetType().Equals(GetType());
+			return !selectedRoles.Contains(role)
+					&& role.PrimaryType == RoleData.PrimaryRoleType.Villager
+					&& role.SecondaryType != RoleData.SecondaryRoleType.None
+					&& role.Behavior
+					&& !role.Behavior.GetType().Equals(GetType());
 		}
 
 		private void SelectRolesFromRoleSetup(RoleSetupData roleSetup, ref List<RoleData> selectedRoles)
