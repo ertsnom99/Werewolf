@@ -168,7 +168,11 @@ namespace Werewolf
 			}
 
 			TellPlayersVoteStarted();
-
+#if UNITY_SERVER && UNITY_EDITOR
+			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
+			_UIManager.VoteScreen.Initialize(_voteMaxDuration);
+			_UIManager.VoteScreen.HideLockinButton();
+#endif
 			_voteCoroutine = WaitForVoteEnd();
 			StartCoroutine(_voteCoroutine);
 
@@ -311,6 +315,9 @@ namespace Werewolf
 				playerCard.Value.SetVotingStatusVisible(false);
 				playerCard.Value.ClearVotes();
 			}
+
+			_UIManager.VoteScreen.StopTimer();
+			_UIManager.VoteScreen.SetLockedInDelayActive(false);
 #endif
 			TellPlayersVoteEnded();
 

@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using Werewolf.Data;
+using UnityEngine.UI;
 
 namespace Werewolf.UI
 {
@@ -14,7 +15,10 @@ namespace Werewolf.UI
 
 		[SerializeField]
 		private RectTransform _lockedInDelay;
-
+#if UNITY_SERVER && UNITY_EDITOR
+		[SerializeField]
+		private Button _lockInButton;
+#endif
 		[SerializeField]
 		private TMP_Text _lockInText;
 
@@ -88,7 +92,12 @@ namespace Werewolf.UI
 			StopCoroutine(_voteCountdownCoroutine);
 			_voteCountdownCoroutine = null;
 		}
-
+#if UNITY_SERVER && UNITY_EDITOR
+		public void HideLockinButton()
+		{
+			_lockInButton.gameObject.SetActive(false);
+		}
+#endif
 		public void SetLockedInDelayActive(bool isActive)
 		{
 			_lockedInDelay.gameObject.SetActive(isActive);

@@ -1524,6 +1524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _timerText: {fileID: 1121654218}
   _lockedInDelay: {fileID: 209540063}
+  _lockInButton: {fileID: 744321846}
   _lockInText: {fileID: 692897699}
 --- !u!1 &832575517
 GameObject:

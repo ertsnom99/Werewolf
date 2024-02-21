@@ -606,7 +606,10 @@ namespace Werewolf
 						RPC_DisplayRolePlaying(playerRole.Key, displayRoleGameplayTagID);
 					}
 #if UNITY_SERVER && UNITY_EDITOR
-					DisplayRolePlaying(displayRoleGameplayTagID);
+					if (!_voteManager.IsPreparingToVote())
+					{
+						DisplayRolePlaying(displayRoleGameplayTagID);
+					}
 #endif
 					// Start the vote if it has been prepared
 					if (_voteManager.IsPreparingToVote())
@@ -637,7 +640,7 @@ namespace Werewolf
 
 					RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
-					HideRolePlaying();
+					HideUI();
 #endif
 					yield return new WaitForSeconds(Config.NightCallChangeDuration);
 				}
@@ -1091,9 +1094,9 @@ namespace Werewolf
 			}
 		}
 
-		private void HideRolePlaying()
+		private void HideUI()
 		{
-			_UIManager.FadeOut(_UIManager.ImageScreen, Config.UITransitionDuration);
+			_UIManager.FadeOut(Config.UITransitionDuration);
 		}
 
 		#region RPC Calls
@@ -1104,15 +1107,9 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_HideRolePlaying()
-		{
-			HideRolePlaying();
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_HideUI()
 		{
-			_UIManager.FadeOut(Config.UITransitionDuration);
+			HideUI();
 		}
 		#endregion
 		#endregion
