@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f890e4d4e85ee704eb5a3e719d3f928f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <PrimaryRoleType>k__BackingField: 0
   <NightPriorities>k__BackingField: 
   <IsPrimaryBehavior>k__BackingField: 0
   _voteMaxDuration: 50
+  _deathMark: mauled

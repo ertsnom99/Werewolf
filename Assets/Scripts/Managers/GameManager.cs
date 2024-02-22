@@ -27,6 +27,8 @@ namespace Werewolf
 
 		private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
 
+		private Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new();
+
 		public struct IndexedReservedRoles
 		{
 			public RoleData[] Roles;
@@ -36,6 +38,13 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 		private Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new();
 #endif
+		private List<PlayerRef> _playersReady = new();
+
+		private bool _rolesDistributionDone = false;
+		private bool _allPlayersReadyToReceiveRole = false;
+		private bool _allRolesSent = false;
+		private bool _allPlayersReadyToPlay = false;
+
 		private List<NightCall> _nightCalls = new();
 
 		private struct NightCall
@@ -44,17 +53,16 @@ namespace Werewolf
 			public List<PlayerRef> Players;
 		}
 
-		private List<PlayerRef> _playersReady = new();
-
-		private bool _rolesDistributionDone = false;
-		private bool _allPlayersReadyToReceiveRole = false;
-		private bool _allRolesSent = false;
-		private bool _allPlayersReadyToPlay = false;
-
 		private int _currentNightCallIndex = 0;
 		private List<PlayerRef> _playersWaitingFor = new();
 
-		private Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new();
+		private List<MarkForDeath> _marksForDeath = new();
+
+		public struct MarkForDeath
+		{
+			public PlayerRef Player;
+			public List<string> Marks;
+		}
 		#endregion
 
 		#region Networked variables
@@ -108,6 +116,8 @@ namespace Werewolf
 		public event Action OnPreRoleDistribution = delegate { };
 		public event Action OnPostRoleDistribution = delegate { };
 		public event Action OnPreStartGame = delegate { };
+		public event Action<PlayerRef, string> OnMarkForDeathAdded = delegate { };
+		public event Action<PlayerRef> OnMarkForDeathRemoved = delegate { };
 
 		// Client events
 		public event Action OnRoleReceived = delegate { };
@@ -1056,6 +1066,37 @@ namespace Werewolf
 			}
 		}
 		#endregion
+		#endregion
+
+		#region Mark For Death
+		public void AddMarkForDeath(PlayerRef player, string mark)
+		{
+			for (int i = 0; i < _marksForDeath.Count; i++)
+			{
+				if (_marksForDeath[i].Player == player)
+				{
+					_marksForDeath[i].Marks.Add(mark);
+					OnMarkForDeathAdded(player, mark);
+					return;
+				}
+			}
+
+			_marksForDeath.Add(new() { Player = player, Marks = new() { mark } });
+			OnMarkForDeathAdded(player, mark);
+		}
+
+		public void RemoveMarkForDeath(PlayerRef player)
+		{
+			for (int i = 0; i < _marksForDeath.Count; i++)
+			{
+				if (_marksForDeath[i].Player == player)
+				{
+					_marksForDeath.RemoveAt(i);
+					OnMarkForDeathRemoved(player);
+					return;
+				}
+			}
+		}
 		#endregion
 
 		#region UI
