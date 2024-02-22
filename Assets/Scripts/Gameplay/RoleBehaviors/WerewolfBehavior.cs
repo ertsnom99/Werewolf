@@ -8,10 +8,7 @@ namespace Werewolf
 	public class WerewolfBehavior : RoleBehavior
 	{
 		[SerializeField]
-		private float _voteMaxDuration;
-
-		[SerializeField]
-		private string _deathMark;
+		private CommonWerewolfsData _commonData;
 
 		private bool _preparedVote;
 
@@ -28,7 +25,7 @@ namespace Werewolf
 
 		public override bool OnRoleCall()
 		{
-			_preparedVote = _voteManager.PrepareVote(_voteMaxDuration, false);
+			_preparedVote = _voteManager.PrepareVote(_commonData.VoteMaxDuration, false);
 			_voteManager.AddVoter(Player);
 			_voteManager.AddVoteImmunity(Player);
 
@@ -67,7 +64,7 @@ namespace Werewolf
 					}
 				}
 
-				_gameManager.AddMarkForDeath(votedPlayer, _deathMark);
+				_gameManager.AddMarkForDeath(votedPlayer, _commonData.DeathMark);
 			}
 
 			_gameManager.StopWaintingForPlayer(Player);
