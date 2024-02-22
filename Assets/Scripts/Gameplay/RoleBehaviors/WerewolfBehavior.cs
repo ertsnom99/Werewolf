@@ -10,6 +10,9 @@ namespace Werewolf
 		[SerializeField]
 		private float _voteMaxDuration;
 
+		[SerializeField]
+		private string _deathMark;
+
 		private bool _preparedVote;
 
 		private GameManager _gameManager;
@@ -64,8 +67,7 @@ namespace Werewolf
 					}
 				}
 
-				// TODO: Add a mark of death
-				Debug.LogError($"Victim is {votedPlayer}");
+				_gameManager.AddMarkForDeath(votedPlayer, _deathMark);
 			}
 
 			_gameManager.StopWaintingForPlayer(Player);
