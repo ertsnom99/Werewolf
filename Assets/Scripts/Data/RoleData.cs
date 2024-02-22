@@ -17,7 +17,7 @@ namespace Werewolf.Data
 		Lonely
 	};
 
-	[CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Role")]
+	[CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Roles/Role")]
 	public class RoleData : GameplayData
 	{
 		[Serializable]

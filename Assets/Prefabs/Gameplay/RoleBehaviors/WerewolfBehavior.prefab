@@ -47,5 +47,4 @@ MonoBehaviour:
   <PrimaryRoleType>k__BackingField: 0
   <NightPriorities>k__BackingField: 
   <IsPrimaryBehavior>k__BackingField: 0
-  _voteMaxDuration: 50
-  _deathMark: mauled
+  _commonData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32, type: 2}
