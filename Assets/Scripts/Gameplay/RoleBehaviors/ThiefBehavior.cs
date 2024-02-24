@@ -70,12 +70,7 @@ namespace Werewolf
 				}
 			}
 
-			if (!_gameManager.MakePlayerChooseReservedRole(this, _reservedOnlyWerewolfs, OnRoleSelected))
-			{
-				return false;
-			}
-
-			return true;
+			return _gameManager.AskClientToChooseReservedRole(this, _reservedOnlyWerewolfs, OnRoleSelected);
 		}
 
 		private void OnRoleSelected(int choiceIndex)

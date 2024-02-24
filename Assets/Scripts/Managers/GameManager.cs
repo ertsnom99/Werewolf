@@ -56,6 +56,8 @@ namespace Werewolf
 		private int _currentNightCallIndex = 0;
 		private List<PlayerRef> _playersWaitingFor = new();
 
+		private Dictionary<PlayerRef, Action<PlayerRef>> _choosePlayerCallbacks = new();
+
 		private List<MarkForDeath> _marksForDeath = new();
 
 		public struct MarkForDeath
@@ -992,7 +994,7 @@ namespace Werewolf
 		}
 
 		// Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
-		public bool MakePlayerChooseReservedRole(RoleBehavior ReservedRoleOwner, bool mustChooseOne, Action<int> callback)
+		public bool AskClientToChooseReservedRole(RoleBehavior ReservedRoleOwner, bool mustChooseOne, Action<int> callback)
 		{
 			if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
 			{
@@ -1008,14 +1010,14 @@ namespace Werewolf
 			}
 
 			_chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-			RPC_MakePlayerChooseReservedRole(ReservedRoleOwner.Player, rolesContainer, mustChooseOne);
+			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, rolesContainer, mustChooseOne);
 
 			return true;
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_MakePlayerChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer, bool mustChooseOne)
+		public void RPC_ClientChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer, bool mustChooseOne)
 		{
 			List<Choice.ChoiceData> choices = new();
 
@@ -1064,6 +1066,67 @@ namespace Werewolf
 
 				Destroy(_reservedRolesCards[networkIndex][i].gameObject);
 			}
+		}
+		#endregion
+		#endregion
+
+		#region Choose a Player
+		public bool AskClientToChoosePlayer(PlayerRef choosingPlayer, PlayerRef[] immunePlayers, string displayText, Action<PlayerRef> callback)
+		{
+			if (_choosePlayerCallbacks.ContainsKey(choosingPlayer))
+			{
+				return false;
+			}
+
+			_choosePlayerCallbacks.Add(choosingPlayer, callback);
+			RPC_ClientChoosePlayer(choosingPlayer, immunePlayers, displayText);
+
+			return true;
+		}
+
+		private void OnClientChooseCard(Card card)
+		{
+			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+			{
+				playerCard.Value.ResetSelectionMode();
+				playerCard.Value.OnCardClick -= OnClientChooseCard;
+			}
+
+			HideUI();
+
+			RPC_GivePlayerChoice(card.Player);
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_ClientChoosePlayer([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, string displayText)
+		{
+			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+			{
+				if (Array.IndexOf(immunePlayers, playerCard.Key) >= 0)
+				{
+					playerCard.Value.SetSelectionMode(true, false);
+					continue;
+				}
+
+				playerCard.Value.SetSelectionMode(true, true);
+				playerCard.Value.OnCardClick += OnClientChooseCard;
+			}
+
+			_UIManager.TitleScreen.Initialize(displayText);
+			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_GivePlayerChoice(PlayerRef player, RpcInfo info = default)
+		{
+			if (!_choosePlayerCallbacks.ContainsKey(info.Source))
+			{
+				return;
+			}
+
+			_choosePlayerCallbacks[info.Source](player);
+			_chooseReservedRoleCallbacks.Remove(info.Source);
 		}
 		#endregion
 		#endregion
