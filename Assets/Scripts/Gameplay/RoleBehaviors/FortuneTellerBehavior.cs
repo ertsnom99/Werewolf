@@ -21,7 +21,17 @@ namespace Werewolf
 
 		private void OnPlayerSelected(PlayerRef player)
 		{
-			Debug.LogError(player);
+			if (_timedOut)
+			{
+				return;
+			}
+
+			if (player == PlayerRef.None)
+			{
+				_gameManager.StopWaintingForPlayer(Player);
+				return;
+			}
+
 			// TODO: Reveal the player role to Player
 		}
 

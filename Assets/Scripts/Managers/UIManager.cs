@@ -13,9 +13,6 @@ namespace Werewolf
 		public TitleScreen TitleScreen { get; private set; }
 
 		[field: SerializeField]
-		public ImageScreen ImageScreen { get; private set; }
-
-		[field: SerializeField]
 		public ChoiceScreen ChoiceScreen { get; private set; }
 
 		[field: SerializeField]

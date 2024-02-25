@@ -52,6 +52,9 @@ namespace Werewolf.Data
 		public string RolePlayingTextPlurial { get; private set; }
 
 		[field: SerializeField]
+		public string SkipTurnText { get; private set; }
+
+		[field: SerializeField]
 		public string ChooseRoleText { get; private set; }
 
 		[field: SerializeField]
