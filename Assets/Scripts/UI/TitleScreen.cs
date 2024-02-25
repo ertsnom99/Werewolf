@@ -20,7 +20,7 @@ namespace Werewolf.UI
 		[SerializeField]
 		private TMP_Text _confirmButtonText;
 
-		public event Action OnConfirm = delegate { };
+		public event Action OnConfirm;
 
 		public void Initialize(Sprite image, string title, bool showConfirmButton = false, string confirmButtonText = "")
 		{
@@ -32,7 +32,7 @@ namespace Werewolf.UI
 
 		public void Confirm()
 		{
-			OnConfirm();
+			OnConfirm?.Invoke();
 		}
 	}
 }
