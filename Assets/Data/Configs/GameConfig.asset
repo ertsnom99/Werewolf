@@ -89,6 +89,7 @@ MonoBehaviour:
   <UITransitionDuration>k__BackingField: 0.75
   <RolePlayingTextSingular>k__BackingField: The {0} is playing...
   <RolePlayingTextPlurial>k__BackingField: The {0}s are playing...
+  <SkipTurnText>k__BackingField: Skip turn
   <ChooseRoleText>k__BackingField: You MAY choose one
   <ChooseRoleObligatoryText>k__BackingField: You MUST choose one
   <ChoosedRoleText>k__BackingField: Your choice

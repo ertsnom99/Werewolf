@@ -1084,6 +1084,11 @@ namespace Werewolf
 			return true;
 		}
 
+		private void OnClientChooseNoCard()
+		{
+			OnClientChooseCard(null);
+		}
+
 		private void OnClientChooseCard(Card card)
 		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
@@ -1092,9 +1097,10 @@ namespace Werewolf
 				playerCard.Value.OnCardClick -= OnClientChooseCard;
 			}
 
+			_UIManager.TitleScreen.OnConfirm -= OnClientChooseNoCard;
 			HideUI();
 
-			RPC_GivePlayerChoice(card.Player);
+			RPC_GivePlayerChoice(card ? card.Player : PlayerRef.None);
 		}
 
 		#region RPC Calls
@@ -1113,7 +1119,8 @@ namespace Werewolf
 				playerCard.Value.OnCardClick += OnClientChooseCard;
 			}
 
-			_UIManager.TitleScreen.Initialize(displayText);
+			_UIManager.TitleScreen.Initialize(null, displayText, true, Config.SkipTurnText);
+			_UIManager.TitleScreen.OnConfirm += OnClientChooseNoCard;
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
 
@@ -1168,8 +1175,8 @@ namespace Werewolf
 			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
 			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
 
-			_UIManager.ImageScreen.Initialize(roleData.Image, string.Format(text, roleData.Name.ToLower()));
-			_UIManager.FadeIn(_UIManager.ImageScreen, Config.UITransitionDuration);
+			_UIManager.TitleScreen.Initialize(roleData.Image, string.Format(text, roleData.Name.ToLower()));
+			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
 
 		private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
