@@ -72,7 +72,7 @@ namespace Werewolf
 		private List<VoteDot> _voteDots = new();
 		private int _voteAmount;
 
-		public event Action<Card> OnCardClick = delegate { };
+		public event Action<Card> OnCardClick;
 #if UNITY_EDITOR
 		private void Awake()
 		{
@@ -203,7 +203,7 @@ namespace Werewolf
 			}
 
 			SetSelected(!_isSelected);
-			OnCardClick(this);
+			OnCardClick?.Invoke(this);
 		}
 		#endregion
 	}

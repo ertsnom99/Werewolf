@@ -43,7 +43,7 @@ namespace Werewolf
 
 		private UIManager _UIManager;
 
-		public event Action<Dictionary<PlayerRef, Vote>> VoteCompletedCallback = delegate { };
+		public event Action<Dictionary<PlayerRef, Vote>> VoteCompletedCallback;
 
 		public void SetPlayerCards(Dictionary<PlayerRef, Card> playerCards)
 		{
@@ -321,7 +321,7 @@ namespace Werewolf
 #endif
 			TellPlayersVoteEnded();
 
-			VoteCompletedCallback(_votes);
+			VoteCompletedCallback?.Invoke(_votes);
 
 			_voteCoroutine = null;
 			VoteCompletedCallback = null;

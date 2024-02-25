@@ -88,7 +88,7 @@ namespace Werewolf
 		[field: SerializeField]
 		private Card _cardPrefab;
 
-		public static event Action OnSpawned = delegate { };
+		public static event Action OnSpawned;
 		public static bool HasSpawned { get; private set; }
 
 		private Dictionary<PlayerRef, Card> _playerCards = new();
@@ -115,14 +115,14 @@ namespace Werewolf
 		private VoteManager _voteManager;
 
 		// Server events
-		public event Action OnPreRoleDistribution = delegate { };
-		public event Action OnPostRoleDistribution = delegate { };
-		public event Action OnPreStartGame = delegate { };
-		public event Action<PlayerRef, string> OnMarkForDeathAdded = delegate { };
-		public event Action<PlayerRef> OnMarkForDeathRemoved = delegate { };
+		public event Action OnPreRoleDistribution;
+		public event Action OnPostRoleDistribution;
+		public event Action OnPreStartGame;
+		public event Action<PlayerRef, string> OnMarkForDeathAdded;
+		public event Action<PlayerRef> OnMarkForDeathRemoved;
 
 		// Client events
-		public event Action OnRoleReceived = delegate { };
+		public event Action OnRoleReceived;
 
 		private readonly Vector3 STARTING_DIRECTION = Vector3.back;
 
@@ -154,7 +154,7 @@ namespace Werewolf
 		public override void Spawned()
 		{
 			HasSpawned = true;
-			OnSpawned();
+			OnSpawned?.Invoke();
 		}
 
 		#region Pre Gameplay Loop
@@ -164,9 +164,9 @@ namespace Werewolf
 
 			SelectRolesToDistribute(rolesSetup);
 
-			OnPreRoleDistribution();
+			OnPreRoleDistribution?.Invoke();
 			DistributeRoles();
-			OnPostRoleDistribution();
+			OnPostRoleDistribution?.Invoke();
 
 			DetermineNightCalls();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -432,7 +432,7 @@ namespace Werewolf
 			CreateReservedRoleCards();
 			AdjustCamera();
 
-			OnRoleReceived();
+			OnRoleReceived?.Invoke();
 		}
 		#endregion
 		#endregion
@@ -470,7 +470,7 @@ namespace Werewolf
 			}
 			else if (_allRolesSent && _allPlayersReadyToPlay)
 			{
-				OnPreStartGame();
+				OnPreStartGame?.Invoke();
 				StartGame();
 			}
 		}
@@ -1146,13 +1146,13 @@ namespace Werewolf
 				if (_marksForDeath[i].Player == player)
 				{
 					_marksForDeath[i].Marks.Add(mark);
-					OnMarkForDeathAdded(player, mark);
+					OnMarkForDeathAdded?.Invoke(player, mark);
 					return;
 				}
 			}
 
 			_marksForDeath.Add(new() { Player = player, Marks = new() { mark } });
-			OnMarkForDeathAdded(player, mark);
+			OnMarkForDeathAdded?.Invoke(player, mark);
 		}
 
 		public void RemoveMarkForDeath(PlayerRef player)
@@ -1162,7 +1162,7 @@ namespace Werewolf
 				if (_marksForDeath[i].Player == player)
 				{
 					_marksForDeath.RemoveAt(i);
-					OnMarkForDeathRemoved(player);
+					OnMarkForDeathRemoved?.Invoke(player);
 					return;
 				}
 			}
