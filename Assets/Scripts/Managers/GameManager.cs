@@ -1015,9 +1015,15 @@ namespace Werewolf
 			return true;
 		}
 
-		public void RemoveChooseReservedRoleCallback(PlayerRef reservedRoleOwner)
+		private void GiveReservedRoleChoice(int choice)
+		{
+			RPC_GiveReservedRoleChoice(choice);
+		}
+
+		public void StopChoosingReservedRole(PlayerRef reservedRoleOwner)
 		{
 			_chooseReservedRoleCallbacks.Remove(reservedRoleOwner);
+			RPC_ClientStopChoosingReservedRole(reservedRoleOwner);
 		}
 
 		#region RPC Calls
@@ -1037,10 +1043,7 @@ namespace Werewolf
 				choices.Add(new() { Image = roleData.Image, Value = roleGameplayTag });
 			}
 
-			_UIManager.ChoiceScreen.OnConfirmChoice += (int choice) =>
-			{
-				RPC_GiveReservedRoleChoice(choice);
-			};
+			_UIManager.ChoiceScreen.OnConfirmChoice += GiveReservedRoleChoice;
 
 			_UIManager.ChoiceScreen.Initialize(mustChooseOne ? Config.ChooseRoleObligatoryText : Config.ChooseRoleText, Config.ChoosedRoleText, Config.DidNotChoosedRoleText, choices.ToArray(), mustChooseOne);
 			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionDuration);
@@ -1072,6 +1075,13 @@ namespace Werewolf
 				Destroy(_reservedRolesCards[networkIndex][i].gameObject);
 			}
 		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_ClientStopChoosingReservedRole([RpcTarget] PlayerRef player)
+		{
+			_UIManager.ChoiceScreen.DisableConfirmButton();
+			_UIManager.ChoiceScreen.OnConfirmChoice -= GiveReservedRoleChoice;
+		}
 		#endregion
 		#endregion
 
@@ -1102,6 +1112,12 @@ namespace Werewolf
 			RPC_GivePlayerChoice(card ? card.Player : PlayerRef.None);
 		}
 
+		public void StopChoosingPlayer(PlayerRef player)
+		{
+			_choosePlayerCallbacks.Remove(player);
+			RPC_ClientStopChoosingPlayer(player);
+		}
+
 		private void StopChoosingPlayer()
 		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
@@ -1111,11 +1127,6 @@ namespace Werewolf
 			}
 
 			_UIManager.TitleScreen.OnConfirm -= OnClientChooseNoCard;
-		}
-
-		public void RemoveChoosePlayerCallback(PlayerRef choosingPlayer)
-		{
-			_choosePlayerCallbacks.Remove(choosingPlayer);
 		}
 
 		#region RPC Calls
@@ -1152,7 +1163,7 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_ClientStopChoosingPlayer([RpcTarget] PlayerRef player)
+		private void RPC_ClientStopChoosingPlayer([RpcTarget] PlayerRef player)
 		{
 			StopChoosingPlayer();
 		}

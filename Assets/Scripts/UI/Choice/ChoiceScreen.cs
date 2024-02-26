@@ -99,10 +99,15 @@ namespace Werewolf.UI
 				Destroy(choice.gameObject);
 			}
 
-			_confirmButton.onClick.RemoveAllListeners();
-			_confirmButton.interactable = false;
+			DisableConfirmButton();
 
 			OnConfirmChoice?.Invoke(_selectedChoice != null ? Array.IndexOf(_choices, _selectedChoice) : -1);
+		}
+
+		public void DisableConfirmButton()
+		{
+			_confirmButton.onClick.RemoveAllListeners();
+			_confirmButton.interactable = false;
 		}
 	}
 }
