@@ -101,6 +101,8 @@ namespace Werewolf
 
 		public override void OnRoleTimeOut()
 		{
+			_gameManager.RemoveChooseReservedRoleCallback(Player);
+
 			if (_reservedOnlyWerewolfs)
 			{
 				ChangeForRandomRole();
