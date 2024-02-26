@@ -1091,6 +1091,14 @@ namespace Werewolf
 
 		private void OnClientChooseCard(Card card)
 		{
+			StopChoosingPlayer();
+			HideUI();
+
+			RPC_GivePlayerChoice(card ? card.Player : PlayerRef.None);
+		}
+
+		private void StopChoosingPlayer()
+		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
 				playerCard.Value.ResetSelectionMode();
@@ -1098,9 +1106,6 @@ namespace Werewolf
 			}
 
 			_UIManager.TitleScreen.OnConfirm -= OnClientChooseNoCard;
-			HideUI();
-
-			RPC_GivePlayerChoice(card ? card.Player : PlayerRef.None);
 		}
 
 		#region RPC Calls
@@ -1133,7 +1138,13 @@ namespace Werewolf
 			}
 
 			_choosePlayerCallbacks[info.Source](player);
-			_chooseReservedRoleCallbacks.Remove(info.Source);
+			_choosePlayerCallbacks.Remove(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_ClientStopChoosingPlayer([RpcTarget] PlayerRef player)
+		{
+			StopChoosingPlayer();
 		}
 		#endregion
 		#endregion
