@@ -1015,6 +1015,11 @@ namespace Werewolf
 			return true;
 		}
 
+		public void RemoveChooseReservedRoleCallback(PlayerRef reservedRoleOwner)
+		{
+			_chooseReservedRoleCallbacks.Remove(reservedRoleOwner);
+		}
+
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_ClientChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer, bool mustChooseOne)
@@ -1106,6 +1111,11 @@ namespace Werewolf
 			}
 
 			_UIManager.TitleScreen.OnConfirm -= OnClientChooseNoCard;
+		}
+
+		public void RemoveChoosePlayerCallback(PlayerRef choosingPlayer)
+		{
+			_choosePlayerCallbacks.Remove(choosingPlayer);
 		}
 
 		#region RPC Calls

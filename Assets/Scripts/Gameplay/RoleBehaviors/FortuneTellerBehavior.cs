@@ -46,6 +46,7 @@ namespace Werewolf
 				return;
 			}
 
+			_gameManager.RemoveChoosePlayerCallback(Player);
 			_gameManager.RPC_ClientStopChoosingPlayer(Player);
 
 			// TODO: What if is revealing role when time out happens?
