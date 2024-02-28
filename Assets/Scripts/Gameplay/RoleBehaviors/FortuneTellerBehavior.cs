@@ -30,16 +30,15 @@ namespace Werewolf
 
 			_choosingPlayer = false;
 
-			if (player == PlayerRef.None)
+			if (player == PlayerRef.None || !_gameManager.RevealPlayerRole(player, Player, true, OnRoleRevealed))
 			{
 				_gameManager.StopWaintingForPlayer(Player);
-				return;
 			}
+		}
 
-			_gameManager.RevealPlayerRole(player, Player, true);
-
-			// TODO: Wait before stop waiting
-			//_gameManager.StopWaintingForPlayer(Player);
+		private void OnRoleRevealed()
+		{
+			_gameManager.StopWaintingForPlayer(Player);
 		}
 
 		public override void OnRoleTimeOut()
@@ -50,8 +49,6 @@ namespace Werewolf
 			}
 
 			_gameManager.StopChoosingPlayer(Player);
-
-			// TODO: What if is revealing role when time out happens?
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
