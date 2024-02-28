@@ -13,7 +13,7 @@ namespace Werewolf
 
 		[field: SerializeField]
 		[field: ReadOnly]
-		public List<int> NightPriorities { get; private set; }
+		public List<Priority> NightPriorities { get; private set; }
 
 		[field: SerializeField]
 		[field: ReadOnly]
@@ -26,7 +26,7 @@ namespace Werewolf
 
 		protected bool _timedOut = false;
 
-		public void AddNightPriority(int nightPriority)
+		public void AddNightPriority(Priority nightPriority)
 		{
 			if (NightPriorities == null)
 			{
@@ -36,6 +36,18 @@ namespace Werewolf
 			{
 				NightPriorities.Add(nightPriority);
 			}
+		}
+
+		public int[] GetNightPrioritiesIndexes()
+		{
+			List<int> nightPrioritiesIndexes = new();
+
+			foreach (Priority nightPrioritie in NightPriorities)
+			{
+				nightPrioritiesIndexes.Add(nightPrioritie.index);
+			}
+
+			return nightPrioritiesIndexes.ToArray();
 		}
 
 		public void SetIsPrimaryBehavior(bool isPrimaryBehavior)

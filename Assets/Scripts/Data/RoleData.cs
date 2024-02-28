@@ -17,16 +17,16 @@ namespace Werewolf.Data
 		Lonely
 	};
 
+	[Serializable]
+	public struct Priority
+	{
+		public int index;
+		public RoleData alias;
+	};
+
 	[CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Roles/Role")]
 	public class RoleData : GameplayData
 	{
-		[Serializable]
-		public struct Priority
-		{
-			public int index;
-			public RoleData alias;
-		};
-
 		[field: SerializeField]
 		public PrimaryRoleType PrimaryType { get; private set; }
 

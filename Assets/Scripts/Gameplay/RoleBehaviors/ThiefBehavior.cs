@@ -90,7 +90,7 @@ namespace Werewolf
 			}
 
 			_gameManager.RemoveReservedRoles(this, new int[0]);
-			_gameManager.RemovePlayerFromNightCall(NightPriorities[0], Player);
+			_gameManager.RemovePlayerFromNightCall(NightPriorities[0].index, Player);
 			_gameManager.StopWaintingForPlayer(Player);
 
 			if (choiceIndex > -1 || _reservedOnlyWerewolfs)
@@ -109,7 +109,7 @@ namespace Werewolf
 			}
 
 			_gameManager.RemoveReservedRoles(this, new int[0]);
-			_gameManager.RemovePlayerFromNightCall(NightPriorities[0], Player);
+			_gameManager.RemovePlayerFromNightCall(NightPriorities[0].index, Player);
 
 			if (_reservedOnlyWerewolfs)
 			{

@@ -84,9 +84,16 @@ MonoBehaviour:
   <NightCallMinimumDuration>k__BackingField: 5
   <NightCallMaximumDuration>k__BackingField: 10
   <NightCallChangeDuration>k__BackingField: 2
+  <RevealDistanceToCamera>k__BackingField: 2
+  <RevealToCameraDuration>k__BackingField: 0.5
+  <HoldRevealDuration>k__BackingField: 2.5
+  <VoteCountdownText>k__BackingField: 'Time left: {0}'
+  <LockedInButtonText>k__BackingField: Lock In Vote
+  <LockedOutButtonText>k__BackingField: Lock Out Vote
+  <AllLockedInDelayToEndVote>k__BackingField: 3
+  <UITransitionDuration>k__BackingField: 0.75
   <LoadingScreenText>k__BackingField: Waiting for server...
   <LoadingScreenTransitionDuration>k__BackingField: 2
-  <UITransitionDuration>k__BackingField: 0.75
   <RolePlayingTextSingular>k__BackingField: The {0} is playing...
   <RolePlayingTextPlurial>k__BackingField: The {0}s are playing...
   <SkipTurnText>k__BackingField: Skip turn
@@ -94,7 +101,3 @@ MonoBehaviour:
   <ChooseRoleObligatoryText>k__BackingField: You MUST choose one
   <ChoosedRoleText>k__BackingField: Your choice
   <DidNotChoosedRoleText>k__BackingField: You didn't choose one
-  <VoteCountdownText>k__BackingField: 'Time left: {0}'
-  <LockedInButtonText>k__BackingField: Lock In Vote
-  <LockedOutButtonText>k__BackingField: Lock Out Vote
-  <AllLockedInDelayToEndVote>k__BackingField: 3

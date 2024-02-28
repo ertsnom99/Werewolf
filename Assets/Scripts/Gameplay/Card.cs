@@ -50,6 +50,9 @@ namespace Werewolf
 		private SpriteRenderer _roleImage;
 
 		[SerializeField]
+		private Canvas _nicknameCanvas;
+
+		[SerializeField]
 		private TMP_Text _nicknameText;
 
 		[field: Header("Debug")]
@@ -92,12 +95,19 @@ namespace Werewolf
 		public void SetRole(RoleData role)
 		{
 			Role = role;
-			_roleImage.sprite = role.Image;
+			_roleImage.sprite = role?.Image;
 		}
 
 		public void SetNickname(string nickname)
 		{
 			_nicknameText.text = nickname;
+		}
+
+		public void DetachNicknameCanvas()
+		{
+			Vector3 tempPosition = _nicknameCanvas.transform.position;
+			_nicknameCanvas.transform.SetParent(null);
+			_nicknameCanvas.transform.position = tempPosition;
 		}
 
 		public void Flip()
