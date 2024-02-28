@@ -36,8 +36,10 @@ namespace Werewolf
 				return;
 			}
 
-			// TODO: Reveal the player role to Player
-			_gameManager.StopWaintingForPlayer(Player);
+			_gameManager.RevealPlayerRole(player, Player, true);
+
+			// TODO: Wait before stop waiting
+			//_gameManager.StopWaintingForPlayer(Player);
 		}
 
 		public override void OnRoleTimeOut()

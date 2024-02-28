@@ -1,3 +1,4 @@
+using System.Data;
 using UnityEngine;
 
 namespace Werewolf.Data
@@ -32,16 +33,41 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float NightCallChangeDuration { get; private set; }
 
+		[field: Header("Role Reveal")]
+		[field: SerializeField]
+		public float RevealDistanceToCamera { get; private set; }
+
+		[field: SerializeField]
+		public float RevealToCameraDuration { get; private set; }
+
+		[field: SerializeField]
+		public float HoldRevealDuration { get; private set; }
+
+		[field: Header("Vote")]
+		[field: SerializeField]
+		public string VoteCountdownText { get; private set; }
+
+		[field: SerializeField]
+		public string LockedInButtonText { get; private set; }
+
+		[field: SerializeField]
+		public string LockedOutButtonText { get; private set; }
+
+		[field: SerializeField]
+		public float AllLockedInDelayToEndVote { get; private set; }
+
+		public const int MAX_PLAYER_COUNT = 20;
+
+		[field: Header("UI")]
+		[field: SerializeField]
+		public float UITransitionDuration { get; private set; }
+
 		[field: Header("Loading Screen")]
 		[field: SerializeField]
 		public string LoadingScreenText { get; private set; }
 
 		[field: SerializeField]
 		public float LoadingScreenTransitionDuration { get; private set; }
-
-		[field: Header("UI")]
-		[field: SerializeField]
-		public float UITransitionDuration { get; private set; }
 
 		[field: Header("UI Text")]
 
@@ -65,20 +91,5 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public string DidNotChoosedRoleText { get; private set; }
-
-		[field: Header("Vote")]
-		[field: SerializeField]
-		public string VoteCountdownText { get; private set; }
-
-		[field: SerializeField]
-		public string LockedInButtonText { get; private set; }
-
-		[field: SerializeField]
-		public string LockedOutButtonText { get; private set; }
-
-		[field: SerializeField]
-		public float AllLockedInDelayToEndVote { get; private set; }
-
-		public const int MAX_PLAYER_COUNT = 20;
 	}
 }
