@@ -65,6 +65,8 @@ namespace Werewolf
 			public PlayerRef Player;
 			public List<string> Marks;
 		}
+
+		private Dictionary<PlayerRef, Action> _revealPlayerRoleCallbacks = new();
 		#endregion
 
 		#region Networked variables
@@ -286,8 +288,9 @@ namespace Werewolf
 			foreach (Priority nightPriority in role.NightPriorities)
 			{
 				roleBehavior.AddNightPriority(nightPriority);
-				roleBehavior.SetIsPrimaryBehavior(true);
 			}
+
+			roleBehavior.SetIsPrimaryBehavior(true);
 
 			_unassignedRoleBehaviors.Add(roleBehavior, role);
 
@@ -630,8 +633,7 @@ namespace Werewolf
 
 					float elapsedTime = .0f;
 
-					// Wait for the current vote ends (if there is one) and until all players are done and the minimum amount of time is reached OR the maximum amount of time is reached
-					while (_voteManager.IsVoting() || ((_playersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration) && elapsedTime < Config.NightCallMaximumDuration))
+					while (!IsNightCallOver(elapsedTime))
 					{
 						elapsedTime += Time.deltaTime;
 						yield return 0;
@@ -660,6 +662,13 @@ namespace Werewolf
 			}
 
 			MoveToNextGameplayLoopStep();
+		}
+
+		private bool IsNightCallOver(float elapsedTime)
+		{
+			return !_voteManager.IsVoting()
+			&& _revealPlayerRoleCallbacks.Count <= 0
+			&& ((_playersWaitingFor.Count <= 0 && elapsedTime >= Config.NightCallMinimumDuration) || elapsedTime >= Config.NightCallMaximumDuration);
 		}
 
 		public void StopWaintingForPlayer(PlayerRef player)
@@ -1207,9 +1216,17 @@ namespace Werewolf
 		#endregion
 
 		#region Role Reveal
-		public void RevealPlayerRole(PlayerRef playerRevealed, PlayerRef revealTo, bool flipDuringZoom)
+		public bool RevealPlayerRole(PlayerRef playerRevealed, PlayerRef revealTo, bool flipDuringZoom, Action callback)
 		{
+			if (_revealPlayerRoleCallbacks.ContainsKey(revealTo))
+			{
+				return false;
+			}
+
+			_revealPlayerRoleCallbacks.Add(revealTo, callback);
 			RPC_RevealPlayerRole(revealTo, playerRevealed, _playerRoles[playerRevealed].Data.GameplayTag.CompactTagId, flipDuringZoom);
+
+			return true;
 		}
 
 		#region RPC Calls
@@ -1274,8 +1291,19 @@ namespace Werewolf
 			}
 
 			card.SetRole(null);
+			RPC_RevealPlayerRoleFinished();
+		}
 
-			// TODO: callback
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		private void RPC_RevealPlayerRoleFinished(RpcInfo info = default)
+		{
+			if (!_revealPlayerRoleCallbacks.ContainsKey(info.Source))
+			{
+				return;
+			}
+
+			_revealPlayerRoleCallbacks[info.Source]();
+			_revealPlayerRoleCallbacks.Remove(info.Source);
 		}
 		#endregion
 		#endregion
