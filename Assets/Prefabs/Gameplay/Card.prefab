@@ -307,7 +307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 990, y: 0, z: 180}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.014}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 21.8412, y: 8.8368}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8708048261423976437
@@ -421,8 +421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97570c15f141dab448312a84d29575c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _thickness: 0.026
-  _card: {fileID: 5324039279452303901}
+  <Thickness>k__BackingField: 0.026
   _notClickableCache: {fileID: 8761506578589015732}
   _selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _notSelectedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -436,7 +435,6 @@ MonoBehaviour:
   _roleImage: {fileID: 389929942712762449}
   _nicknameCanvas: {fileID: 5671852482582481988}
   _nicknameText: {fileID: 1629519482361563234}
-  <IsFaceUp>k__BackingField: 0
   <Role>k__BackingField: {fileID: 0}
 --- !u!65 &3039488389016798652
 BoxCollider:
@@ -458,7 +456,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 0.025, z: 1}
-  m_Center: {x: 0, y: 0.0125, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5640921193512413013
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,7 +493,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 990, y: 0, z: 180}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.014}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 21.8412, y: 8.8368}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &5671852482582481988
@@ -662,7 +660,7 @@ Transform:
   m_GameObject: {fileID: 9112611831262783244}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.026, z: 0}
+  m_LocalPosition: {x: 0, y: 0.028, z: 0}
   m_LocalScale: {x: 0.12500003, y: 0.125, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -736,7 +734,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 2b53cf632378ac245b73558fde825453,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.026
+      value: 0.013
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2b53cf632378ac245b73558fde825453,
         type: 3}

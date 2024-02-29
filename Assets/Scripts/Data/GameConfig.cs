@@ -38,7 +38,13 @@ namespace Werewolf.Data
 		public float RevealDistanceToCamera { get; private set; }
 
 		[field: SerializeField]
-		public float RevealToCameraDuration { get; private set; }
+		public float MoveToCameraDuration { get; private set; }
+
+		[field: SerializeField]
+		public float WaitRevealDuration { get; private set; }
+
+		[field: SerializeField]
+		public float RevealFlipDuration { get; private set; }
 
 		[field: SerializeField]
 		public float HoldRevealDuration { get; private set; }

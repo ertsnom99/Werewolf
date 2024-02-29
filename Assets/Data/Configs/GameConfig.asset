@@ -85,7 +85,9 @@ MonoBehaviour:
   <NightCallMaximumDuration>k__BackingField: 10
   <NightCallChangeDuration>k__BackingField: 2
   <RevealDistanceToCamera>k__BackingField: 2
-  <RevealToCameraDuration>k__BackingField: 0.5
+  <MoveToCameraDuration>k__BackingField: 0.5
+  <WaitRevealDuration>k__BackingField: 2.5
+  <RevealFlipDuration>k__BackingField: 0.25
   <HoldRevealDuration>k__BackingField: 2.5
   <VoteCountdownText>k__BackingField: 'Time left: {0}'
   <LockedInButtonText>k__BackingField: Lock In Vote
