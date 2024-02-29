@@ -667,8 +667,8 @@ namespace Werewolf
 		private bool IsNightCallOver(float elapsedTime)
 		{
 			return !_voteManager.IsVoting()
-			&& _revealPlayerRoleCallbacks.Count <= 0
-			&& ((_playersWaitingFor.Count <= 0 && elapsedTime >= Config.NightCallMinimumDuration) || elapsedTime >= Config.NightCallMaximumDuration);
+				&& _revealPlayerRoleCallbacks.Count <= 0
+				&& ((_playersWaitingFor.Count <= 0 && elapsedTime >= Config.NightCallMinimumDuration) || elapsedTime >= Config.NightCallMaximumDuration);
 		}
 
 		public void StopWaintingForPlayer(PlayerRef player)
@@ -1229,6 +1229,111 @@ namespace Werewolf
 			return true;
 		}
 
+		private IEnumerator AnimatePlayerRoleReveal(Card card, bool waitBeforeReveal, bool returnFacedown)
+		{
+			Camera mainCamera = Camera.main;
+
+			Vector3 startingPosition = card.transform.position;
+			Vector3 targetPosition = mainCamera.transform.position + mainCamera.transform.forward * Config.RevealDistanceToCamera;
+
+			Quaternion currentRotation = card.transform.rotation;
+			Quaternion targetRotation;
+
+			// Move the card to the camera
+			float elapsedTime = .0f;
+
+			if (waitBeforeReveal)
+			{
+				targetRotation = Quaternion.LookRotation(mainCamera.transform.up, -mainCamera.transform.forward);
+			}
+			else
+			{
+				targetRotation = Quaternion.LookRotation(mainCamera.transform.up, mainCamera.transform.forward);
+			}
+
+			while (elapsedTime < Config.MoveToCameraDuration)
+			{
+				elapsedTime += Time.deltaTime;
+
+				float progress = elapsedTime / Config.MoveToCameraDuration;
+
+				card.transform.position = Vector3.Lerp(startingPosition, targetPosition, progress);
+				card.transform.rotation = Quaternion.Lerp(currentRotation, targetRotation, progress);
+
+				yield return 0;
+			}
+
+			if (waitBeforeReveal)
+			{
+				// Wait before flipping the card
+				elapsedTime = .0f;
+
+				while (elapsedTime < Config.WaitRevealDuration)
+				{
+					elapsedTime += Time.deltaTime;
+					yield return 0;
+				}
+
+				// Flip the card
+				elapsedTime = .0f;
+
+				targetRotation = Quaternion.LookRotation(mainCamera.transform.up, mainCamera.transform.forward);
+
+				while (elapsedTime < Config.RevealFlipDuration)
+				{
+					elapsedTime += Time.deltaTime;
+
+					float progress = elapsedTime / Config.RevealFlipDuration;
+
+					card.transform.rotation = Quaternion.Lerp(currentRotation, targetRotation, progress);
+
+					yield return 0;
+				}
+			}
+
+			// Hold the card
+			elapsedTime = .0f;
+
+			while (elapsedTime < Config.HoldRevealDuration)
+			{
+				elapsedTime += Time.deltaTime;
+				yield return 0;
+			}
+
+			// Put the card back down
+			elapsedTime = .0f;
+
+			currentRotation = targetRotation;
+
+			if (returnFacedown)
+			{
+				targetRotation = Quaternion.LookRotation(Vector3.forward, -Vector3.down);
+			}
+			else
+			{
+				targetRotation = Quaternion.LookRotation(Vector3.forward, Vector3.down);
+			}
+
+			while (elapsedTime < Config.MoveToCameraDuration)
+			{
+				elapsedTime += Time.deltaTime;
+
+				float progress = elapsedTime / Config.MoveToCameraDuration;
+
+				card.transform.position = Vector3.Lerp(targetPosition, startingPosition, progress);
+				card.transform.rotation = Quaternion.Lerp(currentRotation, targetRotation, progress);
+
+				yield return 0;
+			}
+
+			if (returnFacedown)
+			{
+				card.SetRole(null);
+			}
+
+			RPC_RevealPlayerRoleFinished();
+		}
+
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		private void RPC_RevealPlayerRole([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int gameplayDataID, bool flipDuringZoom)
@@ -1243,55 +1348,7 @@ namespace Werewolf
 			Card card = _playerCards[playerRevealed];
 			card.SetRole(roleData);
 
-			StartCoroutine(AnimatePlayerRoleReveal(card));
-		}
-
-		private IEnumerator AnimatePlayerRoleReveal(Card card)
-		{
-			Camera mainCamera = Camera.main;
-
-			Vector3 startingPosition = card.transform.position;
-			Vector3 targetPosition = mainCamera.transform.position + mainCamera.transform.forward * Config.RevealDistanceToCamera;
-
-			Quaternion startingRotation = card.transform.rotation;
-			Quaternion targetRotation = Quaternion.LookRotation(mainCamera.transform.up, mainCamera.transform.forward);
-
-			float elapsedTime = .0f;
-
-			while (elapsedTime < Config.RevealToCameraDuration)
-			{
-				elapsedTime += Time.deltaTime;
-
-				float progress = elapsedTime / Config.RevealToCameraDuration;
-				card.transform.position = Vector3.Lerp(startingPosition, targetPosition, progress);
-				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
-
-				yield return 0;
-			}
-
-			elapsedTime = .0f;
-
-			while (elapsedTime < Config.HoldRevealDuration)
-			{
-				elapsedTime += Time.deltaTime;
-				yield return 0;
-			}
-
-			elapsedTime = .0f;
-
-			while (elapsedTime < Config.RevealToCameraDuration)
-			{
-				elapsedTime += Time.deltaTime;
-
-				float progress = elapsedTime / Config.RevealToCameraDuration;
-				card.transform.position = Vector3.Lerp(targetPosition, startingPosition, progress);
-				card.transform.rotation = Quaternion.Lerp(targetRotation, startingRotation, progress);
-
-				yield return 0;
-			}
-
-			card.SetRole(null);
-			RPC_RevealPlayerRoleFinished();
+			StartCoroutine(AnimatePlayerRoleReveal(card, false, true));
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -1390,6 +1447,7 @@ namespace Werewolf
 				Quaternion rotation = Quaternion.Euler(0, rotationIncrement * counter, 0);
 
 				Card card = Instantiate(_cardPrefab, rotation * startingPosition, Quaternion.identity);
+				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetPlayer(playerRole.Key);
 				card.SetRole(playerRole.Value.Data);
@@ -1429,6 +1487,7 @@ namespace Werewolf
 					Vector3 columnPosition = (Vector3.right * columnCounter * Config.ReservedRolesSpacing) + (Vector3.left * (reservedRoleByBehavior.Value.Roles.Length - 1) * Config.ReservedRolesSpacing / 2.0f);
 
 					Card card = Instantiate(_cardPrefab, rowPosition + columnPosition, Quaternion.identity);
+					card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 					card.SetRole(role);
 					card.Flip();
@@ -1474,6 +1533,7 @@ namespace Werewolf
 				Quaternion rotation = Quaternion.Euler(0, rotationIncrement * rotationOffset, 0);
 
 				Card card = Instantiate(_cardPrefab, rotation * startingPosition, Quaternion.identity);
+				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetPlayer(playerInfo.Key);
 				card.SetNickname(playerInfo.Value.Nickname);
@@ -1530,6 +1590,7 @@ namespace Werewolf
 					Vector3 columnPosition = (Vector3.right * columnCounter * Config.ReservedRolesSpacing) + (Vector3.left * (reservedRole.RoleCount - 1) * Config.ReservedRolesSpacing / 2.0f);
 
 					Card card = Instantiate(_cardPrefab, rowPosition + columnPosition, Quaternion.identity);
+					card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 					if (roleGameplayTagID > 0)
 					{

@@ -11,12 +11,9 @@ namespace Werewolf
 {
 	public class Card : MonoBehaviour, MouseDetectionListener
 	{
-		[Header("Card")]
-		[SerializeField]
-		private float _thickness = 0.026f;
-
-		[SerializeField]
-		private Transform _card;
+		[field: Header("Card")]
+		[field: SerializeField]
+		public float Thickness { get; private set; }
 
 		[Header("Selection")]
 		[SerializeField]
@@ -58,10 +55,6 @@ namespace Werewolf
 		[field: Header("Debug")]
 		[field: SerializeField]
 		[field: ReadOnly]
-		public bool IsFaceUp { get; private set; }
-
-		[field: SerializeField]
-		[field: ReadOnly]
 		public PlayerRef Player { get; private set; }
 
 		[field: SerializeField]
@@ -83,8 +76,6 @@ namespace Werewolf
 			{
 				Debug.LogError($"_roleImage of the player {gameObject.name} is null");
 			}
-
-			IsFaceUp = false;
 		}
 #endif
 		public void SetPlayer(PlayerRef player)
@@ -112,21 +103,7 @@ namespace Werewolf
 
 		public void Flip()
 		{
-			Vector3 direction;
-
-			if (IsFaceUp)
-			{
-				direction = Vector3.up;
-			}
-			else
-			{
-				direction = Vector3.down;
-			}
-
-			_card.position += direction * _thickness;
-			_card.rotation *= Quaternion.AngleAxis(180, Vector3.forward);
-
-			IsFaceUp = !IsFaceUp;
+			transform.rotation *= Quaternion.AngleAxis(180, transform.forward);
 		}
 
 		#region Selection mode
