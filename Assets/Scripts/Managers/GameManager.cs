@@ -514,8 +514,8 @@ namespace Werewolf
 		#region Gameplay Loop
 		private void StartGame()
 		{
-			_currentGameplayLoopStep = GameplayLoopStep.NightTransition;
-			StartCoroutine(TransitionToNight());
+			_currentGameplayLoopStep = GameplayLoopStep.Execution;
+			MoveToNextGameplayLoopStep();
 		}
 
 		#region Gameplay Loop Steps
@@ -531,13 +531,13 @@ namespace Werewolf
 			switch (_currentGameplayLoopStep)
 			{
 				case GameplayLoopStep.NightTransition:
-					StartCoroutine(TransitionToNight());
+					StartCoroutine(ChangeDaytime(Daytime.Night));
 					break;
 				case GameplayLoopStep.RoleCall:
 					StartCoroutine(CallRoles());
 					break;
 				case GameplayLoopStep.DayTransition:
-
+					StartCoroutine(ChangeDaytime(Daytime.Day));
 					break;
 				case GameplayLoopStep.DeathReveal:
 
@@ -554,11 +554,11 @@ namespace Werewolf
 			}
 		}
 
-		private IEnumerator TransitionToNight()
+		private IEnumerator ChangeDaytime(Daytime daytime)
 		{
-			RPC_TransitionToNight();
+			RPC_ChangeDaytime(daytime);
 #if UNITY_SERVER && UNITY_EDITOR
-			_daytimeManager.ChangeDaytime(Daytime.Night);
+			_daytimeManager.ChangeDaytime(daytime);
 #endif
 			yield return new WaitForSeconds(Config.DaytimeTransitionStepDuration);
 
@@ -684,9 +684,9 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_TransitionToNight()
+		public void RPC_ChangeDaytime(Daytime time)
 		{
-			_daytimeManager.ChangeDaytime(Daytime.Night);
+			_daytimeManager.ChangeDaytime(time);
 		}
 		#endregion
 		#endregion
