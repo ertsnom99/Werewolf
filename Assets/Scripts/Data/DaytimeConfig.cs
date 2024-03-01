@@ -5,7 +5,7 @@ namespace Werewolf.Data
 	[CreateAssetMenu(fileName = "DaytimeConfig", menuName = "ScriptableObjects/Config/DaytimeConfig")]
 	public class DaytimeConfig : ScriptableObject
 	{
-		[field: Header("Daytime")]
+		[field: Header("Day")]
 		[field: SerializeField]
 		public Color DayColor { get; private set; }
 
@@ -15,6 +15,7 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public string DayTransitionText { get; private set; }
 
+		[field: Header("Night")]
 		[field: SerializeField]
 		public Color NightColor { get; private set; }
 
@@ -24,6 +25,7 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public string NightTransitionText { get; private set; }
 
+		[field: Header("UI")]
 		[field: SerializeField]
 		public float DaytimeTransitionDuration { get; private set; }
 

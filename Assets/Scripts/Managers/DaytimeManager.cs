@@ -72,7 +72,7 @@ namespace Werewolf
 			_inTransition = true;
 
 			StartCoroutine(TransitionDaytime());
-			StartCoroutine(TransitionTitle(_config.NightTransitionText));
+			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _config.DayTransitionText : _config.NightTransitionText));
 		}
 
 		private IEnumerator TransitionDaytime()
