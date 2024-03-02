@@ -22,6 +22,9 @@ namespace Werewolf.Data
 
 		[field: Header("Gameplay Loop")]
 		[field: SerializeField]
+		public float GameplayLoopStepDelay { get; private set; }
+
+		[field: SerializeField]
 		public float DaytimeTransitionStepDuration { get; private set; }
 
 		[field: SerializeField]
@@ -31,7 +34,7 @@ namespace Werewolf.Data
 		public float NightCallMaximumDuration { get; private set; }
 
 		[field: SerializeField]
-		public float NightCallChangeDuration { get; private set; }
+		public float NightCallChangeDelay { get; private set; }
 
 		[field: Header("Role Reveal")]
 		[field: SerializeField]
@@ -48,6 +51,19 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public float HoldRevealDuration { get; private set; }
+
+		[field: Header("Death Reveal")]
+		[field: SerializeField]
+		public string DeathRevealNoDeathText { get; private set; }
+
+		[field: SerializeField]
+		public string DeathRevealDeathText { get; private set; }
+
+		[field: SerializeField]
+		public float DeathRevealTitleHoldDuration { get; private set; }
+
+		[field: SerializeField]
+		public float DelayBeforeRevealingDeadPlayer { get; private set; }
 
 		[field: Header("Vote")]
 		[field: SerializeField]
