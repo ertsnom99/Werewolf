@@ -80,15 +80,20 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  <GameplayLoopStepDelay>k__BackingField: 0.5
   <DaytimeTransitionStepDuration>k__BackingField: 4.5
   <NightCallMinimumDuration>k__BackingField: 5
   <NightCallMaximumDuration>k__BackingField: 10
-  <NightCallChangeDuration>k__BackingField: 2
+  <NightCallChangeDelay>k__BackingField: 2
   <RevealDistanceToCamera>k__BackingField: 2
   <MoveToCameraDuration>k__BackingField: 0.5
-  <WaitRevealDuration>k__BackingField: 2.5
+  <WaitRevealDuration>k__BackingField: 2
   <RevealFlipDuration>k__BackingField: 0.25
-  <HoldRevealDuration>k__BackingField: 2.5
+  <HoldRevealDuration>k__BackingField: 1.5
+  <DeathRevealNoDeathText>k__BackingField: No one died tonight!
+  <DeathRevealDeathText>k__BackingField: Some people died...
+  <DeathRevealTitleHoldDuration>k__BackingField: 3
+  <DelayBeforeRevealingDeadPlayer>k__BackingField: 1
   <VoteCountdownText>k__BackingField: 'Time left: {0}'
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote

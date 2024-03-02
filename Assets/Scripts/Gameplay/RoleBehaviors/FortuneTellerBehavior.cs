@@ -30,13 +30,13 @@ namespace Werewolf
 
 			_choosingPlayer = false;
 
-			if (player == PlayerRef.None || !_gameManager.RevealPlayerRole(player, Player, true, OnRoleRevealed))
+			if (player == PlayerRef.None || !_gameManager.RevealPlayerRole(player, Player, false, true, OnRoleRevealed))
 			{
 				_gameManager.StopWaintingForPlayer(Player);
 			}
 		}
 
-		private void OnRoleRevealed()
+		private void OnRoleRevealed(PlayerRef revealTo)
 		{
 			_gameManager.StopWaintingForPlayer(Player);
 		}

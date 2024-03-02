@@ -66,7 +66,7 @@ namespace Werewolf
 			public List<string> Marks;
 		}
 
-		private Dictionary<PlayerRef, Action> _revealPlayerRoleCallbacks = new();
+		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
 		#endregion
 
 		#region Networked variables
@@ -515,11 +515,11 @@ namespace Werewolf
 		private void StartGame()
 		{
 			_currentGameplayLoopStep = GameplayLoopStep.Execution;
-			MoveToNextGameplayLoopStep();
+			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
 		#region Gameplay Loop Steps
-		private void MoveToNextGameplayLoopStep()
+		private IEnumerator MoveToNextGameplayLoopStep()
 		{
 			_currentGameplayLoopStep++;
 
@@ -527,6 +527,8 @@ namespace Werewolf
 			{
 				_currentGameplayLoopStep = 0;
 			}
+
+			yield return new WaitForSeconds(Config.GameplayLoopStepDelay);
 
 			switch (_currentGameplayLoopStep)
 			{
@@ -540,7 +542,7 @@ namespace Werewolf
 					StartCoroutine(ChangeDaytime(Daytime.Day));
 					break;
 				case GameplayLoopStep.DeathReveal:
-
+					StartCoroutine(StartDeathReveal());
 					break;
 				case GameplayLoopStep.Debate:
 
@@ -562,7 +564,7 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(Config.DaytimeTransitionStepDuration);
 
-			MoveToNextGameplayLoopStep();
+			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
 		private IEnumerator CallRoles()
@@ -655,13 +657,13 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 					HideUI();
 #endif
-					yield return new WaitForSeconds(Config.NightCallChangeDuration);
+					yield return new WaitForSeconds(Config.NightCallChangeDelay);
 				}
 
 				_currentNightCallIndex++;
 			}
 
-			MoveToNextGameplayLoopStep();
+			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
 		private bool IsNightCallOver(float elapsedTime)
@@ -679,6 +681,57 @@ namespace Werewolf
 			}
 
 			_playersWaitingFor.Remove(player);
+		}
+
+		public IEnumerator StartDeathReveal()
+		{
+			bool hasAnyPlayerDied = _marksForDeath.Count > 0;
+
+			RPC_DisplayDeathRevealTitle(hasAnyPlayerDied);
+#if UNITY_SERVER && UNITY_EDITOR
+			DisplayDeathRevealTitle(hasAnyPlayerDied);
+#endif
+			yield return new WaitForSeconds(Config.UITransitionDuration);
+
+			yield return new WaitForSeconds(Config.DeathRevealTitleHoldDuration);
+
+			RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+			HideUI();
+#endif
+			yield return new WaitForSeconds(Config.UITransitionDuration);
+
+			if (hasAnyPlayerDied)
+			{
+				while (_marksForDeath.Count > 0)
+				{
+					yield return new WaitForSeconds(Config.DelayBeforeRevealingDeadPlayer);
+
+					foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
+					{
+						// TODO: What should happen to player that is dead (form his point of view)?
+						// TODO: What about servant?
+						_playersWaitingFor.Add(playerRole.Key);
+						RevealPlayerRole(_marksForDeath[0].Player, playerRole.Key, true, false, OnDeathRevealed);
+					}
+
+					while (_playersWaitingFor.Count > 0)
+					{
+						yield return 0;
+					}
+
+					// TODO: Set player as actually dead
+					// TODO: How we display dea dplayer to evety one?
+					_marksForDeath.RemoveAt(0);
+				}
+			}
+
+			StartCoroutine(MoveToNextGameplayLoopStep());
+		}
+
+		private void OnDeathRevealed(PlayerRef revealTo)
+		{
+			StopWaintingForPlayer(revealTo);
 		}
 		#endregion
 
@@ -1216,7 +1269,7 @@ namespace Werewolf
 		#endregion
 
 		#region Role Reveal
-		public bool RevealPlayerRole(PlayerRef playerRevealed, PlayerRef revealTo, bool flipDuringZoom, Action callback)
+		public bool RevealPlayerRole(PlayerRef playerRevealed, PlayerRef revealTo, bool waitBeforeReveal, bool returnFacedown, Action<PlayerRef> callback)
 		{
 			if (_revealPlayerRoleCallbacks.ContainsKey(revealTo))
 			{
@@ -1224,7 +1277,7 @@ namespace Werewolf
 			}
 
 			_revealPlayerRoleCallbacks.Add(revealTo, callback);
-			RPC_RevealPlayerRole(revealTo, playerRevealed, _playerRoles[playerRevealed].Data.GameplayTag.CompactTagId, flipDuringZoom);
+			RPC_RevealPlayerRole(revealTo, playerRevealed, _playerRoles[playerRevealed].Data.GameplayTag.CompactTagId, waitBeforeReveal, returnFacedown);
 
 			return true;
 		}
@@ -1236,7 +1289,7 @@ namespace Werewolf
 			Vector3 startingPosition = card.transform.position;
 			Vector3 targetPosition = mainCamera.transform.position + mainCamera.transform.forward * Config.RevealDistanceToCamera;
 
-			Quaternion currentRotation = card.transform.rotation;
+			Quaternion startingRotation = card.transform.rotation;
 			Quaternion targetRotation;
 
 			// Move the card to the camera
@@ -1258,7 +1311,7 @@ namespace Werewolf
 				float progress = elapsedTime / Config.MoveToCameraDuration;
 
 				card.transform.position = Vector3.Lerp(startingPosition, targetPosition, progress);
-				card.transform.rotation = Quaternion.Lerp(currentRotation, targetRotation, progress);
+				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
 
 				yield return 0;
 			}
@@ -1277,6 +1330,7 @@ namespace Werewolf
 				// Flip the card
 				elapsedTime = .0f;
 
+				startingRotation = card.transform.rotation;
 				targetRotation = Quaternion.LookRotation(mainCamera.transform.up, mainCamera.transform.forward);
 
 				while (elapsedTime < Config.RevealFlipDuration)
@@ -1285,7 +1339,7 @@ namespace Werewolf
 
 					float progress = elapsedTime / Config.RevealFlipDuration;
 
-					card.transform.rotation = Quaternion.Lerp(currentRotation, targetRotation, progress);
+					card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
 
 					yield return 0;
 				}
@@ -1303,7 +1357,7 @@ namespace Werewolf
 			// Put the card back down
 			elapsedTime = .0f;
 
-			currentRotation = targetRotation;
+			startingRotation = card.transform.rotation;
 
 			if (returnFacedown)
 			{
@@ -1321,7 +1375,7 @@ namespace Werewolf
 				float progress = elapsedTime / Config.MoveToCameraDuration;
 
 				card.transform.position = Vector3.Lerp(targetPosition, startingPosition, progress);
-				card.transform.rotation = Quaternion.Lerp(currentRotation, targetRotation, progress);
+				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
 
 				yield return 0;
 			}
@@ -1336,7 +1390,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_RevealPlayerRole([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int gameplayDataID, bool flipDuringZoom)
+		private void RPC_RevealPlayerRole([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int gameplayDataID, bool waitBeforeReveal, bool returnFacedown)
 		{
 			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID);
 
@@ -1348,7 +1402,7 @@ namespace Werewolf
 			Card card = _playerCards[playerRevealed];
 			card.SetRole(roleData);
 
-			StartCoroutine(AnimatePlayerRoleReveal(card, false, true));
+			StartCoroutine(AnimatePlayerRoleReveal(card, waitBeforeReveal, returnFacedown));
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -1359,7 +1413,7 @@ namespace Werewolf
 				return;
 			}
 
-			_revealPlayerRoleCallbacks[info.Source]();
+			_revealPlayerRoleCallbacks[info.Source](info.Source);
 			_revealPlayerRoleCallbacks.Remove(info.Source);
 		}
 		#endregion
@@ -1372,6 +1426,12 @@ namespace Werewolf
 			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
 
 			_UIManager.TitleScreen.Initialize(roleData.Image, string.Format(text, roleData.Name.ToLower()));
+			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
+		}
+
+		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
+		{
+			_UIManager.TitleScreen.Initialize(null, hasAnyPlayerDied ? Config.DeathRevealDeathText : Config.DeathRevealNoDeathText);
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
 
@@ -1421,6 +1481,12 @@ namespace Werewolf
 		public void RPC_DisplayRolePlaying([RpcTarget] PlayerRef player, int roleGameplayTagID)
 		{
 			DisplayRolePlaying(roleGameplayTagID);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayDeathRevealTitle(bool hasAnyPlayerDied)
+		{
+			DisplayDeathRevealTitle(hasAnyPlayerDied);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
