@@ -66,6 +66,8 @@ namespace Werewolf
 			public List<string> Marks;
 		}
 
+		private bool _waitingForDeathRevealEnded;
+
 		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
 		#endregion
 
@@ -692,7 +694,6 @@ namespace Werewolf
 			DisplayDeathRevealTitle(hasAnyPlayerDied);
 #endif
 			yield return new WaitForSeconds(Config.UITransitionDuration);
-
 			yield return new WaitForSeconds(Config.DeathRevealTitleHoldDuration);
 
 			RPC_HideUI();
@@ -707,31 +708,42 @@ namespace Werewolf
 				{
 					yield return new WaitForSeconds(Config.DelayBeforeRevealingDeadPlayer);
 
+					List<PlayerRef> revealTo = new List<PlayerRef>();
+
 					foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
 					{
-						// TODO: What should happen to player that is dead (form his point of view)?
-						// TODO: What about servant?
-						_playersWaitingFor.Add(playerRole.Key);
-						RevealPlayerRole(_marksForDeath[0].Player, playerRole.Key, true, false, OnDeathRevealed);
+						if (playerRole.Key == _marksForDeath[0].Player)
+						{
+							RPC_DisplayPlayerDiedTitle(playerRole.Key);
+							continue;
+						}
+
+						revealTo.Add(playerRole.Key);
 					}
 
-					while (_playersWaitingFor.Count > 0)
+					_waitingForDeathRevealEnded = true;
+					StartCoroutine(RevealPlayerRoleStoppable(_marksForDeath[0].Player, revealTo.ToArray(), true, false, StopWaitingForDeathRevealEnded));
+
+					while (_waitingForDeathRevealEnded)
 					{
 						yield return 0;
 					}
 
 					// TODO: Set player as actually dead
-					// TODO: How we display dea dplayer to evety one?
 					_marksForDeath.RemoveAt(0);
+
+					RPC_HideUI();
+
+					yield return new WaitForSeconds(Config.UITransitionDuration);
 				}
 			}
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
-		private void OnDeathRevealed(PlayerRef revealTo)
+		public void StopWaitingForDeathRevealEnded()
 		{
-			StopWaintingForPlayer(revealTo);
+			_waitingForDeathRevealEnded = false;
 		}
 		#endregion
 
@@ -1269,6 +1281,7 @@ namespace Werewolf
 		#endregion
 
 		#region Role Reveal
+
 		public bool RevealPlayerRole(PlayerRef playerRevealed, PlayerRef revealTo, bool waitBeforeReveal, bool returnFacedown, Action<PlayerRef> callback)
 		{
 			if (_revealPlayerRoleCallbacks.ContainsKey(revealTo))
@@ -1284,31 +1297,96 @@ namespace Werewolf
 
 		private IEnumerator AnimatePlayerRoleReveal(Card card, bool waitBeforeReveal, bool returnFacedown)
 		{
+			yield return MoveCardToCamera(card.transform, !waitBeforeReveal, Config.MoveToCameraDuration);
+
+			if (waitBeforeReveal)
+			{
+				yield return new WaitForSeconds(Config.WaitRevealDuration);
+				yield return FlipFaceUp(card.transform, Config.RevealFlipDuration);
+			}
+
+			yield return new WaitForSeconds(Config.HoldRevealDuration);
+			yield return PutCardDown(card, returnFacedown, Config.MoveToCameraDuration);
+
+			if (returnFacedown)
+			{
+				card.SetRole(null);
+			}
+
+			RPC_RevealPlayerRoleFinished();
+		}
+
+		private IEnumerator RevealPlayerRoleStoppable(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, bool returnFaceDown, Action RevealPlayerCompleted)
+		{
+			foreach (PlayerRef player in revealTo)
+			{
+				_playersWaitingFor.Add(player);
+				RPC_MoveCardToCamera(player, playerRevealed, !waitBeforeReveal, !waitBeforeReveal ? _playerRoles[playerRevealed].Data.GameplayTag.CompactTagId : -1);
+			}
+
+			while (_playersWaitingFor.Count > 0)
+			{
+				yield return 0;
+			}
+
+			if (waitBeforeReveal)
+			{
+				yield return new WaitForSeconds(Config.WaitRevealDuration);
+
+				foreach (PlayerRef player in revealTo)
+				{
+					_playersWaitingFor.Add(player);
+					RPC_FlipFaceUp(player, playerRevealed, _playerRoles[playerRevealed].Data.GameplayTag.CompactTagId);
+				}
+
+				while (_playersWaitingFor.Count > 0)
+				{
+					yield return 0;
+				}
+			}
+
+			yield return new WaitForSeconds(Config.HoldRevealDuration);
+
+			foreach (PlayerRef player in revealTo)
+			{
+				_playersWaitingFor.Add(player);
+				RPC_PutCardBackDown(player, playerRevealed, returnFaceDown);
+			}
+
+			while (_playersWaitingFor.Count > 0)
+			{
+				yield return 0;
+			}
+
+			RevealPlayerCompleted?.Invoke();
+		}
+
+		private IEnumerator MoveCardToCamera(Transform card, bool showRevealed, float duration, Action MovementCompleted = null)
+		{
 			Camera mainCamera = Camera.main;
 
-			Vector3 startingPosition = card.transform.position;
+			Vector3 startingPosition = card.position;
 			Vector3 targetPosition = mainCamera.transform.position + mainCamera.transform.forward * Config.RevealDistanceToCamera;
 
 			Quaternion startingRotation = card.transform.rotation;
 			Quaternion targetRotation;
 
-			// Move the card to the camera
 			float elapsedTime = .0f;
 
-			if (waitBeforeReveal)
-			{
-				targetRotation = Quaternion.LookRotation(mainCamera.transform.up, -mainCamera.transform.forward);
-			}
-			else
+			if (showRevealed)
 			{
 				targetRotation = Quaternion.LookRotation(mainCamera.transform.up, mainCamera.transform.forward);
 			}
+			else
+			{
+				targetRotation = Quaternion.LookRotation(mainCamera.transform.up, -mainCamera.transform.forward);
+			}
 
-			while (elapsedTime < Config.MoveToCameraDuration)
+			while (elapsedTime < duration)
 			{
 				elapsedTime += Time.deltaTime;
 
-				float progress = elapsedTime / Config.MoveToCameraDuration;
+				float progress = elapsedTime / duration;
 
 				card.transform.position = Vector3.Lerp(startingPosition, targetPosition, progress);
 				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
@@ -1316,48 +1394,40 @@ namespace Werewolf
 				yield return 0;
 			}
 
-			if (waitBeforeReveal)
-			{
-				// Wait before flipping the card
-				elapsedTime = .0f;
+			MovementCompleted?.Invoke();
+		}
 
-				while (elapsedTime < Config.WaitRevealDuration)
-				{
-					elapsedTime += Time.deltaTime;
-					yield return 0;
-				}
+		private IEnumerator FlipFaceUp(Transform card, float duration, Action FlipCompleted = null)
+		{
+			Camera mainCamera = Camera.main;
 
-				// Flip the card
-				elapsedTime = .0f;
+			float elapsedTime = .0f;
 
-				startingRotation = card.transform.rotation;
-				targetRotation = Quaternion.LookRotation(mainCamera.transform.up, mainCamera.transform.forward);
+			Quaternion startingRotation = card.rotation;
+			Quaternion targetRotation = Quaternion.LookRotation(mainCamera.transform.up, mainCamera.transform.forward);
 
-				while (elapsedTime < Config.RevealFlipDuration)
-				{
-					elapsedTime += Time.deltaTime;
-
-					float progress = elapsedTime / Config.RevealFlipDuration;
-
-					card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
-
-					yield return 0;
-				}
-			}
-
-			// Hold the card
-			elapsedTime = .0f;
-
-			while (elapsedTime < Config.HoldRevealDuration)
+			while (elapsedTime < duration)
 			{
 				elapsedTime += Time.deltaTime;
+
+				float progress = elapsedTime / duration;
+
+				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
+
 				yield return 0;
 			}
 
-			// Put the card back down
-			elapsedTime = .0f;
+			FlipCompleted?.Invoke();
+		}
 
-			startingRotation = card.transform.rotation;
+		private IEnumerator PutCardDown(Card card, bool returnFacedown, float duration, Action PutDownCompleted = null)
+		{
+			float elapsedTime = .0f;
+
+			Vector3 startingPosition = card.transform.position;
+
+			Quaternion startingRotation = card.transform.rotation;
+			Quaternion targetRotation;
 
 			if (returnFacedown)
 			{
@@ -1368,39 +1438,27 @@ namespace Werewolf
 				targetRotation = Quaternion.LookRotation(Vector3.forward, Vector3.down);
 			}
 
-			while (elapsedTime < Config.MoveToCameraDuration)
+			while (elapsedTime < duration)
 			{
 				elapsedTime += Time.deltaTime;
 
-				float progress = elapsedTime / Config.MoveToCameraDuration;
+				float progress = elapsedTime / duration;
 
-				card.transform.position = Vector3.Lerp(targetPosition, startingPosition, progress);
+				card.transform.position = Vector3.Lerp(startingPosition, card.OriginalPosition, progress);
 				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
 
 				yield return 0;
 			}
 
-			if (returnFacedown)
-			{
-				card.SetRole(null);
-			}
-
-			RPC_RevealPlayerRoleFinished();
+			PutDownCompleted?.Invoke();
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		private void RPC_RevealPlayerRole([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int gameplayDataID, bool waitBeforeReveal, bool returnFacedown)
 		{
-			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID);
-
-			if (!roleData)
-			{
-				return;
-			}
-
 			Card card = _playerCards[playerRevealed];
-			card.SetRole(roleData);
+			card.SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
 
 			StartCoroutine(AnimatePlayerRoleReveal(card, waitBeforeReveal, returnFacedown));
 		}
@@ -1415,6 +1473,48 @@ namespace Werewolf
 
 			_revealPlayerRoleCallbacks[info.Source](info.Source);
 			_revealPlayerRoleCallbacks.Remove(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_MoveCardToCamera([RpcTarget] PlayerRef player, PlayerRef playerRevealed, bool showRevealed, int gameplayDataID = -1)
+		{
+			Card card = _playerCards[playerRevealed];
+
+			if (showRevealed)
+			{
+				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID);
+				card.SetRole(roleData);
+			}
+
+			StartCoroutine(MoveCardToCamera(card.transform, showRevealed, Config.MoveToCameraDuration, () => { RPC_RevealPlayerRoleStepFinished(); }));
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_FlipFaceUp([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int gameplayDataID)
+		{
+			Card card = _playerCards[playerRevealed];
+			card.SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
+
+			StartCoroutine(FlipFaceUp(card.transform, Config.RevealFlipDuration, () => { RPC_RevealPlayerRoleStepFinished(); }));
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_PutCardBackDown([RpcTarget] PlayerRef player, PlayerRef playerRevealed, bool returnFaceDown)
+		{
+			Card card = _playerCards[playerRevealed];
+
+			if (returnFaceDown)
+			{
+				card.SetRole(null);
+			}
+
+			StartCoroutine(PutCardDown(card, returnFaceDown, Config.MoveToCameraDuration, () => { RPC_RevealPlayerRoleStepFinished(); }));
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		private void RPC_RevealPlayerRoleStepFinished(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
 		}
 		#endregion
 		#endregion
@@ -1432,6 +1532,12 @@ namespace Werewolf
 		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
 		{
 			_UIManager.TitleScreen.Initialize(null, hasAnyPlayerDied ? Config.DeathRevealDeathText : Config.DeathRevealNoDeathText);
+			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
+		}
+
+		private void DisplayPlayerDiedTitle()
+		{
+			_UIManager.TitleScreen.Initialize(null, Config.PlayerDiedText);
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
 
@@ -1490,6 +1596,12 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayPlayerDiedTitle([RpcTarget] PlayerRef player)
+		{
+			DisplayPlayerDiedTitle();
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_HideUI()
 		{
 			HideUI();
@@ -1515,6 +1627,7 @@ namespace Werewolf
 				Card card = Instantiate(_cardPrefab, rotation * startingPosition, Quaternion.identity);
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
+				card.SetOriginalPosition(card.transform.position);
 				card.SetPlayer(playerRole.Key);
 				card.SetRole(playerRole.Value.Data);
 				card.SetNickname(_gameDataManager.PlayerInfos[playerRole.Key].Nickname);
@@ -1601,6 +1714,7 @@ namespace Werewolf
 				Card card = Instantiate(_cardPrefab, rotation * startingPosition, Quaternion.identity);
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
+				card.SetOriginalPosition(card.transform.position);
 				card.SetPlayer(playerInfo.Key);
 				card.SetNickname(playerInfo.Value.Nickname);
 				card.DetachNicknameCanvas();

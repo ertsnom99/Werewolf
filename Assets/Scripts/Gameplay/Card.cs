@@ -15,6 +15,8 @@ namespace Werewolf
 		[field: SerializeField]
 		public float Thickness { get; private set; }
 
+		public Vector3 OriginalPosition { get; private set; }
+
 		[Header("Selection")]
 		[SerializeField]
 		private GameObject _notClickableCache;
@@ -78,6 +80,11 @@ namespace Werewolf
 			}
 		}
 #endif
+		public void SetOriginalPosition(Vector3 originalPosition)
+		{
+			OriginalPosition = originalPosition;
+		}
+
 		public void SetPlayer(PlayerRef player)
 		{
 			Player = player;

@@ -63,6 +63,9 @@ namespace Werewolf.Data
 		public float DeathRevealTitleHoldDuration { get; private set; }
 
 		[field: SerializeField]
+		public string PlayerDiedText { get; private set; }
+
+		[field: SerializeField]
 		public float DelayBeforeRevealingDeadPlayer { get; private set; }
 
 		[field: Header("Vote")]
