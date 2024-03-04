@@ -17,12 +17,13 @@ namespace Werewolf
 
 		private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
 
-		private Dictionary<PlayerRef, PlayerRole> _playerRoles = new();
+		public Dictionary<PlayerRef, PlayerData> Players { get; private set; }
 
-		private struct PlayerRole
+		public struct PlayerData
 		{
-			public RoleData Data;
+			public RoleData Role;
 			public List<RoleBehavior> Behaviors;
+			public bool IsAlive;
 		}
 
 		private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
@@ -135,6 +136,7 @@ namespace Werewolf
 			base.Awake();
 
 			RolesToDistribute = new();
+			Players = new();
 
 			if (!Config)
 			{
@@ -323,7 +325,7 @@ namespace Werewolf
 					}
 				}
 
-				_playerRoles.Add(playerInfo.Key, new() { Data = selectedRole, Behaviors = selectedBehaviors });
+				Players.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
 			}
 
 			_rolesDistributionDone = true;
@@ -342,11 +344,11 @@ namespace Werewolf
 		private void DetermineNightCalls()
 		{
 			// Remove any players that do not have a behavior that needs to be called at night
-			List<PlayerRef> players = _playerRoles.Keys.ToList();
+			List<PlayerRef> players = Players.Keys.ToList();
 
 			for (int i = players.Count - 1; i >= 0; i--)
 			{
-				List<RoleBehavior> behaviors = _playerRoles[players[i]].Behaviors;
+				List<RoleBehavior> behaviors = Players[players[i]].Behaviors;
 
 				if (behaviors.Count > 0 && behaviors[0].NightPriorities.Count > 0)
 				{
@@ -361,7 +363,7 @@ namespace Werewolf
 
 			foreach (PlayerRef player in players)
 			{
-				foreach (Priority priority in _playerRoles[player].Behaviors[0].NightPriorities)
+				foreach (Priority priority in Players[player].Behaviors[0].NightPriorities)
 				{
 					if (priorities.Contains(priority.index))
 					{
@@ -381,7 +383,7 @@ namespace Werewolf
 
 				foreach (PlayerRef player in players)
 				{
-					foreach (Priority priority in _playerRoles[player].Behaviors[0].NightPriorities)
+					foreach (Priority priority in Players[player].Behaviors[0].NightPriorities)
 					{
 						if (priority.index == priorities[i])
 						{
@@ -405,7 +407,7 @@ namespace Werewolf
 
 				foreach (PlayerRef player in nightCall.Players)
 				{
-					roles += $"{_playerRoles[player].Data.Name} || ";
+					roles += $"{Players[player].Role.Name} || ";
 				}
 
 				Debug.Log(roles);
@@ -418,7 +420,7 @@ namespace Werewolf
 		{
 			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
 			{
-				RPC_GivePlayerRole(playerInfo.Key, _playerRoles[playerInfo.Key].Data.GameplayTag.CompactTagId);
+				RPC_GivePlayerRole(playerInfo.Key, Players[playerInfo.Key].Role.GameplayTag.CompactTagId);
 			}
 
 			_allRolesSent = true;
@@ -545,6 +547,7 @@ namespace Werewolf
 					break;
 				case GameplayLoopStep.DeathReveal:
 					StartCoroutine(StartDeathReveal());
+_currentGameplayLoopStep = GameplayLoopStep.Execution;
 					break;
 				case GameplayLoopStep.Debate:
 
@@ -558,6 +561,7 @@ namespace Werewolf
 			}
 		}
 
+		#region Daytime Change
 		private IEnumerator ChangeDaytime(Daytime daytime)
 		{
 			RPC_ChangeDaytime(daytime);
@@ -569,6 +573,16 @@ namespace Werewolf
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_ChangeDaytime(Daytime time)
+		{
+			_daytimeManager.ChangeDaytime(time);
+		}
+		#endregion
+		#endregion
+
+		#region Night Call
 		private IEnumerator CallRoles()
 		{
 			_currentNightCallIndex = 0;
@@ -583,10 +597,9 @@ namespace Werewolf
 				// Role call all the roles that must play
 				foreach (PlayerRef player in nightCall.Players)
 				{
-					// TODO: Skip if the player is dead
 					bool skipPlayer = false;
 
-					foreach (RoleBehavior behavior in _playerRoles[player].Behaviors)
+					foreach (RoleBehavior behavior in Players[player].Behaviors)
 					{
 						int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -614,7 +627,7 @@ namespace Werewolf
 				if (_playersWaitingFor.Count > 0)
 				{
 					// Tell the players that are not playing, which role is playing
-					foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
+					foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
 					{
 						if (_playersWaitingFor.Contains(playerRole.Key))
 						{
@@ -674,17 +687,9 @@ namespace Werewolf
 				&& _revealPlayerRoleCallbacks.Count <= 0
 				&& ((_playersWaitingFor.Count <= 0 && elapsedTime >= Config.NightCallMinimumDuration) || elapsedTime >= Config.NightCallMaximumDuration);
 		}
+		#endregion
 
-		public void StopWaintingForPlayer(PlayerRef player)
-		{
-			if (!_playersWaitingFor.Contains(player))
-			{
-				return;
-			}
-
-			_playersWaitingFor.Remove(player);
-		}
-
+		#region Death Reveal
 		public IEnumerator StartDeathReveal()
 		{
 			bool hasAnyPlayerDied = _marksForDeath.Count > 0;
@@ -710,7 +715,7 @@ namespace Werewolf
 
 					List<PlayerRef> revealTo = new List<PlayerRef>();
 
-					foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
+					foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
 					{
 						if (playerRole.Key == _marksForDeath[0].Player)
 						{
@@ -729,11 +734,7 @@ namespace Werewolf
 						yield return 0;
 					}
 
-					// TODO: Set player as actually dead
-					RPC_DisplayPlayerDead(_marksForDeath[0].Player);
-#if UNITY_SERVER && UNITY_EDITOR
-					_playerCards[_marksForDeath[0].Player].DisplayDead();
-#endif
+					SetPlayerDead(_marksForDeath[0].Player);
 					_marksForDeath.RemoveAt(0);
 
 					RPC_HideUI();
@@ -749,13 +750,34 @@ namespace Werewolf
 		{
 			_waitingForDeathRevealEnded = false;
 		}
+
+		private void SetPlayerDead(PlayerRef deadPlayer)
+		{
+			Players[deadPlayer] = new PlayerData { Role = Players[deadPlayer].Role, Behaviors = Players[deadPlayer].Behaviors, IsAlive = false };
+
+			foreach (RoleBehavior behavior in Players[deadPlayer].Behaviors)
+			{
+				foreach (Priority priority in behavior.NightPriorities)
+				{
+					RemovePlayerFromNightCall(priority.index, deadPlayer);
+				}
+			}
+
+			RPC_DisplayPlayerDead(deadPlayer);
+#if UNITY_SERVER && UNITY_EDITOR
+			_playerCards[deadPlayer].DisplayDead();
+#endif
+		}
 		#endregion
 
-		#region RPC Calls
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_ChangeDaytime(Daytime time)
+		public void StopWaintingForPlayer(PlayerRef player)
 		{
-			_daytimeManager.ChangeDaytime(time);
+			if (!_playersWaitingFor.Contains(player))
+			{
+				return;
+			}
+
+			_playersWaitingFor.Remove(player);
 		}
 		#endregion
 		#endregion
@@ -764,15 +786,13 @@ namespace Werewolf
 		public void ChangeRole(PlayerRef player, RoleData roleData, RoleBehavior roleBehavior)
 		{
 			// Change player role
-			PlayerRole playerRole = new() { Data = roleData };
-			playerRole.Behaviors = _playerRoles[player].Behaviors;
-			_playerRoles[player] = playerRole;
+			Players[player] = new() { Role = roleData, Behaviors = Players[player].Behaviors, IsAlive = Players[player].IsAlive };
 
 #if UNITY_SERVER && UNITY_EDITOR
 			_playerCards[player].SetRole(roleData);
 #endif
 			// Remove the primary behavior
-			foreach (RoleBehavior behavior in _playerRoles[player].Behaviors)
+			foreach (RoleBehavior behavior in Players[player].Behaviors)
 			{
 				if (!behavior.IsPrimaryBehavior)
 				{
@@ -820,7 +840,7 @@ namespace Werewolf
 				AddPlayerToNightCall(priority, player);
 			}
 
-			_playerRoles[player].Behaviors.Add(behavior);
+			Players[player].Behaviors.Add(behavior);
 
 			behavior.SetPlayer(player);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -837,14 +857,14 @@ namespace Werewolf
 				RemovePlayerFromNightCall(priority, player);
 			}
 
-			for (int i = _playerRoles[player].Behaviors.Count - 1; i >= 0; i--)
+			for (int i = Players[player].Behaviors.Count - 1; i >= 0; i--)
 			{
-				if (_playerRoles[player].Behaviors[i] != behavior)
+				if (Players[player].Behaviors[i] != behavior)
 				{
 					continue;
 				}
 
-				_playerRoles[player].Behaviors.RemoveAt(i);
+				Players[player].Behaviors.RemoveAt(i);
 				break;
 			}
 
@@ -856,7 +876,7 @@ namespace Werewolf
 		{
 			List<RoleBehavior> behaviorsToRemove = new();
 
-			foreach (RoleBehavior behavior in _playerRoles[player].Behaviors)
+			foreach (RoleBehavior behavior in Players[player].Behaviors)
 			{
 				int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -1294,7 +1314,7 @@ namespace Werewolf
 			}
 
 			_revealPlayerRoleCallbacks.Add(revealTo, callback);
-			RPC_RevealPlayerRole(revealTo, playerRevealed, _playerRoles[playerRevealed].Data.GameplayTag.CompactTagId, waitBeforeReveal, returnFacedown);
+			RPC_RevealPlayerRole(revealTo, playerRevealed, Players[playerRevealed].Role.GameplayTag.CompactTagId, waitBeforeReveal, returnFacedown);
 
 			return true;
 		}
@@ -1325,7 +1345,7 @@ namespace Werewolf
 			foreach (PlayerRef player in revealTo)
 			{
 				_playersWaitingFor.Add(player);
-				RPC_MoveCardToCamera(player, playerRevealed, !waitBeforeReveal, !waitBeforeReveal ? _playerRoles[playerRevealed].Data.GameplayTag.CompactTagId : -1);
+				RPC_MoveCardToCamera(player, playerRevealed, !waitBeforeReveal, !waitBeforeReveal ? Players[playerRevealed].Role.GameplayTag.CompactTagId : -1);
 			}
 
 			while (_playersWaitingFor.Count > 0)
@@ -1340,7 +1360,7 @@ namespace Werewolf
 				foreach (PlayerRef player in revealTo)
 				{
 					_playersWaitingFor.Add(player);
-					RPC_FlipFaceUp(player, playerRevealed, _playerRoles[playerRevealed].Data.GameplayTag.CompactTagId);
+					RPC_FlipFaceUp(player, playerRevealed, Players[playerRevealed].Role.GameplayTag.CompactTagId);
 				}
 
 				while (_playersWaitingFor.Count > 0)
@@ -1550,7 +1570,7 @@ namespace Werewolf
 			RoleData alias = null;
 			bool aliasFound = false;
 
-			foreach (RoleBehavior behavior in _playerRoles[nightCall.Players[0]].Behaviors)
+			foreach (RoleBehavior behavior in Players[nightCall.Players[0]].Behaviors)
 			{
 				foreach (Priority nightPrioritie in behavior.NightPriorities)
 				{
@@ -1577,7 +1597,7 @@ namespace Werewolf
 			}
 			else
 			{
-				return _playerRoles[nightCall.Players[0]].Data.GameplayTag.CompactTagId;
+				return Players[nightCall.Players[0]].Role.GameplayTag.CompactTagId;
 			}
 		}
 
@@ -1623,12 +1643,12 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 		private void CreatePlayerCardsForServer()
 		{
-			float rotationIncrement = 360.0f / _playerRoles.Count;
-			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(_playerRoles.Count);
+			float rotationIncrement = 360.0f / Players.Count;
+			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(Players.Count);
 
 			int counter = -1;
 
-			foreach (KeyValuePair<PlayerRef, PlayerRole> playerRole in _playerRoles)
+			foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
 			{
 				counter++;
 
@@ -1639,7 +1659,7 @@ namespace Werewolf
 
 				card.SetOriginalPosition(card.transform.position);
 				card.SetPlayer(playerRole.Key);
-				card.SetRole(playerRole.Value.Data);
+				card.SetRole(playerRole.Value.Role);
 				card.SetNickname(_gameDataManager.PlayerInfos[playerRole.Key].Nickname);
 				card.DetachNicknameCanvas();
 				card.Flip();

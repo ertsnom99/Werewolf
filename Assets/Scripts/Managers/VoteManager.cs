@@ -41,6 +41,7 @@ namespace Werewolf
 
 		private Card _selectedCard;
 
+		private GameManager _gameManager;
 		private UIManager _UIManager;
 
 		public event Action<Dictionary<PlayerRef, Vote>> VoteCompletedCallback;
@@ -54,6 +55,7 @@ namespace Werewolf
 		{
 			_config = config;
 
+			_gameManager = GameManager.Instance;
 			_UIManager = UIManager.Instance;
 			_UIManager.VoteScreen.SetLockedInDelayDuration(_config.AllLockedInDelayToEndVote);
 		}
@@ -167,7 +169,15 @@ namespace Werewolf
 #endif
 			}
 
-			TellPlayersVoteStarted();
+			if (!StartPlayerVotes())
+			{
+				VoteCompletedCallback?.Invoke(_votes);
+				VoteCompletedCallback = null;
+
+				_step = Step.NotVoting;
+
+				return;
+			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
 			_UIManager.VoteScreen.Initialize(_voteMaxDuration);
@@ -179,8 +189,10 @@ namespace Werewolf
 			_step = Step.Voting;
 		}
 
-		private void TellPlayersVoteStarted()
+		private bool StartPlayerVotes()
 		{
+			bool voteStarted = false;
+
 			foreach (PlayerRef voter in _voters)
 			{
 				List<PlayerRef> immunePlayers = new();
@@ -199,10 +211,26 @@ namespace Werewolf
 					}
 				}
 
-				// TODO: Add dead players to immunePlayers
+				foreach (KeyValuePair<PlayerRef, GameManager.PlayerData> player in _gameManager.Players)
+				{
+					if (player.Value.IsAlive || immunePlayers.Contains(player.Key))
+					{
+						continue;
+					}
 
-				RPC_VoteStarted(voter, _voters.ToArray(), immunePlayers.ToArray(), _voteMaxDuration);
+					immunePlayers.Add(player.Key);
+				}
+
+				if (immunePlayers.Count >= _gameManager.Players.Count)
+				{
+					continue;
+				}
+
+				voteStarted = true;
+				RPC_StartPlayerVote(voter, _voters.ToArray(), immunePlayers.ToArray(), _voteMaxDuration);
 			}
+
+			return voteStarted;
 		}
 
 		private IEnumerator WaitForVoteEnd()
@@ -349,7 +377,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_VoteStarted([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, float maxDuration)
+		private void RPC_StartPlayerVote([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, float maxDuration)
 		{
 			if (_playerCards == null || _config == null)
 			{
