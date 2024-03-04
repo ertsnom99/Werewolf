@@ -44,6 +44,13 @@ namespace Werewolf
 		[SerializeField]
 		private Sprite _doneVotingStatusImage;
 
+		[Header("Death")]
+		[SerializeField]
+		private GameObject _deathImage;
+
+		[SerializeField]
+		private Color _deathTint;
+
 		[Header("UI")]
 		[SerializeField]
 		private SpriteRenderer _roleImage;
@@ -179,6 +186,12 @@ namespace Werewolf
 			_voteAmount = 0;
 		}
 		#endregion
+
+		public void DisplayDead()
+		{
+			_deathImage.SetActive(true);
+			_roleImage.color = _deathTint;
+		}
 
 		#region MouseDetectionListener methods
 		public void MouseEntered() { }

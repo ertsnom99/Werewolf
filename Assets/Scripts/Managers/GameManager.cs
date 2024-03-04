@@ -730,6 +730,10 @@ namespace Werewolf
 					}
 
 					// TODO: Set player as actually dead
+					RPC_DisplayPlayerDead(_marksForDeath[0].Player);
+#if UNITY_SERVER && UNITY_EDITOR
+					_playerCards[_marksForDeath[0].Player].DisplayDead();
+#endif
 					_marksForDeath.RemoveAt(0);
 
 					RPC_HideUI();
@@ -1599,6 +1603,12 @@ namespace Werewolf
 		public void RPC_DisplayPlayerDiedTitle([RpcTarget] PlayerRef player)
 		{
 			DisplayPlayerDiedTitle();
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayPlayerDead(PlayerRef playerDead)
+		{
+			_playerCards[playerDead].DisplayDead();
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
