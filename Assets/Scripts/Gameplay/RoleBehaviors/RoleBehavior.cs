@@ -23,7 +23,6 @@ namespace Werewolf
 		[field: ReadOnly]
 		public PlayerRef Player { get; private set; }
 
-
 		protected bool _timedOut = false;
 
 		public void AddNightPriority(Priority nightPriority)
