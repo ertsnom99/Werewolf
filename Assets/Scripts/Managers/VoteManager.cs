@@ -169,21 +169,22 @@ namespace Werewolf
 #endif
 			}
 
-			if (!StartPlayerVotes())
+			float voteDuration;
+
+			if (StartPlayerVotes())
 			{
-				VoteCompletedCallback?.Invoke(_votes);
-				VoteCompletedCallback = null;
-
-				_step = Step.NotVoting;
-
-				return;
+				voteDuration = _voteMaxDuration;
+			}
+			else
+			{
+				voteDuration = _config.NightCallMinimumDuration;
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
-			_UIManager.VoteScreen.Initialize(_voteMaxDuration);
+			_UIManager.VoteScreen.Initialize(false, voteDuration);
 			_UIManager.VoteScreen.HideLockinButton();
 #endif
-			_voteCoroutine = WaitForVoteEnd();
+			_voteCoroutine = WaitForVoteEnd(voteDuration);
 			StartCoroutine(_voteCoroutine);
 
 			_step = Step.Voting;
@@ -221,24 +222,25 @@ namespace Werewolf
 					immunePlayers.Add(player.Key);
 				}
 
-				if (immunePlayers.Count >= _gameManager.Players.Count)
+				bool canVote = immunePlayers.Count < _gameManager.Players.Count;
+
+				if (canVote)
 				{
-					continue;
+					voteStarted = true;
 				}
 
-				voteStarted = true;
-				RPC_StartPlayerVote(voter, _voters.ToArray(), immunePlayers.ToArray(), _voteMaxDuration);
+				RPC_StartPlayerVote(voter, _voters.ToArray(), immunePlayers.ToArray(), !canVote, _voteMaxDuration);
 			}
 
 			return voteStarted;
 		}
 
-		private IEnumerator WaitForVoteEnd()
+		private IEnumerator WaitForVoteEnd(float duration)
 		{
 			float elapsedTime = .0f;
 			float allLockedInElapsedTime = .0f;
 
-			while (elapsedTime < _voteMaxDuration && (_lockedInVoteCount < _voters.Count || allLockedInElapsedTime < _config.AllLockedInDelayToEndVote))
+			while (elapsedTime < duration && (_lockedInVoteCount < _voters.Count || allLockedInElapsedTime < _config.AllLockedInDelayToEndVote))
 			{
 				if (_lockedInVoteCount < _voters.Count && allLockedInElapsedTime > .0f)
 				{
@@ -377,7 +379,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartPlayerVote([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, float maxDuration)
+		private void RPC_StartPlayerVote([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, bool displayWarning, float maxDuration)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -412,7 +414,7 @@ namespace Werewolf
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
-			_UIManager.VoteScreen.Initialize(maxDuration);
+			_UIManager.VoteScreen.Initialize(displayWarning, maxDuration);
 			_UIManager.VoteScreen.OnVoteLockChanged += OnVoteLockChanged;
 		}
 
