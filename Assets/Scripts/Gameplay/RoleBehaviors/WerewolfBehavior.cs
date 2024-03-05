@@ -36,38 +36,35 @@ namespace Werewolf
 
 		private void OnVoteEnds(Dictionary<PlayerRef, VoteManager.Vote> votes)
 		{
-			if (_preparedVote)
-			{
-				PlayerRef votedPlayer = PlayerRef.None;
+			_gameManager.StopWaintingForPlayer(Player);
 
-				if (votes.Count <= 0)
+			if (!_preparedVote || votes.Count <= 0)
+			{
+				return;
+			}
+
+			PlayerRef votedPlayer = PlayerRef.None;
+
+			foreach (KeyValuePair<PlayerRef, VoteManager.Vote> vote in votes)
+			{
+				if (vote.Value.VotedFor == PlayerRef.None)
 				{
 					return;
 				}
 
-				foreach (KeyValuePair<PlayerRef, VoteManager.Vote> vote in votes)
+				if (votedPlayer == PlayerRef.None)
 				{
-					if (vote.Value.VotedFor == PlayerRef.None)
-					{
-						return;
-					}
-
-					if (votedPlayer == PlayerRef.None)
-					{
-						votedPlayer = vote.Value.VotedFor;
-						continue;
-					}
-
-					if (votedPlayer != vote.Value.VotedFor)
-					{
-						return;
-					}
+					votedPlayer = vote.Value.VotedFor;
+					continue;
 				}
 
-				_gameManager.AddMarkForDeath(votedPlayer, _commonData.DeathMark);
+				if (votedPlayer != vote.Value.VotedFor)
+				{
+					return;
+				}
 			}
 
-			_gameManager.StopWaintingForPlayer(Player);
+			_gameManager.AddMarkForDeath(votedPlayer, _commonData.DeathMark);
 		}
 
 		public override void OnRoleTimeOut() { }

@@ -15,6 +15,9 @@ namespace Werewolf.UI
 
 		[SerializeField]
 		private RectTransform _lockedInDelay;
+
+		[SerializeField]
+		private GameObject _warningText;
 #if UNITY_SERVER && UNITY_EDITOR
 		[SerializeField]
 		private Button _lockInButton;
@@ -42,11 +45,12 @@ namespace Werewolf.UI
 			_lockedInDelayDuration = lockedInDelayDuration;
 		}
 
-		public void Initialize(float maxDuration)
+		public void Initialize(bool displayWarning, float maxDuration)
 		{
 			_isLockedIn = false;
 
 			SetLockedInDelayActive(false);
+			_warningText.SetActive(displayWarning);
 			UpdateButtonText();
 
 			if (_voteCountdownCoroutine != null)
@@ -92,12 +96,7 @@ namespace Werewolf.UI
 			StopCoroutine(_voteCountdownCoroutine);
 			_voteCountdownCoroutine = null;
 		}
-#if UNITY_SERVER && UNITY_EDITOR
-		public void HideLockinButton()
-		{
-			_lockInButton.gameObject.SetActive(false);
-		}
-#endif
+
 		public void SetLockedInDelayActive(bool isActive)
 		{
 			_lockedInDelay.gameObject.SetActive(isActive);
@@ -135,5 +134,11 @@ namespace Werewolf.UI
 		{
 			_lockedInDelay.localScale = new(scale, _lockedInDelay.localScale.y, _lockedInDelay.localScale.z);
 		}
+#if UNITY_SERVER && UNITY_EDITOR
+		public void HideLockinButton()
+		{
+			_lockInButton.gameObject.SetActive(false);
+		}
+#endif
 	}
 }
