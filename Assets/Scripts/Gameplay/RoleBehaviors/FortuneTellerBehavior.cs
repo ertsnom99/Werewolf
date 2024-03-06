@@ -17,7 +17,19 @@ namespace Werewolf
 
 		public override bool OnRoleCall()
 		{
-			_choosingPlayer = _gameManager.AskClientToChoosePlayer(Player, new PlayerRef[] { Player }, "Choose a player to see his role", OnPlayerSelected);
+			List<PlayerRef> immunePlayers = new() { Player };
+
+			foreach (KeyValuePair<PlayerRef, GameManager.PlayerData> player in _gameManager.Players)
+			{
+				if (player.Value.IsAlive)
+				{
+					continue;
+				}
+
+				immunePlayers.Add(player.Key);
+			}
+
+			_choosingPlayer = _gameManager.AskClientToChoosePlayer(Player, immunePlayers.ToArray(), "Choose a player to see his role", OnPlayerSelected);
 			return _choosingPlayer;
 		}
 
