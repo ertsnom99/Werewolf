@@ -10,6 +10,13 @@ using Werewolf.UI;
 
 namespace Werewolf
 {
+	public struct PlayerData
+	{
+		public RoleData Role;
+		public List<RoleBehavior> Behaviors;
+		public bool IsAlive;
+	}
+
 	public class GameManager : NetworkBehaviourSingleton<GameManager>
 	{
 		#region Server variables
@@ -18,13 +25,6 @@ namespace Werewolf
 		private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
 
 		public Dictionary<PlayerRef, PlayerData> Players { get; private set; }
-
-		public struct PlayerData
-		{
-			public RoleData Role;
-			public List<RoleBehavior> Behaviors;
-			public bool IsAlive;
-		}
 
 		private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
 
@@ -154,6 +154,7 @@ namespace Werewolf
 			_voteManager = VoteManager.Instance;
 
 			_voteManager.SetConfig(Config);
+			_voteManager.SetPlayers(Players);
 			_UIManager.VoteScreen.SetConfig(Config);
 		}
 
@@ -180,6 +181,8 @@ namespace Werewolf
 			CreateReservedRoleCardsForServer();
 			AdjustCamera();
 			LogNightCalls();
+
+			_voteManager.SetPlayerCards(_playerCards);
 #endif
 			CheckPreGameplayLoopProgress();
 		}
@@ -438,6 +441,8 @@ namespace Werewolf
 			CreatePlayerCards(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
 			CreateReservedRoleCards();
 			AdjustCamera();
+
+			_voteManager.SetPlayerCards(_playerCards);
 
 			OnRoleReceived?.Invoke();
 		}
@@ -1676,8 +1681,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 					behavior.transform.position = card.transform.position;
 				}
 			}
-
-			_voteManager.SetPlayerCards(_playerCards);
 		}
 
 		private void CreateReservedRoleCardsForServer()
@@ -1757,9 +1760,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 				_playerCards.Add(playerInfo.Key, card);
 			}
-
-			// The VoteManager needs to know the player cards
-			_voteManager.SetPlayerCards(_playerCards);
 		}
 
 		private void CreateReservedRoleCards()
