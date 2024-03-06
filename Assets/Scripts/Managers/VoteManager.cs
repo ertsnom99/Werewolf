@@ -10,17 +10,9 @@ namespace Werewolf
 {
 	public class VoteManager : NetworkBehaviourSingleton<VoteManager>
 	{
-		private Dictionary<PlayerRef, Card> _playerCards;
 		private GameConfig _config;
-
-		private Step _step;
-
-		private enum Step
-		{
-			NotVoting,
-			Preparing,
-			Voting,
-		}
+		private Dictionary<PlayerRef, PlayerData> _players;
+		private Dictionary<PlayerRef, Card> _playerCards;
 
 		private List<PlayerRef> _voters = new();
 		private List<PlayerRef> _immune = new();
@@ -33,15 +25,23 @@ namespace Werewolf
 			public bool LockedIn;
 		}
 
-		private int _lockedInVoteCount;
 		private float _voteMaxDuration;
 		private bool _notVotingPenalty;
+		private int _lockedInVoteCount;
+
+		private Step _step;
+
+		private enum Step
+		{
+			NotVoting,
+			Preparing,
+			Voting,
+		}
 
 		private IEnumerator _voteCoroutine;
 
 		private Card _selectedCard;
 
-		private GameManager _gameManager;
 		private UIManager _UIManager;
 
 		public event Action<Dictionary<PlayerRef, Vote>> VoteCompletedCallback;
@@ -55,9 +55,13 @@ namespace Werewolf
 		{
 			_config = config;
 
-			_gameManager = GameManager.Instance;
 			_UIManager = UIManager.Instance;
 			_UIManager.VoteScreen.SetLockedInDelayDuration(_config.AllLockedInDelayToEndVote);
+		}
+
+		public void SetPlayers(Dictionary<PlayerRef, PlayerData> players)
+		{
+			_players = players;
 		}
 
 		public bool PrepareVote(float voteMaxDuration, bool notVotingPenalty)
@@ -72,9 +76,9 @@ namespace Werewolf
 			_immuneFromPlayers.Clear();
 			_votes.Clear();
 
-			_lockedInVoteCount = 0;
 			_voteMaxDuration = voteMaxDuration;
 			_notVotingPenalty = notVotingPenalty;
+			_lockedInVoteCount = 0;
 
 			_step = Step.Preparing;
 
@@ -140,11 +144,6 @@ namespace Werewolf
 			}
 
 			_immuneFromPlayers[from].Remove(immunePlayer);
-
-			if (_immuneFromPlayers[from].Count <= 0)
-			{
-				_immuneFromPlayers.Remove(from);
-			}
 		}
 
 		public void StartVote()
@@ -156,7 +155,7 @@ namespace Werewolf
 
 			float voteDuration;
 
-			if (FillPlayerImmunity())
+			if (FillImmuneFromPlayers())
 			{
 				voteDuration = _voteMaxDuration;
 			}
@@ -171,7 +170,7 @@ namespace Werewolf
 				RPC_StartPlayerVote(voter,
 									_voters.ToArray(),
 									_immuneFromPlayers[voter].ToArray(),
-									_immuneFromPlayers[voter].Count >= _gameManager.Players.Count, voteDuration);
+									_immuneFromPlayers[voter].Count >= _players.Count, voteDuration);
 #if UNITY_SERVER && UNITY_EDITOR
 				_playerCards[voter].SetVotingStatusVisible(true);
 				_playerCards[voter].UpdateVotingStatus(true);
@@ -188,9 +187,9 @@ namespace Werewolf
 			_step = Step.Voting;
 		}
 
-		private bool FillPlayerImmunity()
+		private bool FillImmuneFromPlayers()
 		{
-			bool voteStarted = false;
+			bool canAtLeastOneVoterVote = false;
 
 			foreach (PlayerRef voter in _voters)
 			{
@@ -204,7 +203,7 @@ namespace Werewolf
 					_immuneFromPlayers[voter].Add(player);
 				}
 
-				foreach (KeyValuePair<PlayerRef, GameManager.PlayerData> player in _gameManager.Players)
+				foreach (KeyValuePair<PlayerRef, PlayerData> player in _players)
 				{
 					if (player.Value.IsAlive || _immuneFromPlayers[voter].Contains(player.Key))
 					{
@@ -214,13 +213,13 @@ namespace Werewolf
 					_immuneFromPlayers[voter].Add(player.Key);
 				}
 
-				if (_immuneFromPlayers[voter].Count < _gameManager.Players.Count)
+				if (_immuneFromPlayers[voter].Count < _players.Count)
 				{
-					voteStarted = true;
+					canAtLeastOneVoterVote = true;
 				}
 			}
 
-			return voteStarted;
+			return canAtLeastOneVoterVote;
 		}
 
 		private IEnumerator WaitForVoteEnd(float duration)
@@ -327,6 +326,16 @@ namespace Werewolf
 					}
 				}
 			}
+
+			foreach (PlayerRef voter in _voters)
+			{
+				RPC_VoteEnded(voter);
+			}
+
+			VoteCompletedCallback?.Invoke(_votes);
+
+			_voteCoroutine = null;
+			VoteCompletedCallback = null;
 #if UNITY_SERVER && UNITY_EDITOR
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
@@ -337,22 +346,7 @@ namespace Werewolf
 			_UIManager.VoteScreen.StopTimer();
 			_UIManager.VoteScreen.SetLockedInDelayActive(false);
 #endif
-			TellPlayersVoteEnded();
-
-			VoteCompletedCallback?.Invoke(_votes);
-
-			_voteCoroutine = null;
-			VoteCompletedCallback = null;
-
 			_step = Step.NotVoting;
-		}
-
-		private void TellPlayersVoteEnded()
-		{
-			foreach (PlayerRef voter in _voters)
-			{
-				RPC_VoteEnded(voter);
-			}
 		}
 
 		public bool IsPreparingToVote()
