@@ -81,7 +81,8 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float AllLockedInDelayToEndVote { get; private set; }
 
-		public const int MAX_PLAYER_COUNT = 20;
+		[field: SerializeField]
+		public float NoVoteDuration { get; private set; }
 
 		[field: Header("UI")]
 		[field: SerializeField]
@@ -116,5 +117,7 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public string DidNotChoosedRoleText { get; private set; }
+
+		public const int MAX_PLAYER_COUNT = 20;
 	}
 }
