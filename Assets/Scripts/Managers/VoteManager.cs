@@ -89,6 +89,7 @@ namespace Werewolf
 			}
 
 			_voters.Add(voter);
+			_immuneFromPlayers.Add(voter, new());
 		}
 
 		public void RemoveVoter(PlayerRef voter)
@@ -113,19 +114,12 @@ namespace Werewolf
 
 		public void AddVoteImmunity(PlayerRef immunePlayer, PlayerRef from)
 		{
-			if (_step != Step.Preparing || (_immuneFromPlayers.ContainsKey(from) && _immuneFromPlayers[from].Contains(immunePlayer)))
+			if (_step != Step.Preparing || !_immune.Contains(from) || _immuneFromPlayers[from].Contains(immunePlayer))
 			{
 				return;
 			}
 
-			if (_immuneFromPlayers.ContainsKey(from))
-			{
-				_immuneFromPlayers[from].Add(immunePlayer);
-			}
-			else
-			{
-				_immuneFromPlayers.Add(from, new() { immunePlayer });
-			}
+			_immuneFromPlayers[from].Add(immunePlayer);
 		}
 
 		public void RemoveVoteImmunity(PlayerRef player)
@@ -160,76 +154,70 @@ namespace Werewolf
 				return;
 			}
 
+			float voteDuration;
+
+			if (FillPlayerImmunity())
+			{
+				voteDuration = _voteMaxDuration;
+			}
+			else
+			{
+				voteDuration = _config.NoVoteDuration;
+			}
+
 			foreach (PlayerRef voter in _voters)
 			{
 				_votes.Add(voter, new());
+				RPC_StartPlayerVote(voter,
+									_voters.ToArray(),
+									_immuneFromPlayers[voter].ToArray(),
+									_immuneFromPlayers[voter].Count >= _gameManager.Players.Count, voteDuration);
 #if UNITY_SERVER && UNITY_EDITOR
 				_playerCards[voter].SetVotingStatusVisible(true);
 				_playerCards[voter].UpdateVotingStatus(true);
 #endif
 			}
 
-			float voteDuration;
-
-			if (StartPlayerVotes())
-			{
-				voteDuration = _voteMaxDuration;
-			}
-			else
-			{
-				voteDuration = _config.NightCallMinimumDuration;
-			}
+			_voteCoroutine = WaitForVoteEnd(voteDuration);
+			StartCoroutine(_voteCoroutine);
 #if UNITY_SERVER && UNITY_EDITOR
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
 			_UIManager.VoteScreen.Initialize(false, voteDuration);
 			_UIManager.VoteScreen.HideLockinButton();
 #endif
-			_voteCoroutine = WaitForVoteEnd(voteDuration);
-			StartCoroutine(_voteCoroutine);
-
 			_step = Step.Voting;
 		}
 
-		private bool StartPlayerVotes()
+		private bool FillPlayerImmunity()
 		{
 			bool voteStarted = false;
 
 			foreach (PlayerRef voter in _voters)
 			{
-				List<PlayerRef> immunePlayers = new();
-				immunePlayers.AddRange(_immune);
-
-				if (_immuneFromPlayers.ContainsKey(voter))
+				foreach (PlayerRef player in _immune)
 				{
-					foreach (PlayerRef immuneFromPlayer in _immuneFromPlayers[voter])
-					{
-						if (immunePlayers.Contains(immuneFromPlayer))
-						{
-							continue;
-						}
-
-						immunePlayers.Add(immuneFromPlayer);
-					}
-				}
-
-				foreach (KeyValuePair<PlayerRef, GameManager.PlayerData> player in _gameManager.Players)
-				{
-					if (player.Value.IsAlive || immunePlayers.Contains(player.Key))
+					if (_immuneFromPlayers[voter].Contains(player))
 					{
 						continue;
 					}
 
-					immunePlayers.Add(player.Key);
+					_immuneFromPlayers[voter].Add(player);
 				}
 
-				bool canVote = immunePlayers.Count < _gameManager.Players.Count;
+				foreach (KeyValuePair<PlayerRef, GameManager.PlayerData> player in _gameManager.Players)
+				{
+					if (player.Value.IsAlive || _immuneFromPlayers[voter].Contains(player.Key))
+					{
+						continue;
+					}
 
-				if (canVote)
+					_immuneFromPlayers[voter].Add(player.Key);
+				}
+
+				if (_immuneFromPlayers[voter].Count < _gameManager.Players.Count)
 				{
 					voteStarted = true;
 				}
-
-				RPC_StartPlayerVote(voter, _voters.ToArray(), immunePlayers.ToArray(), !canVote, _voteMaxDuration);
 			}
 
 			return voteStarted;

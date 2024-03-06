@@ -99,6 +99,7 @@ MonoBehaviour:
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote
   <AllLockedInDelayToEndVote>k__BackingField: 3
+  <NoVoteDuration>k__BackingField: 10
   <UITransitionDuration>k__BackingField: 0.75
   <LoadingScreenText>k__BackingField: Waiting for server...
   <LoadingScreenTransitionDuration>k__BackingField: 2
