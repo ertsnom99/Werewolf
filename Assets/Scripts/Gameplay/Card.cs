@@ -56,7 +56,10 @@ namespace Werewolf
 		private SpriteRenderer _roleImage;
 
 		[SerializeField]
-		private Canvas _nicknameCanvas;
+		private Canvas _groundCanvas;
+
+		[SerializeField]
+		private GameObject _highlight;
 
 		[SerializeField]
 		private TMP_Text _nicknameText;
@@ -108,16 +111,21 @@ namespace Werewolf
 			_nicknameText.text = nickname;
 		}
 
-		public void DetachNicknameCanvas()
+		public void DetachGroundCanvas()
 		{
-			Vector3 tempPosition = _nicknameCanvas.transform.position;
-			_nicknameCanvas.transform.SetParent(null);
-			_nicknameCanvas.transform.position = tempPosition;
+			Vector3 tempPosition = _groundCanvas.transform.position;
+			_groundCanvas.transform.SetParent(null);
+			_groundCanvas.transform.position = tempPosition;
 		}
 
 		public void Flip()
 		{
 			transform.rotation *= Quaternion.AngleAxis(180, transform.forward);
+		}
+
+		public void SetHighlightVisible(bool isVisible)
+		{
+			_highlight.SetActive(isVisible);
 		}
 
 		#region Selection mode
@@ -143,6 +151,7 @@ namespace Werewolf
 		{
 			SetSelectionMode(false, false);
 			SetSelected(false);
+			SetHighlightVisible(false);
 		}
 		#endregion
 
@@ -194,11 +203,27 @@ namespace Werewolf
 		}
 
 		#region MouseDetectionListener methods
-		public void MouseEntered() { }
+		public void MouseEntered()
+		{
+			if (!_inSelectionMode || !_isClickable)
+			{
+				return;
+			}
+
+			SetHighlightVisible(true);
+		}
 
 		public void MouseOver(Vector3 MousePosition) { }
 
-		public void MouseExited() { }
+		public void MouseExited()
+		{
+			if (!_inSelectionMode || !_isClickable)
+			{
+				return;
+			}
+
+			SetHighlightVisible(false);
+		}
 
 		public void MousePressed(Vector3 MousePosition) { }
 

@@ -93,7 +93,6 @@ namespace Werewolf
 		[field: SerializeField]
 		private Card _cardPrefab;
 
-		public static event Action OnSpawned;
 		public static bool HasSpawned { get; private set; }
 
 		private Dictionary<PlayerRef, Card> _playerCards = new();
@@ -119,12 +118,15 @@ namespace Werewolf
 		private DaytimeManager _daytimeManager;
 		private VoteManager _voteManager;
 
+		public static event Action ManagerSpawned;
+
 		// Server events
 		public event Action OnPreRoleDistribution;
 		public event Action OnPostRoleDistribution;
 		public event Action OnPreStartGame;
 		public event Action<PlayerRef, string> OnMarkForDeathAdded;
 		public event Action<PlayerRef> OnMarkForDeathRemoved;
+		public event Action<PlayerRef> PlayerDeathRevealEnded;
 
 		// Client events
 		public event Action OnRoleReceived;
@@ -161,7 +163,7 @@ namespace Werewolf
 		public override void Spawned()
 		{
 			HasSpawned = true;
-			OnSpawned?.Invoke();
+			ManagerSpawned?.Invoke();
 		}
 
 		#region Pre Gameplay Loop
@@ -595,8 +597,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			while (_currentNightCallIndex < _nightCalls.Count)
 			{
 				NightCall nightCall = _nightCalls[_currentNightCallIndex];
-				int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(nightCall);
-
 				Dictionary<PlayerRef, RoleBehavior> actifBehaviors = new();
 
 				// Role call all the roles that must play
@@ -631,7 +631,8 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 				if (_playersWaitingFor.Count > 0)
 				{
-					// Tell the players that are not playing, which role is playing
+					int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(nightCall);
+
 					foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
 					{
 						if (_playersWaitingFor.Contains(playerRole.Key))
@@ -716,13 +717,21 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			{
 				while (_marksForDeath.Count > 0)
 				{
+					PlayerRef deadPlayer = _marksForDeath[0].Player;
+
+					if (!Players[deadPlayer].IsAlive)
+					{
+						_marksForDeath.RemoveAt(0);
+						continue;
+					}
+
 					yield return new WaitForSeconds(Config.DelayBeforeRevealingDeadPlayer);
 
 					List<PlayerRef> revealTo = new List<PlayerRef>();
 
 					foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
 					{
-						if (playerRole.Key == _marksForDeath[0].Player)
+						if (playerRole.Key == deadPlayer)
 						{
 							RPC_DisplayPlayerDiedTitle(playerRole.Key);
 							continue;
@@ -732,19 +741,26 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 					}
 
 					_waitingForDeathRevealEnded = true;
-					StartCoroutine(RevealPlayerRoleStoppable(_marksForDeath[0].Player, revealTo.ToArray(), true, false, StopWaitingForDeathRevealEnded));
+					StartCoroutine(RevealPlayerRoleStoppable(deadPlayer, revealTo.ToArray(), true, false, StopWaitingForDeathRevealEnded));
 
 					while (_waitingForDeathRevealEnded)
 					{
 						yield return 0;
 					}
 
-					SetPlayerDead(_marksForDeath[0].Player);
-					_marksForDeath.RemoveAt(0);
-
 					RPC_HideUI();
 
 					yield return new WaitForSeconds(Config.UITransitionDuration);
+
+					PlayerDeathRevealEnded?.Invoke(deadPlayer);
+
+					while (_playersWaitingFor.Count > 0)
+					{
+						yield return 0;
+					}
+
+					SetPlayerDead(deadPlayer);
+					_marksForDeath.RemoveAt(0);
 				}
 			}
 
@@ -774,6 +790,15 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 #endif
 		}
 		#endregion
+		public void WaitForPlayer(PlayerRef player)
+		{
+			if (_playersWaitingFor.Contains(player))
+			{
+				return;
+			}
+
+			_playersWaitingFor.Add(player);
+		}
 
 		public void StopWaintingForPlayer(PlayerRef player)
 		{
@@ -1281,17 +1306,21 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		#region Mark For Death
 		public void AddMarkForDeath(PlayerRef player, string mark)
 		{
-			for (int i = 0; i < _marksForDeath.Count; i++)
+			_marksForDeath.Add(new() { Player = player, Marks = new() { mark } });
+			OnMarkForDeathAdded?.Invoke(player, mark);
+		}
+
+		public void AddMarkForDeath(PlayerRef player, string mark, int index)
+		{
+			if (_marksForDeath.Count < index)
 			{
-				if (_marksForDeath[i].Player == player)
-				{
-					_marksForDeath[i].Marks.Add(mark);
-					OnMarkForDeathAdded?.Invoke(player, mark);
-					return;
-				}
+				_marksForDeath.Add(new() { Player = player, Marks = new() { mark } });
+			}
+			else
+			{
+				_marksForDeath.Insert(index, new() { Player = player, Marks = new() { mark } });
 			}
 
-			_marksForDeath.Add(new() { Player = player, Marks = new() { mark } });
 			OnMarkForDeathAdded?.Invoke(player, mark);
 		}
 
@@ -1557,7 +1586,12 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			_UIManager.TitleScreen.Initialize(roleData.Image, string.Format(text, roleData.Name.ToLower()));
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
-
+#if UNITY_SERVER && UNITY_EDITOR
+		public void SetPlayerCardHighlightVisible(PlayerRef player, bool isVisible)
+		{
+			_playerCards[player].SetHighlightVisible(isVisible);
+		}
+#endif
 		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
 		{
 			_UIManager.TitleScreen.Initialize(null, hasAnyPlayerDied ? Config.DeathRevealDeathText : Config.DeathRevealNoDeathText);
@@ -1568,6 +1602,27 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		{
 			_UIManager.TitleScreen.Initialize(null, Config.PlayerDiedText);
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
+		}
+
+		public void DisplayPlayerRoleIsPlaying(PlayerRef player)
+		{
+			int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(player);
+
+			foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
+			{
+				if (_playersWaitingFor.Contains(playerRole.Key))
+				{
+					continue;
+				}
+
+				RPC_DisplayRolePlaying(playerRole.Key, displayRoleGameplayTagID);
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			if (!_voteManager.IsPreparingToVote())
+			{
+				DisplayRolePlaying(displayRoleGameplayTagID);
+			}
+#endif
 		}
 
 		private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
@@ -1606,7 +1661,12 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 		}
 
-		private void HideUI()
+		private int GetDisplayedRoleGameplayTagID(PlayerRef player)
+		{
+			return Players[player].Role.GameplayTag.CompactTagId;
+		}
+
+		public void HideUI()
 		{
 			_UIManager.FadeOut(Config.UITransitionDuration);
 		}
@@ -1616,6 +1676,12 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		public void RPC_DisplayRolePlaying([RpcTarget] PlayerRef player, int roleGameplayTagID)
 		{
 			DisplayRolePlaying(roleGameplayTagID);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_SetPlayerCardHighlightVisible(PlayerRef player, bool isVisible)
+		{
+			_playerCards[player].SetHighlightVisible(isVisible);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -1666,7 +1732,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				card.SetPlayer(playerRole.Key);
 				card.SetRole(playerRole.Value.Role);
 				card.SetNickname(_gameDataManager.PlayerInfos[playerRole.Key].Nickname);
-				card.DetachNicknameCanvas();
+				card.DetachGroundCanvas();
 				card.Flip();
 
 				_playerCards.Add(playerRole.Key, card);
@@ -1750,7 +1816,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				card.SetOriginalPosition(card.transform.position);
 				card.SetPlayer(playerInfo.Key);
 				card.SetNickname(playerInfo.Value.Nickname);
-				card.DetachNicknameCanvas();
+				card.DetachGroundCanvas();
 
 				if (playerInfo.Key == bottomPlayer)
 				{
