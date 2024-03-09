@@ -1381,7 +1381,9 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				_playersWaitingFor.Add(player);
 				RPC_MoveCardToCamera(player, playerRevealed, !waitBeforeReveal, !waitBeforeReveal ? Players[playerRevealed].Role.GameplayTag.CompactTagId : -1);
 			}
-
+#if UNITY_SERVER && UNITY_EDITOR
+			StartCoroutine(MoveCardToCamera(_playerCards[playerRevealed].transform, !waitBeforeReveal, Config.MoveToCameraDuration));
+#endif
 			while (_playersWaitingFor.Count > 0)
 			{
 				yield return 0;
@@ -1396,7 +1398,9 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 					_playersWaitingFor.Add(player);
 					RPC_FlipFaceUp(player, playerRevealed, Players[playerRevealed].Role.GameplayTag.CompactTagId);
 				}
-
+#if UNITY_SERVER && UNITY_EDITOR
+				StartCoroutine(FlipFaceUp(_playerCards[playerRevealed].transform, Config.RevealFlipDuration));
+#endif
 				while (_playersWaitingFor.Count > 0)
 				{
 					yield return 0;
@@ -1410,7 +1414,9 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				_playersWaitingFor.Add(player);
 				RPC_PutCardBackDown(player, playerRevealed, returnFaceDown);
 			}
-
+#if UNITY_SERVER && UNITY_EDITOR
+			StartCoroutine(PutCardDown(_playerCards[playerRevealed], returnFaceDown, Config.MoveToCameraDuration));
+#endif
 			while (_playersWaitingFor.Count > 0)
 			{
 				yield return 0;
