@@ -343,7 +343,6 @@ namespace Werewolf
 				playerCard.Value.ClearVotes();
 			}
 
-			_UIManager.VoteScreen.StopTimer();
 			_UIManager.VoteScreen.SetLockedInDelayActive(false);
 #endif
 			_step = Step.NotVoting;
@@ -451,7 +450,6 @@ namespace Werewolf
 				playerCard.Value.OnCardClick -= OnCardSelectedChanged;
 			}
 
-			_UIManager.VoteScreen.StopTimer();
 			_UIManager.VoteScreen.SetLockedInDelayActive(false);
 			_UIManager.VoteScreen.OnVoteLockChanged -= OnVoteLockChanged;
 			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionDuration);

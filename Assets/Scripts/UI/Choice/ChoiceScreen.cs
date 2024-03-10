@@ -1,13 +1,18 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Werewolf.Data;
 
 namespace Werewolf.UI
 {
 	public class ChoiceScreen : FadingScreen
 	{
 		[Header("UI")]
+		[SerializeField]
+		private TMP_Text _countdownText;
+
 		[SerializeField]
 		private TMP_Text _text;
 
@@ -20,19 +25,32 @@ namespace Werewolf.UI
 		[SerializeField]
 		private Button _confirmButton;
 
+		private GameConfig _config;
+
+		private bool _mustChooseOne;
+
 		private Choice[] _choices;
 
 		private Choice _selectedChoice;
 		private string _choosedText;
 		private string _didNotChoosedText;
 
-		public event Action<int> OnConfirmChoice;
+		private IEnumerator _countdownCoroutine;
 
-		public void Initialize(string chooseText, string choosedText, string didNotChoosedText, Choice.ChoiceData[] choices, bool mustChooseOne)
+		public event Action<int> ConfirmChoice;
+
+		public void SetConfig(GameConfig config)
+		{
+			_config = config;
+		}
+
+		public void Initialize(float countdownDuration, string chooseText, string choosedText, string didNotChoosedText, Choice.ChoiceData[] choices, bool mustChooseOne)
 		{
 			_text.text = chooseText;
 			_choosedText = choosedText;
 			_didNotChoosedText = didNotChoosedText;
+
+			_mustChooseOne = mustChooseOne;
 
 			foreach (Transform choice in _choicesContainer.transform)
 			{
@@ -51,17 +69,11 @@ namespace Werewolf.UI
 				_choices[i] = choice;
 			}
 
-			_confirmButton.onClick.AddListener(() =>
-			{
-				if (mustChooseOne && _selectedChoice == null)
-				{
-					return;
-				}
-
-				ConfirmChoice();
-			});
-
+			_confirmButton.onClick.AddListener(OnConfirmChoice);
 			_confirmButton.interactable = true;
+
+			_countdownCoroutine = Countdown(countdownDuration);
+			StartCoroutine(_countdownCoroutine);
 		}
 
 		private void OnChoiceSelected(Choice choice)
@@ -82,8 +94,13 @@ namespace Werewolf.UI
 			_selectedChoice = choice;
 		}
 
-		public void ConfirmChoice()
+		private void OnConfirmChoice()
 		{
+			if (_mustChooseOne && _selectedChoice == null)
+			{
+				return;
+			}
+
 			_text.text = _selectedChoice ? _choosedText : _didNotChoosedText;
 
 			foreach (Choice choice in _choices)
@@ -101,13 +118,41 @@ namespace Werewolf.UI
 
 			DisableConfirmButton();
 
-			OnConfirmChoice?.Invoke(_selectedChoice != null ? Array.IndexOf(_choices, _selectedChoice) : -1);
+			ConfirmChoice?.Invoke(_selectedChoice != null ? Array.IndexOf(_choices, _selectedChoice) : -1);
+		}
+
+		private IEnumerator Countdown(float countdownDuration)
+		{
+			float timeLeft = countdownDuration;
+
+			while (timeLeft > 0)
+			{
+				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
+				_countdownText.text = string.Format(_config.CountdownText, (int)timeLeft);
+				yield return 0;
+			}
 		}
 
 		public void DisableConfirmButton()
 		{
 			_confirmButton.onClick.RemoveAllListeners();
 			_confirmButton.interactable = false;
+		}
+
+		protected override void OnFadeStarts(float targetOpacity)
+		{
+			if (targetOpacity >= 1)
+			{
+				return;
+			}
+
+			if (_countdownCoroutine == null)
+			{
+				return;
+			}
+
+			StopCoroutine(_countdownCoroutine);
+			_countdownCoroutine = null;
 		}
 	}
 }

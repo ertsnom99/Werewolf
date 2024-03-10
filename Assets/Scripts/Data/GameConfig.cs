@@ -70,9 +70,6 @@ namespace Werewolf.Data
 
 		[field: Header("Vote")]
 		[field: SerializeField]
-		public string VoteCountdownText { get; private set; }
-
-		[field: SerializeField]
 		public string LockedInButtonText { get; private set; }
 
 		[field: SerializeField]
@@ -85,6 +82,9 @@ namespace Werewolf.Data
 		public float NoVoteDuration { get; private set; }
 
 		[field: Header("UI")]
+		[field: SerializeField]
+		public string CountdownText { get; private set; }
+
 		[field: SerializeField]
 		public float UITransitionDuration { get; private set; }
 

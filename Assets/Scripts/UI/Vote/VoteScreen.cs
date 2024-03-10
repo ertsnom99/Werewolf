@@ -11,7 +11,7 @@ namespace Werewolf.UI
 	{
 		[Header("UI")]
 		[SerializeField]
-		private TMP_Text _timerText;
+		private TMP_Text _countdownText;
 
 		[SerializeField]
 		private RectTransform _lockedInDelay;
@@ -27,7 +27,7 @@ namespace Werewolf.UI
 
 		private GameConfig _config;
 
-		private IEnumerator _voteCountdownCoroutine;
+		private IEnumerator _countdownCoroutine;
 		private IEnumerator _lockedInDelayCountdownCoroutine;
 
 		private float _lockedInDelayDuration;
@@ -45,7 +45,7 @@ namespace Werewolf.UI
 			_lockedInDelayDuration = lockedInDelayDuration;
 		}
 
-		public void Initialize(bool displayWarning, float maxDuration)
+		public void Initialize(bool displayWarning, float countdownDuration)
 		{
 			_isLockedIn = false;
 
@@ -53,23 +53,23 @@ namespace Werewolf.UI
 			_warningText.SetActive(displayWarning);
 			UpdateButtonText();
 
-			if (_voteCountdownCoroutine != null)
+			if (_countdownCoroutine != null)
 			{
-				StopCoroutine(_voteCountdownCoroutine);
+				StopCoroutine(_countdownCoroutine);
 			}
 
-			_voteCountdownCoroutine = VoteCountdown(maxDuration);
-			StartCoroutine(_voteCountdownCoroutine);
+			_countdownCoroutine = Countdown(countdownDuration);
+			StartCoroutine(_countdownCoroutine);
 		}
 
-		private IEnumerator VoteCountdown(float maxDuration)
+		private IEnumerator Countdown(float countdownDuration)
 		{
-			float timeLeft = maxDuration;
+			float timeLeft = countdownDuration;
 
 			while (timeLeft > 0)
 			{
 				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
-				_timerText.text = string.Format(_config.VoteCountdownText, (int)timeLeft);
+				_countdownText.text = string.Format(_config.CountdownText, (int)timeLeft);
 				yield return 0;
 			}
 		}
@@ -84,17 +84,6 @@ namespace Werewolf.UI
 		private void UpdateButtonText()
 		{
 			_lockInText.text = _isLockedIn ? _config.LockedOutButtonText : _config.LockedInButtonText;
-		}
-
-		public void StopTimer()
-		{
-			if (_voteCountdownCoroutine == null)
-			{
-				return;
-			}
-
-			StopCoroutine(_voteCountdownCoroutine);
-			_voteCountdownCoroutine = null;
 		}
 
 		public void SetLockedInDelayActive(bool isActive)
@@ -140,5 +129,20 @@ namespace Werewolf.UI
 			_lockInButton.gameObject.SetActive(false);
 		}
 #endif
+		protected override void OnFadeStarts(float targetOpacity)
+		{
+			if (targetOpacity >= 1)
+			{
+				return;
+			}
+
+			if (_countdownCoroutine == null)
+			{
+				return;
+			}
+
+			StopCoroutine(_countdownCoroutine);
+			_countdownCoroutine = null;
+		}
 	}
 }
