@@ -70,7 +70,7 @@ namespace Werewolf
 				}
 			}
 
-			return _gameManager.AskClientToChooseReservedRole(this, _reservedOnlyWerewolfs, OnRoleSelected);
+			return _gameManager.AskClientToChooseReservedRole(this, _gameManager.Config.NightCallMaximumDuration, _reservedOnlyWerewolfs, OnRoleSelected);
 		}
 
 		private void OnRoleSelected(int choiceIndex)

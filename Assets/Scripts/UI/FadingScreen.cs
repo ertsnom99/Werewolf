@@ -42,9 +42,13 @@ namespace Werewolf.UI
 				return;
 			}
 
+			OnFadeStarts(targetOpacity);
+
 			_coroutine = TransitionUI(targetOpacity, transitionDuration);
 			StartCoroutine(_coroutine);
 		}
+
+		protected abstract void OnFadeStarts(float targetOpacity);
 
 		private IEnumerator TransitionUI(float targetOpacity, float transitionDuration)
 		{

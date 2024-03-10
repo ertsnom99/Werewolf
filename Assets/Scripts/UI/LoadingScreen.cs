@@ -22,5 +22,6 @@ namespace Werewolf.UI
 				_image.sprite = image;
 			}
 		}
+		protected override void OnFadeStarts(float targetOpacity) { }
 	}
 }

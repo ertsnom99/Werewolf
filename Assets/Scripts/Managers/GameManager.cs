@@ -157,6 +157,8 @@ namespace Werewolf
 
 			_voteManager.SetConfig(Config);
 			_voteManager.SetPlayers(Players);
+			_UIManager.TitleScreen.SetConfig(Config);
+			_UIManager.ChoiceScreen.SetConfig(Config);
 			_UIManager.VoteScreen.SetConfig(Config);
 		}
 
@@ -1127,7 +1129,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		}
 
 		// Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
-		public bool AskClientToChooseReservedRole(RoleBehavior ReservedRoleOwner, bool mustChooseOne, Action<int> callback)
+		public bool AskClientToChooseReservedRole(RoleBehavior ReservedRoleOwner, float maximumDuration, bool mustChooseOne, Action<int> callback)
 		{
 			if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
 			{
@@ -1143,7 +1145,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 
 			_chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, rolesContainer, mustChooseOne);
+			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, rolesContainer, mustChooseOne);
 
 			return true;
 		}
@@ -1161,7 +1163,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_ClientChooseReservedRole([RpcTarget] PlayerRef player, RolesContainer rolesContainer, bool mustChooseOne)
+		public void RPC_ClientChooseReservedRole([RpcTarget] PlayerRef player, float maximumDuration, RolesContainer rolesContainer, bool mustChooseOne)
 		{
 			List<Choice.ChoiceData> choices = new();
 
@@ -1176,9 +1178,9 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				choices.Add(new() { Image = roleData.Image, Value = roleGameplayTag });
 			}
 
-			_UIManager.ChoiceScreen.OnConfirmChoice += GiveReservedRoleChoice;
+			_UIManager.ChoiceScreen.ConfirmChoice += GiveReservedRoleChoice;
 
-			_UIManager.ChoiceScreen.Initialize(mustChooseOne ? Config.ChooseRoleObligatoryText : Config.ChooseRoleText, Config.ChoosedRoleText, Config.DidNotChoosedRoleText, choices.ToArray(), mustChooseOne);
+			_UIManager.ChoiceScreen.Initialize(maximumDuration, mustChooseOne ? Config.ChooseRoleObligatoryText : Config.ChooseRoleText, Config.ChoosedRoleText, Config.DidNotChoosedRoleText, choices.ToArray(), mustChooseOne);
 			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionDuration);
 		}
 
@@ -1213,13 +1215,13 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		private void RPC_ClientStopChoosingReservedRole([RpcTarget] PlayerRef player)
 		{
 			_UIManager.ChoiceScreen.DisableConfirmButton();
-			_UIManager.ChoiceScreen.OnConfirmChoice -= GiveReservedRoleChoice;
+			_UIManager.ChoiceScreen.ConfirmChoice -= GiveReservedRoleChoice;
 		}
 		#endregion
 		#endregion
 
 		#region Choose a Player
-		public bool AskClientToChoosePlayer(PlayerRef choosingPlayer, PlayerRef[] immunePlayers, string displayText, Action<PlayerRef> callback)
+		public bool AskClientToChoosePlayer(PlayerRef choosingPlayer, PlayerRef[] immunePlayers, float maximumDuration, string displayText, Action<PlayerRef> callback)
 		{
 			if (_choosePlayerCallbacks.ContainsKey(choosingPlayer))
 			{
@@ -1227,7 +1229,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 
 			_choosePlayerCallbacks.Add(choosingPlayer, callback);
-			RPC_ClientChoosePlayer(choosingPlayer, immunePlayers, displayText);
+			RPC_ClientChoosePlayer(choosingPlayer, immunePlayers, maximumDuration, displayText);
 
 			return true;
 		}
@@ -1264,7 +1266,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientChoosePlayer([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, string displayText)
+		private void RPC_ClientChoosePlayer([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, float maximumDuration, string displayText)
 		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
@@ -1278,7 +1280,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				playerCard.Value.OnCardClick += OnClientChooseCard;
 			}
 
-			_UIManager.TitleScreen.Initialize(null, displayText, true, Config.SkipTurnText);
+			_UIManager.TitleScreen.Initialize(null, displayText, maximumDuration, true, Config.SkipTurnText);
 			_UIManager.TitleScreen.OnConfirm += OnClientChooseNoCard;
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}

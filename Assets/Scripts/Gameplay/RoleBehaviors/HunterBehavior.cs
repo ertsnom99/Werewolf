@@ -11,6 +11,8 @@ namespace Werewolf
 		[SerializeField]
 		private float _selectedPlayerHighlightDuration = 3.0f;
 
+		private IEnumerator _startChoiceTimerCoroutine;
+
 		private GameManager _gameManager;
 
 		public override void Init()
@@ -26,17 +28,46 @@ namespace Werewolf
 
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer)
 		{
-			if (Player != deadPlayer || !_gameManager.AskClientToChoosePlayer(Player, new[] { Player }, "Choose a player to kill", OnPlayerSelected))
+			if (Player != deadPlayer || !_gameManager.AskClientToChoosePlayer(Player,
+																			new[] { Player },
+																			_gameManager.Config.NightCallMaximumDuration,
+																			"Choose a player to kill",
+																			OnPlayerSelected))
 			{
 				return;
 			}
 
 			_gameManager.WaitForPlayer(Player);
 			_gameManager.DisplayPlayerRoleIsPlaying(Player);
+
+			_startChoiceTimerCoroutine = StartChoiceTimer();
+			StartCoroutine(_startChoiceTimerCoroutine);
+		}
+
+		private IEnumerator StartChoiceTimer()
+		{
+			float elapsedTime = .0f;
+
+			while (elapsedTime < _gameManager.Config.NightCallMaximumDuration)
+			{
+				elapsedTime += Time.deltaTime;
+				yield return 0;
+			}
+
+			_startChoiceTimerCoroutine = null;
+
+			StartCoroutine(HideUIBeforeStopWaintingForPlayer());
 		}
 
 		private void OnPlayerSelected(PlayerRef selectedPlayer)
 		{
+			if (_startChoiceTimerCoroutine == null)
+			{
+				return;
+			}
+
+			StopCoroutine(_startChoiceTimerCoroutine);
+
 			if (selectedPlayer != PlayerRef.None)
 			{
 				_gameManager.AddMarkForDeath(selectedPlayer, "Shot", 1);
@@ -49,6 +80,16 @@ namespace Werewolf
 				StartCoroutine(WaitBeforeRemovingHighlight(selectedPlayer));
 				return;
 			}
+
+			StartCoroutine(HideUIBeforeStopWaintingForPlayer());
+		}
+		private IEnumerator HideUIBeforeStopWaintingForPlayer()
+		{
+			_gameManager.RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+			_gameManager.HideUI();
+#endif
+			yield return new WaitForSeconds(_gameManager.Config.UITransitionDuration);
 
 			_gameManager.StopWaintingForPlayer(Player);
 		}

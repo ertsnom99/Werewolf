@@ -29,7 +29,12 @@ namespace Werewolf
 				immunePlayers.Add(player.Key);
 			}
 
-			_choosingPlayer = _gameManager.AskClientToChoosePlayer(Player, immunePlayers.ToArray(), "Choose a player to see his role", OnPlayerSelected);
+			_choosingPlayer = _gameManager.AskClientToChoosePlayer(Player,
+																immunePlayers.ToArray(),
+																_gameManager.Config.NightCallMaximumDuration,
+																"Choose a player to see his role",
+																OnPlayerSelected);
+
 			return _choosingPlayer;
 		}
 
