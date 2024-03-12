@@ -82,6 +82,7 @@ namespace Werewolf.UI
 		public void SetFade(float opacity)
 		{
 			_canvasGroup.alpha = Mathf.Clamp01(opacity);
+			_canvasGroup.blocksRaycasts = opacity > .0f;
 		}
 	}
 }

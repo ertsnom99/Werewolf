@@ -18,8 +18,8 @@ namespace Werewolf
 		{
 			_gameManager = GameManager.Instance;
 
-			_gameManager.OnPreRoleDistribution += OnPreRoleDistribution;
-			_gameManager.OnPostRoleDistribution += OnPostRoleDistribution;
+			_gameManager.PreRoleDistribution += OnPreRoleDistribution;
+			_gameManager.PostRoleDistribution += OnPostRoleDistribution;
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }

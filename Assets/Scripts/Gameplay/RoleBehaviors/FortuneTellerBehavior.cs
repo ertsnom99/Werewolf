@@ -15,6 +15,8 @@ namespace Werewolf
 			_gameManager = GameManager.Instance;
 		}
 
+		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
+
 		public override bool OnRoleCall()
 		{
 			List<PlayerRef> immunePlayers = new() { Player };
@@ -67,7 +69,5 @@ namespace Werewolf
 
 			_gameManager.StopChoosingPlayer(Player);
 		}
-
-		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 	}
 }

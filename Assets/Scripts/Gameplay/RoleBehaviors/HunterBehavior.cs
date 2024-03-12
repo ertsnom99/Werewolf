@@ -21,10 +21,14 @@ namespace Werewolf
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 		}
 
+		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
+
 		public override bool OnRoleCall()
 		{
 			return false;
 		}
+
+		public override void OnRoleTimeOut() { }
 
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer)
 		{
@@ -104,9 +108,5 @@ namespace Werewolf
 #endif
 			_gameManager.StopWaintingForPlayer(Player);
 		}
-
-		public override void OnRoleTimeOut() { }
-
-		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 	}
 }
