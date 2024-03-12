@@ -20,7 +20,7 @@ namespace Werewolf.Network
 			{
 				case (int)SceneDefs.GAME:
 					_UIManager = UIManager.Instance;
-					_UIManager.LoadingScreen.SetFade(1.0f);
+					_UIManager.SetFade(_UIManager.LoadingScreen, 1.0f);
 
 					if (!GameManager.HasSpawned)
 					{

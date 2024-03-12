@@ -33,7 +33,7 @@ namespace Werewolf.UI
 		private float _lockedInDelayDuration;
 		private bool _isLockedIn;
 
-		public event Action<bool> OnVoteLockChanged;
+		public event Action<bool> VoteLockChanged;
 
 		public void SetConfig(GameConfig config)
 		{
@@ -78,7 +78,7 @@ namespace Werewolf.UI
 		{
 			_isLockedIn = !_isLockedIn;
 			UpdateButtonText();
-			OnVoteLockChanged?.Invoke(_isLockedIn);
+			VoteLockChanged?.Invoke(_isLockedIn);
 		}
 
 		private void UpdateButtonText()

@@ -51,5 +51,11 @@ namespace Werewolf
 
 			_currentFadingScreen.FadeOut(transitionDuration);
 		}
+
+		public void SetFade(FadingScreen fadingScreen, float fade)
+		{
+			_currentFadingScreen = fadingScreen;
+			fadingScreen.SetFade(Mathf.Clamp01(fade));
+		}
 	}
 }

@@ -70,6 +70,8 @@ namespace Werewolf
 		private bool _waitingForDeathRevealEnded;
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
+
+		private Dictionary<PlayerRef, Action> _promptPlayerCallbacks = new();
 		#endregion
 
 		#region Networked variables
@@ -121,11 +123,12 @@ namespace Werewolf
 		public static event Action ManagerSpawned;
 
 		// Server events
-		public event Action OnPreRoleDistribution;
-		public event Action OnPostRoleDistribution;
+		public event Action PreRoleDistribution;
+		public event Action PostRoleDistribution;
 		public event Action OnPreStartGame;
 		public event Action<PlayerRef, string> OnMarkForDeathAdded;
-		public event Action<PlayerRef> OnMarkForDeathRemoved;
+		public event Action<float> WaitBeforeRevealStarted;
+		public event Action WaitBeforeRevealEnded;
 		public event Action<PlayerRef> PlayerDeathRevealEnded;
 
 		// Client events
@@ -175,9 +178,9 @@ namespace Werewolf
 
 			SelectRolesToDistribute(rolesSetup);
 
-			OnPreRoleDistribution?.Invoke();
+			PreRoleDistribution?.Invoke();
 			DistributeRoles();
-			OnPostRoleDistribution?.Invoke();
+			PostRoleDistribution?.Invoke();
 
 			DetermineNightCalls();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1261,7 +1264,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				playerCard.Value.OnCardClick -= OnClientChooseCard;
 			}
 
-			_UIManager.TitleScreen.OnConfirm -= OnClientChooseNoCard;
+			_UIManager.TitleScreen.Confirm -= OnClientChooseNoCard;
 		}
 
 		#region RPC Calls
@@ -1281,7 +1284,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 
 			_UIManager.TitleScreen.Initialize(null, displayText, maximumDuration, true, Config.SkipTurnText);
-			_UIManager.TitleScreen.OnConfirm += OnClientChooseNoCard;
+			_UIManager.TitleScreen.Confirm += OnClientChooseNoCard;
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
 
@@ -1333,7 +1336,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				if (_marksForDeath[i].Player == player)
 				{
 					_marksForDeath.RemoveAt(i);
-					OnMarkForDeathRemoved?.Invoke(player);
 					return;
 				}
 			}
@@ -1393,7 +1395,11 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 			if (waitBeforeReveal)
 			{
+				WaitBeforeRevealStarted?.Invoke(Config.WaitRevealDuration);
+
 				yield return new WaitForSeconds(Config.WaitRevealDuration);
+
+				WaitBeforeRevealEnded?.Invoke();
 
 				foreach (PlayerRef player in revealTo)
 				{
@@ -1581,6 +1587,67 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		private void RPC_RevealPlayerRoleStepFinished(RpcInfo info = default)
 		{
 			StopWaintingForPlayer(info.Source);
+		}
+		#endregion
+		#endregion
+
+		#region Prompt Player
+		public bool PromptPlayer(PlayerRef promptedPlayer, string prompt, float duration, string confirmButtonText , Action callback)
+		{
+			if (_promptPlayerCallbacks.ContainsKey(promptedPlayer))
+			{
+				return false;
+			}
+
+			_promptPlayerCallbacks.Add(promptedPlayer, callback);
+			RPC_PromptPlayer(promptedPlayer, prompt, duration, confirmButtonText);
+
+			return true;
+		}
+
+		private void OnPromptAccepted()
+		{
+			StopPromptingPlayer();
+			RPC_AcceptPrompt();
+		}
+
+		public void StopPromptingPlayer(PlayerRef player)
+		{
+			_promptPlayerCallbacks.Remove(player);
+			RPC_StopPromptingPlayer(player);
+		}
+
+		private void StopPromptingPlayer()
+		{
+			_UIManager.TitleScreen.Confirm -= OnPromptAccepted;
+			_UIManager.SetFade(_UIManager.TitleScreen, .0f);
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, string prompt, float duration, string confirmButtonText)
+		{
+			_UIManager.TitleScreen.Initialize(null, prompt, duration, true, confirmButtonText);
+			_UIManager.TitleScreen.Confirm += OnPromptAccepted;
+			_UIManager.SetFade(_UIManager.TitleScreen, 1.0f);
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_AcceptPrompt(RpcInfo info = default)
+		{
+			if (!_promptPlayerCallbacks.ContainsKey(info.Source))
+			{
+				return;
+			}
+
+			_promptPlayerCallbacks[info.Source]();
+			_promptPlayerCallbacks.Remove(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_StopPromptingPlayer([RpcTarget] PlayerRef player)
+		{
+			StopPromptingPlayer();
 		}
 		#endregion
 		#endregion

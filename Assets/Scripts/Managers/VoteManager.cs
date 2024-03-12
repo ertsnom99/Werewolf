@@ -396,7 +396,7 @@ namespace Werewolf
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
 			_UIManager.VoteScreen.Initialize(displayWarning, maxDuration);
-			_UIManager.VoteScreen.OnVoteLockChanged += OnVoteLockChanged;
+			_UIManager.VoteScreen.VoteLockChanged += OnVoteLockChanged;
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -451,7 +451,7 @@ namespace Werewolf
 			}
 
 			_UIManager.VoteScreen.SetLockedInDelayActive(false);
-			_UIManager.VoteScreen.OnVoteLockChanged -= OnVoteLockChanged;
+			_UIManager.VoteScreen.VoteLockChanged -= OnVoteLockChanged;
 			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionDuration);
 		}
 		#endregion

@@ -94,7 +94,7 @@ MonoBehaviour:
   <DeathRevealDeathText>k__BackingField: Some people died...
   <DeathRevealTitleHoldDuration>k__BackingField: 3
   <PlayerDiedText>k__BackingField: You died!
-  <DelayBeforeRevealingDeadPlayer>k__BackingField: 1
+  <DelayBeforeRevealingDeadPlayer>k__BackingField: 3
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote
   <AllLockedInDelayToEndVote>k__BackingField: 3
