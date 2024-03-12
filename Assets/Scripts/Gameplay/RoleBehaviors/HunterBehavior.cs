@@ -59,6 +59,7 @@ namespace Werewolf
 			}
 
 			_startChoiceTimerCoroutine = null;
+			_gameManager.StopChoosingPlayer(Player);
 
 			StartCoroutine(HideUIBeforeStopWaintingForPlayer());
 		}
