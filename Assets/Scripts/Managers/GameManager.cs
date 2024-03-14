@@ -67,7 +67,8 @@ namespace Werewolf
 			public List<string> Marks;
 		}
 
-		private bool _waitingForDeathRevealEnded;
+		private bool _isPlayerDeathRevealCompleted;
+		private IEnumerator _revealPlayerDeathCoroutine;
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
 
@@ -127,8 +128,8 @@ namespace Werewolf
 		public event Action PostRoleDistribution;
 		public event Action OnPreStartGame;
 		public event Action<PlayerRef, string> OnMarkForDeathAdded;
-		public event Action<float> WaitBeforeRevealStarted;
-		public event Action WaitBeforeRevealEnded;
+		public event Action<PlayerRef, float> WaitBeforeRevealStarted;
+		public event Action<PlayerRef> WaitBeforeRevealEnded;
 		public event Action<PlayerRef> PlayerDeathRevealEnded;
 
 		// Client events
@@ -745,10 +746,12 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 						revealTo.Add(playerRole.Key);
 					}
 
-					_waitingForDeathRevealEnded = true;
-					StartCoroutine(RevealPlayerRoleStoppable(deadPlayer, revealTo.ToArray(), true, false, StopWaitingForDeathRevealEnded));
+					_isPlayerDeathRevealCompleted = false;
 
-					while (_waitingForDeathRevealEnded)
+					_revealPlayerDeathCoroutine = RevealPlayerDeath(deadPlayer, revealTo.ToArray(), true, false, OnRevealPlayerDeathEnded);
+					StartCoroutine(_revealPlayerDeathCoroutine);
+
+					while (!_isPlayerDeathRevealCompleted)
 					{
 						yield return 0;
 					}
@@ -772,9 +775,80 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
-		public void StopWaitingForDeathRevealEnded()
+		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, bool returnFaceDown, Action RevealPlayerCompleted)
 		{
-			_waitingForDeathRevealEnded = false;
+			foreach (PlayerRef player in revealTo)
+			{
+				_playersWaitingFor.Add(player);
+				RPC_MoveCardToCamera(player, playerRevealed, !waitBeforeReveal, !waitBeforeReveal ? Players[playerRevealed].Role.GameplayTag.CompactTagId : -1);
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			StartCoroutine(MoveCardToCamera(_playerCards[playerRevealed].transform, !waitBeforeReveal, Config.MoveToCameraDuration));
+#endif
+			while (_playersWaitingFor.Count > 0)
+			{
+				yield return 0;
+			}
+
+			if (waitBeforeReveal)
+			{
+				WaitBeforeRevealStarted?.Invoke(playerRevealed, Config.WaitRevealDuration);
+
+				yield return new WaitForSeconds(Config.WaitRevealDuration);
+
+				WaitBeforeRevealEnded?.Invoke(playerRevealed);
+
+				foreach (PlayerRef player in revealTo)
+				{
+					_playersWaitingFor.Add(player);
+					RPC_FlipFaceUp(player, playerRevealed, Players[playerRevealed].Role.GameplayTag.CompactTagId);
+				}
+#if UNITY_SERVER && UNITY_EDITOR
+				StartCoroutine(FlipFaceUp(_playerCards[playerRevealed].transform, Config.RevealFlipDuration));
+#endif
+				while (_playersWaitingFor.Count > 0)
+				{
+					yield return 0;
+				}
+			}
+
+			yield return new WaitForSeconds(Config.HoldRevealDuration);
+
+			foreach (PlayerRef player in revealTo)
+			{
+				_playersWaitingFor.Add(player);
+				RPC_PutCardBackDown(player, playerRevealed, returnFaceDown);
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			StartCoroutine(PutCardDown(_playerCards[playerRevealed], returnFaceDown, Config.MoveToCameraDuration));
+#endif
+			while (_playersWaitingFor.Count > 0)
+			{
+				yield return 0;
+			}
+
+			RevealPlayerCompleted?.Invoke();
+		}
+
+		private void OnRevealPlayerDeathEnded()
+		{
+			StopPlayerDeathReveal();
+			_isPlayerDeathRevealCompleted = true;
+		}
+
+		public void StopPlayerDeathReveal()
+		{
+			if (_revealPlayerDeathCoroutine != null)
+			{
+				StopCoroutine(_revealPlayerDeathCoroutine);
+			}
+
+			_revealPlayerDeathCoroutine = null;
+		}
+
+		public void SetPlayerDeathRevealCompleted()
+		{
+			_isPlayerDeathRevealCompleted = true;
 		}
 
 		private void SetPlayerDead(PlayerRef deadPlayer)
@@ -794,6 +868,50 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			_playerCards[deadPlayer].DisplayDead();
 #endif
 		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_MoveCardToCamera([RpcTarget] PlayerRef player, PlayerRef playerRevealed, bool showRevealed, int gameplayDataID = -1)
+		{
+			Card card = _playerCards[playerRevealed];
+
+			if (showRevealed)
+			{
+				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID);
+				card.SetRole(roleData);
+			}
+
+			StartCoroutine(MoveCardToCamera(card.transform, showRevealed, Config.MoveToCameraDuration, () => { RPC_RevealPlayerDeathStepFinished(); }));
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_FlipFaceUp([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int gameplayDataID)
+		{
+			Card card = _playerCards[playerRevealed];
+			card.SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
+
+			StartCoroutine(FlipFaceUp(card.transform, Config.RevealFlipDuration, () => { RPC_RevealPlayerDeathStepFinished(); }));
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_PutCardBackDown([RpcTarget] PlayerRef player, PlayerRef playerRevealed, bool returnFaceDown)
+		{
+			Card card = _playerCards[playerRevealed];
+
+			if (returnFaceDown)
+			{
+				card.SetRole(null);
+			}
+
+			StartCoroutine(PutCardDown(card, returnFaceDown, Config.MoveToCameraDuration, () => { RPC_RevealPlayerDeathStepFinished(); }));
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		private void RPC_RevealPlayerDeathStepFinished(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+		}
+		#endregion
 		#endregion
 		public void WaitForPlayer(PlayerRef player)
 		{
@@ -1343,7 +1461,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		#endregion
 
 		#region Role Reveal
-
 		public bool RevealPlayerRole(PlayerRef playerRevealed, PlayerRef revealTo, bool waitBeforeReveal, bool returnFacedown, Action<PlayerRef> callback)
 		{
 			if (_revealPlayerRoleCallbacks.ContainsKey(revealTo))
@@ -1357,7 +1474,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			return true;
 		}
 
-		private IEnumerator AnimatePlayerRoleReveal(Card card, bool waitBeforeReveal, bool returnFacedown)
+		private IEnumerator RevealPlayerRole(Card card, bool waitBeforeReveal, bool returnFacedown)
 		{
 			yield return MoveCardToCamera(card.transform, !waitBeforeReveal, Config.MoveToCameraDuration);
 
@@ -1376,61 +1493,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 
 			RPC_RevealPlayerRoleFinished();
-		}
-
-		private IEnumerator RevealPlayerRoleStoppable(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, bool returnFaceDown, Action RevealPlayerCompleted)
-		{
-			foreach (PlayerRef player in revealTo)
-			{
-				_playersWaitingFor.Add(player);
-				RPC_MoveCardToCamera(player, playerRevealed, !waitBeforeReveal, !waitBeforeReveal ? Players[playerRevealed].Role.GameplayTag.CompactTagId : -1);
-			}
-#if UNITY_SERVER && UNITY_EDITOR
-			StartCoroutine(MoveCardToCamera(_playerCards[playerRevealed].transform, !waitBeforeReveal, Config.MoveToCameraDuration));
-#endif
-			while (_playersWaitingFor.Count > 0)
-			{
-				yield return 0;
-			}
-
-			if (waitBeforeReveal)
-			{
-				WaitBeforeRevealStarted?.Invoke(Config.WaitRevealDuration);
-
-				yield return new WaitForSeconds(Config.WaitRevealDuration);
-
-				WaitBeforeRevealEnded?.Invoke();
-
-				foreach (PlayerRef player in revealTo)
-				{
-					_playersWaitingFor.Add(player);
-					RPC_FlipFaceUp(player, playerRevealed, Players[playerRevealed].Role.GameplayTag.CompactTagId);
-				}
-#if UNITY_SERVER && UNITY_EDITOR
-				StartCoroutine(FlipFaceUp(_playerCards[playerRevealed].transform, Config.RevealFlipDuration));
-#endif
-				while (_playersWaitingFor.Count > 0)
-				{
-					yield return 0;
-				}
-			}
-
-			yield return new WaitForSeconds(Config.HoldRevealDuration);
-
-			foreach (PlayerRef player in revealTo)
-			{
-				_playersWaitingFor.Add(player);
-				RPC_PutCardBackDown(player, playerRevealed, returnFaceDown);
-			}
-#if UNITY_SERVER && UNITY_EDITOR
-			StartCoroutine(PutCardDown(_playerCards[playerRevealed], returnFaceDown, Config.MoveToCameraDuration));
-#endif
-			while (_playersWaitingFor.Count > 0)
-			{
-				yield return 0;
-			}
-
-			RevealPlayerCompleted?.Invoke();
 		}
 
 		private IEnumerator MoveCardToCamera(Transform card, bool showRevealed, float duration, Action MovementCompleted = null)
@@ -1532,7 +1594,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			Card card = _playerCards[playerRevealed];
 			card.SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
 
-			StartCoroutine(AnimatePlayerRoleReveal(card, waitBeforeReveal, returnFacedown));
+			StartCoroutine(RevealPlayerRole(card, waitBeforeReveal, returnFacedown));
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -1545,48 +1607,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 			_revealPlayerRoleCallbacks[info.Source](info.Source);
 			_revealPlayerRoleCallbacks.Remove(info.Source);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_MoveCardToCamera([RpcTarget] PlayerRef player, PlayerRef playerRevealed, bool showRevealed, int gameplayDataID = -1)
-		{
-			Card card = _playerCards[playerRevealed];
-
-			if (showRevealed)
-			{
-				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID);
-				card.SetRole(roleData);
-			}
-
-			StartCoroutine(MoveCardToCamera(card.transform, showRevealed, Config.MoveToCameraDuration, () => { RPC_RevealPlayerRoleStepFinished(); }));
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_FlipFaceUp([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int gameplayDataID)
-		{
-			Card card = _playerCards[playerRevealed];
-			card.SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
-
-			StartCoroutine(FlipFaceUp(card.transform, Config.RevealFlipDuration, () => { RPC_RevealPlayerRoleStepFinished(); }));
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_PutCardBackDown([RpcTarget] PlayerRef player, PlayerRef playerRevealed, bool returnFaceDown)
-		{
-			Card card = _playerCards[playerRevealed];
-
-			if (returnFaceDown)
-			{
-				card.SetRole(null);
-			}
-
-			StartCoroutine(PutCardDown(card, returnFaceDown, Config.MoveToCameraDuration, () => { RPC_RevealPlayerRoleStepFinished(); }));
-		}
-
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		private void RPC_RevealPlayerRoleStepFinished(RpcInfo info = default)
-		{
-			StopWaintingForPlayer(info.Source);
 		}
 		#endregion
 		#endregion
