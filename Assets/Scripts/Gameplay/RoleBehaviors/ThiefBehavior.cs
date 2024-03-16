@@ -122,5 +122,11 @@ namespace Werewolf
 			int randomIndex = Random.Range(0, _reservedRoles.Roles.Length);
 			_gameManager.ChangeRole(Player, _reservedRoles.Roles[randomIndex], _reservedRoles.Behaviors[randomIndex]);
 		}
+
+		private void OnDestroy()
+		{
+			_gameManager.PreRoleDistribution -= OnPreRoleDistribution;
+			_gameManager.PostRoleDistribution -= OnPostRoleDistribution;
+		}
 	}
 }

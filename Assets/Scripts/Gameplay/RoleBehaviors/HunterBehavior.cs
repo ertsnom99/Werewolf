@@ -109,5 +109,10 @@ namespace Werewolf
 #endif
 			_gameManager.StopWaintingForPlayer(Player);
 		}
+
+		private void OnDestroy()
+		{
+			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
+		}
 	}
 }
