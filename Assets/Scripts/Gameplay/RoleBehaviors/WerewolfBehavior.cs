@@ -36,6 +36,8 @@ namespace Werewolf
 
 		private void OnVoteEnds(Dictionary<PlayerRef, VoteManager.Vote> votes)
 		{
+			_voteManager.VoteCompletedCallback -= OnVoteEnds;
+
 			_gameManager.StopWaintingForPlayer(Player);
 
 			if (!_preparedVote || votes.Count <= 0)

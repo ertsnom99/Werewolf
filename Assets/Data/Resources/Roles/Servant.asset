@@ -26,4 +26,5 @@ MonoBehaviour:
   <GroupIndexes>k__BackingField: 01000000
   <NightPriorities>k__BackingField: []
   <DayPriorities>k__BackingField: []
-  <Behavior>k__BackingField: {fileID: 0}
+  <Behavior>k__BackingField: {fileID: 4830877496367092188, guid: 2344d20f29d66b24f8f6523b1cadfe59,
+    type: 3}
