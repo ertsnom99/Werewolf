@@ -284,6 +284,11 @@ namespace Werewolf
 		{
 			foreach (KeyValuePair<PlayerRef, Card> card in _playerCards)
 			{
+				if (!card.Value)
+				{
+					continue;
+				}
+
 				card.Value.ClearVotes();
 			}
 
@@ -339,6 +344,11 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
+				if (!playerCard.Value)
+				{
+					continue;
+				}
+
 				playerCard.Value.SetVotingStatusVisible(false);
 				playerCard.Value.ClearVotes();
 			}
@@ -382,6 +392,11 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
+				if (!playerCard.Value)
+				{
+					continue;
+				}
+
 				bool isImmune = Array.IndexOf(immunePlayers, playerCard.Key) >= 0;
 
 				if (isImmune)
@@ -443,6 +458,11 @@ namespace Werewolf
 		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
+				if (!playerCard.Value)
+				{
+					continue;
+				}
+
 				playerCard.Value.SetVotingStatusVisible(false);
 				playerCard.Value.ResetSelectionMode();
 				playerCard.Value.ClearVotes();
