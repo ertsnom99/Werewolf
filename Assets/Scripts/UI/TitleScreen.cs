@@ -38,7 +38,9 @@ namespace Werewolf.UI
 
 		public void Initialize(Sprite image, string title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
 		{
+			_image.gameObject.SetActive(image);
 			_image.sprite = image;
+
 			_text.text = title;
 
 			_confirmButton.gameObject.SetActive(showConfirmButton);

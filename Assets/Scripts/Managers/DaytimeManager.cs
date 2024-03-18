@@ -98,7 +98,7 @@ namespace Werewolf
 
 		private IEnumerator TransitionTitle(string text)
 		{
-			_UIManager.TitleScreen.Initialize(null, text);
+			_UIManager.TitleScreen.Initialize(null, text);// TODO: Give real image
 
 			yield return new WaitForSeconds(_config.TextFadeInDelay);
 
