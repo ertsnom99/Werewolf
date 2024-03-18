@@ -71,6 +71,9 @@ namespace Werewolf
 		private IEnumerator _revealPlayerDeathCoroutine;
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
+		private Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new ();
+		private Dictionary<PlayerRef, Action> _flipFaceUpCallbacks = new ();
+		private Dictionary<PlayerRef, Action> _putCardBackDownCallbacks = new();
 
 		private Dictionary<PlayerRef, Action> _promptPlayerCallbacks = new();
 		#endregion
@@ -780,7 +783,11 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			foreach (PlayerRef player in revealTo)
 			{
 				_playersWaitingFor.Add(player);
-				RPC_MoveCardToCamera(player, playerRevealed, !waitBeforeReveal, !waitBeforeReveal ? Players[playerRevealed].Role.GameplayTag.CompactTagId : -1);
+				MoveCardToCamera(player,
+								playerRevealed,
+								!waitBeforeReveal,
+								!waitBeforeReveal ? Players[playerRevealed].Role.GameplayTag.CompactTagId : -1,
+								() => StopWaintingForPlayer(player));
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			MoveCardToCamera(playerRevealed, waitBeforeReveal);
@@ -801,7 +808,10 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				foreach (PlayerRef player in revealTo)
 				{
 					_playersWaitingFor.Add(player);
-					RPC_FlipFaceUp(player, playerRevealed, Players[playerRevealed].Role.GameplayTag.CompactTagId);
+					FlipFaceUp(player,
+							playerRevealed,
+							Players[playerRevealed].Role.GameplayTag.CompactTagId,
+							() => StopWaintingForPlayer(player));
 				}
 #if UNITY_SERVER && UNITY_EDITOR
 				FlipFaceUp(playerRevealed);
@@ -817,7 +827,10 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			foreach (PlayerRef player in revealTo)
 			{
 				_playersWaitingFor.Add(player);
-				RPC_PutCardBackDown(player, playerRevealed, returnFaceDown);
+				PutCardDown(player,
+							playerRevealed,
+							returnFaceDown,
+							() => StopWaintingForPlayer(player));
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			PutCardDown(playerRevealed, returnFaceDown);
@@ -873,47 +886,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			_playerCards[deadPlayer].DisplayDead();
 #endif
 		}
-
-		#region RPC Calls
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_MoveCardToCamera([RpcTarget] PlayerRef player, PlayerRef cardPlayer, bool showRevealed, int gameplayDataID = -1)
-		{
-			if (showRevealed)
-			{
-				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID);
-				_playerCards[cardPlayer].SetRole(roleData);
-			}
-
-			MoveCardToCamera(cardPlayer, showRevealed, () => { RPC_RevealPlayerDeathStepFinished(); });
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_FlipFaceUp([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int gameplayDataID)
-		{
-			_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
-			FlipFaceUp(cardPlayer, () => { RPC_RevealPlayerDeathStepFinished(); });
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_PutCardBackDown([RpcTarget] PlayerRef player, PlayerRef cardPlayer, bool returnFaceDown)
-		{
-			PutCardDown(cardPlayer, returnFaceDown, () =>
-			{
-				if (returnFaceDown)
-				{
-					_playerCards[cardPlayer].SetRole(null);
-				}
-
-				RPC_RevealPlayerDeathStepFinished();
-			});
-		}
-
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		private void RPC_RevealPlayerDeathStepFinished(RpcInfo info = default)
-		{
-			StopWaintingForPlayer(info.Source);
-		}
-		#endregion
 		#endregion
 
 		public void WaitForPlayer(PlayerRef player)
@@ -1591,6 +1563,19 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			MovementCompleted?.Invoke();
 		}
 
+		private bool MoveCardToCamera(PlayerRef movedFor, PlayerRef cardPlayer, bool showRevealed, int gameplayDataID, Action movementCompleted)
+		{
+			if (_moveCardToCameraCallbacks.ContainsKey(movedFor))
+			{
+				return false;
+			}
+
+			_moveCardToCameraCallbacks.Add(movedFor, movementCompleted);
+			RPC_MoveCardToCamera(movedFor, cardPlayer, showRevealed, gameplayDataID);
+
+			return true;
+		}
+
 		public void FlipFaceUp(PlayerRef cardPlayer, Action FlipCompleted = null)
 		{
 			StartCoroutine(FlipFaceUp(_playerCards[cardPlayer].transform, Config.RevealFlipDuration, FlipCompleted));
@@ -1617,6 +1602,19 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 
 			FlipCompleted?.Invoke();
+		}
+
+		private bool FlipFaceUp(PlayerRef flipFor, PlayerRef cardPlayer, int gameplayDataID, Action flipCompleted)
+		{
+			if (_flipFaceUpCallbacks.ContainsKey(flipFor))
+			{
+				return false;
+			}
+
+			_flipFaceUpCallbacks.Add(flipFor, flipCompleted);
+			RPC_FlipFaceUp(flipFor, cardPlayer, gameplayDataID);
+
+			return true;
 		}
 
 		public void PutCardDown(PlayerRef cardPlayer, bool returnFaceDown, Action PutDownCompleted = null)
@@ -1662,6 +1660,19 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			PutDownCompleted?.Invoke();
 		}
 
+		private bool PutCardDown(PlayerRef putFor, PlayerRef cardPlayer, bool returnFaceDown, Action putDownCompleted)
+		{
+			if (_putCardBackDownCallbacks.ContainsKey(putFor))
+			{
+				return false;
+			}
+
+			_putCardBackDownCallbacks.Add(putFor, putDownCompleted);
+			RPC_PutCardBackDown(putFor, cardPlayer, returnFaceDown);
+
+			return true;
+		}
+
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		private void RPC_RevealPlayerRole([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int gameplayDataID, bool waitBeforeReveal, bool returnFaceDown)
@@ -1682,6 +1693,75 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 			_revealPlayerRoleCallbacks[info.Source](info.Source);
 			_revealPlayerRoleCallbacks.Remove(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_MoveCardToCamera([RpcTarget] PlayerRef player, PlayerRef cardPlayer, bool showRevealed, int gameplayDataID = -1)
+		{
+			if (showRevealed)
+			{
+				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID);
+				_playerCards[cardPlayer].SetRole(roleData);
+			}
+
+			MoveCardToCamera(cardPlayer, showRevealed, () => RPC_MoveCardToCameraFinished());
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		private void RPC_MoveCardToCameraFinished(RpcInfo info = default)
+		{
+			if (!_moveCardToCameraCallbacks.ContainsKey(info.Source))
+			{
+				return;
+			}
+
+			_moveCardToCameraCallbacks[info.Source]();
+			_moveCardToCameraCallbacks.Remove(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_FlipFaceUp([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int gameplayDataID)
+		{
+			_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
+			FlipFaceUp(cardPlayer, () => RPC_FlipFaceUpFinished());
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		private void RPC_FlipFaceUpFinished(RpcInfo info = default)
+		{
+			if (!_flipFaceUpCallbacks.ContainsKey(info.Source))
+			{
+				return;
+			}
+
+			_flipFaceUpCallbacks[info.Source]();
+			_flipFaceUpCallbacks.Remove(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_PutCardBackDown([RpcTarget] PlayerRef player, PlayerRef cardPlayer, bool returnFaceDown)
+		{
+			PutCardDown(cardPlayer, returnFaceDown, () =>
+			{
+				if (returnFaceDown)
+				{
+					_playerCards[cardPlayer].SetRole(null);
+				}
+
+				RPC_PutCardBackDownFinished();
+			});
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		private void RPC_PutCardBackDownFinished(RpcInfo info = default)
+		{
+			if (!_putCardBackDownCallbacks.ContainsKey(info.Source))
+			{
+				return;
+			}
+
+			_putCardBackDownCallbacks[info.Source]();
+			_putCardBackDownCallbacks.Remove(info.Source);
 		}
 		#endregion
 		#endregion
