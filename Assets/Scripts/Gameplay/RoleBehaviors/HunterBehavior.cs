@@ -42,8 +42,21 @@ namespace Werewolf
 			}
 
 			_gameManager.WaitForPlayer(Player);
-			_gameManager.DisplayPlayerRoleIsPlaying(Player);
 
+			foreach (KeyValuePair<PlayerRef, PlayerData> player in _gameManager.Players)
+			{
+				if (player.Key == Player)
+				{
+					continue;
+				}
+
+				_gameManager.RPC_MoveCardToCamera(player.Key, Player, true, _gameManager.Players[Player].Role.GameplayTag.CompactTagId);
+				_gameManager.RPC_DisplayTitle(player.Key, "The hunter is choosing who to kill!");
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			_gameManager.MoveCardToCamera(Player, true);
+			_gameManager.DisplayTitle("The hunter is choosing who to kill!");
+#endif
 			_startChoiceTimerCoroutine = StartChoiceTimer();
 			StartCoroutine(_startChoiceTimerCoroutine);
 		}
@@ -73,6 +86,18 @@ namespace Werewolf
 
 			StopCoroutine(_startChoiceTimerCoroutine);
 
+			foreach (KeyValuePair<PlayerRef, PlayerData> player in _gameManager.Players)
+			{
+				if (player.Key == Player)
+				{
+					continue;
+				}
+
+				_gameManager.RPC_PutCardBackDown(player.Key, Player, false);
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			_gameManager.PutCardBackDown(Player, false);
+#endif
 			if (selectedPlayer != PlayerRef.None)
 			{
 				_gameManager.AddMarkForDeath(selectedPlayer, "Shot", 1);

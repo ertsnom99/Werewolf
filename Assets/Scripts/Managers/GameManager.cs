@@ -827,13 +827,13 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			foreach (PlayerRef player in revealTo)
 			{
 				_playersWaitingFor.Add(player);
-				PutCardDown(player,
-							playerRevealed,
-							returnFaceDown,
-							() => StopWaintingForPlayer(player));
+				PutCardBackDown(player,
+								playerRevealed,
+								returnFaceDown,
+								() => StopWaintingForPlayer(player));
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			PutCardDown(playerRevealed, returnFaceDown);
+			PutCardBackDown(playerRevealed, returnFaceDown);
 #endif
 			while (_playersWaitingFor.Count > 0)
 			{
@@ -1433,7 +1433,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				playerCard.Value.OnCardClick += OnClientChooseCard;
 			}
 
-			_UIManager.TitleScreen.Initialize(null, displayText, maximumDuration, true, Config.SkipTurnText);
+			_UIManager.TitleScreen.Initialize(null, displayText, maximumDuration, true, Config.SkipTurnText);// TODO: Give real image
 			_UIManager.TitleScreen.Confirm += OnClientChooseNoCard;
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
@@ -1517,7 +1517,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 
 			yield return new WaitForSeconds(Config.HoldRevealDuration);
-			yield return PutCardDown(card, returnFaceDown, Config.MoveToCameraDuration);
+			yield return PutCardBackDown(card, returnFaceDown, Config.MoveToCameraDuration);
 
 			RPC_RevealPlayerRoleFinished();
 		}
@@ -1617,12 +1617,12 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			return true;
 		}
 
-		public void PutCardDown(PlayerRef cardPlayer, bool returnFaceDown, Action PutDownCompleted = null)
+		public void PutCardBackDown(PlayerRef cardPlayer, bool returnFaceDown, Action PutDownCompleted = null)
 		{
-			StartCoroutine(PutCardDown(_playerCards[cardPlayer], returnFaceDown, Config.MoveToCameraDuration, PutDownCompleted));
+			StartCoroutine(PutCardBackDown(_playerCards[cardPlayer], returnFaceDown, Config.MoveToCameraDuration, PutDownCompleted));
 		}
 
-		private IEnumerator PutCardDown(Card card, bool returnFaceDown, float duration, Action PutDownCompleted = null)
+		private IEnumerator PutCardBackDown(Card card, bool returnFaceDown, float duration, Action PutDownCompleted = null)
 		{
 			float elapsedTime = .0f;
 
@@ -1660,7 +1660,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			PutDownCompleted?.Invoke();
 		}
 
-		private bool PutCardDown(PlayerRef putFor, PlayerRef cardPlayer, bool returnFaceDown, Action putDownCompleted)
+		private bool PutCardBackDown(PlayerRef putFor, PlayerRef cardPlayer, bool returnFaceDown, Action putDownCompleted)
 		{
 			if (_putCardBackDownCallbacks.ContainsKey(putFor))
 			{
@@ -1741,7 +1741,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_PutCardBackDown([RpcTarget] PlayerRef player, PlayerRef cardPlayer, bool returnFaceDown)
 		{
-			PutCardDown(cardPlayer, returnFaceDown, () =>
+			PutCardBackDown(cardPlayer, returnFaceDown, () =>
 			{
 				if (returnFaceDown)
 				{
@@ -1802,7 +1802,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, string prompt, float duration, string confirmButtonText)
 		{
-			_UIManager.TitleScreen.Initialize(null, prompt, duration, true, confirmButtonText);
+			_UIManager.TitleScreen.Initialize(null, prompt, duration, true, confirmButtonText);// TODO: Give real image
 			_UIManager.TitleScreen.Confirm += OnPromptAccepted;
 			_UIManager.SetFade(_UIManager.TitleScreen, 1.0f);
 		}
@@ -1833,46 +1833,25 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
 			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
 
-			_UIManager.TitleScreen.Initialize(roleData.Image, string.Format(text, roleData.Name.ToLower()));
+			_UIManager.TitleScreen.Initialize(roleData.Image, string.Format(text, roleData.Name.ToLower()));// TODO: Give real image
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
-#if UNITY_SERVER && UNITY_EDITOR
+
 		public void SetPlayerCardHighlightVisible(PlayerRef player, bool isVisible)
 		{
 			_playerCards[player].SetHighlightVisible(isVisible);
 		}
-#endif
+
 		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
 		{
-			_UIManager.TitleScreen.Initialize(null, hasAnyPlayerDied ? Config.DeathRevealDeathText : Config.DeathRevealNoDeathText);
+			_UIManager.TitleScreen.Initialize(null, hasAnyPlayerDied ? Config.DeathRevealDeathText : Config.DeathRevealNoDeathText);// TODO: Give real image
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
 
 		private void DisplayPlayerDiedTitle()
 		{
-			_UIManager.TitleScreen.Initialize(null, Config.PlayerDiedText);
+			_UIManager.TitleScreen.Initialize(null, Config.PlayerDiedText);// TODO: Give real image
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
-		}
-
-		public void DisplayPlayerRoleIsPlaying(PlayerRef player)
-		{
-			int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(player);
-
-			foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
-			{
-				if (_playersWaitingFor.Contains(playerRole.Key))
-				{
-					continue;
-				}
-
-				RPC_DisplayRolePlaying(playerRole.Key, displayRoleGameplayTagID);
-			}
-#if UNITY_SERVER && UNITY_EDITOR
-			if (!_voteManager.IsPreparingToVote())
-			{
-				DisplayRolePlaying(displayRoleGameplayTagID);
-			}
-#endif
 		}
 
 		private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
@@ -1911,9 +1890,10 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 		}
 
-		private int GetDisplayedRoleGameplayTagID(PlayerRef player)
+		public void DisplayTitle(string title)
 		{
-			return Players[player].Role.GameplayTag.CompactTagId;
+			_UIManager.TitleScreen.Initialize(null, title);
+			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionDuration);
 		}
 
 		public void HideUI()
@@ -1931,7 +1911,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_SetPlayerCardHighlightVisible(PlayerRef player, bool isVisible)
 		{
-			_playerCards[player].SetHighlightVisible(isVisible);
+			SetPlayerCardHighlightVisible(player, isVisible);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -1950,6 +1930,12 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		public void RPC_DisplayPlayerDead(PlayerRef playerDead)
 		{
 			_playerCards[playerDead].DisplayDead();
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, string title)
+		{
+			DisplayTitle(title);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]

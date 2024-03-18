@@ -63,6 +63,7 @@ public class ServantBehavior : RoleBehavior
 			if (player.Key == Player)
 			{
 				_gameManager.RPC_FlipFaceUp(player.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
+				_gameManager.RPC_DisplayTitle(player.Key, $"Your new role is: {RoleToTake.Name}");
 				continue;
 			}
 
@@ -73,6 +74,7 @@ public class ServantBehavior : RoleBehavior
 
 			_gameManager.RPC_MoveCardToCamera(player.Key, Player, true, servantRole.GameplayTag.CompactTagId);
 			_gameManager.RPC_DestroyPlayerCard(player.Key, _playerRevealed);
+			_gameManager.RPC_DisplayTitle(player.Key, "The servant has decided to take this role!");
 		}
 #if UNITY_SERVER && UNITY_EDITOR
 		_gameManager.ChangePlayerCardRole(Player, servantRole);
@@ -93,7 +95,7 @@ public class ServantBehavior : RoleBehavior
 		}
 #if UNITY_SERVER && UNITY_EDITOR
 		_gameManager.ChangePlayerCardRole(Player, RoleToTake);
-		_gameManager.PutCardDown(Player, false);
+		_gameManager.PutCardBackDown(Player, false);
 #endif
 		yield return new WaitForSeconds(_gameManager.Config.MoveToCameraDuration);
 		_gameManager.SetPlayerDeathRevealCompleted();
