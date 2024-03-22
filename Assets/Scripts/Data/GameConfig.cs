@@ -68,6 +68,13 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float DelayBeforeRevealingDeadPlayer { get; private set; }
 
+		[field: Header("Debate")]
+		[field: SerializeField]
+		public string DebateText { get; private set; }
+
+		[field: SerializeField]
+		public float DebateStepDuration { get; private set; }
+		
 		[field: Header("Vote")]
 		[field: SerializeField]
 		public string LockedInButtonText { get; private set; }
