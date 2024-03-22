@@ -18,17 +18,14 @@ MonoBehaviour:
   <Description>k__BackingField: 
   <Image>k__BackingField: {fileID: 1642371001, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
     type: 3}
-  <Type>k__BackingField: 0
+  <PrimaryType>k__BackingField: 0
+  <SecondaryType>k__BackingField: 0
   <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 2
-  <GroupIndexes>k__BackingField: 01000000
+  <PlayerGroupIndexes>k__BackingField: 01000000
   <NightPriorities>k__BackingField:
   - index: 7
     alias: {fileID: 0}
   <DayPriorities>k__BackingField: []
-  <NightPrioritiesNew>k__BackingField:
-  - index: 7
-    alias: {fileID: 0}
-  <DayPrioritiesNew>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 0}
