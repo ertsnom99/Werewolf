@@ -46,7 +46,7 @@ namespace Werewolf.Data
 		public int MandatoryCount { get; private set; }
 
 		[field: SerializeField]
-		public int[] GroupIndexes { get; private set; }
+		public int[] PlayerGroupIndexes { get; private set; }
 
 		[field: SerializeField]
 		public Priority[] NightPriorities { get; private set; }

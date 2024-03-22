@@ -23,7 +23,7 @@ MonoBehaviour:
   <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
-  <GroupIndexes>k__BackingField: 01000000
+  <PlayerGroupIndexes>k__BackingField: 01000000
   <NightPriorities>k__BackingField: []
   <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 4830877496367092188, guid: 2344d20f29d66b24f8f6523b1cadfe59,

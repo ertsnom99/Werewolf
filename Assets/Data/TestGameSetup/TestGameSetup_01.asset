@@ -30,15 +30,5 @@ MonoBehaviour:
   - Pool:
     - {fileID: 11400000, guid: 2f4b33e1175be6a43b478f692b6a2d81, type: 2}
     UseCount: 1
-  <AvailableRoles>k__BackingField:
-  - Pool:
-    - {fileID: 11400000, guid: bd74ac91c284e0c44a2afdb8a0478c79, type: 2}
-    UseCount: 1
-  - Pool:
-    - {fileID: 11400000, guid: 87ca120de9ad22b41b08f1b85fbe7dd3, type: 2}
-    UseCount: 1
-  - Pool:
-    - {fileID: 11400000, guid: a3e967485adaba141aaac27d5d1a0b7a, type: 2}
-    - {fileID: 11400000, guid: 7fcc764f3f5c2b645b39c81e27186c99, type: 2}
-    UseCount: 2
+  <AvailableRoles>k__BackingField: []
   <MinPlayerCount>k__BackingField: 2

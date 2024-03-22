@@ -26,6 +26,8 @@ namespace Werewolf
 
 		public Dictionary<PlayerRef, PlayerData> Players { get; private set; }
 
+		private int _alivePlayerCount;
+
 		private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
 
 		private Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new();
@@ -45,6 +47,14 @@ namespace Werewolf
 		private bool _allPlayersReadyToReceiveRole = false;
 		private bool _allRolesSent = false;
 		private bool _allPlayersReadyToPlay = false;
+
+		private List<PlayerGroup> _playerGroups = new();
+
+		private struct PlayerGroup
+		{
+			public int Index;
+			public List<PlayerRef> Players;
+		}
 
 		private List<NightCall> _nightCalls = new();
 
@@ -186,13 +196,15 @@ namespace Werewolf
 			DistributeRoles();
 			PostRoleDistribution?.Invoke();
 
+			_alivePlayerCount = Players.Count;
+
+			DeterminePlayerGroups();
 			DetermineNightCalls();
 #if UNITY_SERVER && UNITY_EDITOR
 			CreatePlayerCardsForServer();
 			CreateReservedRoleCardsForServer();
 			AdjustCamera();
 			LogNightCalls();
-
 			_voteManager.SetPlayerCards(_playerCards);
 #endif
 			CheckPreGameplayLoopProgress();
@@ -303,6 +315,11 @@ namespace Werewolf
 
 			roleBehavior.SetPrimaryRoleType(role.PrimaryType);
 
+			foreach(int playerGroupIndex in role.PlayerGroupIndexes)
+			{
+				roleBehavior.AddPlayerGroupIndex(playerGroupIndex);
+			}
+
 			foreach (Priority nightPriority in role.NightPriorities)
 			{
 				roleBehavior.AddNightPriority(nightPriority);
@@ -353,6 +370,27 @@ namespace Werewolf
 		public void RemoveRoleToDistribute(RoleData role)
 		{
 			RolesToDistribute.Remove(role);
+		}
+
+		private void DeterminePlayerGroups()
+		{
+			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			{
+				if (player.Value.Behaviors.Count <= 0)
+				{
+					foreach(int playerGroupIndex in player.Value.Role.PlayerGroupIndexes)
+					{
+						AddPlayerToPlayerGroup(playerGroupIndex, player.Key);
+					}
+
+					continue;
+				}
+
+				foreach(int playerGroupIndex in player.Value.Behaviors[0].GetCurrentPlayerGroups())
+				{
+					AddPlayerToPlayerGroup(playerGroupIndex, player.Key);
+				}
+			}
 		}
 
 		private void DetermineNightCalls()
@@ -775,6 +813,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				}
 			}
 
+			CheckForWinner();
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
@@ -867,6 +906,9 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		private void SetPlayerDead(PlayerRef deadPlayer)
 		{
 			Players[deadPlayer] = new PlayerData { Role = Players[deadPlayer].Role, Behaviors = Players[deadPlayer].Behaviors, IsAlive = false };
+			_alivePlayerCount--;
+
+			RemovePlayerFromAllPlayerGroups(deadPlayer);
 
 			foreach (RoleBehavior behavior in Players[deadPlayer].Behaviors)
 			{
@@ -885,6 +927,18 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 #if UNITY_SERVER && UNITY_EDITOR
 			_playerCards[deadPlayer].DisplayDead();
 #endif
+		}
+
+		private void CheckForWinner()
+		{
+			foreach(PlayerGroup playerGroup in _playerGroups)
+			{
+				if (playerGroup.Players.Count >= _alivePlayerCount)
+				{
+					//TODO: Trigger winner sequence
+					return;
+				}
+			}
 		}
 		#endregion
 
@@ -913,30 +967,53 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		#region Role Change
 		public void ChangeRole(PlayerRef player, RoleData roleData, RoleBehavior roleBehavior)
 		{
+			RemovePrimaryBehavior(player);
+
+			if (!roleBehavior)
+			{
+				foreach (int playerGroupIndex in roleData.PlayerGroupIndexes)
+				{
+					AddPlayerToPlayerGroup(playerGroupIndex, player);
+				}
+			}
+			else
+			{
+				AddBehavior(player, roleBehavior);
+				roleBehavior.SetIsPrimaryBehavior(true);
+			}
+
 			Players[player] = new() { Role = roleData, Behaviors = Players[player].Behaviors, IsAlive = Players[player].IsAlive };
 
 			RPC_ChangePlayerCardRole(player, roleData.GameplayTag.CompactTagId);
 #if UNITY_SERVER && UNITY_EDITOR
 			_playerCards[player].SetRole(roleData);
 #endif
-			foreach (RoleBehavior behavior in Players[player].Behaviors)
-			{
-				if (behavior.IsPrimaryBehavior)
-				{
-					RemoveBehavior(player, behavior);
-					break;
-				}
-			}
-
-			if (roleBehavior)
-			{
-				AddBehavior(player, roleBehavior);
-				roleBehavior.SetIsPrimaryBehavior(true);
-			}
 		}
 
 		public void TransferRole(PlayerRef from, PlayerRef to, bool destroyOldBehavior = true)
 		{
+			RemovePrimaryBehavior(to, destroyOldBehavior);
+
+			if (Players[from].Behaviors.Count <= 0)
+			{
+				foreach (int villageGroup in Players[from].Role.PlayerGroupIndexes)
+				{
+					AddPlayerToPlayerGroup(villageGroup, to);
+				}
+			}
+			else
+			{
+				foreach (RoleBehavior behavior in Players[from].Behaviors)
+				{
+					if (behavior.IsPrimaryBehavior)
+					{
+						RemoveBehavior(from, behavior, false);
+						AddBehavior(to, behavior);
+						break;
+					}
+				}
+			}
+
 			Players[to] = new() { Role = Players[from].Role, Behaviors = Players[to].Behaviors, IsAlive = Players[to].IsAlive };
 			Players[from] = new() { Role = null, Behaviors = Players[from].Behaviors, IsAlive = Players[from].IsAlive };
 
@@ -944,24 +1021,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 #if UNITY_SERVER && UNITY_EDITOR
 			_playerCards[to].SetRole(Players[to].Role);
 #endif
-			foreach (RoleBehavior behavior in Players[to].Behaviors)
-			{
-				if (behavior.IsPrimaryBehavior)
-				{
-					RemoveBehavior(to, behavior, destroyOldBehavior);
-					break;
-				}
-			}
-
-			foreach (RoleBehavior behavior in Players[from].Behaviors)
-			{
-				if (behavior.IsPrimaryBehavior)
-				{
-					RemoveBehavior(from, behavior, false);
-					AddBehavior(to, behavior);
-					break;
-				}
-			}
 		}
 
 		public void ChangePlayerCardRole(PlayerRef player, RoleData roleData)
@@ -996,11 +1055,38 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				AddPlayerToNightCall(priority, player);
 			}
 
+			foreach (int playerGroupIndex in behavior.GetCurrentPlayerGroups())
+			{
+				AddPlayerToPlayerGroup(playerGroupIndex, player);
+			}
+
 			Players[player].Behaviors.Add(behavior);
 			behavior.SetPlayer(player);
 #if UNITY_SERVER && UNITY_EDITOR
 			behavior.transform.position = _playerCards[player].transform.position;
 #endif
+		}
+
+		private void RemovePrimaryBehavior(PlayerRef player, bool destroyOldBehavior = true)
+		{
+			if (Players[player].Behaviors.Count <= 0)
+			{
+				foreach (int playerGroupIndex in Players[player].Role.PlayerGroupIndexes)
+				{
+					RemovePlayerFromGroup(playerGroupIndex, player);
+				}
+			}
+			else
+			{
+				foreach (RoleBehavior behavior in Players[player].Behaviors)
+				{
+					if (behavior.IsPrimaryBehavior)
+					{
+						RemoveBehavior(player, behavior, destroyOldBehavior);
+						break;
+					}
+				}
+			}
 		}
 
 		private void RemoveBehavior(PlayerRef player, RoleBehavior behavior, bool destroyBehavior = true)
@@ -1023,11 +1109,16 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				break;
 			}
 
+			foreach (int group in behavior.GetCurrentPlayerGroups())
+			{
+				RemovePlayerFromGroup(group, player);
+			}
+
 			if (!destroyBehavior)
 			{
 				return;
 			}
-
+			
 			Destroy(behavior.gameObject);
 		}
 
@@ -1067,6 +1158,76 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			DestroyPlayerCard(cardPlayer);
 		}
 		#endregion
+		#endregion
+
+		#region Player Group Change
+		public void AddPlayerToPlayerGroup(int playerGroupIndex, PlayerRef player)
+		{
+			PlayerGroup playerGroup;
+
+			for (int i = _playerGroups.Count - 1; i >= 0; i--)
+			{
+				if (_playerGroups[i].Index == playerGroupIndex)
+				{
+					if (_playerGroups[i].Players.Contains(player))
+					{
+						Debug.LogError("Tried to add duplicated player to a player group");
+						return;
+					}
+
+					_playerGroups[i].Players.Add(player);
+					return;
+				}
+				else if (_playerGroups[i].Index < playerGroupIndex)
+				{
+					playerGroup = new();
+					playerGroup.Index = playerGroupIndex;
+					playerGroup.Players = new() { player };
+
+					_playerGroups.Insert(i, playerGroup);
+					return;
+				}
+			}
+
+			playerGroup = new();
+			playerGroup.Index = playerGroupIndex;
+			playerGroup.Players = new() { player };
+
+			_playerGroups.Add(playerGroup);
+		}
+
+		public void RemovePlayerFromGroup(int playerGroupIndex, PlayerRef player)
+		{
+			for (int i = 0; i < _playerGroups.Count; i++)
+			{
+				if (_playerGroups[i].Index != playerGroupIndex)
+				{
+					continue;
+				}
+
+				_playerGroups[i].Players.Remove(player);
+
+				if (_playerGroups[i].Players.Count <= 0)
+				{
+					_playerGroups.RemoveAt(i);
+				}
+
+				break;
+			}
+		}
+
+		public void RemovePlayerFromAllPlayerGroups(PlayerRef player)
+		{
+			for (int i = _playerGroups.Count - 1; i >= 0; i--)
+			{
+				_playerGroups[i].Players.Remove(player);
+
+				if (_playerGroups[i].Players.Count <= 0)
+				{
+					_playerGroups.RemoveAt(i);
+				}
+			}
+		}
 		#endregion
 
 		#region Night Call Change
