@@ -55,7 +55,7 @@ namespace Werewolf
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.MoveCardToCamera(Player, true);
-			_gameManager.DisplayTitle("The hunter is choosing who to kill!");
+			_gameManager.DisplayTitle(null, "The hunter is choosing who to kill!");
 #endif
 			_startChoiceTimerCoroutine = StartChoiceTimer();
 			StartCoroutine(_startChoiceTimerCoroutine);
