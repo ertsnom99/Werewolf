@@ -734,6 +734,14 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
+		private void DisplayRolePlaying(int roleGameplayTagID)
+		{
+			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
+			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
+
+			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.ToLower()));// TODO: Give real image
+		}
+
 		private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
 		{
 			RoleData alias = null;
@@ -776,6 +784,14 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				&& _revealPlayerRoleCallbacks.Count <= 0
 				&& ((_playersWaitingFor.Count <= 0 && elapsedTime >= Config.NightCallMinimumDuration) || elapsedTime >= Config.NightCallMaximumDuration);
 		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayRolePlaying([RpcTarget] PlayerRef player, int roleGameplayTagID)
+		{
+			DisplayRolePlaying(roleGameplayTagID);
+		}
+		#endregion
 		#endregion
 
 		#region Death Reveal
@@ -851,6 +867,16 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 			CheckForWinner();
 			StartCoroutine(MoveToNextGameplayLoopStep());
+		}
+
+		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
+		{
+			DisplayTitle(null, hasAnyPlayerDied ? Config.DeathRevealDeathText : Config.DeathRevealNoDeathText);// TODO: Give real image
+		}
+
+		private void DisplayPlayerDiedTitle()
+		{
+			DisplayTitle(null, Config.PlayerDiedText);// TODO: Give real image
 		}
 
 		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, bool returnFaceDown, Action RevealPlayerCompleted)
@@ -979,6 +1005,18 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayDeathRevealTitle(bool hasAnyPlayerDied)
+		{
+			DisplayDeathRevealTitle(hasAnyPlayerDied);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayPlayerDiedTitle([RpcTarget] PlayerRef player)
+		{
+			DisplayPlayerDiedTitle();
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_DisplayPlayerDead(PlayerRef playerDead)
 		{
 			_playerCards[playerDead].DisplayDead();
@@ -989,14 +1027,99 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		#region Debate
 		private IEnumerator StartDebate()
 		{
-			RPC_DisplayDebateTitle();
+			foreach(KeyValuePair<PlayerRef, PlayerData> player in Players)
+			{
+				RPC_OnDebateStarted(player.Key, player.Value.IsAlive);
+
+				if (!player.Value.IsAlive)
+				{
+					continue;
+				}
+
+				WaitForPlayer(player.Key);
+			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayDebateTitle();
+			DisplayTitle(null, Config.DebateText, Config.DebateStepDuration, false, Config.SkipText);
 #endif
-			yield return new WaitForSeconds(Config.DebateStepDuration);
+			float elapsedTime = .0f;
+
+			while (_playersWaitingFor.Count > 0 && elapsedTime < Config.DebateStepDuration)
+			{
+				elapsedTime += Time.deltaTime;
+				yield return 0;
+			}
+
+			RPC_OnDebateEnded();
+			_playersWaitingFor.Clear();
+
+#if UNITY_SERVER && UNITY_EDITOR
+			OnDebateEnded();
+#endif
+			yield return new WaitForSeconds(Config.UITransitionDuration);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
+
+		private void OnPlayerSkipDebate()
+		{
+			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
+
+			_playerCards[Runner.LocalPlayer].SetVotingStatusVisible(true);
+			_playerCards[Runner.LocalPlayer].UpdateVotingStatus(false);
+
+			RPC_SkipDebate();
+		}
+
+		private void OnDebateEnded()
+		{
+			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
+
+			foreach (KeyValuePair<PlayerRef, Card> card in _playerCards)
+			{
+				card.Value.SetVotingStatusVisible(false);
+			}
+
+			HideUI();
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, bool showConfirmButton)
+		{
+			DisplayTitle(null, Config.DebateText, Config.DebateStepDuration, showConfirmButton, Config.SkipText);
+
+			if (!showConfirmButton)
+			{
+				return;
+			}
+
+			_UIManager.TitleScreen.Confirm += OnPlayerSkipDebate;
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_SkipDebate(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+#if UNITY_SERVER && UNITY_EDITOR
+			_playerCards[info.Source].SetVotingStatusVisible(true);
+			_playerCards[info.Source].UpdateVotingStatus(false);
+#endif
+			RPC_PlayerSkippedDebate(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_PlayerSkippedDebate(PlayerRef player)
+		{
+			_playerCards[player].SetVotingStatusVisible(true);
+			_playerCards[player].UpdateVotingStatus(false);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_OnDebateEnded()
+		{
+			OnDebateEnded();
+		}
+		#endregion
 		#endregion
 
 		public void WaitForPlayer(PlayerRef player)
@@ -2045,29 +2168,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		#endregion
 
 		#region UI
-		private void DisplayRolePlaying(int roleGameplayTagID)
-		{
-			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
-			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
-
-			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.ToLower()));// TODO: Give real image
-		}
-
-		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
-		{
-			DisplayTitle(null, hasAnyPlayerDied ? Config.DeathRevealDeathText : Config.DeathRevealNoDeathText);// TODO: Give real image
-		}
-
-		private void DisplayPlayerDiedTitle()
-		{
-			DisplayTitle(null, Config.PlayerDiedText);// TODO: Give real image
-		}
-
-		private void DisplayDebateTitle()
-		{
-			DisplayTitle(null, Config.DebateText, Config.DebateStepDuration);// TODO: Give real image
-		}
-
 		public void DisplayTitle(Sprite image, string title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
 		{
 			_UIManager.TitleScreen.Initialize(image, title, countdownDuration, showConfirmButton, confirmButtonText);
@@ -2085,30 +2185,6 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		}
 
 		#region RPC Calls
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayRolePlaying([RpcTarget] PlayerRef player, int roleGameplayTagID)
-		{
-			DisplayRolePlaying(roleGameplayTagID);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayDeathRevealTitle(bool hasAnyPlayerDied)
-		{
-			DisplayDeathRevealTitle(hasAnyPlayerDied);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayPlayerDiedTitle([RpcTarget] PlayerRef player)
-		{
-			DisplayPlayerDiedTitle();
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayDebateTitle()
-		{
-			DisplayDebateTitle();
-		}
-
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, string title)
 		{
