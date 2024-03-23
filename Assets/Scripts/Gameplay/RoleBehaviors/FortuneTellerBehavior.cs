@@ -33,8 +33,9 @@ namespace Werewolf
 
 			_choosingPlayer = _gameManager.AskClientToChoosePlayer(Player,
 																immunePlayers.ToArray(),
-																_gameManager.Config.NightCallMaximumDuration,
 																"Choose a player to see his role",
+																_gameManager.Config.NightCallMaximumDuration,
+																true,
 																OnPlayerSelected);
 
 			return _choosingPlayer;

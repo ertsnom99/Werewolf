@@ -26,7 +26,7 @@ namespace Werewolf
 
 		public Dictionary<PlayerRef, PlayerData> Players { get; private set; }
 
-		private int _alivePlayerCount;
+		public int AlivePlayerCount { get; private set; }
 
 		private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
 
@@ -196,7 +196,7 @@ namespace Werewolf
 			DistributeRoles();
 			PostRoleDistribution?.Invoke();
 
-			_alivePlayerCount = Players.Count;
+			AlivePlayerCount = Players.Count;
 
 			DeterminePlayerGroups();
 			DetermineNightCalls();
@@ -968,7 +968,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		private void SetPlayerDead(PlayerRef deadPlayer)
 		{
 			Players[deadPlayer] = new PlayerData { Role = Players[deadPlayer].Role, Behaviors = Players[deadPlayer].Behaviors, IsAlive = false };
-			_alivePlayerCount--;
+			AlivePlayerCount--;
 
 			RemovePlayerFromAllPlayerGroups(deadPlayer);
 
@@ -995,7 +995,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		{
 			foreach(PlayerGroup playerGroup in _playerGroups)
 			{
-				if (playerGroup.Players.Count >= _alivePlayerCount)
+				if (playerGroup.Players.Count >= AlivePlayerCount)
 				{
 					//TODO: Trigger winner sequence
 					return;
@@ -1705,7 +1705,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 		#endregion
 
 		#region Choose a Player
-		public bool AskClientToChoosePlayer(PlayerRef choosingPlayer, PlayerRef[] immunePlayers, float maximumDuration, string displayText, Action<PlayerRef> callback)
+		public bool AskClientToChoosePlayer(PlayerRef choosingPlayer, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool canChooseNobody, Action<PlayerRef> callback)
 		{
 			if (_choosePlayerCallbacks.ContainsKey(choosingPlayer))
 			{
@@ -1713,7 +1713,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 
 			_choosePlayerCallbacks.Add(choosingPlayer, callback);
-			RPC_ClientChoosePlayer(choosingPlayer, immunePlayers, maximumDuration, displayText);
+			RPC_ClientChoosePlayer(choosingPlayer, immunePlayers, displayText, maximumDuration, canChooseNobody);
 
 			return true;
 		}
@@ -1755,7 +1755,7 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientChoosePlayer([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, float maximumDuration, string displayText)
+		private void RPC_ClientChoosePlayer([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool canChooseNobody)
 		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
@@ -1774,7 +1774,13 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 				playerCard.Value.OnCardClick += OnClientChooseCard;
 			}
 
-			DisplayTitle(null, displayText, maximumDuration, true, Config.SkipTurnText);// TODO: Give real image
+			DisplayTitle(null, displayText, maximumDuration, canChooseNobody, Config.SkipTurnText);// TODO: Give real image
+			
+			if (!canChooseNobody)
+			{
+				return;
+			}
+
 			_UIManager.TitleScreen.Confirm += OnClientChooseNoCard;
 		}
 

@@ -1,6 +1,7 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 
@@ -32,10 +33,11 @@ namespace Werewolf
 
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer)
 		{
-			if (Player != deadPlayer || !_gameManager.AskClientToChoosePlayer(Player,
+			if (Player != deadPlayer || _gameManager.AlivePlayerCount <= 1 || !_gameManager.AskClientToChoosePlayer(Player,
 																			new[] { Player },
-																			_gameManager.Config.NightCallMaximumDuration,
 																			"Choose a player to kill",
+																			_gameManager.Config.NightCallMaximumDuration,
+																			false,
 																			OnPlayerSelected))
 			{
 				return;
@@ -71,10 +73,42 @@ namespace Werewolf
 				yield return 0;
 			}
 
-			_startChoiceTimerCoroutine = null;
 			_gameManager.StopChoosingPlayer(Player);
 
-			StartCoroutine(HideUIBeforeStopWaintingForPlayer());
+			int iterationCount = 0;
+			PlayerRef[] players = _gameManager.Players.Keys.ToArray();
+			int playerIndex = Random.Range(0, _gameManager.Players.Count);
+			PlayerRef selectedPlayer = PlayerRef.None;
+
+			while (iterationCount < _gameManager.Players.Count)
+			{
+				if (players[playerIndex] != Player && _gameManager.Players[players[playerIndex]].IsAlive)
+				{
+					selectedPlayer = players[playerIndex];
+					break;
+				}
+
+				playerIndex++;
+
+				if (playerIndex >= _gameManager.Players.Count)
+				{
+					playerIndex = 0;
+				}
+
+				iterationCount++;
+			}
+
+			if (selectedPlayer == PlayerRef.None)
+			{
+				Debug.LogError("The hunter could not find a player to kill!!!");
+
+				_startChoiceTimerCoroutine = null;
+				StartCoroutine(HideUIBeforeStopWaintingForPlayer());
+			}
+			else
+			{
+				OnPlayerSelected(selectedPlayer);
+			}
 		}
 
 		private void OnPlayerSelected(PlayerRef selectedPlayer)
@@ -85,6 +119,7 @@ namespace Werewolf
 			}
 
 			StopCoroutine(_startChoiceTimerCoroutine);
+			_startChoiceTimerCoroutine = null;
 
 			foreach (KeyValuePair<PlayerRef, PlayerData> player in _gameManager.Players)
 			{
