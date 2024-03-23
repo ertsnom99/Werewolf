@@ -17,7 +17,8 @@ MonoBehaviour:
   <MandatoryRoles>k__BackingField:
   - Pool:
     - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
-    UseCount: 1
+    - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
+    UseCount: 2
   - Pool:
     - {fileID: 11400000, guid: 42cdb8e84ec451d409c8ec23ec8429c5, type: 2}
     UseCount: 1
@@ -27,8 +28,8 @@ MonoBehaviour:
   - Pool:
     - {fileID: 11400000, guid: 7ac908ee88d1bfe46a54ee85727d69ae, type: 2}
     UseCount: 1
+  <AvailableRoles>k__BackingField:
   - Pool:
     - {fileID: 11400000, guid: 2f4b33e1175be6a43b478f692b6a2d81, type: 2}
     UseCount: 1
-  <AvailableRoles>k__BackingField: []
   <MinPlayerCount>k__BackingField: 2

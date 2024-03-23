@@ -96,6 +96,7 @@ MonoBehaviour:
   <PlayerDiedText>k__BackingField: You died!
   <DelayBeforeRevealingDeadPlayer>k__BackingField: 3
   <DebateText>k__BackingField: Debate about who will be hanged!
+  <SkipText>k__BackingField: Skip debate
   <DebateStepDuration>k__BackingField: 60
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote

@@ -73,6 +73,9 @@ namespace Werewolf.Data
 		public string DebateText { get; private set; }
 
 		[field: SerializeField]
+		public string SkipText { get; private set; }
+
+		[field: SerializeField]
 		public float DebateStepDuration { get; private set; }
 		
 		[field: Header("Vote")]
