@@ -14,7 +14,7 @@ namespace Werewolf
 		private Dictionary<PlayerRef, PlayerData> _players;
 		private Dictionary<PlayerRef, Card> _playerCards;
 
-		private List<PlayerRef> _voters = new();
+		public List<PlayerRef> Voters { get; private set; }
 		private List<PlayerRef> _immune = new();
 		private Dictionary<PlayerRef, List<PlayerRef>> _immuneFromPlayers = new();
 		private List<PlayerRef> _spectators = new();
@@ -50,6 +50,12 @@ namespace Werewolf
 
 		public event Action<Dictionary<PlayerRef, int>> VoteCompletedCallback;
 
+		protected override void Awake()
+		{
+			base.Awake();
+			Voters = new List<PlayerRef>();
+		}
+
 		public void SetPlayerCards(Dictionary<PlayerRef, Card> playerCards)
 		{
 			_playerCards = playerCards;
@@ -75,7 +81,7 @@ namespace Werewolf
 				return false;
 			}
 
-			_voters.Clear();
+			Voters.Clear();
 			_immune.Clear();
 			_immuneFromPlayers.Clear();
 			_spectators.Clear();
@@ -93,23 +99,23 @@ namespace Werewolf
 
 		public void AddVoter(PlayerRef voter)
 		{
-			if (_step != Step.Preparing || _voters.Contains(voter))
+			if (_step != Step.Preparing || Voters.Contains(voter))
 			{
 				return;
 			}
 
-			_voters.Add(voter);
+			Voters.Add(voter);
 			_immuneFromPlayers.Add(voter, new() { voter });
 		}
 
 		public void RemoveVoter(PlayerRef voter)
 		{
-			if (_step != Step.Preparing || !_voters.Contains(voter))
+			if (_step != Step.Preparing || !Voters.Contains(voter))
 			{
 				return;
 			}
 
-			_voters.Remove(voter);
+			Voters.Remove(voter);
 			_immuneFromPlayers.Remove(voter);
 		}
 
@@ -155,7 +161,7 @@ namespace Werewolf
 
 		public void AddSpectator(PlayerRef spectator)
 		{
-			if (_step != Step.Preparing || _spectators.Contains(spectator) || _voters.Contains(spectator))
+			if (_step != Step.Preparing || _spectators.Contains(spectator) || Voters.Contains(spectator))
 			{
 				return;
 			}
@@ -191,11 +197,11 @@ namespace Werewolf
 				voteDuration = _config.NoVoteDuration;
 			}
 
-			foreach (PlayerRef voter in _voters)
+			foreach (PlayerRef voter in Voters)
 			{
 				_votes.Add(voter, new());
 				RPC_StartVoting(voter,
-								_voters.ToArray(),
+								Voters.ToArray(),
 								_immuneFromPlayers[voter].ToArray(),
 								_immuneFromPlayers[voter].Count >= _players.Count, voteDuration,
 								_allowedToNotVote);
@@ -208,7 +214,7 @@ namespace Werewolf
 			foreach (PlayerRef spectator in _spectators)
 			{
 				RPC_StartSpectating(spectator,
-									_voters.ToArray(),
+									Voters.ToArray(),
 									voteDuration);
 			}
 
@@ -225,7 +231,7 @@ namespace Werewolf
 		{
 			bool canAtLeastOneVoterVote = false;
 
-			foreach (PlayerRef voter in _voters)
+			foreach (PlayerRef voter in Voters)
 			{
 				foreach (PlayerRef player in _immune)
 				{
@@ -280,13 +286,13 @@ namespace Werewolf
 			float elapsedTime = .0f;
 			float allLockedInElapsedTime = .0f;
 
-			while (elapsedTime < duration && (_lockedInVoteCount < _voters.Count || allLockedInElapsedTime < _config.AllLockedInDelayToEndVote))
+			while (elapsedTime < duration && (_lockedInVoteCount < Voters.Count || allLockedInElapsedTime < _config.AllLockedInDelayToEndVote))
 			{
-				if (_lockedInVoteCount < _voters.Count && allLockedInElapsedTime > .0f)
+				if (_lockedInVoteCount < Voters.Count && allLockedInElapsedTime > .0f)
 				{
 					allLockedInElapsedTime = .0f;
 				}
-				else if (_lockedInVoteCount >= _voters.Count)
+				else if (_lockedInVoteCount >= Voters.Count)
 				{
 					allLockedInElapsedTime += Time.deltaTime;
 				}
@@ -378,7 +384,7 @@ namespace Werewolf
 
 			if (_failToVotePenalty)
 			{
-				foreach (PlayerRef voter in _voters)
+				foreach (PlayerRef voter in Voters)
 				{
 					if (_votes[voter].VotedFor != PlayerRef.None)
 					{
@@ -389,7 +395,7 @@ namespace Werewolf
 				}
 			}
 
-			foreach (PlayerRef voter in _voters)
+			foreach (PlayerRef voter in Voters)
 			{
 				RPC_VoteEnded(voter);
 			}
@@ -532,7 +538,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			UpdateVisualFeedback();
 #endif
-			foreach (PlayerRef voter in _voters)
+			foreach (PlayerRef voter in Voters)
 			{
 				RPC_UpdateClientVote(voter, info.Source, votedFor, islocked);
 			}
