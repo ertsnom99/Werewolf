@@ -101,6 +101,7 @@ MonoBehaviour:
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote
   <AllLockedInDelayToEndVote>k__BackingField: 3
+  <VillageVoteDuration>k__BackingField: 15
   <NoVoteDuration>k__BackingField: 10
   <CountdownText>k__BackingField: 'Time left: {0}'
   <UITransitionDuration>k__BackingField: 0.75

@@ -1,5 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 
@@ -29,44 +30,23 @@ namespace Werewolf
 			_voteManager.AddVoter(Player);
 			_voteManager.AddVoteImmunity(Player);
 
-			_voteManager.VoteCompletedCallback += OnVoteEnds;
+			_voteManager.VoteCompletedCallback += OnVoteEnded;
 
 			return true;
 		}
 
-		private void OnVoteEnds(Dictionary<PlayerRef, VoteManager.Vote> votes)
+		private void OnVoteEnded(Dictionary<PlayerRef, int> votes)
 		{
-			_voteManager.VoteCompletedCallback -= OnVoteEnds;
+			_voteManager.VoteCompletedCallback -= OnVoteEnded;
 
 			_gameManager.StopWaintingForPlayer(Player);
 
-			if (!_preparedVote || votes.Count <= 0)
+			if (!_preparedVote || votes.Count != 1)
 			{
 				return;
 			}
 
-			PlayerRef votedPlayer = PlayerRef.None;
-
-			foreach (KeyValuePair<PlayerRef, VoteManager.Vote> vote in votes)
-			{
-				if (vote.Value.VotedFor == PlayerRef.None)
-				{
-					return;
-				}
-
-				if (votedPlayer == PlayerRef.None)
-				{
-					votedPlayer = vote.Value.VotedFor;
-					continue;
-				}
-
-				if (votedPlayer != vote.Value.VotedFor)
-				{
-					return;
-				}
-			}
-
-			_gameManager.AddMarkForDeath(votedPlayer, _commonData.DeathMark);
+			_gameManager.AddMarkForDeath(votes.Keys.ToArray()[0], _commonData.DeathMark);
 		}
 
 		public override void OnRoleTimeOut() { }

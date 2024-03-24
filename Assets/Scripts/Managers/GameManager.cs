@@ -604,10 +604,10 @@ namespace Werewolf
 					break;
 				case GameplayLoopStep.Debate:
 					StartCoroutine(StartDebate());
-_currentGameplayLoopStep = GameplayLoopStep.Execution;
 					break;
 				case GameplayLoopStep.Vote:
-
+					StartVillageVote();
+_currentGameplayLoopStep = GameplayLoopStep.Execution;
 					break;
 				case GameplayLoopStep.Execution:
 
@@ -1120,6 +1120,67 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			OnDebateEnded();
 		}
 		#endregion
+		#endregion
+
+		#region Village Vote
+		private void StartVillageVote()
+		{
+			_voteManager.PrepareVote(Config.VillageVoteDuration, true);
+
+			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			{
+				if (player.Value.IsAlive)
+				{
+					_voteManager.AddVoter(player.Key);
+				}
+				else
+				{
+					_voteManager.AddVoteImmunity(player.Key);
+					_voteManager.AddSpectator(player.Key);
+				}
+			}
+
+			_voteManager.VoteCompletedCallback += OnVillageVoteEnded;
+			_voteManager.StartVote();
+		}
+
+		private void OnVillageVoteEnded(Dictionary<PlayerRef, int> votes)
+		{
+			_voteManager.VoteCompletedCallback -= OnVillageVoteEnded;
+
+			int mostVoteCount = 0;
+			List<PlayerRef> mostVotedPlayers = new List<PlayerRef>();
+
+			foreach(KeyValuePair<PlayerRef, int> vote in votes)
+			{
+				if (vote.Value < mostVoteCount)
+				{
+					continue;
+				}
+
+				if (vote.Value > mostVoteCount)
+				{
+					mostVoteCount = vote.Value;
+					mostVotedPlayers.Clear();
+				}
+
+				mostVotedPlayers.Add(vote.Key);
+			}
+
+			PlayerRef votedPlayer;
+
+			if (mostVotedPlayers.Count > 1)
+			{
+				votedPlayer = mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Count)];
+			}
+			else
+			{
+				votedPlayer = mostVotedPlayers[0];
+			}
+
+			AddMarkForDeath(votedPlayer, "Hanged");
+			StartCoroutine(MoveToNextGameplayLoopStep());
+		}
 		#endregion
 
 		public void WaitForPlayer(PlayerRef player)

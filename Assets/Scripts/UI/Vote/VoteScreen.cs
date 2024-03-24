@@ -18,10 +18,10 @@ namespace Werewolf.UI
 
 		[SerializeField]
 		private GameObject _warningText;
-#if UNITY_SERVER && UNITY_EDITOR
+
 		[SerializeField]
 		private Button _lockInButton;
-#endif
+
 		[SerializeField]
 		private TMP_Text _lockInText;
 
@@ -45,7 +45,7 @@ namespace Werewolf.UI
 			_lockedInDelayDuration = lockedInDelayDuration;
 		}
 
-		public void Initialize(bool displayWarning, float countdownDuration)
+		public void Initialize(bool displayWarning, float countdownDuration, bool displayButton)
 		{
 			_isLockedIn = false;
 
@@ -57,6 +57,8 @@ namespace Werewolf.UI
 			{
 				StopCoroutine(_countdownCoroutine);
 			}
+
+			SetLockinButtonVisible(displayButton);
 
 			_countdownCoroutine = Countdown(countdownDuration);
 			StartCoroutine(_countdownCoroutine);
@@ -123,12 +125,12 @@ namespace Werewolf.UI
 		{
 			_lockedInDelay.localScale = new(scale, _lockedInDelay.localScale.y, _lockedInDelay.localScale.z);
 		}
-#if UNITY_SERVER && UNITY_EDITOR
-		public void HideLockinButton()
+
+		public void SetLockinButtonVisible(bool isVisible)
 		{
-			_lockInButton.gameObject.SetActive(false);
+			_lockInButton.gameObject.SetActive(isVisible);
 		}
-#endif
+
 		protected override void OnFadeStarts(float targetOpacity)
 		{
 			if (targetOpacity >= 1)
