@@ -46,7 +46,9 @@ namespace Werewolf
 
 			_gameManager.StopWaintingForPlayer(Player);
 
-			if (!_preparedVote || votes.Count != 1)
+			PlayerRef firstPlayerVotedFor = votes.Count == 1 ? votes.Keys.ToArray()[0] : PlayerRef.None;
+
+			if (!_preparedVote || firstPlayerVotedFor == PlayerRef.None || votes[firstPlayerVotedFor] < _voteManager.Voters.Count)
 			{
 				return;
 			}
