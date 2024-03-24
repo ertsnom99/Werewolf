@@ -607,10 +607,9 @@ namespace Werewolf
 					break;
 				case GameplayLoopStep.Vote:
 					StartVillageVote();
-_currentGameplayLoopStep = GameplayLoopStep.Execution;
 					break;
 				case GameplayLoopStep.Execution:
-
+					StartCoroutine(StartDeathReveal());
 					break;
 			}
 		}
@@ -1179,6 +1178,23 @@ _currentGameplayLoopStep = GameplayLoopStep.Execution;
 			}
 
 			AddMarkForDeath(votedPlayer, "Hanged");
+			StartCoroutine(HighlightVotedPlayer(votedPlayer));
+		}
+
+		private IEnumerator HighlightVotedPlayer(PlayerRef votedPlayer)
+		{
+			RPC_HideUI();
+
+			RPC_SetPlayerCardHighlightVisible(votedPlayer, true);
+#if UNITY_SERVER && UNITY_EDITOR
+			SetPlayerCardHighlightVisible(votedPlayer, true);
+#endif
+			yield return new WaitForSeconds(Config.VotedPlayerHighlightDuration);
+
+			RPC_SetPlayerCardHighlightVisible(votedPlayer, false);
+#if UNITY_SERVER && UNITY_EDITOR
+			SetPlayerCardHighlightVisible(votedPlayer, false);
+#endif
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 		#endregion
