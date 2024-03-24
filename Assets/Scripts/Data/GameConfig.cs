@@ -89,10 +89,13 @@ namespace Werewolf.Data
 		public float AllLockedInDelayToEndVote { get; private set; }
 
 		[field: SerializeField]
+		public float NoVoteDuration { get; private set; }
+
+		[field: SerializeField]
 		public float VillageVoteDuration { get; private set; }
 
 		[field: SerializeField]
-		public float NoVoteDuration { get; private set; }
+		public float VotedPlayerHighlightDuration { get; private set; }
 
 		[field: Header("UI")]
 		[field: SerializeField]
