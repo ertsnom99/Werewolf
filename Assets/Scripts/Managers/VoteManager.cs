@@ -26,8 +26,9 @@ namespace Werewolf
 			public bool LockedIn;
 		}
 
-		private float _voteMaxDuration;
-		private bool _notVotingPenalty;
+		private float _maxDuration;
+		private bool _allowedToNotVote;
+		private bool _failToVotePenalty;
 		private int _lockedInVoteCount;
 
 		private Step _step;
@@ -42,6 +43,8 @@ namespace Werewolf
 		private IEnumerator _voteCoroutine;
 
 		private Card _selectedCard;
+
+		private PlayerRef[] _immunePlayers;
 
 		private UIManager _UIManager;
 
@@ -65,7 +68,7 @@ namespace Werewolf
 			_players = players;
 		}
 
-		public bool PrepareVote(float voteMaxDuration, bool notVotingPenalty)
+		public bool PrepareVote(float maxDuration, bool allowedToNotVote, bool failToVotePenalty)
 		{
 			if (_step != Step.NotVoting)
 			{
@@ -78,8 +81,9 @@ namespace Werewolf
 			_spectators.Clear();
 			_votes.Clear();
 
-			_voteMaxDuration = voteMaxDuration;
-			_notVotingPenalty = notVotingPenalty;
+			_maxDuration = maxDuration;
+			_allowedToNotVote = allowedToNotVote;
+			_failToVotePenalty = failToVotePenalty;
 			_lockedInVoteCount = 0;
 
 			_step = Step.Preparing;
@@ -180,7 +184,7 @@ namespace Werewolf
 
 			if (FillImmuneFromPlayers())
 			{
-				voteDuration = _voteMaxDuration;
+				voteDuration = _maxDuration;
 			}
 			else
 			{
@@ -193,7 +197,8 @@ namespace Werewolf
 				RPC_StartVoting(voter,
 								_voters.ToArray(),
 								_immuneFromPlayers[voter].ToArray(),
-								_immuneFromPlayers[voter].Count >= _players.Count, voteDuration);
+								_immuneFromPlayers[voter].Count >= _players.Count, voteDuration,
+								_allowedToNotVote);
 #if UNITY_SERVER && UNITY_EDITOR
 				_playerCards[voter].SetVotingStatusVisible(true);
 				_playerCards[voter].UpdateVotingStatus(true);
@@ -251,6 +256,25 @@ namespace Werewolf
 			return canAtLeastOneVoterVote;
 		}
 
+		private void SetCardsClickable(bool areClickable)
+		{
+			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+			{
+				if (!playerCard.Value)
+				{
+					continue;
+				}
+
+				if (Array.IndexOf(_immunePlayers, playerCard.Key) >= 0)
+				{
+					playerCard.Value.SetSelectionMode(true, false);
+					continue;
+				}
+
+				playerCard.Value.SetSelectionMode(true, areClickable);
+			}
+		}
+
 		private IEnumerator WaitForVoteEnd(float duration)
 		{
 			float elapsedTime = .0f;
@@ -304,6 +328,8 @@ namespace Werewolf
 		private void OnVoteLockChanged(bool isLocked)
 		{
 			_votes[Runner.LocalPlayer].LockedIn = isLocked;
+			SetCardsClickable(!isLocked);
+
 			UpdateVisualFeedback();
 
 			RPC_UpdateServerVote(_votes[Runner.LocalPlayer].VotedFor, isLocked);
@@ -350,7 +376,7 @@ namespace Werewolf
 				return;
 			}
 
-			if (_notVotingPenalty)
+			if (_failToVotePenalty)
 			{
 				foreach (PlayerRef voter in _voters)
 				{
@@ -425,7 +451,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, bool displayWarning, float maxDuration)
+		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, bool displayWarning, float maxDuration, bool allowedToNotVote)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -444,28 +470,17 @@ namespace Werewolf
 			}
 
 			_selectedCard = null;
+			_immunePlayers = immunePlayers;
+
+			SetCardsClickable(true);
 
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
-				if (!playerCard.Value)
-				{
-					continue;
-				}
-
-				bool isImmune = Array.IndexOf(immunePlayers, playerCard.Key) >= 0;
-
-				if (isImmune)
-				{
-					playerCard.Value.SetSelectionMode(true, false);
-					continue;
-				}
-
-				playerCard.Value.SetSelectionMode(true, true);
 				playerCard.Value.OnCardClick += OnCardSelectedChanged;
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
-			_UIManager.VoteScreen.Initialize(displayWarning, maxDuration, true);
+			_UIManager.VoteScreen.Initialize(displayWarning, maxDuration, true, allowedToNotVote ? null : () => { return _selectedCard != null; });
 			_UIManager.VoteScreen.VoteLockChanged += OnVoteLockChanged;
 		}
 

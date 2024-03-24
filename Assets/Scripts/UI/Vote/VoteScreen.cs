@@ -31,7 +31,10 @@ namespace Werewolf.UI
 		private IEnumerator _lockedInDelayCountdownCoroutine;
 
 		private float _lockedInDelayDuration;
-		private bool _isLockedIn;
+		public bool IsLockedIn { get; private set; }
+
+		public delegate bool CanLockInDelegate();
+		private CanLockInDelegate _canLockIn;
 
 		public event Action<bool> VoteLockChanged;
 
@@ -45,9 +48,10 @@ namespace Werewolf.UI
 			_lockedInDelayDuration = lockedInDelayDuration;
 		}
 
-		public void Initialize(bool displayWarning, float countdownDuration, bool displayButton)
+		public void Initialize(bool displayWarning, float countdownDuration, bool displayButton, CanLockInDelegate canLockInDelegate = null)
 		{
-			_isLockedIn = false;
+			IsLockedIn = false;
+			_canLockIn = canLockInDelegate;
 
 			SetLockedInDelayActive(false);
 			_warningText.SetActive(displayWarning);
@@ -78,14 +82,19 @@ namespace Werewolf.UI
 
 		public void ToggleChoiceLock()
 		{
-			_isLockedIn = !_isLockedIn;
+			if (_canLockIn != null && !_canLockIn())
+			{
+				return;
+			}
+
+			IsLockedIn = !IsLockedIn;
 			UpdateButtonText();
-			VoteLockChanged?.Invoke(_isLockedIn);
+			VoteLockChanged?.Invoke(IsLockedIn);
 		}
 
 		private void UpdateButtonText()
 		{
-			_lockInText.text = _isLockedIn ? _config.LockedOutButtonText : _config.LockedInButtonText;
+			_lockInText.text = IsLockedIn ? _config.LockedOutButtonText : _config.LockedInButtonText;
 		}
 
 		public void SetLockedInDelayActive(bool isActive)

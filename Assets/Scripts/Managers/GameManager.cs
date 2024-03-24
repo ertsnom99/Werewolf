@@ -139,7 +139,8 @@ namespace Werewolf
 		// Server events
 		public event Action PreRoleDistribution;
 		public event Action PostRoleDistribution;
-		public event Action OnPreStartGame;
+		public event Action PreStartGame;
+		public event Action StartWaitingForPlayersRollCall;
 		public event Action<PlayerRef, string> OnMarkForDeathAdded;
 		public event Action<PlayerRef, List<string>, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
@@ -531,7 +532,7 @@ namespace Werewolf
 			}
 			else if (_allRolesSent && _allPlayersReadyToPlay)
 			{
-				OnPreStartGame?.Invoke();
+				PreStartGame?.Invoke();
 				StartGame();
 			}
 		}
@@ -677,6 +678,8 @@ namespace Werewolf
 
 				if (_playersWaitingFor.Count > 0)
 				{
+					StartWaitingForPlayersRollCall?.Invoke();
+
 					int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(nightCall);
 
 					foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
@@ -694,12 +697,6 @@ namespace Werewolf
 						DisplayRolePlaying(displayRoleGameplayTagID);
 					}
 #endif
-					// Start the vote if it has been prepared
-					if (_voteManager.IsPreparingToVote())
-					{
-						_voteManager.StartVote();
-					}
-
 					float elapsedTime = .0f;
 
 					while (!IsNightCallOver(elapsedTime))
@@ -1127,7 +1124,7 @@ namespace Werewolf
 		#region Village Vote
 		private void StartVillageVote()
 		{
-			_voteManager.PrepareVote(Config.VillageVoteDuration, true);
+			_voteManager.PrepareVote(Config.VillageVoteDuration, false, true);
 
 			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
 			{
