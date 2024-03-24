@@ -26,11 +26,16 @@ namespace Werewolf
 
 		public override bool OnRoleCall()
 		{
-			_preparedVote = _voteManager.PrepareVote(_commonData.VoteMaxDuration, false);
+			_preparedVote = _voteManager.PrepareVote(_commonData.VoteMaxDuration, true, false);
 			_voteManager.AddVoter(Player);
 			_voteManager.AddVoteImmunity(Player);
 
 			_voteManager.VoteCompletedCallback += OnVoteEnded;
+
+			if (_preparedVote)
+			{
+				_gameManager.StartWaitingForPlayersRollCall += OnStartWaitingForPlayersRollCall;
+			}
 
 			return true;
 		}
@@ -47,6 +52,12 @@ namespace Werewolf
 			}
 
 			_gameManager.AddMarkForDeath(votes.Keys.ToArray()[0], _commonData.DeathMark);
+		}
+
+		private void OnStartWaitingForPlayersRollCall()
+		{
+			_gameManager.StartWaitingForPlayersRollCall -= OnStartWaitingForPlayersRollCall;
+			_voteManager.StartVote();
 		}
 
 		public override void OnRoleTimeOut() { }
