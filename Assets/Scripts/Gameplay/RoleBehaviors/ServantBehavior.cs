@@ -32,9 +32,12 @@ public class ServantBehavior : RoleBehavior
 
 	public override void OnRoleTimeOut() { }
 
-	private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, float revealDuration)
+	private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<string> marks, float revealDuration)
 	{
-		if (playerRevealed == Player || !_gameManager.PromptPlayer(Player, "Take this role?", revealDuration, "Take", OnTakeRole))
+		if (!_gameManager.Players[Player].IsAlive
+			|| playerRevealed == Player
+			|| !marks.Contains(_gameManager.Config.VillageVoteMarkForDeath)
+			|| !_gameManager.PromptPlayer(Player, "Take this role?", revealDuration, "Take", OnTakeRole))
 		{
 			return;
 		}
