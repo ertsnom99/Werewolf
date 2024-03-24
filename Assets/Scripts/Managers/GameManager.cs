@@ -141,7 +141,7 @@ namespace Werewolf
 		public event Action PostRoleDistribution;
 		public event Action OnPreStartGame;
 		public event Action<PlayerRef, string> OnMarkForDeathAdded;
-		public event Action<PlayerRef, float> WaitBeforeDeathRevealStarted;
+		public event Action<PlayerRef, List<string>, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
 		public event Action<PlayerRef> PlayerDeathRevealEnded;
 
@@ -600,7 +600,7 @@ namespace Werewolf
 					StartCoroutine(ChangeDaytime(Daytime.Day));
 					break;
 				case GameplayLoopStep.DeathReveal:
-					StartCoroutine(StartDeathReveal());
+					StartCoroutine(StartDeathReveal(true));
 					break;
 				case GameplayLoopStep.Debate:
 					StartCoroutine(StartDebate());
@@ -609,7 +609,7 @@ namespace Werewolf
 					StartVillageVote();
 					break;
 				case GameplayLoopStep.Execution:
-					StartCoroutine(StartDeathReveal());
+					StartCoroutine(StartDeathReveal(false));
 					break;
 			}
 		}
@@ -794,22 +794,25 @@ namespace Werewolf
 		#endregion
 
 		#region Death Reveal
-		public IEnumerator StartDeathReveal()
+		public IEnumerator StartDeathReveal(bool showTitle)
 		{
 			bool hasAnyPlayerDied = _marksForDeath.Count > 0;
 
-			RPC_DisplayDeathRevealTitle(hasAnyPlayerDied);
+			if (showTitle)
+			{
+				RPC_DisplayDeathRevealTitle(hasAnyPlayerDied);
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayDeathRevealTitle(hasAnyPlayerDied);
+				DisplayDeathRevealTitle(hasAnyPlayerDied);
 #endif
-			yield return new WaitForSeconds(Config.UITransitionDuration);
-			yield return new WaitForSeconds(Config.DeathRevealTitleHoldDuration);
+				yield return new WaitForSeconds(Config.UITransitionDuration);
+				yield return new WaitForSeconds(Config.DeathRevealTitleHoldDuration);
 
-			RPC_HideUI();
+				RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
-			HideUI();
+				HideUI();
 #endif
-			yield return new WaitForSeconds(Config.UITransitionDuration);
+				yield return new WaitForSeconds(Config.UITransitionDuration);
+			}
 
 			if (hasAnyPlayerDied)
 			{
@@ -840,7 +843,7 @@ namespace Werewolf
 
 					_isPlayerDeathRevealCompleted = false;
 
-					_revealPlayerDeathCoroutine = RevealPlayerDeath(deadPlayer, revealTo.ToArray(), true, false, OnRevealPlayerDeathEnded);
+					_revealPlayerDeathCoroutine = RevealPlayerDeath(deadPlayer, revealTo.ToArray(), true, _marksForDeath[0].Marks, false, OnRevealPlayerDeathEnded);
 					StartCoroutine(_revealPlayerDeathCoroutine);
 
 					while (!_isPlayerDeathRevealCompleted)
@@ -878,7 +881,7 @@ namespace Werewolf
 			DisplayTitle(null, Config.PlayerDiedText);// TODO: Give real image
 		}
 
-		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, bool returnFaceDown, Action RevealPlayerCompleted)
+		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, List<string> marks, bool returnFaceDown, Action RevealPlayerCompleted)
 		{
 			foreach (PlayerRef player in revealTo)
 			{
@@ -899,7 +902,7 @@ namespace Werewolf
 
 			if (waitBeforeReveal)
 			{
-				WaitBeforeDeathRevealStarted?.Invoke(playerRevealed, Config.WaitRevealDuration);
+				WaitBeforeDeathRevealStarted?.Invoke(playerRevealed, marks, Config.WaitRevealDuration);
 
 				yield return new WaitForSeconds(Config.WaitRevealDuration);
 
@@ -1177,7 +1180,7 @@ namespace Werewolf
 				votedPlayer = mostVotedPlayers[0];
 			}
 
-			AddMarkForDeath(votedPlayer, "Hanged");
+			AddMarkForDeath(votedPlayer, Config.VillageVoteMarkForDeath);
 			StartCoroutine(HighlightVotedPlayer(votedPlayer));
 		}
 

@@ -95,6 +95,9 @@ namespace Werewolf.Data
 		public float VillageVoteDuration { get; private set; }
 
 		[field: SerializeField]
+		public string VillageVoteMarkForDeath { get; private set; }
+
+		[field: SerializeField]
 		public float VotedPlayerHighlightDuration { get; private set; }
 
 		[field: Header("UI")]

@@ -103,6 +103,7 @@ MonoBehaviour:
   <AllLockedInDelayToEndVote>k__BackingField: 3
   <NoVoteDuration>k__BackingField: 10
   <VillageVoteDuration>k__BackingField: 15
+  <VillageVoteMarkForDeath>k__BackingField: Hanged
   <VotedPlayerHighlightDuration>k__BackingField: 5
   <CountdownText>k__BackingField: 'Time left: {0}'
   <UITransitionDuration>k__BackingField: 0.75
