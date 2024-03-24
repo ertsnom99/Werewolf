@@ -45,6 +45,7 @@ namespace Werewolf.UI
 
 			_confirmButton.gameObject.SetActive(showConfirmButton);
 			_confirmButtonText.text = confirmButtonText;
+			_confirmButton.interactable = true;
 
 			if (_countdownCoroutine != null)
 			{
@@ -77,6 +78,7 @@ namespace Werewolf.UI
 
 		public void OnConfirm()
 		{
+			_confirmButton.interactable = false;
 			Confirm?.Invoke();
 		}
 

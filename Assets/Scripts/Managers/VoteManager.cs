@@ -377,6 +377,11 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, Vote> vote in _votes)
 			{
+				if (vote.Value.VotedFor == PlayerRef.None)
+				{
+					continue;
+				}
+
 				if (totalVotes.ContainsKey(vote.Value.VotedFor))
 				{
 					totalVotes[vote.Value.VotedFor]++;
