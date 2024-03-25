@@ -119,10 +119,10 @@ namespace Werewolf
 			NightTransition = 0,
 			RoleCall,
 			DayTransition,
-			DeathReveal,
+			DayDeathReveal,
 			Debate,
 			Vote,
-			Execution,
+			VoteDeathReveal,
 			Count,
 		}
 
@@ -573,7 +573,7 @@ namespace Werewolf
 		#region Gameplay Loop
 		private void StartGame()
 		{
-			_currentGameplayLoopStep = GameplayLoopStep.Execution;
+			_currentGameplayLoopStep = GameplayLoopStep.VoteDeathReveal;
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
@@ -600,7 +600,7 @@ namespace Werewolf
 				case GameplayLoopStep.DayTransition:
 					StartCoroutine(ChangeDaytime(Daytime.Day));
 					break;
-				case GameplayLoopStep.DeathReveal:
+				case GameplayLoopStep.DayDeathReveal:
 					StartCoroutine(StartDeathReveal(true));
 					break;
 				case GameplayLoopStep.Debate:
@@ -609,7 +609,7 @@ namespace Werewolf
 				case GameplayLoopStep.Vote:
 					StartVillageVote();
 					break;
-				case GameplayLoopStep.Execution:
+				case GameplayLoopStep.VoteDeathReveal:
 					StartCoroutine(StartDeathReveal(false));
 					break;
 			}
