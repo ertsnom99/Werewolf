@@ -29,6 +29,7 @@ namespace Werewolf
 		private float _maxDuration;
 		private bool _allowedToNotVote;
 		private bool _failToVotePenalty;
+		private Dictionary<PlayerRef, int> _modifiers;
 		private int _lockedInVoteCount;
 
 		private Step _step;
@@ -74,7 +75,7 @@ namespace Werewolf
 			_players = players;
 		}
 
-		public bool PrepareVote(float maxDuration, bool allowedToNotVote, bool failToVotePenalty)
+		public bool PrepareVote(float maxDuration, bool allowedToNotVote, bool failToVotePenalty, Dictionary<PlayerRef, int> modifiers = null)
 		{
 			if (_step != Step.NotVoting)
 			{
@@ -90,6 +91,7 @@ namespace Werewolf
 			_maxDuration = maxDuration;
 			_allowedToNotVote = allowedToNotVote;
 			_failToVotePenalty = failToVotePenalty;
+			_modifiers = modifiers;
 			_lockedInVoteCount = 0;
 
 			_step = Step.Preparing;
@@ -414,13 +416,15 @@ namespace Werewolf
 					continue;
 				}
 
+				int voteValue = (_modifiers != null && _modifiers.ContainsKey(vote.Key)) ? _modifiers[vote.Key] : 1;
+
 				if (totalVotes.ContainsKey(vote.Value.VotedFor))
 				{
-					totalVotes[vote.Value.VotedFor]++;
+					totalVotes[vote.Value.VotedFor] += voteValue;
 					continue;
 				}
 
-				totalVotes.Add(vote.Value.VotedFor, 1);
+				totalVotes.Add(vote.Value.VotedFor, voteValue);
 			}
 
 			VoteCompletedCallback?.Invoke(totalVotes);
