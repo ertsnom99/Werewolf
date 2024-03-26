@@ -36,7 +36,7 @@ public class ServantBehavior : RoleBehavior
 	{
 		if (!_gameManager.Players[Player].IsAlive
 			|| playerRevealed == Player
-			|| !marks.Contains(_gameManager.Config.VillageVoteMarkForDeath)
+			|| !marks.Contains(_gameManager.Config.ExecutionMarkForDeath)
 			|| !_gameManager.PromptPlayer(Player, "Take this role?", revealDuration, "Take", OnTakeRole))
 		{
 			return;

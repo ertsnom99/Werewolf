@@ -26,6 +26,8 @@ namespace Werewolf
 
 		public Dictionary<PlayerRef, PlayerData> Players { get; private set; }
 
+		private PlayerRef _captain;
+
 		public int AlivePlayerCount { get; private set; }
 
 		private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
@@ -80,6 +82,8 @@ namespace Werewolf
 		private bool _isPlayerDeathRevealCompleted;
 		private IEnumerator _revealPlayerDeathCoroutine;
 
+		private Action<List<PlayerRef>> _votesCountedCallback;
+
 		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
 		private Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new ();
 		private Dictionary<PlayerRef, Action> _flipFaceUpCallbacks = new ();
@@ -116,14 +120,15 @@ namespace Werewolf
 
 		private enum GameplayLoopStep
 		{
-			NightTransition = 0,
+			DebateElection = 0,
+			Election,
+			NightTransition,
 			RoleCall,
 			DayTransition,
 			DayDeathReveal,
-			Debate,
-			Vote,
-			VoteDeathReveal,
-			Count,
+			DebateExecution,
+			Execution,
+			ExecutionDeathReveal,
 		}
 
 		private GameplayLoopStep _currentGameplayLoopStep;
@@ -150,6 +155,7 @@ namespace Werewolf
 		public event Action OnRoleReceived;
 
 		private readonly Vector3 STARTING_DIRECTION = Vector3.back;
+		private readonly int CAPTAIN_VOTE_MODIFIER = 2;
 
 		protected override void Awake()
 		{
@@ -573,24 +579,35 @@ namespace Werewolf
 		#region Gameplay Loop
 		private void StartGame()
 		{
-			_currentGameplayLoopStep = GameplayLoopStep.VoteDeathReveal;
-			StartCoroutine(MoveToNextGameplayLoopStep());
+			_currentGameplayLoopStep = GameplayLoopStep.DebateElection;
+			ExecuteGameplayLoopStep();
 		}
 
 		#region Gameplay Loop Steps
 		private IEnumerator MoveToNextGameplayLoopStep()
 		{
-			_currentGameplayLoopStep++;
-
-			if (_currentGameplayLoopStep == GameplayLoopStep.Count)
+			if (_currentGameplayLoopStep == GameplayLoopStep.ExecutionDeathReveal)
 			{
-				_currentGameplayLoopStep = 0;
+				_currentGameplayLoopStep = GameplayLoopStep.Election;
 			}
+
+			_currentGameplayLoopStep++;
 
 			yield return new WaitForSeconds(Config.GameplayLoopStepDelay);
 
+			ExecuteGameplayLoopStep();
+		}
+
+		private void ExecuteGameplayLoopStep()
+		{
 			switch (_currentGameplayLoopStep)
 			{
+				case GameplayLoopStep.DebateElection:
+					StartCoroutine(StartDebate(Config.DebateElectionText));
+					break;
+				case GameplayLoopStep.Election:
+					StartElection();
+					break;
 				case GameplayLoopStep.NightTransition:
 					StartCoroutine(ChangeDaytime(Daytime.Night));
 					break;
@@ -603,17 +620,145 @@ namespace Werewolf
 				case GameplayLoopStep.DayDeathReveal:
 					StartCoroutine(StartDeathReveal(true));
 					break;
-				case GameplayLoopStep.Debate:
-					StartCoroutine(StartDebate());
+				case GameplayLoopStep.DebateExecution:
+					StartCoroutine(StartDebate(Config.DebateExecutionText));
 					break;
-				case GameplayLoopStep.Vote:
-					StartVillageVote();
+				case GameplayLoopStep.Execution:
+					StartExecution();
 					break;
-				case GameplayLoopStep.VoteDeathReveal:
+				case GameplayLoopStep.ExecutionDeathReveal:
 					StartCoroutine(StartDeathReveal(false));
 					break;
 			}
 		}
+
+		#region Debate
+		private IEnumerator StartDebate(string debateText)
+		{
+			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			{
+				RPC_OnDebateStarted(player.Key, debateText, player.Value.IsAlive);
+
+				if (!player.Value.IsAlive)
+				{
+					continue;
+				}
+
+				WaitForPlayer(player.Key);
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			DisplayTitle(null, debateText, Config.DebateStepDuration, false, Config.SkipText);
+#endif
+			float elapsedTime = .0f;
+
+			while (_playersWaitingFor.Count > 0 && elapsedTime < Config.DebateStepDuration)
+			{
+				elapsedTime += Time.deltaTime;
+				yield return 0;
+			}
+
+			RPC_OnDebateEnded();
+			_playersWaitingFor.Clear();
+
+#if UNITY_SERVER && UNITY_EDITOR
+			OnDebateEnded();
+#endif
+			yield return new WaitForSeconds(Config.UITransitionDuration);
+
+			StartCoroutine(MoveToNextGameplayLoopStep());
+		}
+
+		private void OnPlayerSkipDebate()
+		{
+			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
+
+			_playerCards[Runner.LocalPlayer].SetVotingStatusVisible(true);
+			_playerCards[Runner.LocalPlayer].UpdateVotingStatus(false);
+
+			RPC_SkipDebate();
+		}
+
+		private void OnDebateEnded()
+		{
+			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
+
+			foreach (KeyValuePair<PlayerRef, Card> card in _playerCards)
+			{
+				card.Value.SetVotingStatusVisible(false);
+			}
+
+			HideUI();
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, string debateText, bool showConfirmButton)
+		{
+			DisplayTitle(null, debateText, Config.DebateStepDuration, showConfirmButton, Config.SkipText);
+
+			if (!showConfirmButton)
+			{
+				return;
+			}
+
+			_UIManager.TitleScreen.Confirm += OnPlayerSkipDebate;
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_SkipDebate(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+#if UNITY_SERVER && UNITY_EDITOR
+			_playerCards[info.Source].SetVotingStatusVisible(true);
+			_playerCards[info.Source].UpdateVotingStatus(false);
+#endif
+			RPC_PlayerSkippedDebate(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_PlayerSkippedDebate(PlayerRef player)
+		{
+			_playerCards[player].SetVotingStatusVisible(true);
+			_playerCards[player].UpdateVotingStatus(false);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_OnDebateEnded()
+		{
+			OnDebateEnded();
+		}
+		#endregion
+		#endregion
+
+		#region Election
+		private void StartElection()
+		{
+			StartVote(ChooseCaptain, false, false);
+		}
+
+		private void ChooseCaptain(List<PlayerRef> mostVotedPlayers)
+		{
+			PlayerRef votedPlayer;
+
+			if (mostVotedPlayers.Count > 1)
+			{
+				votedPlayer = mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Count)];
+			}
+			else if (mostVotedPlayers.Count == 1)
+			{
+				votedPlayer = mostVotedPlayers[0];
+			}
+			else
+			{
+				votedPlayer = Players.Keys.ElementAt(UnityEngine.Random.Range(0, Players.Count));
+			}
+
+			_captain = votedPlayer;
+			// TODO: Give the smaller captain card to the captain
+			
+			StartCoroutine(HighlightVotedPlayer(votedPlayer));
+		}
+		#endregion
 
 		#region Daytime Change
 		private IEnumerator ChangeDaytime(Daytime daytime)
@@ -1023,108 +1168,49 @@ namespace Werewolf
 		#endregion
 		#endregion
 
-		#region Debate
-		private IEnumerator StartDebate()
+		#region Execution
+		private void StartExecution()
 		{
-			foreach(KeyValuePair<PlayerRef, PlayerData> player in Players)
+			Dictionary<PlayerRef, int> modifiers = new();
+
+			if (_captain != PlayerRef.None)
 			{
-				RPC_OnDebateStarted(player.Key, player.Value.IsAlive);
-
-				if (!player.Value.IsAlive)
-				{
-					continue;
-				}
-
-				WaitForPlayer(player.Key);
-			}
-#if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(null, Config.DebateText, Config.DebateStepDuration, false, Config.SkipText);
-#endif
-			float elapsedTime = .0f;
-
-			while (_playersWaitingFor.Count > 0 && elapsedTime < Config.DebateStepDuration)
-			{
-				elapsedTime += Time.deltaTime;
-				yield return 0;
+				modifiers.Add(_captain, CAPTAIN_VOTE_MODIFIER);
 			}
 
-			RPC_OnDebateEnded();
-			_playersWaitingFor.Clear();
-
-#if UNITY_SERVER && UNITY_EDITOR
-			OnDebateEnded();
-#endif
-			yield return new WaitForSeconds(Config.UITransitionDuration);
-
-			StartCoroutine(MoveToNextGameplayLoopStep());
+			StartVote(ExecutePlayer, false, true, modifiers);
 		}
 
-		private void OnPlayerSkipDebate()
+		private void ExecutePlayer(List<PlayerRef> mostVotedPlayers)
 		{
-			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
+			PlayerRef votedPlayer;
 
-			_playerCards[Runner.LocalPlayer].SetVotingStatusVisible(true);
-			_playerCards[Runner.LocalPlayer].UpdateVotingStatus(false);
-
-			RPC_SkipDebate();
-		}
-
-		private void OnDebateEnded()
-		{
-			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
-
-			foreach (KeyValuePair<PlayerRef, Card> card in _playerCards)
+			if (mostVotedPlayers.Count > 1)
 			{
-				card.Value.SetVotingStatusVisible(false);
+				// TODO: Let the capitain choose who dies
+				votedPlayer = mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Count)];
+			}
+			else
+			{
+				votedPlayer = mostVotedPlayers[0];
 			}
 
-			HideUI();
-		}
-
-		#region RPC Calls
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, bool showConfirmButton)
-		{
-			DisplayTitle(null, Config.DebateText, Config.DebateStepDuration, showConfirmButton, Config.SkipText);
-
-			if (!showConfirmButton)
-			{
-				return;
-			}
-
-			_UIManager.TitleScreen.Confirm += OnPlayerSkipDebate;
-		}
-
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_SkipDebate(RpcInfo info = default)
-		{
-			StopWaintingForPlayer(info.Source);
-#if UNITY_SERVER && UNITY_EDITOR
-			_playerCards[info.Source].SetVotingStatusVisible(true);
-			_playerCards[info.Source].UpdateVotingStatus(false);
-#endif
-			RPC_PlayerSkippedDebate(info.Source);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_PlayerSkippedDebate(PlayerRef player)
-		{
-			_playerCards[player].SetVotingStatusVisible(true);
-			_playerCards[player].UpdateVotingStatus(false);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_OnDebateEnded()
-		{
-			OnDebateEnded();
+			AddMarkForDeath(votedPlayer, Config.ExecutionMarkForDeath);
+			StartCoroutine(HighlightVotedPlayer(votedPlayer));
 		}
 		#endregion
-		#endregion
 
-		#region Village Vote
-		private void StartVillageVote()
+		#region Vote
+		private bool StartVote(Action<List<PlayerRef>> votesCountedCallback, bool allowedToNotVote, bool failToVotePenalty, Dictionary<PlayerRef, int> modifiers = null)
 		{
-			_voteManager.PrepareVote(Config.VillageVoteDuration, false, true);
+			if (_votesCountedCallback != null)
+			{
+				return false;
+			}
+
+			_votesCountedCallback = votesCountedCallback;
+
+			_voteManager.PrepareVote(Config.ElectionVoteDuration, allowedToNotVote, failToVotePenalty, modifiers);
 
 			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
 			{
@@ -1139,18 +1225,20 @@ namespace Werewolf
 				}
 			}
 
-			_voteManager.VoteCompletedCallback += OnVillageVoteEnded;
+			_voteManager.VoteCompletedCallback += OnVoteEnded;
 			_voteManager.StartVote();
+
+			return true;
 		}
 
-		private void OnVillageVoteEnded(Dictionary<PlayerRef, int> votes)
+		private void OnVoteEnded(Dictionary<PlayerRef, int> votes)
 		{
-			_voteManager.VoteCompletedCallback -= OnVillageVoteEnded;
+			_voteManager.VoteCompletedCallback -= OnVoteEnded;
 
 			int mostVoteCount = 0;
 			List<PlayerRef> mostVotedPlayers = new List<PlayerRef>();
 
-			foreach(KeyValuePair<PlayerRef, int> vote in votes)
+			foreach (KeyValuePair<PlayerRef, int> vote in votes)
 			{
 				if (vote.Value < mostVoteCount)
 				{
@@ -1166,19 +1254,8 @@ namespace Werewolf
 				mostVotedPlayers.Add(vote.Key);
 			}
 
-			PlayerRef votedPlayer;
-
-			if (mostVotedPlayers.Count > 1)
-			{
-				votedPlayer = mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Count)];
-			}
-			else
-			{
-				votedPlayer = mostVotedPlayers[0];
-			}
-
-			AddMarkForDeath(votedPlayer, Config.VillageVoteMarkForDeath);
-			StartCoroutine(HighlightVotedPlayer(votedPlayer));
+			_votesCountedCallback?.Invoke(mostVotedPlayers);
+			_votesCountedCallback = null;
 		}
 
 		private IEnumerator HighlightVotedPlayer(PlayerRef votedPlayer)
@@ -1189,7 +1266,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			SetPlayerCardHighlightVisible(votedPlayer, true);
 #endif
-			yield return new WaitForSeconds(Config.VotedPlayerHighlightDuration);
+			yield return new WaitForSeconds(Config.ExecutedPlayerHighlightDuration);
 
 			RPC_SetPlayerCardHighlightVisible(votedPlayer, false);
 #if UNITY_SERVER && UNITY_EDITOR

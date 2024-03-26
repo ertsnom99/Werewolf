@@ -70,14 +70,31 @@ namespace Werewolf.Data
 
 		[field: Header("Debate")]
 		[field: SerializeField]
-		public string DebateText { get; private set; }
-
-		[field: SerializeField]
 		public string SkipText { get; private set; }
 
 		[field: SerializeField]
 		public float DebateStepDuration { get; private set; }
-		
+
+		[field: Header("Election")]
+		[field: SerializeField]
+		public string DebateElectionText { get; private set; }
+
+		[field: SerializeField]
+		public float ElectionVoteDuration { get; private set; }
+
+		[field: Header("Execution")]
+		[field: SerializeField]
+		public string DebateExecutionText { get; private set; }
+
+		[field: SerializeField]
+		public float ExecutionVoteDuration { get; private set; }
+
+		[field: SerializeField]
+		public string ExecutionMarkForDeath { get; private set; }
+
+		[field: SerializeField]
+		public float ExecutedPlayerHighlightDuration { get; private set; }
+
 		[field: Header("Vote")]
 		[field: SerializeField]
 		public string LockedInButtonText { get; private set; }
@@ -90,15 +107,6 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public float NoVoteDuration { get; private set; }
-
-		[field: SerializeField]
-		public float VillageVoteDuration { get; private set; }
-
-		[field: SerializeField]
-		public string VillageVoteMarkForDeath { get; private set; }
-
-		[field: SerializeField]
-		public float VotedPlayerHighlightDuration { get; private set; }
 
 		[field: Header("UI")]
 		[field: SerializeField]
