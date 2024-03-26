@@ -733,7 +733,7 @@ namespace Werewolf
 		#region Election
 		private void StartElection()
 		{
-			StartVote(ChooseCaptain, false, false);
+			StartVoteForAllPlayers(ChooseCaptain, false, false);
 		}
 
 		private void ChooseCaptain(List<PlayerRef> mostVotedPlayers)
@@ -756,7 +756,7 @@ namespace Werewolf
 			_captain = votedPlayer;
 			// TODO: Give the smaller captain card to the captain
 			
-			StartCoroutine(HighlightVotedPlayer(votedPlayer));
+			StartCoroutine(HighlightPlayer(votedPlayer, () => StartCoroutine(MoveToNextGameplayLoopStep())));
 		}
 		#endregion
 
@@ -1178,7 +1178,7 @@ namespace Werewolf
 				modifiers.Add(_captain, CAPTAIN_VOTE_MODIFIER);
 			}
 
-			StartVote(ExecutePlayer, false, true, modifiers);
+			StartVoteForAllPlayers(ExecutePlayer, false, true, modifiers);
 		}
 
 		private void ExecutePlayer(List<PlayerRef> mostVotedPlayers)
@@ -1196,12 +1196,12 @@ namespace Werewolf
 			}
 
 			AddMarkForDeath(votedPlayer, Config.ExecutionMarkForDeath);
-			StartCoroutine(HighlightVotedPlayer(votedPlayer));
+			StartCoroutine(HighlightPlayer(votedPlayer, () => StartCoroutine(MoveToNextGameplayLoopStep())));
 		}
 		#endregion
 
 		#region Vote
-		private bool StartVote(Action<List<PlayerRef>> votesCountedCallback, bool allowedToNotVote, bool failToVotePenalty, Dictionary<PlayerRef, int> modifiers = null)
+		private bool StartVoteForAllPlayers(Action<List<PlayerRef>> votesCountedCallback, bool allowedToNotVote, bool failToVotePenalty, Dictionary<PlayerRef, int> modifiers = null)
 		{
 			if (_votesCountedCallback != null)
 			{
@@ -1257,23 +1257,6 @@ namespace Werewolf
 			_votesCountedCallback?.Invoke(mostVotedPlayers);
 			_votesCountedCallback = null;
 		}
-
-		private IEnumerator HighlightVotedPlayer(PlayerRef votedPlayer)
-		{
-			RPC_HideUI();
-
-			RPC_SetPlayerCardHighlightVisible(votedPlayer, true);
-#if UNITY_SERVER && UNITY_EDITOR
-			SetPlayerCardHighlightVisible(votedPlayer, true);
-#endif
-			yield return new WaitForSeconds(Config.ExecutedPlayerHighlightDuration);
-
-			RPC_SetPlayerCardHighlightVisible(votedPlayer, false);
-#if UNITY_SERVER && UNITY_EDITOR
-			SetPlayerCardHighlightVisible(votedPlayer, false);
-#endif
-			StartCoroutine(MoveToNextGameplayLoopStep());
-		}
 		#endregion
 
 		public void WaitForPlayer(PlayerRef player)
@@ -1297,6 +1280,23 @@ namespace Werewolf
 		}
 		#endregion
 		#endregion
+
+		private IEnumerator HighlightPlayer(PlayerRef player, Action highlightEndedCallback)
+		{
+			RPC_HideUI();
+
+			RPC_SetPlayerCardHighlightVisible(player, true);
+#if UNITY_SERVER && UNITY_EDITOR
+			SetPlayerCardHighlightVisible(player, true);
+#endif
+			yield return new WaitForSeconds(Config.ExecutedPlayerHighlightDuration);
+
+			RPC_SetPlayerCardHighlightVisible(player, false);
+#if UNITY_SERVER && UNITY_EDITOR
+			SetPlayerCardHighlightVisible(player, false);
+#endif
+			highlightEndedCallback?.Invoke();
+		}
 
 		#region Role Change
 		public void ChangeRole(PlayerRef player, RoleData roleData, RoleBehavior roleBehavior)
