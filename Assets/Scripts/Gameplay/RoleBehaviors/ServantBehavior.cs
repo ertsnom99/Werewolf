@@ -46,7 +46,7 @@ public class ServantBehavior : RoleBehavior
 		_playerRevealed = playerRevealed;
 	}
 
-	private void OnTakeRole()
+	private void OnTakeRole(PlayerRef player)
 	{
 		_isWaitingForPromptAnswer = false;
 		_gameManager.StopPlayerDeathReveal();

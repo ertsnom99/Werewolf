@@ -68,23 +68,37 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float DelayBeforeRevealingDeadPlayer { get; private set; }
 
-		[field: Header("Debate")]
-		[field: SerializeField]
-		public string SkipText { get; private set; }
-
-		[field: SerializeField]
-		public float DebateStepDuration { get; private set; }
-
 		[field: Header("Election")]
 		[field: SerializeField]
-		public string DebateElectionText { get; private set; }
+		public string ElectionPromptTitleText { get; private set; }
+
+		[field: SerializeField]
+		public string ElectionPromptButtonText { get; private set; }
+
+		[field: SerializeField]
+		public float ElectionPromptDuration { get; private set; }
+
+		[field: SerializeField]
+		public string ElectionMultipleCandidateText { get; private set; }
+
+		[field: SerializeField]
+		public string ElectionDebateText { get; private set; }
 
 		[field: SerializeField]
 		public float ElectionVoteDuration { get; private set; }
 
+		[field: SerializeField]
+		public string ElectionNoCandidateText { get; private set; }
+
+		[field: SerializeField]
+		public float ElectionNoCandidateDuration { get; private set; }
+
+		[field: SerializeField]
+		public string ElectionCaptainRevealText { get; private set; }
+
 		[field: Header("Execution")]
 		[field: SerializeField]
-		public string DebateExecutionText { get; private set; }
+		public string ExecutionDebateText { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionVoteDuration { get; private set; }
@@ -92,8 +106,16 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public string ExecutionMarkForDeath { get; private set; }
 
+		[field: Header("Debate")]
 		[field: SerializeField]
-		public float ExecutedPlayerHighlightDuration { get; private set; }
+		public string SkipText { get; private set; }
+
+		[field: SerializeField]
+		public float DebateStepDuration { get; private set; }
+
+		[field: Header("Highlight")]
+		[field: SerializeField]
+		public float HighlightDuration { get; private set; }
 
 		[field: Header("Vote")]
 		[field: SerializeField]
@@ -113,7 +135,10 @@ namespace Werewolf.Data
 		public string CountdownText { get; private set; }
 
 		[field: SerializeField]
-		public float UITransitionDuration { get; private set; }
+		public float UITransitionNormalDuration { get; private set; }
+
+		[field: SerializeField]
+		public float UITransitionFastDuration { get; private set; }
 
 		[field: Header("Loading Screen")]
 		[field: SerializeField]

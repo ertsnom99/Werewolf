@@ -154,7 +154,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.HideUI();
 #endif
-			yield return new WaitForSeconds(_gameManager.Config.UITransitionDuration);
+			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
 
 			_gameManager.StopWaintingForPlayer(Player);
 		}
