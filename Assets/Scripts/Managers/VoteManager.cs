@@ -107,7 +107,7 @@ namespace Werewolf
 			}
 
 			Voters.Add(voter);
-			_immuneFromPlayers.Add(voter, new() { voter });
+			_immuneFromPlayers.Add(voter, new());
 		}
 
 		public void RemoveVoter(PlayerRef voter)
@@ -143,7 +143,7 @@ namespace Werewolf
 
 		public void AddVoteImmunity(PlayerRef immunePlayer, PlayerRef from)
 		{
-			if (_step != Step.Preparing || !_immune.Contains(from) || _immuneFromPlayers[from].Contains(immunePlayer))
+			if (_step != Step.Preparing || !_immuneFromPlayers.ContainsKey(from) || _immuneFromPlayers[from].Contains(immunePlayer))
 			{
 				return;
 			}
@@ -223,7 +223,7 @@ namespace Werewolf
 			_voteCoroutine = WaitForVoteEnd(voteDuration);
 			StartCoroutine(_voteCoroutine);
 #if UNITY_SERVER && UNITY_EDITOR
-			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
+			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 			_UIManager.VoteScreen.Initialize(false, voteDuration, false);
 #endif
 			_step = Step.Voting;
@@ -444,7 +444,7 @@ namespace Werewolf
 			}
 
 			_UIManager.VoteScreen.SetLockedInDelayActive(false);
-			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionDuration);
+			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 #endif
 			_step = Step.NotVoting;
 		}
@@ -489,7 +489,7 @@ namespace Werewolf
 				playerCard.Value.OnCardClick += OnCardSelectedChanged;
 			}
 
-			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
+			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 			_UIManager.VoteScreen.Initialize(displayWarning, maxDuration, true, allowedToNotVote ? null : () => { return _selectedCard != null; });
 			_UIManager.VoteScreen.VoteLockChanged += OnVoteLockChanged;
 		}
@@ -513,7 +513,7 @@ namespace Werewolf
 				_playerCards[voter].UpdateVotingStatus(true);
 			}
 
-			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionDuration);
+			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 			_UIManager.VoteScreen.Initialize(false, maxDuration, false);
 		}
 
@@ -580,7 +580,7 @@ namespace Werewolf
 
 			_UIManager.VoteScreen.SetLockedInDelayActive(false);
 			_UIManager.VoteScreen.VoteLockChanged -= OnVoteLockChanged;
-			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionDuration);
+			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 		}
 		#endregion
 	}

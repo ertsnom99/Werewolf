@@ -95,20 +95,29 @@ MonoBehaviour:
   <DeathRevealTitleHoldDuration>k__BackingField: 3
   <PlayerDiedText>k__BackingField: You died!
   <DelayBeforeRevealingDeadPlayer>k__BackingField: 3
-  <SkipText>k__BackingField: Skip debate
-  <DebateStepDuration>k__BackingField: 60
-  <DebateElectionText>k__BackingField: Debate about who should be captain
+  <ElectionPromptTitleText>k__BackingField: Do you want to be the captain?
+  <ElectionPromptButtonText>k__BackingField: Yes!
+  <ElectionPromptDuration>k__BackingField: 10
+  <ElectionMultipleCandidateText>k__BackingField: Multiple players want to be captain.
+    The village will debate, then vote!
+  <ElectionDebateText>k__BackingField: Debate about who should be captain
   <ElectionVoteDuration>k__BackingField: 15
-  <DebateExecutionText>k__BackingField: Debate about who will be hanged!
+  <ElectionNoCandidateText>k__BackingField: No one wanted to be the captain!
+  <ElectionNoCandidateDuration>k__BackingField: 5
+  <ElectionCaptainRevealText>k__BackingField: Here is the captain!
+  <ExecutionDebateText>k__BackingField: Debate about who will be hanged!
   <ExecutionVoteDuration>k__BackingField: 15
   <ExecutionMarkForDeath>k__BackingField: Hanged
-  <ExecutedPlayerHighlightDuration>k__BackingField: 5
+  <SkipText>k__BackingField: Skip debate
+  <DebateStepDuration>k__BackingField: 60
+  <HighlightDuration>k__BackingField: 5
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote
   <AllLockedInDelayToEndVote>k__BackingField: 3
   <NoVoteDuration>k__BackingField: 10
   <CountdownText>k__BackingField: 'Time left: {0}'
-  <UITransitionDuration>k__BackingField: 0.75
+  <UITransitionNormalDuration>k__BackingField: 0.75
+  <UITransitionFastDuration>k__BackingField: 0.1
   <LoadingScreenText>k__BackingField: Waiting for server...
   <LoadingScreenTransitionDuration>k__BackingField: 2
   <RolePlayingTextSingular>k__BackingField: The {0} is playing...
