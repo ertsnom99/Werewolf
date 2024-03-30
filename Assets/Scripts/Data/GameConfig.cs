@@ -104,6 +104,24 @@ namespace Werewolf.Data
 		public float ExecutionVoteDuration { get; private set; }
 
 		[field: SerializeField]
+		public string ExecutionDrawNewVoteText { get; private set; }
+
+		[field: SerializeField]
+		public string ExecutionDrawAgainText { get; private set; }
+
+		[field: SerializeField]
+		public float ExecutionTitleHoldDuration { get; private set; }
+
+		[field: SerializeField]
+		public string ExecutionDrawYouChooseText { get; private set; }
+
+		[field: SerializeField]
+		public string ExecutionDrawCaptainChooseText { get; private set; }
+
+		[field: SerializeField]
+		public float ExecutionCaptainChoiceDuration { get; private set; }
+
+		[field: SerializeField]
 		public string ExecutionMarkForDeath { get; private set; }
 
 		[field: Header("Debate")]

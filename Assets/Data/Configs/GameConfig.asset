@@ -105,8 +105,18 @@ MonoBehaviour:
   <ElectionNoCandidateText>k__BackingField: No one wanted to be the captain!
   <ElectionNoCandidateDuration>k__BackingField: 5
   <ElectionCaptainRevealText>k__BackingField: Here is the captain!
-  <ExecutionDebateText>k__BackingField: Debate about who will be hanged!
+  <ExecutionDebateText>k__BackingField: Debate about who will be executed!
   <ExecutionVoteDuration>k__BackingField: 15
+  <ExecutionDrawNewVoteText>k__BackingField: The vote was a draw! A new vote will
+    start to break the draw
+  <ExecutionDrawAgainText>k__BackingField: The vote was a draw again! No one will
+    be executed
+  <ExecutionTitleHoldDuration>k__BackingField: 3
+  <ExecutionDrawYouChooseText>k__BackingField: The vote was a draw! Choose who to
+    execute.
+  <ExecutionDrawCaptainChooseText>k__BackingField: The vote was a draw! The captain
+    will choose who to execute.
+  <ExecutionCaptainChoiceDuration>k__BackingField: 10
   <ExecutionMarkForDeath>k__BackingField: Hanged
   <SkipText>k__BackingField: Skip debate
   <DebateStepDuration>k__BackingField: 60

@@ -83,7 +83,9 @@ namespace Werewolf
 		private bool _isPlayerDeathRevealCompleted;
 		private IEnumerator _revealPlayerDeathCoroutine;
 
-		private Action<List<PlayerRef>> _votesCountedCallback;
+		private Action<PlayerRef[]> _votesCountedCallback;
+
+		private IEnumerator _waitForCaptainExecutionCoroutine;
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
 		private Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new ();
@@ -656,16 +658,8 @@ namespace Werewolf
 
 			if (_captainCandidates.Count > 1)
 			{
-				RPC_DisplayTitle(Config.ElectionMultipleCandidateText);
-#if UNITY_SERVER && UNITY_EDITOR
-				DisplayTitle(null, Config.ElectionMultipleCandidateText);
-#endif
-				yield return HighlightPlayers(_captainCandidates.ToArray());
-				RPC_HideUI();
-#if UNITY_SERVER && UNITY_EDITOR
-				HideUI();
-#endif
-				yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+				StartCoroutine(HighlightPlayers(_captainCandidates.ToArray()));
+				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidateText, Config.HighlightDuration);
 				StartCoroutine(StartDebate(Config.ElectionDebateText));
 				yield break;
 			}
@@ -676,16 +670,7 @@ namespace Werewolf
 			}
 			else
 			{
-				RPC_DisplayTitle(Config.ElectionNoCandidateText);
-#if UNITY_SERVER && UNITY_EDITOR
-				DisplayTitle(null, Config.ElectionNoCandidateText);
-#endif
-				yield return new WaitForSeconds(Config.ElectionNoCandidateDuration);
-				RPC_HideUI();
-#if UNITY_SERVER && UNITY_EDITOR
-				HideUI();
-#endif
-				yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+				yield return DisplayTitleForAllPlayers(Config.ElectionNoCandidateText, Config.ElectionNoCandidateDuration);
 			}
 
 			_currentGameplayLoopStep = GameplayLoopStep.Election;
@@ -704,36 +689,24 @@ namespace Werewolf
 
 		private void StartElection()
 		{
-			List<PlayerRef> notCandidatePlayers = new List<PlayerRef>();
-
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
-			{
-				if (_captainCandidates.Contains(player.Key))
-				{
-					continue;
-				}
-
-				notCandidatePlayers.Add(player.Key);
-			}
-			
-			StartVoteForAllPlayers(OnElectionVotesCounted, false, false, null, true, notCandidatePlayers);
+			StartVoteForAllPlayers(OnElectionVotesCounted, false, false, null, true, GetPlayersExcluding(_captainCandidates.ToArray()));
 		}
 
-		private void OnElectionVotesCounted(List<PlayerRef> mostVotedPlayers)
+		private void OnElectionVotesCounted(PlayerRef[] mostVotedPlayers)
 		{
 			ChooseCaptain(mostVotedPlayers);
 			StartCoroutine(ShowElectionResult());
 		}
 
-		private void ChooseCaptain(List<PlayerRef> mostVotedPlayers)
+		private void ChooseCaptain(PlayerRef[] mostVotedPlayers)
 		{
 			PlayerRef votedPlayer;
 
-			if (mostVotedPlayers.Count > 1)
+			if (mostVotedPlayers.Length > 1)
 			{
-				votedPlayer = mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Count)];
+				votedPlayer = mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)];
 			}
-			else if (mostVotedPlayers.Count == 1)
+			else if (mostVotedPlayers.Length == 1)
 			{
 				votedPlayer = mostVotedPlayers[0];
 			}
@@ -754,16 +727,8 @@ namespace Werewolf
 		private IEnumerator ShowCaptain()
 		{
 			// TODO: Give the smaller captain card to the captain
-			RPC_DisplayTitle(Config.ElectionCaptainRevealText);
-#if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(null, Config.ElectionCaptainRevealText);
-#endif
-			yield return HighlightPlayer(_captain);
-			RPC_HideUI();
-#if UNITY_SERVER && UNITY_EDITOR
-			HideUI();
-#endif
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			StartCoroutine(HighlightPlayer(_captain));
+			yield return DisplayTitleForAllPlayers(Config.ElectionCaptainRevealText, Config.HighlightDuration);
 		}
 
 		#endregion
@@ -1179,6 +1144,129 @@ namespace Werewolf
 		#region Execution
 		private void StartExecution()
 		{
+			StartVoteForAllPlayers(OnExecutionVotesCounted, false, true, GetExecutionVoteModifiers());
+		}
+
+		private void OnExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
+		{
+			if (mostVotedPlayers.Length == 1)
+			{
+				StartCoroutine(ExecutePlayer(mostVotedPlayers[0]));
+			}
+			else if (_captain == PlayerRef.None)
+			{
+				StartCoroutine(StartSecondaryExecution(mostVotedPlayers));
+			}
+			else
+			{
+				_waitForCaptainExecutionCoroutine = StartCaptainExecution(mostVotedPlayers);
+				StartCoroutine(_waitForCaptainExecutionCoroutine);
+			}
+		}
+
+		private IEnumerator StartSecondaryExecution(PlayerRef[] mostVotedPlayers)
+		{
+			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteText, Config.ExecutionTitleHoldDuration);
+
+			StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
+												false,
+												false,
+												GetExecutionVoteModifiers(),
+												false,
+												GetPlayersExcluding(mostVotedPlayers));
+		}
+
+		private void OnSecondaryExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
+		{
+			if (mostVotedPlayers.Length == 1)
+			{
+				StartCoroutine(ExecutePlayer(mostVotedPlayers[0]));
+			}
+			else
+			{
+				StartCoroutine(DisplayFailedExecution());
+			}
+		}
+
+		private IEnumerator DisplayFailedExecution()
+		{
+			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainText, Config.ExecutionTitleHoldDuration);
+			StartCoroutine(MoveToNextGameplayLoopStep());
+		}
+
+		private IEnumerator StartCaptainExecution(PlayerRef[] mostVotedPlayers)
+		{
+			List<PlayerRef> executionChoices = mostVotedPlayers.ToList();
+			executionChoices.Remove(_captain);
+
+			AskClientToChoosePlayer(_captain,
+									GetPlayersExcluding(executionChoices.ToArray()),
+									Config.ExecutionDrawYouChooseText,
+									Config.ExecutionCaptainChoiceDuration,
+									false,
+									OnCaptainChooseExecutedPlayer);
+
+			foreach (var player in Players)
+			{
+				if (player.Key == _captain)
+				{
+					continue;
+				}
+
+				RPC_DisplayTitle(player.Key, Config.ExecutionDrawCaptainChooseText);
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			DisplayTitle(null, Config.ExecutionDrawCaptainChooseText);
+#endif
+			yield return new WaitForSeconds(Config.ExecutionCaptainChoiceDuration);
+
+			_waitForCaptainExecutionCoroutine = null;
+
+			StopChoosingPlayer(_captain);
+
+			RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+			HideUI();
+#endif
+			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+
+			StartCoroutine(ExecutePlayer(mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)]));
+		}
+
+		private void OnCaptainChooseExecutedPlayer(PlayerRef executedPlayer)
+		{
+			if (_waitForCaptainExecutionCoroutine == null)
+			{
+				return;
+			}
+
+			StartCoroutine(EndCaptainExecution(executedPlayer));
+		}
+
+		private IEnumerator EndCaptainExecution(PlayerRef executedPlayer)
+		{
+			StopCoroutine(_waitForCaptainExecutionCoroutine);
+			_waitForCaptainExecutionCoroutine = null;
+
+			RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+			HideUI();
+#endif
+			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+
+			StartCoroutine(ExecutePlayer(executedPlayer));
+		}
+
+		private IEnumerator ExecutePlayer(PlayerRef executedPlayer)
+		{
+			AddMarkForDeath(executedPlayer, Config.ExecutionMarkForDeath);
+			yield return HighlightPlayer(executedPlayer);
+
+			StartCoroutine(MoveToNextGameplayLoopStep());
+		}
+
+		private Dictionary<PlayerRef, int> GetExecutionVoteModifiers()
+		{
 			Dictionary<PlayerRef, int> modifiers = new();
 
 			if (_captain != PlayerRef.None)
@@ -1186,32 +1274,7 @@ namespace Werewolf
 				modifiers.Add(_captain, CAPTAIN_VOTE_MODIFIER);
 			}
 
-			StartVoteForAllPlayers(OnExecutionVotesCounted, false, true, modifiers);
-		}
-
-		private void OnExecutionVotesCounted(List<PlayerRef> mostVotedPlayers)
-		{
-			StartCoroutine(ExecutePlayer(mostVotedPlayers));
-		}
-
-		private IEnumerator ExecutePlayer(List<PlayerRef> mostVotedPlayers)
-		{
-			PlayerRef votedPlayer;
-
-			if (mostVotedPlayers.Count > 1)
-			{
-				// TODO: Let the capitain choose who dies
-				votedPlayer = mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Count)];
-			}
-			else
-			{
-				votedPlayer = mostVotedPlayers[0];
-			}
-
-			AddMarkForDeath(votedPlayer, Config.ExecutionMarkForDeath);
-			yield return HighlightPlayer(votedPlayer);
-
-			StartCoroutine(MoveToNextGameplayLoopStep());
+			return modifiers;
 		}
 		#endregion
 
@@ -1314,12 +1377,12 @@ namespace Werewolf
 		#endregion
 
 		#region Vote
-		private bool StartVoteForAllPlayers(Action<List<PlayerRef>> votesCountedCallback,
+		private bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
 											bool allowedToNotVote,
 											bool failToVotePenalty,
 											Dictionary<PlayerRef, int> modifiers = null,
 											bool canVoteForSelf = false,
-											List<PlayerRef> ImmunePlayers = null)
+											PlayerRef[] ImmunePlayers = null)
 		{
 			if (_votesCountedCallback != null)
 			{
@@ -1383,10 +1446,27 @@ namespace Werewolf
 				mostVotedPlayers.Add(vote.Key);
 			}
 
-			_votesCountedCallback?.Invoke(mostVotedPlayers);
+			_votesCountedCallback?.Invoke(mostVotedPlayers.ToArray());
 			_votesCountedCallback = null;
 		}
 		#endregion
+
+		private PlayerRef[] GetPlayersExcluding(PlayerRef[] playersToRemove)
+		{
+			List<PlayerRef> notCandidatePlayers = new List<PlayerRef>();
+
+			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			{
+				if (playersToRemove.Contains(player.Key))
+				{
+					continue;
+				}
+
+				notCandidatePlayers.Add(player.Key);
+			}
+
+			return notCandidatePlayers.ToArray();
+		}
 
 		public void WaitForPlayer(PlayerRef player)
 		{
@@ -2490,10 +2570,25 @@ namespace Werewolf
 		#endregion
 
 		#region UI
+
 		public void DisplayTitle(Sprite image, string title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
 		{
 			_UIManager.TitleScreen.Initialize(image, title, countdownDuration, showConfirmButton, confirmButtonText);
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionNormalDuration);
+		}
+
+		private IEnumerator DisplayTitleForAllPlayers(string title, float holdDuration)
+		{
+			RPC_DisplayTitle(title);
+#if UNITY_SERVER && UNITY_EDITOR
+			DisplayTitle(null, title);
+#endif
+			yield return new WaitForSeconds(holdDuration);
+			RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+			HideUI();
+#endif
+			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 		}
 
 		public void HideUI()
