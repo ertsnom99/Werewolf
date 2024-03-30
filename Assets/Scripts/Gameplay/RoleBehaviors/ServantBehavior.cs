@@ -34,8 +34,9 @@ public class ServantBehavior : RoleBehavior
 
 	private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<string> marks, float revealDuration)
 	{
-		if (!_gameManager.Players[Player].IsAlive
-			|| playerRevealed == Player
+		if (Player == PlayerRef.None
+			|| !_gameManager.Players[Player].IsAlive
+			|| Player == playerRevealed
 			|| !marks.Contains(_gameManager.Config.ExecutionMarkForDeath)
 			|| !_gameManager.PromptPlayer(Player, "Take this role?", revealDuration, "Take", OnTakeRole))
 		{
