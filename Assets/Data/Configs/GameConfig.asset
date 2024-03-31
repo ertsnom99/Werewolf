@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: 
   <AvailableRolesMaxAttemptCount>k__BackingField: 100
+  <CardPrefab>k__BackingField: {fileID: 2092366821852372363, guid: f1a13b5e49102a4489154c427ff896be,
+    type: 3}
   <CardsOffset>k__BackingField:
     serializedVersion: 2
     m_Curve:
@@ -47,6 +49,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   <ReservedRolesSpacing>k__BackingField: 1.5
+  <CaptainCardPrefab>k__BackingField: {fileID: 4242641526295142619, guid: d00483e34f2d91c43a011de8c4cbb2e5,
+    type: 3}
+  <CaptainCardOffset>k__BackingField: {x: -1, y: 0, z: 0}
   <CameraOffset>k__BackingField:
     serializedVersion: 2
     m_Curve:
@@ -123,7 +128,56 @@ MonoBehaviour:
   <ChooseNextCaptainText>k__BackingField: Choose the next captain
   <CaptainChoiceDuration>k__BackingField: 10
   <OldCaptainChoosingText>k__BackingField: The old captain is choosing the new one
-  <HighlightDuration>k__BackingField: 5
+  <CaptainCardMovementDuration>k__BackingField: 0.5
+  <CaptainCardMovementXY>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <CaptainCardMovementYOffset>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 12.081046
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.018092103
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -11.7789755
+      outSlope: -0.529001
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.024122894
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <HighlightDuration>k__BackingField: 3
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote
   <AllLockedInDelayToEndVote>k__BackingField: 3

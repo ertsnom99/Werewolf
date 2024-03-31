@@ -1,4 +1,3 @@
-using System.Data;
 using UnityEngine;
 
 namespace Werewolf.Data
@@ -12,10 +11,19 @@ namespace Werewolf.Data
 
 		[field: Header("Visual")]
 		[field: SerializeField]
+		public Card CardPrefab { get; private set; }
+
+		[field: SerializeField]
 		public AnimationCurve CardsOffset { get; private set; }
 
 		[field: SerializeField]
 		public float ReservedRolesSpacing { get; private set; }
+
+		[field: SerializeField]
+		public GameObject CaptainCardPrefab { get; private set; }
+
+		[field: SerializeField]
+		public Vector3 CaptainCardOffset { get; private set; }
 
 		[field: SerializeField]
 		public AnimationCurve CameraOffset { get; private set; }
@@ -140,6 +148,15 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public string OldCaptainChoosingText { get; private set; }
+
+		[field: SerializeField]
+		public float CaptainCardMovementDuration { get; private set; }
+
+		[field: SerializeField]
+		public AnimationCurve CaptainCardMovementXY { get; private set; }
+
+		[field: SerializeField]
+		public AnimationCurve CaptainCardMovementYOffset { get; private set; }
 
 		[field: Header("Highlight")]
 		[field: SerializeField]

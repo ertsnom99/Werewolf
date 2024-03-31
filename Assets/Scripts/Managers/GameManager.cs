@@ -28,6 +28,7 @@ namespace Werewolf
 
 		private List<PlayerRef> _captainCandidates = new List<PlayerRef>();
 		private PlayerRef _captain;
+		private GameObject _captainCard;
 
 		public int AlivePlayerCount { get; private set; }
 
@@ -99,10 +100,9 @@ namespace Werewolf
 		#endregion
 
 		#region Networked variables
-		[Networked, Capacity(5), SerializeField]
+		[Networked, Capacity(5)]
 		public NetworkArray<RolesContainer> ReservedRoles { get; }
 
-		[Serializable]
 		public struct RolesContainer : INetworkStruct
 		{
 			public int RoleCount;
@@ -111,13 +111,8 @@ namespace Werewolf
 		}
 		#endregion
 
-		[field: Header("Config")]
 		[field: SerializeField]
 		public GameConfig Config { get; private set; }
-
-		[field: Header("Visual")]
-		[field: SerializeField]
-		private Card _cardPrefab;
 
 		public static bool HasSpawned { get; private set; }
 
@@ -1521,8 +1516,11 @@ namespace Werewolf
 
 			if (captainChoices.Count <= 0)
 			{
+				RPC_DestroyCaptainCard();
+#if UNITY_SERVER && UNITY_EDITOR
+				Destroy(_captainCard);
+#endif
 				_chooseNextCaptainCoroutine = null;
-				// TODO: Remove small captain card
 				_isNextCaptainChoiceCompleted = true;
 				yield break;
 			}
@@ -1586,10 +1584,62 @@ namespace Werewolf
 
 		private IEnumerator ShowCaptain()
 		{
-			// TODO: Give the smaller captain card to the captain
+			if (!_captainCard)
+			{
+				RPC_InstantiateCaptainCard(_captain);
+#if UNITY_SERVER && UNITY_EDITOR
+				_captainCard = Instantiate(Config.CaptainCardPrefab, _playerCards[_captain].transform.position + Config.CaptainCardOffset, Quaternion.identity);
+#endif
+			}
+			else
+			{
+				RPC_ChangeCaptainCardPosition(_captain);
+#if UNITY_SERVER && UNITY_EDITOR
+				StartCoroutine(MoveCaptainCard(_playerCards[_captain].transform.position + Config.CaptainCardOffset));
+#endif
+			}
+
 			StartCoroutine(HighlightPlayer(_captain));
 			yield return DisplayTitleForAllPlayers(Config.CaptainRevealText, Config.HighlightDuration);
 		}
+
+		private IEnumerator MoveCaptainCard(Vector3 newPosition)
+		{
+			Vector3 startingPosition = _captainCard.transform.position;
+			float elapsedTime = .0f;
+
+			while (elapsedTime < Config.CaptainCardMovementDuration)
+			{
+				elapsedTime += Time.deltaTime;
+
+				float progress = elapsedTime / Config.CaptainCardMovementDuration;
+
+				_captainCard.transform.position = Vector3.Lerp(startingPosition, newPosition, Config.CaptainCardMovementXY.Evaluate(progress))
+												+ Vector3.up * Config.CaptainCardMovementYOffset.Evaluate(progress);
+
+				yield return 0;
+			}
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_InstantiateCaptainCard(PlayerRef captain)
+		{
+			_captainCard = Instantiate(Config.CaptainCardPrefab, _playerCards[captain].transform.position + Config.CaptainCardOffset, Quaternion.identity);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_ChangeCaptainCardPosition(PlayerRef captain)
+		{
+			StartCoroutine(MoveCaptainCard(_playerCards[captain].transform.position + Config.CaptainCardOffset));
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DestroyCaptainCard()
+		{
+			Destroy(_captainCard); 
+		}
+		#endregion
 		#endregion
 
 		#region Highlight Players
@@ -2740,7 +2790,7 @@ namespace Werewolf
 
 				Quaternion rotation = Quaternion.Euler(0, rotationIncrement * counter, 0);
 
-				Card card = Instantiate(_cardPrefab, rotation * startingPosition, Quaternion.identity);
+				Card card = Instantiate(Config.CardPrefab, rotation * startingPosition, Quaternion.identity);
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetOriginalPosition(card.transform.position);
@@ -2779,7 +2829,7 @@ namespace Werewolf
 				{
 					Vector3 columnPosition = (Vector3.right * columnCounter * Config.ReservedRolesSpacing) + (Vector3.left * (reservedRoleByBehavior.Value.Roles.Length - 1) * Config.ReservedRolesSpacing / 2.0f);
 
-					Card card = Instantiate(_cardPrefab, rowPosition + columnPosition, Quaternion.identity);
+					Card card = Instantiate(Config.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 					card.SetRole(role);
@@ -2825,7 +2875,7 @@ namespace Werewolf
 
 				Quaternion rotation = Quaternion.Euler(0, rotationIncrement * rotationOffset, 0);
 
-				Card card = Instantiate(_cardPrefab, rotation * startingPosition, Quaternion.identity);
+				Card card = Instantiate(Config.CardPrefab, rotation * startingPosition, Quaternion.identity);
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetOriginalPosition(card.transform.position);
@@ -2880,7 +2930,7 @@ namespace Werewolf
 				{
 					Vector3 columnPosition = (Vector3.right * columnCounter * Config.ReservedRolesSpacing) + (Vector3.left * (reservedRole.RoleCount - 1) * Config.ReservedRolesSpacing / 2.0f);
 
-					Card card = Instantiate(_cardPrefab, rowPosition + columnPosition, Quaternion.identity);
+					Card card = Instantiate(Config.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 					if (roleGameplayTagID > 0)
