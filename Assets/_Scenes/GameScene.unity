@@ -3148,6 +3148,36 @@ PrefabInstance:
       propertyPath: SortKey
       value: 2918463288
       objectReference: {fileID: 0}
+    - target: {fileID: 4748154167829602997, guid: 9fef766fa437c824db70516a46e2a37b,
+        type: 3}
+      propertyPath: _ReservedRoles.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748154167829602997, guid: 9fef766fa437c824db70516a46e2a37b,
+        type: 3}
+      propertyPath: _ReservedRoles.Array.data[0]._Roles.Data.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748154167829602997, guid: 9fef766fa437c824db70516a46e2a37b,
+        type: 3}
+      propertyPath: _ReservedRoles.Array.data[0]._Roles.Data.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748154167829602997, guid: 9fef766fa437c824db70516a46e2a37b,
+        type: 3}
+      propertyPath: _ReservedRoles.Array.data[0]._Roles.Data.Array.data[2]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748154167829602997, guid: 9fef766fa437c824db70516a46e2a37b,
+        type: 3}
+      propertyPath: _ReservedRoles.Array.data[0]._Roles.Data.Array.data[3]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748154167829602997, guid: 9fef766fa437c824db70516a46e2a37b,
+        type: 3}
+      propertyPath: _ReservedRoles.Array.data[0]._Roles.Data.Array.data[4]
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5214817337782520858, guid: 9fef766fa437c824db70516a46e2a37b,
         type: 3}
       propertyPath: m_LocalPosition.x
