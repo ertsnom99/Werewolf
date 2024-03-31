@@ -933,22 +933,16 @@ namespace Werewolf
 
 					yield return new WaitForSeconds(Config.DelayBeforeRevealingDeadPlayer);
 
-					List<PlayerRef> revealTo = new List<PlayerRef>();
-
-					foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
-					{
-						if (playerRole.Key == deadPlayer)
-						{
-							RPC_DisplayPlayerDiedTitle(playerRole.Key);
-							continue;
-						}
-
-						revealTo.Add(playerRole.Key);
-					}
+					RPC_DisplayPlayerDiedTitle(deadPlayer);
 
 					_isPlayerDeathRevealCompleted = false;
 
-					_revealPlayerDeathCoroutine = RevealPlayerDeath(deadPlayer, revealTo.ToArray(), true, _marksForDeath[0].Marks, false, OnRevealPlayerDeathEnded);
+					_revealPlayerDeathCoroutine = RevealPlayerDeath(deadPlayer,
+																	GetPlayersExcluding(deadPlayer),
+																	true,
+																	_marksForDeath[0].Marks,
+																	false,
+																	OnRevealPlayerDeathEnded);
 					StartCoroutine(_revealPlayerDeathCoroutine);
 
 					while (!_isPlayerDeathRevealCompleted)
@@ -956,8 +950,7 @@ namespace Werewolf
 						yield return 0;
 					}
 
-					RPC_HideUI();
-
+					RPC_HideUI(deadPlayer);
 					yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
 					PlayerDeathRevealEnded?.Invoke(deadPlayer);
@@ -972,10 +965,10 @@ namespace Werewolf
 
 					if (deadPlayer == _captain)
 					{
+						_isNextCaptainChoiceCompleted = false;
+
 						_chooseNextCaptainCoroutine = ChooseNextCaptain();
 						StartCoroutine(_chooseNextCaptainCoroutine);
-
-						_isNextCaptainChoiceCompleted = false;
 
 						while (!_isNextCaptainChoiceCompleted)
 						{
@@ -1072,11 +1065,12 @@ namespace Werewolf
 
 		public void StopPlayerDeathReveal()
 		{
-			if (_revealPlayerDeathCoroutine != null)
+			if (_revealPlayerDeathCoroutine == null)
 			{
-				StopCoroutine(_revealPlayerDeathCoroutine);
+				return;
 			}
 
+			StopCoroutine(_revealPlayerDeathCoroutine);
 			_revealPlayerDeathCoroutine = null;
 		}
 
@@ -1454,23 +1448,6 @@ namespace Werewolf
 		}
 		#endregion
 
-		private PlayerRef[] GetPlayersExcluding(PlayerRef[] playersToRemove)
-		{
-			List<PlayerRef> notCandidatePlayers = new List<PlayerRef>();
-
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
-			{
-				if (playersToRemove.Contains(player.Key))
-				{
-					continue;
-				}
-
-				notCandidatePlayers.Add(player.Key);
-			}
-
-			return notCandidatePlayers.ToArray();
-		}
-
 		public void WaitForPlayer(PlayerRef player)
 		{
 			if (_playersWaitingFor.Contains(player))
@@ -1492,6 +1469,40 @@ namespace Werewolf
 		}
 		#endregion
 		#endregion
+
+		private PlayerRef[] GetPlayersExcluding(PlayerRef playerToExclude)
+		{
+			List<PlayerRef> players = new List<PlayerRef>();
+
+			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			{
+				if (player.Key == playerToExclude)
+				{
+					continue;
+				}
+
+				players.Add(player.Key);
+			}
+
+			return players.ToArray();
+		}
+
+		private PlayerRef[] GetPlayersExcluding(PlayerRef[] playersToExclude)
+		{
+			List<PlayerRef> players = new List<PlayerRef>();
+
+			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			{
+				if (playersToExclude.Contains(player.Key))
+				{
+					continue;
+				}
+
+				players.Add(player.Key);
+			}
+
+			return players.ToArray();
+		}
 
 		#region Captain
 		private IEnumerator ChooseNextCaptain()
