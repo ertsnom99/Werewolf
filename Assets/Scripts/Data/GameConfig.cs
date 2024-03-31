@@ -93,9 +93,6 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float ElectionNoCandidateDuration { get; private set; }
 
-		[field: SerializeField]
-		public string ElectionCaptainRevealText { get; private set; }
-
 		[field: Header("Execution")]
 		[field: SerializeField]
 		public string ExecutionDebateText { get; private set; }
@@ -130,6 +127,19 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public float DebateStepDuration { get; private set; }
+
+		[field: Header("Captain")]
+		[field: SerializeField]
+		public string CaptainRevealText { get; private set; }
+
+		[field: SerializeField]
+		public string ChooseNextCaptainText { get; private set; }
+
+		[field: SerializeField]
+		public float CaptainChoiceDuration { get; private set; }
+
+		[field: SerializeField]
+		public string OldCaptainChoosingText { get; private set; }
 
 		[field: Header("Highlight")]
 		[field: SerializeField]

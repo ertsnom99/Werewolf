@@ -82,10 +82,13 @@ namespace Werewolf
 
 		private bool _isPlayerDeathRevealCompleted;
 		private IEnumerator _revealPlayerDeathCoroutine;
+		private IEnumerator _chooseNextCaptainCoroutine;
+
+		private bool _isNextCaptainChoiceCompleted;
 
 		private Action<PlayerRef[]> _votesCountedCallback;
 
-		private IEnumerator _waitForCaptainExecutionCoroutine;
+		private IEnumerator _startCaptainExecutionCoroutine;
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
 		private Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new ();
@@ -694,12 +697,6 @@ namespace Werewolf
 
 		private void OnElectionVotesCounted(PlayerRef[] mostVotedPlayers)
 		{
-			ChooseCaptain(mostVotedPlayers);
-			StartCoroutine(ShowElectionResult());
-		}
-
-		private void ChooseCaptain(PlayerRef[] mostVotedPlayers)
-		{
 			PlayerRef votedPlayer;
 
 			if (mostVotedPlayers.Length > 1)
@@ -716,6 +713,7 @@ namespace Werewolf
 			}
 
 			_captain = votedPlayer;
+			StartCoroutine(ShowElectionResult());
 		}
 
 		private IEnumerator ShowElectionResult()
@@ -723,14 +721,6 @@ namespace Werewolf
 			yield return ShowCaptain();
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
-
-		private IEnumerator ShowCaptain()
-		{
-			// TODO: Give the smaller captain card to the captain
-			StartCoroutine(HighlightPlayer(_captain));
-			yield return DisplayTitleForAllPlayers(Config.ElectionCaptainRevealText, Config.HighlightDuration);
-		}
-
 		#endregion
 
 		#region Daytime Change
@@ -979,6 +969,19 @@ namespace Werewolf
 
 					SetPlayerDead(deadPlayer);
 					_marksForDeath.RemoveAt(0);
+
+					if (deadPlayer == _captain)
+					{
+						_chooseNextCaptainCoroutine = ChooseNextCaptain();
+						StartCoroutine(_chooseNextCaptainCoroutine);
+
+						_isNextCaptainChoiceCompleted = false;
+
+						while (!_isNextCaptainChoiceCompleted)
+						{
+							yield return 0;
+						}
+					}
 				}
 			}
 
@@ -1159,8 +1162,8 @@ namespace Werewolf
 			}
 			else
 			{
-				_waitForCaptainExecutionCoroutine = StartCaptainExecution(mostVotedPlayers);
-				StartCoroutine(_waitForCaptainExecutionCoroutine);
+				_startCaptainExecutionCoroutine = StartCaptainExecution(mostVotedPlayers);
+				StartCoroutine(_startCaptainExecutionCoroutine);
 			}
 		}
 
@@ -1220,7 +1223,7 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(Config.ExecutionCaptainChoiceDuration);
 
-			_waitForCaptainExecutionCoroutine = null;
+			_startCaptainExecutionCoroutine = null;
 
 			StopChoosingPlayer(_captain);
 
@@ -1235,7 +1238,7 @@ namespace Werewolf
 
 		private void OnCaptainChooseExecutedPlayer(PlayerRef executedPlayer)
 		{
-			if (_waitForCaptainExecutionCoroutine == null)
+			if (_startCaptainExecutionCoroutine == null)
 			{
 				return;
 			}
@@ -1245,8 +1248,8 @@ namespace Werewolf
 
 		private IEnumerator EndCaptainExecution(PlayerRef executedPlayer)
 		{
-			StopCoroutine(_waitForCaptainExecutionCoroutine);
-			_waitForCaptainExecutionCoroutine = null;
+			StopCoroutine(_startCaptainExecutionCoroutine);
+			_startCaptainExecutionCoroutine = null;
 
 			RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1488,6 +1491,94 @@ namespace Werewolf
 			_playersWaitingFor.Remove(player);
 		}
 		#endregion
+		#endregion
+
+		#region Captain
+		private IEnumerator ChooseNextCaptain()
+		{
+			List<PlayerRef> captainChoices = new List<PlayerRef>();
+
+			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			{
+				if (!player.Value.IsAlive || player.Key == _captain)
+				{
+					continue;
+				}
+
+				captainChoices.Add(player.Key);
+			}
+
+			if (captainChoices.Count <= 0)
+			{
+				_chooseNextCaptainCoroutine = null;
+				// TODO: Remove small captain card
+				_isNextCaptainChoiceCompleted = true;
+				yield break;
+			}
+
+			AskClientToChoosePlayer(_captain,
+									GetPlayersExcluding(captainChoices.ToArray()),
+									Config.ChooseNextCaptainText,
+									Config.CaptainChoiceDuration,
+									false,
+									OnChoosedNextCaptain);
+
+			foreach (var player in Players)
+			{
+				if (player.Key == _captain)
+				{
+					continue;
+				}
+
+				RPC_DisplayTitle(player.Key, Config.OldCaptainChoosingText);
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			DisplayTitle(null, Config.OldCaptainChoosingText);
+#endif
+			yield return new WaitForSeconds(Config.CaptainChoiceDuration);
+			_chooseNextCaptainCoroutine = null;
+
+			StopChoosingPlayer(_captain);
+
+			RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+			HideUI();
+#endif
+			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+
+			_captain = captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)];
+			yield return ShowCaptain();
+
+			_isNextCaptainChoiceCompleted = true;
+		}
+
+		private void OnChoosedNextCaptain(PlayerRef nextCaptain)
+		{
+			if (_chooseNextCaptainCoroutine == null)
+			{
+				return;
+			}
+
+			StartCoroutine(EndChoosingNextCaptain(nextCaptain));
+		}
+
+		private IEnumerator EndChoosingNextCaptain(PlayerRef nextCaptain)
+		{
+			StopCoroutine(_chooseNextCaptainCoroutine);
+			_chooseNextCaptainCoroutine = null;
+
+			_captain = nextCaptain;
+			yield return ShowCaptain();
+
+			_isNextCaptainChoiceCompleted = true;
+		}
+
+		private IEnumerator ShowCaptain()
+		{
+			// TODO: Give the smaller captain card to the captain
+			StartCoroutine(HighlightPlayer(_captain));
+			yield return DisplayTitleForAllPlayers(Config.CaptainRevealText, Config.HighlightDuration);
+		}
 		#endregion
 
 		#region Highlight Players
