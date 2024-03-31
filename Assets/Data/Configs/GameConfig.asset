@@ -94,7 +94,7 @@ MonoBehaviour:
   <DeathRevealDeathText>k__BackingField: Some people died...
   <DeathRevealTitleHoldDuration>k__BackingField: 3
   <PlayerDiedText>k__BackingField: You died!
-  <DelayBeforeRevealingDeadPlayer>k__BackingField: 3
+  <DelayBeforeRevealingDeadPlayer>k__BackingField: 1.5
   <ElectionPromptTitleText>k__BackingField: Do you want to be the captain?
   <ElectionPromptButtonText>k__BackingField: Yes!
   <ElectionPromptDuration>k__BackingField: 10
@@ -104,7 +104,6 @@ MonoBehaviour:
   <ElectionVoteDuration>k__BackingField: 15
   <ElectionNoCandidateText>k__BackingField: No one wanted to be the captain!
   <ElectionNoCandidateDuration>k__BackingField: 5
-  <ElectionCaptainRevealText>k__BackingField: Here is the captain!
   <ExecutionDebateText>k__BackingField: Debate about who will be executed!
   <ExecutionVoteDuration>k__BackingField: 15
   <ExecutionDrawNewVoteText>k__BackingField: The vote was a draw! A new vote will
@@ -120,6 +119,10 @@ MonoBehaviour:
   <ExecutionMarkForDeath>k__BackingField: Hanged
   <SkipText>k__BackingField: Skip debate
   <DebateStepDuration>k__BackingField: 60
+  <CaptainRevealText>k__BackingField: Here is the captain!
+  <ChooseNextCaptainText>k__BackingField: Choose the next captain
+  <CaptainChoiceDuration>k__BackingField: 10
+  <OldCaptainChoosingText>k__BackingField: The old captain is choosing the new one
   <HighlightDuration>k__BackingField: 5
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote
