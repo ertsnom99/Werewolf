@@ -1593,7 +1593,7 @@ namespace Werewolf
 			}
 			else
 			{
-				RPC_ChangeCaptainCardPosition(_captain);
+				RPC_MoveCaptainCard(_captain);
 #if UNITY_SERVER && UNITY_EDITOR
 				StartCoroutine(MoveCaptainCard(_playerCards[_captain].transform.position + Config.CaptainCardOffset));
 #endif
@@ -1629,7 +1629,7 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_ChangeCaptainCardPosition(PlayerRef captain)
+		public void RPC_MoveCaptainCard(PlayerRef captain)
 		{
 			StartCoroutine(MoveCaptainCard(_playerCards[captain].transform.position + Config.CaptainCardOffset));
 		}
