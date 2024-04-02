@@ -1545,20 +1545,8 @@ namespace Werewolf
 			DisplayTitle(null, Config.OldCaptainChoosingText);
 #endif
 			yield return new WaitForSeconds(Config.CaptainChoiceDuration);
-			_chooseNextCaptainCoroutine = null;
 
-			StopChoosingPlayer(_captain);
-
-			RPC_HideUI();
-#if UNITY_SERVER && UNITY_EDITOR
-			HideUI();
-#endif
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
-
-			_captain = captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)];
-			yield return ShowCaptain();
-
-			_isNextCaptainChoiceCompleted = true;
+			StartCoroutine(EndChoosingNextCaptain(captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)]));
 		}
 
 		private void OnChoosedNextCaptain(PlayerRef nextCaptain)
@@ -1575,6 +1563,14 @@ namespace Werewolf
 		{
 			StopCoroutine(_chooseNextCaptainCoroutine);
 			_chooseNextCaptainCoroutine = null;
+
+			StopChoosingPlayer(_captain);
+
+			RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+			HideUI();
+#endif
+			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
 			_captain = nextCaptain;
 			yield return ShowCaptain();
@@ -2721,7 +2717,6 @@ namespace Werewolf
 		#endregion
 
 		#region UI
-
 		public void DisplayTitle(Sprite image, string title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
 		{
 			_UIManager.TitleScreen.Initialize(image, title, countdownDuration, showConfirmButton, confirmButtonText);
