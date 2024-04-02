@@ -2274,8 +2274,6 @@ namespace Werewolf
 		private void OnClientChooseCard(Card card)
 		{
 			StopChoosingPlayer();
-			HideUI();
-
 			RPC_GivePlayerChoice(card ? card.Player : PlayerRef.None);
 		}
 
@@ -2299,6 +2297,7 @@ namespace Werewolf
 			}
 
 			_UIManager.TitleScreen.Confirm -= OnClientChooseNoCard;
+			_UIManager.TitleScreen.SetConfirmButtonInteractable(false);
 		}
 
 		#region RPC Calls

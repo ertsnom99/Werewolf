@@ -76,6 +76,11 @@ namespace Werewolf.UI
 			}
 		}
 
+		public void SetConfirmButtonInteractable(bool isInteractable)
+		{
+			_confirmButton.interactable = isInteractable;
+		}
+
 		public void OnConfirm()
 		{
 			_confirmButton.interactable = false;
