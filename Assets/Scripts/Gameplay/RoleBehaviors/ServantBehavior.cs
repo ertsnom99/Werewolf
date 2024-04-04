@@ -62,23 +62,23 @@ public class ServantBehavior : RoleBehavior
 
 		_gameManager.TransferRole(_playerRevealed, Player, false);
 
-		foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _gameManager.PlayerInfos)
+		foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
 		{
-			if (player.Key == Player)
+			if (playerInfo.Key == Player)
 			{
-				_gameManager.RPC_FlipFaceUp(player.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
-				_gameManager.RPC_DisplayTitle(player.Key, $"Your new role is: {RoleToTake.Name}");
+				_gameManager.RPC_FlipFaceUp(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
+				_gameManager.RPC_DisplayTitle(playerInfo.Key, $"Your new role is: {RoleToTake.Name}");
 				continue;
 			}
 
-			if (player.Key == _playerRevealed)
+			if (playerInfo.Key == _playerRevealed)
 			{
 				_gameManager.RPC_HideUI(_playerRevealed);
 			}
 
-			_gameManager.RPC_MoveCardToCamera(player.Key, Player, true, servantRole.GameplayTag.CompactTagId);
-			_gameManager.RPC_DestroyPlayerCard(player.Key, _playerRevealed);
-			_gameManager.RPC_DisplayTitle(player.Key, "The servant has decided to take this role!");
+			_gameManager.RPC_MoveCardToCamera(playerInfo.Key, Player, true, servantRole.GameplayTag.CompactTagId);
+			_gameManager.RPC_DestroyPlayerCard(playerInfo.Key, _playerRevealed);
+			_gameManager.RPC_DisplayTitle(playerInfo.Key, "The servant has decided to take this role!");
 		}
 #if UNITY_SERVER && UNITY_EDITOR
 		_gameManager.ChangePlayerCardRole(Player, servantRole);
@@ -88,15 +88,15 @@ public class ServantBehavior : RoleBehavior
 #endif
 		yield return new WaitForSeconds(_servantRevealDuration);
 
-		foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _gameManager.PlayerInfos)
+		foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
 		{
-			if (player.Key == Player)
+			if (playerInfo.Key == Player)
 			{
 				_gameManager.RPC_DestroyPlayerCard(Player, _playerRevealed);
 				continue;
 			}
 
-			_gameManager.RPC_PutCardBackDown(player.Key, Player, true);
+			_gameManager.RPC_PutCardBackDown(playerInfo.Key, Player, true);
 		}
 #if UNITY_SERVER && UNITY_EDITOR
 		_gameManager.ChangePlayerCardRole(Player, RoleToTake);

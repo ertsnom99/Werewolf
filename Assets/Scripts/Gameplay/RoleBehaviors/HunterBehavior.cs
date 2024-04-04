@@ -45,15 +45,15 @@ namespace Werewolf
 
 			_gameManager.WaitForPlayer(Player);
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
 			{
-				if (player.Key == Player)
+				if (playerInfo.Key == Player)
 				{
 					continue;
 				}
 
-				_gameManager.RPC_MoveCardToCamera(player.Key, Player, true, _gameManager.PlayerInfos[Player].Role.GameplayTag.CompactTagId);
-				_gameManager.RPC_DisplayTitle(player.Key, "The hunter is choosing who to kill!");
+				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, Player, true, _gameManager.PlayerInfos[Player].Role.GameplayTag.CompactTagId);
+				_gameManager.RPC_DisplayTitle(playerInfo.Key, "The hunter is choosing who to kill!");
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.MoveCardToCamera(Player, true);
@@ -121,14 +121,14 @@ namespace Werewolf
 			StopCoroutine(_startChoiceTimerCoroutine);
 			_startChoiceTimerCoroutine = null;
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
 			{
-				if (player.Key == Player)
+				if (playerInfo.Key == Player)
 				{
 					continue;
 				}
 
-				_gameManager.RPC_PutCardBackDown(player.Key, Player, false);
+				_gameManager.RPC_PutCardBackDown(playerInfo.Key, Player, false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.PutCardBackDown(Player, false);

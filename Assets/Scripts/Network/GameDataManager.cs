@@ -220,14 +220,14 @@ namespace Werewolf.Network
 				return;
 			}
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerData in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in PlayerInfos)
 			{
 				PlayerInfo newPlayerData = new();
-				newPlayerData.PlayerRef = playerData.Value.PlayerRef;
-				newPlayerData.Nickname = playerData.Value.Nickname;
+				newPlayerData.PlayerRef = playerInfo.Value.PlayerRef;
+				newPlayerData.Nickname = playerInfo.Value.Nickname;
 				newPlayerData.IsLeader = true;
 
-				PlayerInfos.Set(playerData.Key, newPlayerData);
+				PlayerInfos.Set(playerInfo.Key, newPlayerData);
 
 				break;
 			}
