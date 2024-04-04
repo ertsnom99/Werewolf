@@ -12,10 +12,6 @@ namespace Werewolf
 
 	public class DaytimeManager : MonoSingleton<DaytimeManager>
 	{
-		[Header("Config")]
-		[SerializeField]
-		private DaytimeConfig _config;
-
 		[Header("Lighting")]
 		[SerializeField]
 		private Light _light;
@@ -23,25 +19,21 @@ namespace Werewolf
 		public Daytime CurrentDaytime { get; private set; }
 		private bool _inTransition = false;
 
+		private GameConfig _config;
+
 		private UIManager _UIManager;
 
-		protected override void Awake()
+		public void SetConfig(GameConfig config)
 		{
-			base.Awake();
-
-			if (!_config)
-			{
-				Debug.LogError("The GameConfig of the DayTimeManager is not defined");
-			}
-
-			CurrentDaytime = Daytime.Day;
-		}
-
-		private void Start()
-		{
+			_config = config;
 			_UIManager = UIManager.Instance;
 
 			SetDaytime(CurrentDaytime);
+
+			if (_config.DaytimeTransitionDuration < (_config.DaytimeTextFadeInDelay + _config.UITransitionNormalDuration))
+			{
+				Debug.LogError("_config.DaytimeTransitionDuration most not be smaller than _config.DaytimeTextFadeInDelay + _config.UITransitionNormalDuration");
+			}
 		}
 
 		private void SetDaytime(Daytime daytime)
@@ -71,8 +63,8 @@ namespace Werewolf
 			CurrentDaytime = daytime;
 			_inTransition = true;
 
-			StartCoroutine(TransitionDaytime());
 			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _config.DayTransitionText : _config.NightTransitionText));
+			StartCoroutine(TransitionDaytime());
 		}
 
 		private IEnumerator TransitionDaytime()
@@ -84,10 +76,10 @@ namespace Werewolf
 
 			float transitionProgress = .0f;
 
-			while (transitionProgress < _config.DaytimeTransitionDuration)
+			while (transitionProgress < _config.DaytimeLightTransitionDuration)
 			{
 				transitionProgress += Time.deltaTime;
-				float progressRatio = Mathf.Clamp01(transitionProgress / _config.DaytimeTransitionDuration);
+				float progressRatio = Mathf.Clamp01(transitionProgress / _config.DaytimeLightTransitionDuration);
 
 				_light.color = Color.Lerp(startingColor, targetColor, progressRatio);
 				_light.colorTemperature = Mathf.Lerp(startingTemperature, targetTemperature, progressRatio);
@@ -100,13 +92,15 @@ namespace Werewolf
 		{
 			_UIManager.TitleScreen.Initialize(null, text);// TODO: Give real image
 
-			yield return new WaitForSeconds(_config.TextFadeInDelay);
+			yield return new WaitForSeconds(_config.DaytimeTextFadeInDelay);
 
-			_UIManager.FadeIn(_UIManager.TitleScreen, _config.TextTransitionDuration);
+			_UIManager.FadeIn(_UIManager.TitleScreen, _config.UITransitionNormalDuration);
 
-			yield return new WaitForSeconds(_config.TextHoldDelay);
+			yield return new WaitForSeconds(_config.DaytimeTransitionDuration - _config.DaytimeTextFadeInDelay - _config.UITransitionNormalDuration);
 
-			_UIManager.FadeOut(_config.TextTransitionDuration);
+			_UIManager.FadeOut(_config.UITransitionNormalDuration);
+
+			yield return new WaitForSeconds(_config.UITransitionNormalDuration);
 
 			_inTransition = false;
 		}

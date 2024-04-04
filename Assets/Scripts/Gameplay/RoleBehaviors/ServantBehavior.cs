@@ -35,7 +35,7 @@ public class ServantBehavior : RoleBehavior
 	private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<string> marks, float revealDuration)
 	{
 		if (Player == PlayerRef.None
-			|| !_gameManager.Players[Player].IsAlive
+			|| !_gameManager.PlayerInfos[Player].IsAlive
 			|| Player == playerRevealed
 			|| !marks.Contains(_gameManager.Config.ExecutionMarkForDeath)
 			|| !_gameManager.PromptPlayer(Player, "Take this role?", revealDuration, "Take", OnTakeRole))
@@ -57,12 +57,12 @@ public class ServantBehavior : RoleBehavior
 
 	private IEnumerator ChangeRole()
 	{
-		RoleData RoleToTake = _gameManager.Players[_playerRevealed].Role;
-		RoleData servantRole = _gameManager.Players[Player].Role;
+		RoleData RoleToTake = _gameManager.PlayerInfos[_playerRevealed].Role;
+		RoleData servantRole = _gameManager.PlayerInfos[Player].Role;
 
 		_gameManager.TransferRole(_playerRevealed, Player, false);
 
-		foreach (KeyValuePair<PlayerRef, PlayerData> player in _gameManager.Players)
+		foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _gameManager.PlayerInfos)
 		{
 			if (player.Key == Player)
 			{
@@ -84,10 +84,11 @@ public class ServantBehavior : RoleBehavior
 		_gameManager.ChangePlayerCardRole(Player, servantRole);
 		_gameManager.MoveCardToCamera(Player, true);
 		_gameManager.DestroyPlayerCard(_playerRevealed);
+		_gameManager.DisplayTitle(null, "The servant has decided to take this role!");
 #endif
 		yield return new WaitForSeconds(_servantRevealDuration);
 
-		foreach (KeyValuePair<PlayerRef, PlayerData> player in _gameManager.Players)
+		foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _gameManager.PlayerInfos)
 		{
 			if (player.Key == Player)
 			{

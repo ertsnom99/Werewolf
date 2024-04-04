@@ -86,44 +86,50 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   <GameplayLoopStepDelay>k__BackingField: 0.5
-  <DaytimeTransitionStepDuration>k__BackingField: 4.5
+  <ElectionPromptTitleText>k__BackingField: Do you want to be the captain?
+  <ElectionPromptButtonText>k__BackingField: Yes!
+  <ElectionPromptDuration>k__BackingField: 5
+  <ElectionMultipleCandidateText>k__BackingField: Multiple players want to be captain.
+    The village will debate, then vote!
+  <ElectionMultipleCandidateDuration>k__BackingField: 3
+  <ElectionDebateText>k__BackingField: Debate about who should be captain
+  <ElectionDebateDuration>k__BackingField: 60
+  <ElectionNoCandidateText>k__BackingField: No one wanted to be the captain!
+  <ElectionNoCandidateDuration>k__BackingField: 5
+  <ElectionVoteDuration>k__BackingField: 15
+  <DaytimeTransitionDuration>k__BackingField: 3
+  <DaytimeTextFadeInDelay>k__BackingField: 0.25
+  <DaytimeLightTransitionDuration>k__BackingField: 1
+  <DayColor>k__BackingField: {r: 1, g: 1, b: 1, a: 0}
+  <DayTemperature>k__BackingField: 5000
+  <DayTransitionText>k__BackingField: The sun is rising, the village wakes up...
+  <NightColor>k__BackingField: {r: 0.2, g: 0.23529412, b: 0.36862746, a: 1}
+  <NightTemperature>k__BackingField: 19354
+  <NightTransitionText>k__BackingField: The sun is setting, the village goes to sleep...
+  <RolePlayingTextSingular>k__BackingField: The {0} is playing...
+  <RolePlayingTextPlurial>k__BackingField: The {0}s are playing...
   <NightCallMinimumDuration>k__BackingField: 5
   <NightCallMaximumDuration>k__BackingField: 10
   <NightCallChangeDelay>k__BackingField: 2
-  <RevealDistanceToCamera>k__BackingField: 2
-  <MoveToCameraDuration>k__BackingField: 0.5
-  <WaitRevealDuration>k__BackingField: 2
-  <RevealFlipDuration>k__BackingField: 0.25
-  <HoldRevealDuration>k__BackingField: 1.5
-  <DeathRevealNoDeathText>k__BackingField: No one died tonight!
-  <DeathRevealDeathText>k__BackingField: Some people died...
-  <DeathRevealTitleHoldDuration>k__BackingField: 3
+  <DeathRevealSomeoneDiedText>k__BackingField: Some people died...
+  <DeathRevealNooneDiedText>k__BackingField: No one died tonight!
+  <DeathRevealTitleHoldDuration>k__BackingField: 2
+  <DelayBeforeRevealingDeadPlayer>k__BackingField: 1
   <PlayerDiedText>k__BackingField: You died!
-  <DelayBeforeRevealingDeadPlayer>k__BackingField: 1.5
-  <ElectionPromptTitleText>k__BackingField: Do you want to be the captain?
-  <ElectionPromptButtonText>k__BackingField: Yes!
-  <ElectionPromptDuration>k__BackingField: 10
-  <ElectionMultipleCandidateText>k__BackingField: Multiple players want to be captain.
-    The village will debate, then vote!
-  <ElectionDebateText>k__BackingField: Debate about who should be captain
-  <ElectionVoteDuration>k__BackingField: 15
-  <ElectionNoCandidateText>k__BackingField: No one wanted to be the captain!
-  <ElectionNoCandidateDuration>k__BackingField: 5
   <ExecutionDebateText>k__BackingField: Debate about who will be executed!
+  <ExecutionDebateDuration>k__BackingField: 60
   <ExecutionVoteDuration>k__BackingField: 15
   <ExecutionDrawNewVoteText>k__BackingField: The vote was a draw! A new vote will
     start to break the draw
+  <ExecutionTitleHoldDuration>k__BackingField: 3
   <ExecutionDrawAgainText>k__BackingField: The vote was a draw again! No one will
     be executed
-  <ExecutionTitleHoldDuration>k__BackingField: 3
   <ExecutionDrawYouChooseText>k__BackingField: The vote was a draw! Choose who to
     execute.
   <ExecutionDrawCaptainChooseText>k__BackingField: The vote was a draw! The captain
     will choose who to execute.
   <ExecutionCaptainChoiceDuration>k__BackingField: 10
   <ExecutionMarkForDeath>k__BackingField: Hanged
-  <SkipText>k__BackingField: Skip debate
-  <DebateStepDuration>k__BackingField: 60
   <CaptainRevealText>k__BackingField: Here is the captain!
   <ChooseNextCaptainText>k__BackingField: Choose the next captain
   <CaptainChoiceDuration>k__BackingField: 10
@@ -177,18 +183,22 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <HighlightDuration>k__BackingField: 3
+  <SkipText>k__BackingField: Skip debate
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote
   <AllLockedInDelayToEndVote>k__BackingField: 3
   <NoVoteDuration>k__BackingField: 10
+  <HighlightDuration>k__BackingField: 3
+  <MoveToCameraDuration>k__BackingField: 0.5
+  <RoleRevealDistanceToCamera>k__BackingField: 2
+  <RoleRevealWaitDuration>k__BackingField: 2
+  <RoleRevealFlipDuration>k__BackingField: 0.25
+  <RoleRevealHoldDuration>k__BackingField: 1.5
   <CountdownText>k__BackingField: 'Time left: {0}'
   <UITransitionNormalDuration>k__BackingField: 0.75
   <UITransitionFastDuration>k__BackingField: 0.1
   <LoadingScreenText>k__BackingField: Waiting for server...
   <LoadingScreenTransitionDuration>k__BackingField: 2
-  <RolePlayingTextSingular>k__BackingField: The {0} is playing...
-  <RolePlayingTextPlurial>k__BackingField: The {0}s are playing...
   <SkipTurnText>k__BackingField: Skip turn
   <ChooseRoleText>k__BackingField: You MAY choose one
   <ChooseRoleObligatoryText>k__BackingField: You MUST choose one
