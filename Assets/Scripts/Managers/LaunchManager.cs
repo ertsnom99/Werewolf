@@ -94,8 +94,8 @@ namespace Werewolf
 			// Start Runner
 			return runner.StartGame(new()
 			{
-				SessionName = "TestSession",//SessionName,
-				PlayerCount = 10,//MaxPlayerCount,
+				SessionName = SessionName,
+				PlayerCount = MaxPlayerCount,
 				GameMode = GameMode.Server,
 				SceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
 				Scene = scene,
