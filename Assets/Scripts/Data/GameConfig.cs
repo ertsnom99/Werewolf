@@ -5,16 +5,14 @@ namespace Werewolf.Data
 	[CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/Config/GameConfig")]
 	public class GameConfig : ScriptableObject
 	{
+		public const int MAX_PLAYER_COUNT = 20;
+
 		[field: Header("Loading Screen")]
 		[field: SerializeField]
 		public string LoadingScreenText { get; private set; }
 
 		[field: SerializeField]
 		public float LoadingScreenTransitionDuration { get; private set; }
-
-		[field: Header("Role Distribution")]
-		[field: SerializeField]
-		public int AvailableRolesMaxAttemptCount { get; private set; }
 
 		[field: Header("Visual")]
 		[field: SerializeField]
@@ -34,6 +32,10 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public AnimationCurve CameraOffset { get; private set; }
+
+		[field: Header("Role Distribution")]
+		[field: SerializeField]
+		public int AvailableRolesMaxAttemptCount { get; private set; }
 
 		[field: Header("Gameplay Loop")]
 		[field: SerializeField]
@@ -216,8 +218,6 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public string DidNotChoosedRoleText { get; private set; }
-
-		public const int MAX_PLAYER_COUNT = 20;
 
 		[field: Header("Role Reveal")]
 		[field: SerializeField]
