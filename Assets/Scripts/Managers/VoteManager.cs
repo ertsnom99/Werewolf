@@ -11,7 +11,7 @@ namespace Werewolf
 	public class VoteManager : NetworkBehaviourSingleton<VoteManager>
 	{
 		private GameConfig _config;
-		private Dictionary<PlayerRef, PlayerData> _players;
+		private Dictionary<PlayerRef, PlayerInfo> _players;
 		private Dictionary<PlayerRef, Card> _playerCards;
 
 		public List<PlayerRef> Voters { get; private set; }
@@ -70,7 +70,7 @@ namespace Werewolf
 			_UIManager.VoteScreen.SetLockedInDelayDuration(_config.AllLockedInDelayToEndVote);
 		}
 
-		public void SetPlayers(Dictionary<PlayerRef, PlayerData> players)
+		public void SetPlayers(Dictionary<PlayerRef, PlayerInfo> players)
 		{
 			_players = players;
 		}
@@ -245,7 +245,7 @@ namespace Werewolf
 					_immuneFromPlayers[voter].Add(player);
 				}
 
-				foreach (KeyValuePair<PlayerRef, PlayerData> player in _players)
+				foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _players)
 				{
 					if (player.Value.IsAlive || _immuneFromPlayers[voter].Contains(player.Key))
 					{

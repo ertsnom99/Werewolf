@@ -45,14 +45,14 @@ namespace Werewolf
 
 			_gameManager.WaitForPlayer(Player);
 
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in _gameManager.Players)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _gameManager.PlayerInfos)
 			{
 				if (player.Key == Player)
 				{
 					continue;
 				}
 
-				_gameManager.RPC_MoveCardToCamera(player.Key, Player, true, _gameManager.Players[Player].Role.GameplayTag.CompactTagId);
+				_gameManager.RPC_MoveCardToCamera(player.Key, Player, true, _gameManager.PlayerInfos[Player].Role.GameplayTag.CompactTagId);
 				_gameManager.RPC_DisplayTitle(player.Key, "The hunter is choosing who to kill!");
 			}
 #if UNITY_SERVER && UNITY_EDITOR
@@ -76,13 +76,13 @@ namespace Werewolf
 			_gameManager.StopChoosingPlayer(Player);
 
 			int iterationCount = 0;
-			PlayerRef[] players = _gameManager.Players.Keys.ToArray();
-			int playerIndex = Random.Range(0, _gameManager.Players.Count);
+			PlayerRef[] players = _gameManager.PlayerInfos.Keys.ToArray();
+			int playerIndex = Random.Range(0, _gameManager.PlayerInfos.Count);
 			PlayerRef selectedPlayer = PlayerRef.None;
 
-			while (iterationCount < _gameManager.Players.Count)
+			while (iterationCount < _gameManager.PlayerInfos.Count)
 			{
-				if (players[playerIndex] != Player && _gameManager.Players[players[playerIndex]].IsAlive)
+				if (players[playerIndex] != Player && _gameManager.PlayerInfos[players[playerIndex]].IsAlive)
 				{
 					selectedPlayer = players[playerIndex];
 					break;
@@ -90,7 +90,7 @@ namespace Werewolf
 
 				playerIndex++;
 
-				if (playerIndex >= _gameManager.Players.Count)
+				if (playerIndex >= _gameManager.PlayerInfos.Count)
 				{
 					playerIndex = 0;
 				}
@@ -121,7 +121,7 @@ namespace Werewolf
 			StopCoroutine(_startChoiceTimerCoroutine);
 			_startChoiceTimerCoroutine = null;
 
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in _gameManager.Players)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _gameManager.PlayerInfos)
 			{
 				if (player.Key == Player)
 				{

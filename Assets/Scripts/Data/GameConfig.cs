@@ -5,6 +5,13 @@ namespace Werewolf.Data
 	[CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/Config/GameConfig")]
 	public class GameConfig : ScriptableObject
 	{
+		[field: Header("Loading Screen")]
+		[field: SerializeField]
+		public string LoadingScreenText { get; private set; }
+
+		[field: SerializeField]
+		public float LoadingScreenTransitionDuration { get; private set; }
+
 		[field: Header("Role Distribution")]
 		[field: SerializeField]
 		public int AvailableRolesMaxAttemptCount { get; private set; }
@@ -32,50 +39,6 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float GameplayLoopStepDelay { get; private set; }
 
-		[field: SerializeField]
-		public float DaytimeTransitionStepDuration { get; private set; }
-
-		[field: SerializeField]
-		public float NightCallMinimumDuration { get; private set; }
-
-		[field: SerializeField]
-		public float NightCallMaximumDuration { get; private set; }
-
-		[field: SerializeField]
-		public float NightCallChangeDelay { get; private set; }
-
-		[field: Header("Role Reveal")]
-		[field: SerializeField]
-		public float RevealDistanceToCamera { get; private set; }
-
-		[field: SerializeField]
-		public float MoveToCameraDuration { get; private set; }
-
-		[field: SerializeField]
-		public float WaitRevealDuration { get; private set; }
-
-		[field: SerializeField]
-		public float RevealFlipDuration { get; private set; }
-
-		[field: SerializeField]
-		public float HoldRevealDuration { get; private set; }
-
-		[field: Header("Death Reveal")]
-		[field: SerializeField]
-		public string DeathRevealNoDeathText { get; private set; }
-
-		[field: SerializeField]
-		public string DeathRevealDeathText { get; private set; }
-
-		[field: SerializeField]
-		public float DeathRevealTitleHoldDuration { get; private set; }
-
-		[field: SerializeField]
-		public string PlayerDiedText { get; private set; }
-
-		[field: SerializeField]
-		public float DelayBeforeRevealingDeadPlayer { get; private set; }
-
 		[field: Header("Election")]
 		[field: SerializeField]
 		public string ElectionPromptTitleText { get; private set; }
@@ -90,10 +53,13 @@ namespace Werewolf.Data
 		public string ElectionMultipleCandidateText { get; private set; }
 
 		[field: SerializeField]
+		public float ElectionMultipleCandidateDuration { get; private set; }
+
+		[field: SerializeField]
 		public string ElectionDebateText { get; private set; }
 
 		[field: SerializeField]
-		public float ElectionVoteDuration { get; private set; }
+		public float ElectionDebateDuration { get; private set; }
 
 		[field: SerializeField]
 		public string ElectionNoCandidateText { get; private set; }
@@ -101,9 +67,75 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float ElectionNoCandidateDuration { get; private set; }
 
+		[field: SerializeField]
+		public float ElectionVoteDuration { get; private set; }
+
+		[field: Header("Daytime")]
+		[field: SerializeField]
+		public float DaytimeTransitionDuration { get; private set; }
+
+		[field: SerializeField]
+		public float DaytimeTextFadeInDelay { get; private set; }
+
+		[field: SerializeField]
+		public float DaytimeLightTransitionDuration { get; private set; }
+
+		[field: SerializeField]
+		public Color DayColor { get; private set; }
+
+		[field: SerializeField]
+		public float DayTemperature { get; private set; }
+
+		[field: SerializeField]
+		public string DayTransitionText { get; private set; }
+
+		[field: SerializeField]
+		public Color NightColor { get; private set; }
+
+		[field: SerializeField]
+		public float NightTemperature { get; private set; }
+
+		[field: SerializeField]
+		public string NightTransitionText { get; private set; }
+
+		[field: Header("NightCall")]
+		[field: SerializeField]
+		public string RolePlayingTextSingular { get; private set; }
+
+		[field: SerializeField]
+		public string RolePlayingTextPlurial { get; private set; }
+
+		[field: SerializeField]
+		public float NightCallMinimumDuration { get; private set; }
+
+		[field: SerializeField]
+		public float NightCallMaximumDuration { get; private set; }
+
+		[field: SerializeField]
+		public float NightCallChangeDelay { get; private set; }
+
+		[field: Header("Death Reveal")]
+		[field: SerializeField]
+		public string DeathRevealSomeoneDiedText { get; private set; }
+
+		[field: SerializeField]
+		public string DeathRevealNooneDiedText { get; private set; }
+
+		[field: SerializeField]
+		public float DeathRevealTitleHoldDuration { get; private set; }
+
+		[field: SerializeField]
+		public float DelayBeforeRevealingDeadPlayer { get; private set; }
+
+		[field: SerializeField]
+		public string PlayerDiedText { get; private set; }
+
 		[field: Header("Execution")]
 		[field: SerializeField]
 		public string ExecutionDebateText { get; private set; }
+
+		[field: SerializeField]
+		public float ExecutionDebateDuration { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionVoteDuration { get; private set; }
@@ -112,10 +144,10 @@ namespace Werewolf.Data
 		public string ExecutionDrawNewVoteText { get; private set; }
 
 		[field: SerializeField]
-		public string ExecutionDrawAgainText { get; private set; }
+		public float ExecutionTitleHoldDuration { get; private set; }
 
 		[field: SerializeField]
-		public float ExecutionTitleHoldDuration { get; private set; }
+		public string ExecutionDrawAgainText { get; private set; }
 
 		[field: SerializeField]
 		public string ExecutionDrawYouChooseText { get; private set; }
@@ -128,13 +160,6 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public string ExecutionMarkForDeath { get; private set; }
-
-		[field: Header("Debate")]
-		[field: SerializeField]
-		public string SkipText { get; private set; }
-
-		[field: SerializeField]
-		public float DebateStepDuration { get; private set; }
 
 		[field: Header("Captain")]
 		[field: SerializeField]
@@ -158,9 +183,9 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public AnimationCurve CaptainCardMovementYOffset { get; private set; }
 
-		[field: Header("Highlight")]
+		[field: Header("Debate")]
 		[field: SerializeField]
-		public float HighlightDuration { get; private set; }
+		public string SkipText { get; private set; }
 
 		[field: Header("Vote")]
 		[field: SerializeField]
@@ -175,34 +200,11 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float NoVoteDuration { get; private set; }
 
-		[field: Header("UI")]
+		[field: Header("Highlight Players")]
 		[field: SerializeField]
-		public string CountdownText { get; private set; }
+		public float HighlightDuration { get; private set; }
 
-		[field: SerializeField]
-		public float UITransitionNormalDuration { get; private set; }
-
-		[field: SerializeField]
-		public float UITransitionFastDuration { get; private set; }
-
-		[field: Header("Loading Screen")]
-		[field: SerializeField]
-		public string LoadingScreenText { get; private set; }
-
-		[field: SerializeField]
-		public float LoadingScreenTransitionDuration { get; private set; }
-
-		[field: Header("UI Text")]
-
-		[field: SerializeField]
-		public string RolePlayingTextSingular { get; private set; }
-
-		[field: SerializeField]
-		public string RolePlayingTextPlurial { get; private set; }
-
-		[field: SerializeField]
-		public string SkipTurnText { get; private set; }
-
+		[field: Header("Role Reservation")]
 		[field: SerializeField]
 		public string ChooseRoleText { get; private set; }
 
@@ -216,5 +218,35 @@ namespace Werewolf.Data
 		public string DidNotChoosedRoleText { get; private set; }
 
 		public const int MAX_PLAYER_COUNT = 20;
+
+		[field: Header("Role Reveal")]
+		[field: SerializeField]
+		public float MoveToCameraDuration { get; private set; }
+
+		[field: SerializeField]
+		public float RoleRevealDistanceToCamera { get; private set; }
+
+		[field: SerializeField]
+		public float RoleRevealWaitDuration { get; private set; }
+
+		[field: SerializeField]
+		public float RoleRevealFlipDuration { get; private set; }
+
+		[field: SerializeField]
+		public float RoleRevealHoldDuration { get; private set; }
+
+		[field: Header("UI")]
+		[field: SerializeField]
+		public float UITransitionNormalDuration { get; private set; }
+
+		[field: SerializeField]
+		public float UITransitionFastDuration { get; private set; }
+
+		[field: Header("UI Text")]
+		[field: SerializeField]
+		public string CountdownText { get; private set; }
+
+		[field: SerializeField]
+		public string SkipTurnText { get; private set; }
 	}
 }

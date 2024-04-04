@@ -10,7 +10,7 @@ using Werewolf.UI;
 
 namespace Werewolf
 {
-	public struct PlayerData
+	public struct PlayerInfo
 	{
 		public RoleData Role;
 		public List<RoleBehavior> Behaviors;
@@ -24,7 +24,7 @@ namespace Werewolf
 
 		private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
 
-		public Dictionary<PlayerRef, PlayerData> Players { get; private set; }
+		public Dictionary<PlayerRef, PlayerInfo> PlayerInfos { get; private set; }
 
 		private List<PlayerRef> _captainCandidates = new List<PlayerRef>();
 		private PlayerRef _captain;
@@ -137,8 +137,8 @@ namespace Werewolf
 		private GameDataManager _gameDataManager;
 		private GameplayDatabaseManager _gameplayDatabaseManager;
 		private UIManager _UIManager;
-		private DaytimeManager _daytimeManager;
 		private VoteManager _voteManager;
+		private DaytimeManager _daytimeManager;
 
 		public static event Action ManagerSpawned;
 
@@ -163,7 +163,7 @@ namespace Werewolf
 			base.Awake();
 
 			RolesToDistribute = new();
-			Players = new();
+			PlayerInfos = new();
 
 			if (!Config)
 			{
@@ -177,11 +177,12 @@ namespace Werewolf
 
 			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
 			_UIManager = UIManager.Instance;
-			_daytimeManager = DaytimeManager.Instance;
 			_voteManager = VoteManager.Instance;
+			_daytimeManager = DaytimeManager.Instance;
 
 			_voteManager.SetConfig(Config);
-			_voteManager.SetPlayers(Players);
+			_voteManager.SetPlayers(PlayerInfos);
+			_daytimeManager.SetConfig(Config);
 			_UIManager.TitleScreen.SetConfig(Config);
 			_UIManager.ChoiceScreen.SetConfig(Config);
 			_UIManager.VoteScreen.SetConfig(Config);
@@ -204,7 +205,7 @@ namespace Werewolf
 			DistributeRoles();
 			PostRoleDistribution?.Invoke();
 
-			AlivePlayerCount = Players.Count;
+			AlivePlayerCount = PlayerInfos.Count;
 
 			DeterminePlayerGroups();
 			DetermineNightCalls();
@@ -345,26 +346,26 @@ namespace Werewolf
 		#region Roles Distribution
 		private void DistributeRoles()
 		{
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
 			{
-				RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
-				RolesToDistribute.Remove(selectedRole);
+                RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
+                RolesToDistribute.Remove(selectedRole);
 
-				List<RoleBehavior> selectedBehaviors = new();
+                List<RoleBehavior> selectedBehaviors = new();
 
 				foreach (KeyValuePair<RoleBehavior, RoleData> unassignedRoleBehavior in _unassignedRoleBehaviors)
 				{
 					if (unassignedRoleBehavior.Value == selectedRole)
 					{
-						RoleBehavior selectedBehavior = unassignedRoleBehavior.Key;
+                        RoleBehavior selectedBehavior = unassignedRoleBehavior.Key;
 						selectedBehavior.SetPlayer(playerInfo.Key);
 						selectedBehaviors.Add(selectedBehavior);
-						_unassignedRoleBehaviors.Remove(unassignedRoleBehavior.Key);
+                        _unassignedRoleBehaviors.Remove(unassignedRoleBehavior.Key);
 						break;
 					}
 				}
 
-				Players.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
+                PlayerInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
 			}
 
 			_rolesDistributionDone = true;
@@ -382,7 +383,7 @@ namespace Werewolf
 
 		private void DeterminePlayerGroups()
 		{
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in PlayerInfos)
 			{
 				if (player.Value.Behaviors.Count <= 0)
 				{
@@ -404,11 +405,11 @@ namespace Werewolf
 		private void DetermineNightCalls()
 		{
 			// Remove any players that do not have a behavior that needs to be called at night
-			List<PlayerRef> players = Players.Keys.ToList();
+			List<PlayerRef> players = PlayerInfos.Keys.ToList();
 
 			for (int i = players.Count - 1; i >= 0; i--)
 			{
-				List<RoleBehavior> behaviors = Players[players[i]].Behaviors;
+				List<RoleBehavior> behaviors = PlayerInfos[players[i]].Behaviors;
 
 				if (behaviors.Count > 0 && behaviors[0].NightPriorities.Count > 0)
 				{
@@ -423,7 +424,7 @@ namespace Werewolf
 
 			foreach (PlayerRef player in players)
 			{
-				foreach (Priority priority in Players[player].Behaviors[0].NightPriorities)
+				foreach (Priority priority in PlayerInfos[player].Behaviors[0].NightPriorities)
 				{
 					if (priorities.Contains(priority.index))
 					{
@@ -443,7 +444,7 @@ namespace Werewolf
 
 				foreach (PlayerRef player in players)
 				{
-					foreach (Priority priority in Players[player].Behaviors[0].NightPriorities)
+					foreach (Priority priority in PlayerInfos[player].Behaviors[0].NightPriorities)
 					{
 						if (priority.index == priorities[i])
 						{
@@ -467,7 +468,7 @@ namespace Werewolf
 
 				foreach (PlayerRef player in nightCall.Players)
 				{
-					roles += $"{Players[player].Role.Name} || ";
+					roles += $"{PlayerInfos[player].Role.Name} || ";
 				}
 
 				Debug.Log(roles);
@@ -476,16 +477,6 @@ namespace Werewolf
 			Debug.Log("-------------------------------------------------------");
 		}
 #endif
-		private void SendPlayerRoles()
-		{
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
-			{
-				RPC_GivePlayerRole(playerInfo.Key, Players[playerInfo.Key].Role.GameplayTag.CompactTagId);
-			}
-
-			_allRolesSent = true;
-		}
-
 		#region RPC calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_GivePlayerRole([RpcTarget] PlayerRef player, int roleGameplayTagID)
@@ -507,6 +498,24 @@ namespace Werewolf
 		#endregion
 
 		#region Loop Progress
+		private void CheckPreGameplayLoopProgress()
+		{
+			if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
+			{
+				foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
+				{
+					RPC_GivePlayerRole(playerInfo.Key, PlayerInfos[playerInfo.Key].Role.GameplayTag.CompactTagId);
+				}
+
+				_allRolesSent = true;
+			}
+			else if (_allRolesSent && _allPlayersReadyToPlay)
+			{
+				PreStartGame?.Invoke();
+				StartGame();
+			}
+		}
+
 		private bool AddPlayerReady(PlayerRef player)
 		{
 			if (_playersReady.Contains(player))
@@ -529,19 +538,6 @@ namespace Werewolf
 			}
 
 			return true;
-		}
-
-		private void CheckPreGameplayLoopProgress()
-		{
-			if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
-			{
-				SendPlayerRoles();
-			}
-			else if (_allRolesSent && _allPlayersReadyToPlay)
-			{
-				PreStartGame?.Invoke();
-				StartGame();
-			}
 		}
 
 		#region RPC Calls
@@ -622,7 +618,7 @@ namespace Werewolf
 					StartCoroutine(StartDeathReveal(true));
 					break;
 				case GameplayLoopStep.ExecutionDebate:
-					StartCoroutine(StartDebate(Config.ExecutionDebateText));
+					StartCoroutine(StartDebate(Config.ExecutionDebateText, Config.ExecutionDebateDuration));
 					break;
 				case GameplayLoopStep.Execution:
 					StartExecution();
@@ -636,29 +632,34 @@ namespace Werewolf
 		#region Election
 		private IEnumerator StartElectionDebate()
 		{
-			foreach(KeyValuePair<PlayerRef, PlayerData> player in Players)
+			foreach(KeyValuePair<PlayerRef, PlayerInfo> player in PlayerInfos)
 			{
-				PromptPlayer(player.Key, Config.ElectionPromptTitleText, Config.ElectionPromptDuration, Config.ElectionPromptButtonText, OnPlayerWantsToBeCaptain);
+				PromptPlayer(player.Key,
+							Config.ElectionPromptTitleText,
+							Config.ElectionPromptDuration,
+							Config.ElectionPromptButtonText,
+							OnPlayerWantsToBeCaptain,
+							false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			DisplayTitle(null, Config.ElectionPromptTitleText, Config.ElectionPromptDuration);
 #endif
 			yield return new WaitForSeconds(Config.ElectionPromptDuration);
 
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in PlayerInfos)
 			{
-				StopPromptingPlayer(player.Key);
+				StopPromptingPlayer(player.Key, false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_UIManager.FadeOut(Config.UITransitionFastDuration);
+			_UIManager.FadeOut(Config.UITransitionNormalDuration);
 #endif
-			yield return new WaitForSeconds(Config.UITransitionFastDuration);
+			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
 			if (_captainCandidates.Count > 1)
 			{
 				StartCoroutine(HighlightPlayers(_captainCandidates.ToArray()));
-				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidateText, Config.HighlightDuration);
-				StartCoroutine(StartDebate(Config.ElectionDebateText));
+				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidateText, Config.ElectionMultipleCandidateDuration);
+				StartCoroutine(StartDebate(Config.ElectionDebateText, Config.ElectionDebateDuration));
 				yield break;
 			}
 			else if (_captainCandidates.Count == 1)
@@ -687,7 +688,7 @@ namespace Werewolf
 
 		private void StartElection()
 		{
-			StartVoteForAllPlayers(OnElectionVotesCounted, false, false, null, true, GetPlayersExcluding(_captainCandidates.ToArray()));
+			StartVoteForAllPlayers(OnElectionVotesCounted, Config.ElectionVoteDuration, false, false, null, true, GetPlayersExcluding(_captainCandidates.ToArray()));
 		}
 
 		private void OnElectionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -725,7 +726,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			_daytimeManager.ChangeDaytime(daytime);
 #endif
-			yield return new WaitForSeconds(Config.DaytimeTransitionStepDuration);
+			yield return new WaitForSeconds(Config.DaytimeTransitionDuration);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
@@ -754,7 +755,7 @@ namespace Werewolf
 				{
 					bool skipPlayer = false;
 
-					foreach (RoleBehavior behavior in Players[player].Behaviors)
+					foreach (RoleBehavior behavior in PlayerInfos[player].Behaviors)
 					{
 						int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -785,7 +786,7 @@ namespace Werewolf
 
 					int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(nightCall);
 
-					foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
+					foreach (KeyValuePair<PlayerRef, PlayerInfo> playerRole in PlayerInfos)
 					{
 						if (_playersWaitingFor.Contains(playerRole.Key))
 						{
@@ -833,20 +834,12 @@ namespace Werewolf
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
-		private void DisplayRolePlaying(int roleGameplayTagID)
-		{
-			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
-			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
-
-			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.ToLower()));// TODO: Give real image
-		}
-
 		private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
 		{
 			RoleData alias = null;
 			bool aliasFound = false;
 
-			foreach (RoleBehavior behavior in Players[nightCall.Players[0]].Behaviors)
+			foreach (RoleBehavior behavior in PlayerInfos[nightCall.Players[0]].Behaviors)
 			{
 				foreach (Priority nightPrioritie in behavior.NightPriorities)
 				{
@@ -873,8 +866,16 @@ namespace Werewolf
 			}
 			else
 			{
-				return Players[nightCall.Players[0]].Role.GameplayTag.CompactTagId;
+				return PlayerInfos[nightCall.Players[0]].Role.GameplayTag.CompactTagId;
 			}
+		}
+
+		private void DisplayRolePlaying(int roleGameplayTagID)
+		{
+			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
+			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
+
+			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.ToLower()));// TODO: Give real image
 		}
 
 		private bool IsNightCallOver(float elapsedTime)
@@ -920,7 +921,7 @@ namespace Werewolf
 				{
 					PlayerRef deadPlayer = _marksForDeath[0].Player;
 
-					if (!Players[deadPlayer].IsAlive)
+					if (!PlayerInfos[deadPlayer].IsAlive)
 					{
 						_marksForDeath.RemoveAt(0);
 						continue;
@@ -945,7 +946,10 @@ namespace Werewolf
 						yield return 0;
 					}
 
-					RPC_HideUI(deadPlayer);
+					RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+					HideUI();
+#endif
 					yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
 					PlayerDeathRevealEnded?.Invoke(deadPlayer);
@@ -979,7 +983,7 @@ namespace Werewolf
 
 		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
 		{
-			DisplayTitle(null, hasAnyPlayerDied ? Config.DeathRevealDeathText : Config.DeathRevealNoDeathText);// TODO: Give real image
+			DisplayTitle(null, hasAnyPlayerDied ? Config.DeathRevealSomeoneDiedText : Config.DeathRevealNooneDiedText);// TODO: Give real image
 		}
 
 		private void DisplayPlayerDiedTitle()
@@ -995,7 +999,7 @@ namespace Werewolf
 				MoveCardToCamera(player,
 								playerRevealed,
 								!waitBeforeReveal,
-								!waitBeforeReveal ? Players[playerRevealed].Role.GameplayTag.CompactTagId : -1,
+								!waitBeforeReveal ? PlayerInfos[playerRevealed].Role.GameplayTag.CompactTagId : -1,
 								() => StopWaintingForPlayer(player));
 			}
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1008,9 +1012,9 @@ namespace Werewolf
 
 			if (waitBeforeReveal)
 			{
-				WaitBeforeDeathRevealStarted?.Invoke(playerRevealed, marks, Config.WaitRevealDuration);
+				WaitBeforeDeathRevealStarted?.Invoke(playerRevealed, marks, Config.RoleRevealWaitDuration);
 
-				yield return new WaitForSeconds(Config.WaitRevealDuration);
+				yield return new WaitForSeconds(Config.RoleRevealWaitDuration);
 
 				WaitBeforeDeathRevealEnded?.Invoke(playerRevealed);
 
@@ -1019,7 +1023,7 @@ namespace Werewolf
 					_playersWaitingFor.Add(player);
 					FlipFaceUp(player,
 							playerRevealed,
-							Players[playerRevealed].Role.GameplayTag.CompactTagId,
+							PlayerInfos[playerRevealed].Role.GameplayTag.CompactTagId,
 							() => StopWaintingForPlayer(player));
 				}
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1031,7 +1035,7 @@ namespace Werewolf
 				}
 			}
 
-			yield return new WaitForSeconds(Config.HoldRevealDuration);
+			yield return new WaitForSeconds(Config.RoleRevealHoldDuration);
 
 			foreach (PlayerRef player in revealTo)
 			{
@@ -1076,12 +1080,12 @@ namespace Werewolf
 
 		private void SetPlayerDead(PlayerRef deadPlayer)
 		{
-			Players[deadPlayer] = new PlayerData { Role = Players[deadPlayer].Role, Behaviors = Players[deadPlayer].Behaviors, IsAlive = false };
+			PlayerInfos[deadPlayer] = new PlayerInfo { Role = PlayerInfos[deadPlayer].Role, Behaviors = PlayerInfos[deadPlayer].Behaviors, IsAlive = false };
 			AlivePlayerCount--;
 
 			RemovePlayerFromAllPlayerGroups(deadPlayer);
 
-			foreach (RoleBehavior behavior in Players[deadPlayer].Behaviors)
+			foreach (RoleBehavior behavior in PlayerInfos[deadPlayer].Behaviors)
 			{
 				foreach (Priority priority in behavior.NightPriorities)
 				{
@@ -1136,7 +1140,11 @@ namespace Werewolf
 		#region Execution
 		private void StartExecution()
 		{
-			StartVoteForAllPlayers(OnExecutionVotesCounted, false, true, GetExecutionVoteModifiers());
+			StartVoteForAllPlayers(OnExecutionVotesCounted,
+									Config.ExecutionVoteDuration,
+									false,
+									true,
+									GetExecutionVoteModifiers());
 		}
 
 		private void OnExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -1161,11 +1169,12 @@ namespace Werewolf
 			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteText, Config.ExecutionTitleHoldDuration);
 
 			StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
-												false,
-												false,
-												GetExecutionVoteModifiers(),
-												false,
-												GetPlayersExcluding(mostVotedPlayers));
+									Config.ExecutionVoteDuration,
+									false,
+									false,
+									GetExecutionVoteModifiers(),
+									false,
+									GetPlayersExcluding(mostVotedPlayers));
 		}
 
 		private void OnSecondaryExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -1198,7 +1207,7 @@ namespace Werewolf
 									false,
 									OnCaptainChooseExecutedPlayer);
 
-			foreach (var player in Players)
+			foreach (var player in PlayerInfos)
 			{
 				if (player.Key == _captain)
 				{
@@ -1270,179 +1279,6 @@ namespace Werewolf
 		}
 		#endregion
 
-		#region Debate
-		private IEnumerator StartDebate(string debateText)
-		{
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
-			{
-				RPC_OnDebateStarted(player.Key, debateText, player.Value.IsAlive);
-
-				if (!player.Value.IsAlive)
-				{
-					continue;
-				}
-
-				WaitForPlayer(player.Key);
-			}
-#if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(null, debateText, Config.DebateStepDuration, false, Config.SkipText);
-#endif
-			float elapsedTime = .0f;
-
-			while (_playersWaitingFor.Count > 0 && elapsedTime < Config.DebateStepDuration)
-			{
-				elapsedTime += Time.deltaTime;
-				yield return 0;
-			}
-
-			RPC_OnDebateEnded();
-			_playersWaitingFor.Clear();
-
-#if UNITY_SERVER && UNITY_EDITOR
-			OnDebateEnded();
-#endif
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
-
-			StartCoroutine(MoveToNextGameplayLoopStep());
-		}
-
-		private void OnPlayerSkipDebate()
-		{
-			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
-
-			_playerCards[Runner.LocalPlayer].SetVotingStatusVisible(true);
-			_playerCards[Runner.LocalPlayer].UpdateVotingStatus(false);
-
-			RPC_SkipDebate();
-		}
-
-		private void OnDebateEnded()
-		{
-			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
-
-			foreach (KeyValuePair<PlayerRef, Card> card in _playerCards)
-			{
-				card.Value.SetVotingStatusVisible(false);
-			}
-
-			HideUI();
-		}
-
-		#region RPC Calls
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, string debateText, bool showConfirmButton)
-		{
-			DisplayTitle(null, debateText, Config.DebateStepDuration, showConfirmButton, Config.SkipText);
-
-			if (!showConfirmButton)
-			{
-				return;
-			}
-
-			_UIManager.TitleScreen.Confirm += OnPlayerSkipDebate;
-		}
-
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_SkipDebate(RpcInfo info = default)
-		{
-			StopWaintingForPlayer(info.Source);
-#if UNITY_SERVER && UNITY_EDITOR
-			_playerCards[info.Source].SetVotingStatusVisible(true);
-			_playerCards[info.Source].UpdateVotingStatus(false);
-#endif
-			RPC_PlayerSkippedDebate(info.Source);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_PlayerSkippedDebate(PlayerRef player)
-		{
-			_playerCards[player].SetVotingStatusVisible(true);
-			_playerCards[player].UpdateVotingStatus(false);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_OnDebateEnded()
-		{
-			OnDebateEnded();
-		}
-		#endregion
-		#endregion
-
-		#region Vote
-		private bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
-											bool allowedToNotVote,
-											bool failToVotePenalty,
-											Dictionary<PlayerRef, int> modifiers = null,
-											bool canVoteForSelf = false,
-											PlayerRef[] ImmunePlayers = null)
-		{
-			if (_votesCountedCallback != null)
-			{
-				return false;
-			}
-
-			_votesCountedCallback = votesCountedCallback;
-
-			_voteManager.PrepareVote(Config.ElectionVoteDuration, allowedToNotVote, failToVotePenalty, modifiers);
-
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
-			{
-				if (player.Value.IsAlive)
-				{
-					_voteManager.AddVoter(player.Key);
-
-					if (!canVoteForSelf)
-					{
-						_voteManager.AddVoteImmunity(player.Key, player.Key);
-					}
-				}
-				else
-				{
-					_voteManager.AddSpectator(player.Key);
-				}
-
-				if (player.Value.IsAlive && (ImmunePlayers == null || !ImmunePlayers.Contains(player.Key)))
-				{
-					continue;
-				}
-
-				_voteManager.AddVoteImmunity(player.Key);
-			}
-
-			_voteManager.VoteCompletedCallback += OnVoteEnded;
-			_voteManager.StartVote();
-
-			return true;
-		}
-
-		private void OnVoteEnded(Dictionary<PlayerRef, int> votes)
-		{
-			_voteManager.VoteCompletedCallback -= OnVoteEnded;
-
-			int mostVoteCount = 0;
-			List<PlayerRef> mostVotedPlayers = new List<PlayerRef>();
-
-			foreach (KeyValuePair<PlayerRef, int> vote in votes)
-			{
-				if (vote.Value < mostVoteCount)
-				{
-					continue;
-				}
-
-				if (vote.Value > mostVoteCount)
-				{
-					mostVoteCount = vote.Value;
-					mostVotedPlayers.Clear();
-				}
-
-				mostVotedPlayers.Add(vote.Key);
-			}
-
-			_votesCountedCallback?.Invoke(mostVotedPlayers.ToArray());
-			_votesCountedCallback = null;
-		}
-		#endregion
-
 		public void WaitForPlayer(PlayerRef player)
 		{
 			if (_playersWaitingFor.Contains(player))
@@ -1469,7 +1305,7 @@ namespace Werewolf
 		{
 			List<PlayerRef> players = new List<PlayerRef>();
 
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in PlayerInfos)
 			{
 				if (player.Key == playerToExclude)
 				{
@@ -1486,7 +1322,7 @@ namespace Werewolf
 		{
 			List<PlayerRef> players = new List<PlayerRef>();
 
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in PlayerInfos)
 			{
 				if (playersToExclude.Contains(player.Key))
 				{
@@ -1504,7 +1340,7 @@ namespace Werewolf
 		{
 			List<PlayerRef> captainChoices = new List<PlayerRef>();
 
-			foreach (KeyValuePair<PlayerRef, PlayerData> player in Players)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in PlayerInfos)
 			{
 				if (!player.Value.IsAlive || player.Key == _captain)
 				{
@@ -1532,7 +1368,7 @@ namespace Werewolf
 									false,
 									OnChoosedNextCaptain);
 
-			foreach (var player in Players)
+			foreach (var player in PlayerInfos)
 			{
 				if (player.Key == _captain)
 				{
@@ -1638,6 +1474,180 @@ namespace Werewolf
 		#endregion
 		#endregion
 
+		#region Debate
+		private IEnumerator StartDebate(string text, float duration)
+		{
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in PlayerInfos)
+			{
+				RPC_OnDebateStarted(player.Key, text, duration, player.Value.IsAlive);
+
+				if (!player.Value.IsAlive)
+				{
+					continue;
+				}
+
+				WaitForPlayer(player.Key);
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			DisplayTitle(null, text, duration, false, Config.SkipText);
+#endif
+			float elapsedTime = .0f;
+
+			while (_playersWaitingFor.Count > 0 && elapsedTime < duration)
+			{
+				elapsedTime += Time.deltaTime;
+				yield return 0;
+			}
+
+			RPC_OnDebateEnded();
+			_playersWaitingFor.Clear();
+
+#if UNITY_SERVER && UNITY_EDITOR
+			OnDebateEnded();
+#endif
+			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+
+			StartCoroutine(MoveToNextGameplayLoopStep());
+		}
+
+		private void OnPlayerSkipDebate()
+		{
+			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
+
+			_playerCards[Runner.LocalPlayer].SetVotingStatusVisible(true);
+			_playerCards[Runner.LocalPlayer].UpdateVotingStatus(false);
+
+			RPC_SkipDebate();
+		}
+
+		private void OnDebateEnded()
+		{
+			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
+
+			foreach (KeyValuePair<PlayerRef, Card> card in _playerCards)
+			{
+				card.Value.SetVotingStatusVisible(false);
+			}
+
+			HideUI();
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, string debateText, float countdownDuration, bool showConfirmButton)
+		{
+			DisplayTitle(null, debateText, countdownDuration, showConfirmButton, Config.SkipText);
+
+			if (!showConfirmButton)
+			{
+				return;
+			}
+
+			_UIManager.TitleScreen.Confirm += OnPlayerSkipDebate;
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_SkipDebate(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+#if UNITY_SERVER && UNITY_EDITOR
+			_playerCards[info.Source].SetVotingStatusVisible(true);
+			_playerCards[info.Source].UpdateVotingStatus(false);
+#endif
+			RPC_PlayerSkippedDebate(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_PlayerSkippedDebate(PlayerRef player)
+		{
+			_playerCards[player].SetVotingStatusVisible(true);
+			_playerCards[player].UpdateVotingStatus(false);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_OnDebateEnded()
+		{
+			OnDebateEnded();
+		}
+		#endregion
+		#endregion
+
+		#region Vote
+		private bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
+											float maxDuration,
+											bool allowedToNotVote,
+											bool failToVotePenalty,
+											Dictionary<PlayerRef, int> modifiers = null,
+											bool canVoteForSelf = false,
+											PlayerRef[] ImmunePlayers = null)
+		{
+			if (_votesCountedCallback != null)
+			{
+				return false;
+			}
+
+			_votesCountedCallback = votesCountedCallback;
+
+			_voteManager.PrepareVote(maxDuration, allowedToNotVote, failToVotePenalty, modifiers);
+
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in PlayerInfos)
+			{
+				if (player.Value.IsAlive)
+				{
+					_voteManager.AddVoter(player.Key);
+
+					if (!canVoteForSelf)
+					{
+						_voteManager.AddVoteImmunity(player.Key, player.Key);
+					}
+				}
+				else
+				{
+					_voteManager.AddSpectator(player.Key);
+				}
+
+				if (player.Value.IsAlive && (ImmunePlayers == null || !ImmunePlayers.Contains(player.Key)))
+				{
+					continue;
+				}
+
+				_voteManager.AddVoteImmunity(player.Key);
+			}
+
+			_voteManager.VoteCompletedCallback += OnVoteEnded;
+			_voteManager.StartVote();
+
+			return true;
+		}
+
+		private void OnVoteEnded(Dictionary<PlayerRef, int> votes)
+		{
+			_voteManager.VoteCompletedCallback -= OnVoteEnded;
+
+			int mostVoteCount = 0;
+			List<PlayerRef> mostVotedPlayers = new List<PlayerRef>();
+
+			foreach (KeyValuePair<PlayerRef, int> vote in votes)
+			{
+				if (vote.Value < mostVoteCount)
+				{
+					continue;
+				}
+
+				if (vote.Value > mostVoteCount)
+				{
+					mostVoteCount = vote.Value;
+					mostVotedPlayers.Clear();
+				}
+
+				mostVotedPlayers.Add(vote.Key);
+			}
+
+			_votesCountedCallback?.Invoke(mostVotedPlayers.ToArray());
+			_votesCountedCallback = null;
+		}
+		#endregion
+
 		#region Highlight Players
 		private IEnumerator HighlightPlayer(PlayerRef player)
 		{
@@ -1706,7 +1716,7 @@ namespace Werewolf
 				roleBehavior.SetIsPrimaryBehavior(true);
 			}
 
-			Players[player] = new() { Role = roleData, Behaviors = Players[player].Behaviors, IsAlive = Players[player].IsAlive };
+			PlayerInfos[player] = new() { Role = roleData, Behaviors = PlayerInfos[player].Behaviors, IsAlive = PlayerInfos[player].IsAlive };
 
 			RPC_ChangePlayerCardRole(player, roleData.GameplayTag.CompactTagId);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1718,16 +1728,16 @@ namespace Werewolf
 		{
 			RemovePrimaryBehavior(to, destroyOldBehavior);
 
-			if (Players[from].Behaviors.Count <= 0)
+			if (PlayerInfos[from].Behaviors.Count <= 0)
 			{
-				foreach (int villageGroup in Players[from].Role.PlayerGroupIndexes)
+				foreach (int villageGroup in PlayerInfos[from].Role.PlayerGroupIndexes)
 				{
 					AddPlayerToPlayerGroup(villageGroup, to);
 				}
 			}
 			else
 			{
-				foreach (RoleBehavior behavior in Players[from].Behaviors)
+				foreach (RoleBehavior behavior in PlayerInfos[from].Behaviors)
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
@@ -1738,12 +1748,12 @@ namespace Werewolf
 				}
 			}
 
-			Players[to] = new() { Role = Players[from].Role, Behaviors = Players[to].Behaviors, IsAlive = Players[to].IsAlive };
-			Players[from] = new() { Role = null, Behaviors = Players[from].Behaviors, IsAlive = Players[from].IsAlive };
+			PlayerInfos[to] = new() { Role = PlayerInfos[from].Role, Behaviors = PlayerInfos[to].Behaviors, IsAlive = PlayerInfos[to].IsAlive };
+			PlayerInfos[from] = new() { Role = null, Behaviors = PlayerInfos[from].Behaviors, IsAlive = PlayerInfos[from].IsAlive };
 
-			RPC_ChangePlayerCardRole(to, Players[to].Role.GameplayTag.CompactTagId);
+			RPC_ChangePlayerCardRole(to, PlayerInfos[to].Role.GameplayTag.CompactTagId);
 #if UNITY_SERVER && UNITY_EDITOR
-			_playerCards[to].SetRole(Players[to].Role);
+			_playerCards[to].SetRole(PlayerInfos[to].Role);
 #endif
 		}
 
@@ -1784,7 +1794,7 @@ namespace Werewolf
 				AddPlayerToPlayerGroup(playerGroupIndex, player);
 			}
 
-			Players[player].Behaviors.Add(behavior);
+			PlayerInfos[player].Behaviors.Add(behavior);
 			behavior.SetPlayer(player);
 #if UNITY_SERVER && UNITY_EDITOR
 			behavior.transform.position = _playerCards[player].transform.position;
@@ -1793,16 +1803,16 @@ namespace Werewolf
 
 		private void RemovePrimaryBehavior(PlayerRef player, bool destroyOldBehavior = true)
 		{
-			if (Players[player].Behaviors.Count <= 0)
+			if (PlayerInfos[player].Behaviors.Count <= 0)
 			{
-				foreach (int playerGroupIndex in Players[player].Role.PlayerGroupIndexes)
+				foreach (int playerGroupIndex in PlayerInfos[player].Role.PlayerGroupIndexes)
 				{
 					RemovePlayerFromGroup(playerGroupIndex, player);
 				}
 			}
 			else
 			{
-				foreach (RoleBehavior behavior in Players[player].Behaviors)
+				foreach (RoleBehavior behavior in PlayerInfos[player].Behaviors)
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
@@ -1822,14 +1832,14 @@ namespace Werewolf
 				RemovePlayerFromNightCall(priority, player);
 			}
 
-			for (int i = Players[player].Behaviors.Count - 1; i >= 0; i--)
+			for (int i = PlayerInfos[player].Behaviors.Count - 1; i >= 0; i--)
 			{
-				if (Players[player].Behaviors[i] != behavior)
+				if (PlayerInfos[player].Behaviors[i] != behavior)
 				{
 					continue;
 				}
 
-				Players[player].Behaviors.RemoveAt(i);
+				PlayerInfos[player].Behaviors.RemoveAt(i);
 				break;
 			}
 
@@ -1851,7 +1861,7 @@ namespace Werewolf
 		{
 			List<RoleBehavior> behaviorsToRemove = new();
 
-			foreach (RoleBehavior behavior in Players[player].Behaviors)
+			foreach (RoleBehavior behavior in PlayerInfos[player].Behaviors)
 			{
 				int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -2022,7 +2032,7 @@ namespace Werewolf
 		}
 		#endregion
 
-		#region Roles Reservation
+		#region Role Reservation
 		public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] roles, bool AreFaceUp)
 		{
 			RolesContainer rolesContainer = new();
@@ -2390,7 +2400,7 @@ namespace Werewolf
 			}
 
 			_revealPlayerRoleCallbacks.Add(revealTo, callback);
-			RPC_RevealPlayerRole(revealTo, playerRevealed, Players[playerRevealed].Role.GameplayTag.CompactTagId, waitBeforeReveal, returnFaceDown);
+			RPC_RevealPlayerRole(revealTo, playerRevealed, PlayerInfos[playerRevealed].Role.GameplayTag.CompactTagId, waitBeforeReveal, returnFaceDown);
 
 			return true;
 		}
@@ -2401,11 +2411,11 @@ namespace Werewolf
 
 			if (waitBeforeReveal)
 			{
-				yield return new WaitForSeconds(Config.WaitRevealDuration);
-				yield return FlipFaceUp(card.transform, Config.RevealFlipDuration);
+				yield return new WaitForSeconds(Config.RoleRevealWaitDuration);
+				yield return FlipFaceUp(card.transform, Config.RoleRevealFlipDuration);
 			}
 
-			yield return new WaitForSeconds(Config.HoldRevealDuration);
+			yield return new WaitForSeconds(Config.RoleRevealHoldDuration);
 			yield return PutCardBackDown(card, returnFaceDown, Config.MoveToCameraDuration);
 
 			RPC_RevealPlayerRoleFinished();
@@ -2421,7 +2431,7 @@ namespace Werewolf
 			Camera mainCamera = Camera.main;
 
 			Vector3 startingPosition = card.position;
-			Vector3 targetPosition = mainCamera.transform.position + mainCamera.transform.forward * Config.RevealDistanceToCamera;
+			Vector3 targetPosition = mainCamera.transform.position + mainCamera.transform.forward * Config.RoleRevealDistanceToCamera;
 
 			Quaternion startingRotation = card.transform.rotation;
 			Quaternion targetRotation;
@@ -2467,7 +2477,7 @@ namespace Werewolf
 
 		public void FlipFaceUp(PlayerRef cardPlayer, Action FlipCompleted = null)
 		{
-			StartCoroutine(FlipFaceUp(_playerCards[cardPlayer].transform, Config.RevealFlipDuration, FlipCompleted));
+			StartCoroutine(FlipFaceUp(_playerCards[cardPlayer].transform, Config.RoleRevealFlipDuration, FlipCompleted));
 		}
 
 		private IEnumerator FlipFaceUp(Transform card, float duration, Action FlipCompleted = null)
@@ -2656,7 +2666,7 @@ namespace Werewolf
 		#endregion
 
 		#region Prompt Player
-		public bool PromptPlayer(PlayerRef promptedPlayer, string prompt, float duration, string confirmButtonText , Action<PlayerRef> callback)
+		public bool PromptPlayer(PlayerRef promptedPlayer, string prompt, float duration, string confirmButtonText , Action<PlayerRef> callback, bool fastFade = true)
 		{
 			if (_promptPlayerCallbacks.ContainsKey(promptedPlayer))
 			{
@@ -2664,7 +2674,7 @@ namespace Werewolf
 			}
 
 			_promptPlayerCallbacks.Add(promptedPlayer, callback);
-			RPC_PromptPlayer(promptedPlayer, prompt, duration, confirmButtonText);
+			RPC_PromptPlayer(promptedPlayer, prompt, duration, confirmButtonText, fastFade);
 
 			return true;
 		}
@@ -2675,25 +2685,19 @@ namespace Werewolf
 			RPC_AcceptPrompt();
 		}
 
-		public void StopPromptingPlayer(PlayerRef player)
+		public void StopPromptingPlayer(PlayerRef player, bool fastFade = true)
 		{
 			_promptPlayerCallbacks.Remove(player);
-			RPC_StopPromptingPlayer(player);
-		}
-
-		private void StopPromptingPlayer()
-		{
-			_UIManager.TitleScreen.Confirm -= OnPromptAccepted;
-			_UIManager.FadeOut(_UIManager.TitleScreen, Config.UITransitionFastDuration);
+			RPC_StopPromptingPlayer(player, fastFade);
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, string prompt, float duration, string confirmButtonText)
+		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, string prompt, float duration, string confirmButtonText, bool fastFade)
 		{
 			_UIManager.TitleScreen.Initialize(null, prompt, duration, true, confirmButtonText);// TODO: Give real image
 			_UIManager.TitleScreen.Confirm += OnPromptAccepted;
-			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionFastDuration);
+			_UIManager.FadeIn(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -2709,9 +2713,10 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StopPromptingPlayer([RpcTarget] PlayerRef player)
+		private void RPC_StopPromptingPlayer([RpcTarget] PlayerRef player, bool fastFade)
 		{
-			StopPromptingPlayer();
+			_UIManager.TitleScreen.Confirm -= OnPromptAccepted;
+			_UIManager.FadeOut(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
 		}
 		#endregion
 		#endregion
@@ -2725,11 +2730,16 @@ namespace Werewolf
 
 		private IEnumerator DisplayTitleForAllPlayers(string title, float holdDuration)
 		{
+			if (holdDuration < Config.UITransitionNormalDuration)
+			{
+				Debug.LogError("holdDuration most not be smaller than Config.UITransitionNormalDuration");
+			}
+
 			RPC_DisplayTitle(title);
 #if UNITY_SERVER && UNITY_EDITOR
 			DisplayTitle(null, title);
 #endif
-			yield return new WaitForSeconds(holdDuration);
+			yield return new WaitForSeconds(holdDuration - Config.UITransitionNormalDuration);
 			RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
 			HideUI();
@@ -2773,12 +2783,12 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 		private void CreatePlayerCardsForServer()
 		{
-			float rotationIncrement = 360.0f / Players.Count;
-			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(Players.Count);
+			float rotationIncrement = 360.0f / PlayerInfos.Count;
+			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(PlayerInfos.Count);
 
 			int counter = -1;
 
-			foreach (KeyValuePair<PlayerRef, PlayerData> playerRole in Players)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerRole in PlayerInfos)
 			{
 				counter++;
 
@@ -2841,7 +2851,7 @@ namespace Werewolf
 #endif
 		private void CreatePlayerCards(PlayerRef bottomPlayer, RoleData playerRole)
 		{
-			NetworkDictionary<PlayerRef, PlayerInfo> playerInfos = _gameDataManager.PlayerInfos;
+            NetworkDictionary<PlayerRef, Network.PlayerInfo> playerInfos = _gameDataManager.PlayerInfos;
 			int playerCount = playerInfos.Count;
 
 			int counter = -1;
@@ -2851,7 +2861,7 @@ namespace Werewolf
 			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(playerCount);
 
 			// Offset the rotation to keep bottomPlayer at the bottom
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in playerInfos)
+			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in playerInfos)
 			{
 				if (playerInfo.Key == bottomPlayer)
 				{
@@ -2862,14 +2872,14 @@ namespace Werewolf
 			}
 
 			// Create cards
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in playerInfos)
+			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in playerInfos)
 			{
 				counter++;
 				rotationOffset++;
 
-				Quaternion rotation = Quaternion.Euler(0, rotationIncrement * rotationOffset, 0);
+                Quaternion rotation = Quaternion.Euler(0, rotationIncrement * rotationOffset, 0);
 
-				Card card = Instantiate(Config.CardPrefab, rotation * startingPosition, Quaternion.identity);
+                Card card = Instantiate(Config.CardPrefab, rotation * startingPosition, Quaternion.identity);
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetOriginalPosition(card.transform.position);
@@ -2883,7 +2893,7 @@ namespace Werewolf
 					card.Flip();
 				}
 
-				_playerCards.Add(playerInfo.Key, card);
+                _playerCards.Add(playerInfo.Key, card);
 			}
 		}
 
