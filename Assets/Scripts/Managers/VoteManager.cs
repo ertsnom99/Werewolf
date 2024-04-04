@@ -245,14 +245,14 @@ namespace Werewolf
 					_immuneFromPlayers[voter].Add(player);
 				}
 
-				foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _players)
+				foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _players)
 				{
-					if (player.Value.IsAlive || _immuneFromPlayers[voter].Contains(player.Key))
+					if (playerInfo.Value.IsAlive || _immuneFromPlayers[voter].Contains(playerInfo.Key))
 					{
 						continue;
 					}
 
-					_immuneFromPlayers[voter].Add(player.Key);
+					_immuneFromPlayers[voter].Add(playerInfo.Key);
 				}
 
 				if (_immuneFromPlayers[voter].Count < _players.Count)

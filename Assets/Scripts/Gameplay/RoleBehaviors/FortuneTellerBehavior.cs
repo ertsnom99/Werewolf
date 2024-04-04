@@ -21,14 +21,14 @@ namespace Werewolf
 		{
 			List<PlayerRef> immunePlayers = new() { Player };
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> player in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
 			{
-				if (player.Value.IsAlive)
+				if (playerInfo.Value.IsAlive)
 				{
 					continue;
 				}
 
-				immunePlayers.Add(player.Key);
+				immunePlayers.Add(playerInfo.Key);
 			}
 
 			_choosingPlayer = _gameManager.AskClientToChoosePlayer(Player,
