@@ -443,6 +443,7 @@ namespace Werewolf
 				playerCard.Value.ClearVotes();
 			}
 
+			_UIManager.SetFade(_UIManager.TitleScreen, .0f);
 			_UIManager.VoteScreen.SetLockedInDelayActive(false);
 			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 #endif

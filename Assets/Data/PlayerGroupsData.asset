@@ -15,19 +15,25 @@ MonoBehaviour:
   <Datas>k__BackingField:
   - Index: 1
     Name: Villagers
+    Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Leader: {fileID: 0}
   - Index: 2
     Name: Werewolfs
+    Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Leader: {fileID: 0}
   - Index: 3
     Name: White Werewolf
+    Image: {fileID: -1846022942, guid: 57e5fee1eb9618343bcdb98861e6b594, type: 3}
     Leader: {fileID: 0}
   - Index: 4
     Name: Sectarian
+    Image: {fileID: -1321321227, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b, type: 3}
     Leader: {fileID: 0}
   - Index: 5
     Name: Flute Player
+    Image: {fileID: 1803793580, guid: d27adb3f7039d1a45a0389b130f6c9c3, type: 3}
     Leader: {fileID: 0}
   - Index: 6
     Name: Couple
+    Image: {fileID: 0}
     Leader: {fileID: 0}

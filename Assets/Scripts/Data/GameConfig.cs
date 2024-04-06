@@ -132,6 +132,9 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public string PlayerDiedText { get; private set; }
 
+		[field: SerializeField]
+		public PlayerGroupsData PlayerGroups { get; private set; }
+
 		[field: Header("Execution")]
 		[field: SerializeField]
 		public string ExecutionDebateText { get; private set; }
@@ -162,6 +165,10 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public string ExecutionMarkForDeath { get; private set; }
+
+		[field: Header("End Game")]
+		[field: SerializeField]
+		public string WinningPlayerGroupText { get; private set; }
 
 		[field: Header("Captain")]
 		[field: SerializeField]

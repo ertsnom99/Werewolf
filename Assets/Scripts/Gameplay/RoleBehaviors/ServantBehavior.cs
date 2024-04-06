@@ -66,7 +66,7 @@ public class ServantBehavior : RoleBehavior
 		{
 			if (playerInfo.Key == Player)
 			{
-				_gameManager.RPC_FlipFaceUp(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
+				_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
 				_gameManager.RPC_DisplayTitle(playerInfo.Key, $"Your new role is: {RoleToTake.Name}");
 				continue;
 			}

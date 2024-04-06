@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b4fe5951b970f43a2fcd1087386345, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  <AvailableRolesMaxAttemptCount>k__BackingField: 100
+  <LoadingScreenText>k__BackingField: Waiting for server...
+  <LoadingScreenTransitionDuration>k__BackingField: 2
   <CardPrefab>k__BackingField: {fileID: 2092366821852372363, guid: f1a13b5e49102a4489154c427ff896be,
     type: 3}
   <CardsOffset>k__BackingField:
@@ -85,6 +86,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  <AvailableRolesMaxAttemptCount>k__BackingField: 100
   <GameplayLoopStepDelay>k__BackingField: 0.5
   <ElectionPromptTitleText>k__BackingField: Do you want to be the captain?
   <ElectionPromptButtonText>k__BackingField: Yes!
@@ -116,6 +118,8 @@ MonoBehaviour:
   <DeathRevealTitleHoldDuration>k__BackingField: 2
   <DelayBeforeRevealingDeadPlayer>k__BackingField: 1
   <PlayerDiedText>k__BackingField: You died!
+  <PlayerGroups>k__BackingField: {fileID: 11400000, guid: 33cd032a2771b8043a99ab33bc92c771,
+    type: 2}
   <ExecutionDebateText>k__BackingField: Debate about who will be executed!
   <ExecutionDebateDuration>k__BackingField: 60
   <ExecutionVoteDuration>k__BackingField: 15
@@ -130,6 +134,7 @@ MonoBehaviour:
     will choose who to execute.
   <ExecutionCaptainChoiceDuration>k__BackingField: 10
   <ExecutionMarkForDeath>k__BackingField: Hanged
+  <WinningPlayerGroupText>k__BackingField: The {0} won!
   <CaptainRevealText>k__BackingField: Here is the captain!
   <ChooseNextCaptainText>k__BackingField: Choose the next captain
   <CaptainChoiceDuration>k__BackingField: 10
@@ -189,18 +194,16 @@ MonoBehaviour:
   <AllLockedInDelayToEndVote>k__BackingField: 3
   <NoVoteDuration>k__BackingField: 10
   <HighlightDuration>k__BackingField: 3
+  <ChooseRoleText>k__BackingField: You MAY choose one
+  <ChooseRoleObligatoryText>k__BackingField: You MUST choose one
+  <ChoosedRoleText>k__BackingField: Your choice
+  <DidNotChoosedRoleText>k__BackingField: You didn't choose one
   <MoveToCameraDuration>k__BackingField: 0.5
   <RoleRevealDistanceToCamera>k__BackingField: 2
   <RoleRevealWaitDuration>k__BackingField: 2
   <RoleRevealFlipDuration>k__BackingField: 0.25
   <RoleRevealHoldDuration>k__BackingField: 1.5
-  <CountdownText>k__BackingField: 'Time left: {0}'
   <UITransitionNormalDuration>k__BackingField: 0.75
   <UITransitionFastDuration>k__BackingField: 0.1
-  <LoadingScreenText>k__BackingField: Waiting for server...
-  <LoadingScreenTransitionDuration>k__BackingField: 2
+  <CountdownText>k__BackingField: 'Time left: {0}'
   <SkipTurnText>k__BackingField: Skip turn
-  <ChooseRoleText>k__BackingField: You MAY choose one
-  <ChooseRoleObligatoryText>k__BackingField: You MUST choose one
-  <ChoosedRoleText>k__BackingField: Your choice
-  <DidNotChoosedRoleText>k__BackingField: You didn't choose one
