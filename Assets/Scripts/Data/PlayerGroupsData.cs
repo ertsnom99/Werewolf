@@ -8,6 +8,8 @@ namespace Werewolf.Data
 	{
 		public int Index;
 		public string Name;
+		[field: PreviewSprite]
+		public Sprite Image;
 		[HideInInspector]
 		public GameObject Leader;
 	}
@@ -17,5 +19,18 @@ namespace Werewolf.Data
 	{
 		[field: SerializeField]
 		public PlayerGroupData[] Datas { get; private set; }
+
+		public PlayerGroupData GetPlayerGroupData(int index)
+		{
+			foreach(PlayerGroupData data in Datas)
+			{
+				if (data.Index == index)
+				{
+					return data;
+				}
+			}
+
+			return new();
+		}
 	}
 }

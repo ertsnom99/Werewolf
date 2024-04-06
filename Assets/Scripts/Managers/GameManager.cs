@@ -93,7 +93,7 @@ namespace Werewolf
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
 		private Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new ();
-		private Dictionary<PlayerRef, Action> _flipFaceUpCallbacks = new ();
+		private Dictionary<PlayerRef, Action> _flipCardCallbacks = new ();
 		private Dictionary<PlayerRef, Action> _putCardBackDownCallbacks = new();
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _promptPlayerCallbacks = new();
@@ -977,7 +977,11 @@ namespace Werewolf
 				}
 			}
 
-			CheckForWinner();
+			if (CheckForWinners())
+			{
+				yield break;
+			}
+
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
@@ -1021,14 +1025,12 @@ namespace Werewolf
 				foreach (PlayerRef player in revealTo)
 				{
 					_playersWaitingFor.Add(player);
-					FlipFaceUp(player,
+					FlipCard(player,
 							playerRevealed,
 							PlayerInfos[playerRevealed].Role.GameplayTag.CompactTagId,
 							() => StopWaintingForPlayer(player));
 				}
-#if UNITY_SERVER && UNITY_EDITOR
-				FlipFaceUp(playerRevealed);
-#endif
+
 				while (_playersWaitingFor.Count > 0)
 				{
 					yield return 0;
@@ -1102,18 +1104,6 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			_playerCards[deadPlayer].DisplayDead();
 #endif
-		}
-
-		private void CheckForWinner()
-		{
-			foreach(PlayerGroup playerGroup in _playerGroups)
-			{
-				if (playerGroup.Players.Count >= AlivePlayerCount)
-				{
-					//TODO: Trigger winner sequence
-					return;
-				}
-			}
 		}
 
 		#region RPC Calls
@@ -1261,7 +1251,7 @@ namespace Werewolf
 		private IEnumerator ExecutePlayer(PlayerRef executedPlayer)
 		{
 			AddMarkForDeath(executedPlayer, Config.ExecutionMarkForDeath);
-			yield return HighlightPlayer(executedPlayer);
+			yield return HighlightPlayerToggle(executedPlayer);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
@@ -1277,6 +1267,73 @@ namespace Werewolf
 
 			return modifiers;
 		}
+		#endregion
+
+		#region End Game
+		private bool CheckForWinners()
+		{
+			foreach (PlayerGroup playerGroup in _playerGroups)
+			{
+				if (playerGroup.Players.Count < AlivePlayerCount)
+				{
+					continue;
+				}
+
+				StartEndGameSequence(playerGroup);
+				return true;
+			}
+
+			return false;
+		}
+
+		private void StartEndGameSequence(PlayerGroup winningPlayerGroup)
+		{
+			RPC_DisplayWinningPlayerGroup(winningPlayerGroup.Index);
+#if UNITY_SERVER && UNITY_EDITOR
+			DisplayWinningPlayerGroup(winningPlayerGroup.Index);
+#endif
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in PlayerInfos)
+			{
+				if (!_playerCards[playerInfo.Key])
+				{
+					continue;
+				}
+
+				if (PlayerInfos[playerInfo.Key].IsAlive)
+				{
+					foreach (KeyValuePair<PlayerRef, PlayerInfo> innerPlayerInfo in PlayerInfos)
+					{
+						if (innerPlayerInfo.Key == playerInfo.Key)
+						{
+							continue;
+						}
+
+						RPC_FlipCard(innerPlayerInfo.Key, playerInfo.Key, playerInfo.Value.Role.GameplayTag.CompactTagId);
+					}
+				}
+
+				if (playerInfo.Value.Behaviors.Count > 0 && !playerInfo.Value.Behaviors[0].PlayerGroupIndexes.Contains(winningPlayerGroup.Index))
+				{
+					continue;
+				}
+
+				HighlightPlayer(playerInfo.Key);
+			}
+		}
+
+		private void DisplayWinningPlayerGroup(int playerGroupIndex)
+		{
+			PlayerGroupData playerGroupData = Config.PlayerGroups.GetPlayerGroupData(playerGroupIndex);
+			DisplayTitle(playerGroupData.Image, string.Format(Config.WinningPlayerGroupText, playerGroupData.Name));
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayWinningPlayerGroup(int playerGroupIndex)
+		{
+			DisplayWinningPlayerGroup(playerGroupIndex);
+		}
+		#endregion
 		#endregion
 
 		public void WaitForPlayer(PlayerRef player)
@@ -1431,7 +1488,7 @@ namespace Werewolf
 #endif
 			}
 
-			StartCoroutine(HighlightPlayer(_captain));
+			StartCoroutine(HighlightPlayerToggle(_captain));
 			yield return DisplayTitleForAllPlayers(Config.CaptainRevealText, Config.HighlightDuration);
 		}
 
@@ -1649,7 +1706,15 @@ namespace Werewolf
 		#endregion
 
 		#region Highlight Players
-		private IEnumerator HighlightPlayer(PlayerRef player)
+		private void HighlightPlayer(PlayerRef player)
+		{
+			RPC_SetPlayerCardHighlightVisible(player, true);
+#if UNITY_SERVER && UNITY_EDITOR
+			SetPlayerCardHighlightVisible(player, true);
+#endif
+		}
+
+		private IEnumerator HighlightPlayerToggle(PlayerRef player)
 		{
 			RPC_SetPlayerCardHighlightVisible(player, true);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -2412,7 +2477,7 @@ namespace Werewolf
 			if (waitBeforeReveal)
 			{
 				yield return new WaitForSeconds(Config.RoleRevealWaitDuration);
-				yield return FlipFaceUp(card.transform, Config.RoleRevealFlipDuration);
+				yield return FlipCard(card.transform, Config.RoleRevealFlipDuration);
 			}
 
 			yield return new WaitForSeconds(Config.RoleRevealHoldDuration);
@@ -2475,19 +2540,17 @@ namespace Werewolf
 			return true;
 		}
 
-		public void FlipFaceUp(PlayerRef cardPlayer, Action FlipCompleted = null)
+		public void FlipCard(PlayerRef cardPlayer, Action FlipCompleted = null)
 		{
-			StartCoroutine(FlipFaceUp(_playerCards[cardPlayer].transform, Config.RoleRevealFlipDuration, FlipCompleted));
+			StartCoroutine(FlipCard(_playerCards[cardPlayer].transform, Config.RoleRevealFlipDuration, FlipCompleted));
 		}
 
-		private IEnumerator FlipFaceUp(Transform card, float duration, Action FlipCompleted = null)
+		private IEnumerator FlipCard(Transform card, float duration, Action FlipCompleted = null)
 		{
-			Camera mainCamera = Camera.main;
-
 			float elapsedTime = .0f;
 
 			Quaternion startingRotation = card.rotation;
-			Quaternion targetRotation = Quaternion.LookRotation(mainCamera.transform.up, mainCamera.transform.forward);
+			Quaternion targetRotation = Quaternion.LookRotation(card.forward, -card.up);
 
 			while (elapsedTime < duration)
 			{
@@ -2503,15 +2566,15 @@ namespace Werewolf
 			FlipCompleted?.Invoke();
 		}
 
-		private bool FlipFaceUp(PlayerRef flipFor, PlayerRef cardPlayer, int gameplayDataID, Action flipCompleted)
+		private bool FlipCard(PlayerRef flipFor, PlayerRef cardPlayer, int gameplayDataID, Action flipCompleted)
 		{
-			if (_flipFaceUpCallbacks.ContainsKey(flipFor))
+			if (_flipCardCallbacks.ContainsKey(flipFor))
 			{
 				return false;
 			}
 
-			_flipFaceUpCallbacks.Add(flipFor, flipCompleted);
-			RPC_FlipFaceUp(flipFor, cardPlayer, gameplayDataID);
+			_flipCardCallbacks.Add(flipFor, flipCompleted);
+			RPC_FlipCard(flipFor, cardPlayer, gameplayDataID);
 
 			return true;
 		}
@@ -2619,22 +2682,29 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_FlipFaceUp([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int gameplayDataID)
+		public void RPC_FlipCard([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int gameplayDataID)
 		{
 			_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
-			FlipFaceUp(cardPlayer, () => RPC_FlipFaceUpFinished());
+			FlipCard(cardPlayer, () => RPC_FlipCardFinished());
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_FlipCard(PlayerRef cardPlayer, int gameplayDataID)
+		{
+			_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
+			FlipCard(cardPlayer);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		private void RPC_FlipFaceUpFinished(RpcInfo info = default)
+		private void RPC_FlipCardFinished(RpcInfo info = default)
 		{
-			if (!_flipFaceUpCallbacks.ContainsKey(info.Source))
+			if (!_flipCardCallbacks.ContainsKey(info.Source))
 			{
 				return;
 			}
 
-			_flipFaceUpCallbacks[info.Source]();
-			_flipFaceUpCallbacks.Remove(info.Source);
+			_flipCardCallbacks[info.Source]();
+			_flipCardCallbacks.Remove(info.Source);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -2851,7 +2921,7 @@ namespace Werewolf
 #endif
 		private void CreatePlayerCards(PlayerRef bottomPlayer, RoleData playerRole)
 		{
-            NetworkDictionary<PlayerRef, Network.PlayerInfo> playerInfos = _gameDataManager.PlayerInfos;
+			NetworkDictionary<PlayerRef, Network.PlayerInfo> playerInfos = _gameDataManager.PlayerInfos;
 			int playerCount = playerInfos.Count;
 
 			int counter = -1;
