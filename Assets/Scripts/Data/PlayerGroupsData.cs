@@ -20,6 +20,9 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public PlayerGroupData[] Datas { get; private set; }
 
+		[field: SerializeField]
+		public int NoBehaviorGroupIndex { get; private set; }
+
 		public PlayerGroupData GetPlayerGroupData(int index)
 		{
 			foreach(PlayerGroupData data in Datas)
