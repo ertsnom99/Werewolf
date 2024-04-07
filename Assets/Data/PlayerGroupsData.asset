@@ -37,3 +37,4 @@ MonoBehaviour:
     Name: Couple
     Image: {fileID: 0}
     Leader: {fileID: 0}
+  <NoBehaviorGroupIndex>k__BackingField: 1

@@ -111,6 +111,15 @@ namespace Werewolf
 		}
 		#endregion
 
+		[Serializable]
+		public struct EndGamePlayerInfo : INetworkStruct
+		{
+			public PlayerRef Player;
+			public int Role;
+			public bool IsAlive;
+			public bool Won;
+		}
+
 		[field: SerializeField]
 		public GameConfig Config { get; private set; }
 
@@ -1027,8 +1036,8 @@ namespace Werewolf
 					_playersWaitingFor.Add(player);
 					FlipCard(player,
 							playerRevealed,
-							PlayerInfos[playerRevealed].Role.GameplayTag.CompactTagId,
-							() => StopWaintingForPlayer(player));
+							() => StopWaintingForPlayer(player),
+							PlayerInfos[playerRevealed].Role.GameplayTag.CompactTagId);
 				}
 
 				while (_playersWaitingFor.Count > 0)
@@ -1279,59 +1288,85 @@ namespace Werewolf
 					continue;
 				}
 
-				StartEndGameSequence(playerGroup);
+				PrepareEndGameSequence(playerGroup);
 				return true;
 			}
 
 			return false;
 		}
 
-		private void StartEndGameSequence(PlayerGroup winningPlayerGroup)
+		private void PrepareEndGameSequence(PlayerGroup winningPlayerGroup)
 		{
-			RPC_DisplayWinningPlayerGroup(winningPlayerGroup.Index);
-#if UNITY_SERVER && UNITY_EDITOR
-			DisplayWinningPlayerGroup(winningPlayerGroup.Index);
-#endif
+			List<EndGamePlayerInfo> endGamePlayerInfos = new List<EndGamePlayerInfo>();
+
 			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in PlayerInfos)
 			{
-				if (!_playerCards[playerInfo.Key])
+				int role = -1;
+
+				if (playerInfo.Value.Role)
 				{
-					continue;
+					role = playerInfo.Value.Role.GameplayTag.CompactTagId;
 				}
 
-				if (PlayerInfos[playerInfo.Key].IsAlive)
+				endGamePlayerInfos.Add(new() { Player = playerInfo.Key,
+												Role = role,
+												IsAlive = playerInfo.Value.IsAlive,
+												Won = IsPartOfPlayerGroup(playerInfo.Key, winningPlayerGroup) });
+#if UNITY_SERVER && UNITY_EDITOR
+				if (endGamePlayerInfos[endGamePlayerInfos.Count - 1].Won)
 				{
-					foreach (KeyValuePair<PlayerRef, PlayerInfo> innerPlayerInfo in PlayerInfos)
-					{
-						if (innerPlayerInfo.Key == playerInfo.Key)
-						{
-							continue;
-						}
-
-						RPC_FlipCard(innerPlayerInfo.Key, playerInfo.Key, playerInfo.Value.Role.GameplayTag.CompactTagId);
-					}
+					SetPlayerCardHighlightVisible(playerInfo.Key, true);
 				}
-
-				if (playerInfo.Value.Behaviors.Count > 0 && !playerInfo.Value.Behaviors[0].PlayerGroupIndexes.Contains(winningPlayerGroup.Index))
-				{
-					continue;
-				}
-
-				HighlightPlayer(playerInfo.Key);
+#endif
 			}
+
+			RPC_StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroup.Index);
+#if UNITY_SERVER && UNITY_EDITOR
+			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroup.Index));
+#endif
 		}
 
-		private void DisplayWinningPlayerGroup(int playerGroupIndex)
+		private bool IsPartOfPlayerGroup(PlayerRef player, PlayerGroup playerGroup)
 		{
-			PlayerGroupData playerGroupData = Config.PlayerGroups.GetPlayerGroupData(playerGroupIndex);
+			return (PlayerInfos[player].Behaviors.Count > 0 && PlayerInfos[player].Behaviors[0].PlayerGroupIndexes.Contains(playerGroup.Index))
+			|| (PlayerInfos[player].Behaviors.Count <= 0 && playerGroup.Index == Config.PlayerGroups.NoBehaviorGroupIndex);
+		}
+
+		private IEnumerator StartEndGameSequence(EndGamePlayerInfo[] endGamePlayerInfos, int winningPlayerGroupIndex)
+		{
+			foreach (EndGamePlayerInfo endGamePlayerInfo in endGamePlayerInfos)
+			{
+				if (endGamePlayerInfo.Role == -1)
+				{
+					continue;
+				}
+#if !UNITY_SERVER
+				if (endGamePlayerInfo.IsAlive && endGamePlayerInfo.Player != Runner.LocalPlayer)
+				{
+					FlipCard(endGamePlayerInfo.Player, endGamePlayerInfo.Role);
+				}
+#endif
+				if (!endGamePlayerInfo.Won)
+				{
+					continue;
+				}
+
+				SetPlayerCardHighlightVisible(endGamePlayerInfo.Player, true);
+			}
+
+			PlayerGroupData playerGroupData = Config.PlayerGroups.GetPlayerGroupData(winningPlayerGroupIndex);
 			DisplayTitle(playerGroupData.Image, string.Format(Config.WinningPlayerGroupText, playerGroupData.Name));
+
+			yield return new WaitForSeconds(3.0f);
+
+			// TODO: Display end game summary
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayWinningPlayerGroup(int playerGroupIndex)
+		public void RPC_StartEndGameSequence(EndGamePlayerInfo[] endGamePlayerInfos, int winningPlayerGroupIndex)
 		{
-			DisplayWinningPlayerGroup(playerGroupIndex);
+			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupIndex));
 		}
 		#endregion
 		#endregion
@@ -1977,7 +2012,7 @@ namespace Werewolf
 					_playerGroups[i].Players.Add(player);
 					return;
 				}
-				else if (_playerGroups[i].Index < playerGroupIndex)
+				else if (_playerGroups[i].Index > playerGroupIndex)
 				{
 					playerGroup = new();
 					playerGroup.Index = playerGroupIndex;
@@ -2540,8 +2575,17 @@ namespace Werewolf
 			return true;
 		}
 
-		public void FlipCard(PlayerRef cardPlayer, Action FlipCompleted = null)
+		public void FlipCard(PlayerRef cardPlayer, int gameplayDataID = -1, Action FlipCompleted = null)
 		{
+			if (gameplayDataID == -1)
+			{
+				_playerCards[cardPlayer].SetRole(null);
+			}
+			else
+			{
+				_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
+			}
+
 			StartCoroutine(FlipCard(_playerCards[cardPlayer].transform, Config.RoleRevealFlipDuration, FlipCompleted));
 		}
 
@@ -2566,7 +2610,7 @@ namespace Werewolf
 			FlipCompleted?.Invoke();
 		}
 
-		private bool FlipCard(PlayerRef flipFor, PlayerRef cardPlayer, int gameplayDataID, Action flipCompleted)
+		private bool FlipCard(PlayerRef flipFor, PlayerRef cardPlayer, Action flipCompleted, int gameplayDataID = -1)
 		{
 			if (_flipCardCallbacks.ContainsKey(flipFor))
 			{
@@ -2682,17 +2726,15 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_FlipCard([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int gameplayDataID)
+		public void RPC_FlipCard([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int gameplayDataID = -1)
 		{
-			_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
-			FlipCard(cardPlayer, () => RPC_FlipCardFinished());
+			FlipCard(cardPlayer, gameplayDataID, () => RPC_FlipCardFinished());
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_FlipCard(PlayerRef cardPlayer, int gameplayDataID)
+		public void RPC_FlipCard(PlayerRef cardPlayer, int gameplayDataID = -1)
 		{
-			_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
-			FlipCard(cardPlayer);
+			FlipCard(cardPlayer, gameplayDataID);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
