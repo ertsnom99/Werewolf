@@ -17,6 +17,15 @@ namespace Werewolf
 		public bool IsAlive;
 	}
 
+	[Serializable]
+	public struct EndGamePlayerInfo : INetworkStruct
+	{
+		public PlayerRef Player;
+		public int Role;
+		public bool IsAlive;
+		public bool Won;
+	}
+
 	public class GameManager : NetworkBehaviourSingleton<GameManager>
 	{
 		#region Server variables
@@ -110,15 +119,6 @@ namespace Werewolf
 			public NetworkArray<int> Roles { get; }
 		}
 		#endregion
-
-		[Serializable]
-		public struct EndGamePlayerInfo : INetworkStruct
-		{
-			public PlayerRef Player;
-			public int Role;
-			public bool IsAlive;
-			public bool Won;
-		}
 
 		[field: SerializeField]
 		public GameConfig Config { get; private set; }
@@ -1281,6 +1281,12 @@ namespace Werewolf
 		#region End Game
 		private bool CheckForWinners()
 		{
+			if (_playerGroups.Count <= 0)
+			{
+				PrepareEndGameSequence(null);
+				return true;
+			}
+
 			foreach (PlayerGroup playerGroup in _playerGroups)
 			{
 				if (playerGroup.Players.Count < AlivePlayerCount)
@@ -1295,7 +1301,7 @@ namespace Werewolf
 			return false;
 		}
 
-		private void PrepareEndGameSequence(PlayerGroup winningPlayerGroup)
+		private void PrepareEndGameSequence(PlayerGroup? winningPlayerGroup)
 		{
 			List<EndGamePlayerInfo> endGamePlayerInfos = new List<EndGamePlayerInfo>();
 
@@ -1311,7 +1317,7 @@ namespace Werewolf
 				endGamePlayerInfos.Add(new() { Player = playerInfo.Key,
 												Role = role,
 												IsAlive = playerInfo.Value.IsAlive,
-												Won = IsPartOfPlayerGroup(playerInfo.Key, winningPlayerGroup) });
+												Won = winningPlayerGroup != null ? IsPlayerInGroup(playerInfo.Key, (PlayerGroup)winningPlayerGroup) : false });
 #if UNITY_SERVER && UNITY_EDITOR
 				if (endGamePlayerInfos[endGamePlayerInfos.Count - 1].Won)
 				{
@@ -1320,13 +1326,15 @@ namespace Werewolf
 #endif
 			}
 
-			RPC_StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroup.Index);
+			int winningPlayerGroupIndex = winningPlayerGroup != null ? ((PlayerGroup)winningPlayerGroup).Index : -1;
+
+			RPC_StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupIndex);
 #if UNITY_SERVER && UNITY_EDITOR
-			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroup.Index));
+			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupIndex));
 #endif
 		}
 
-		private bool IsPartOfPlayerGroup(PlayerRef player, PlayerGroup playerGroup)
+		private bool IsPlayerInGroup(PlayerRef player, PlayerGroup playerGroup)
 		{
 			return (PlayerInfos[player].Behaviors.Count > 0 && PlayerInfos[player].Behaviors[0].PlayerGroupIndexes.Contains(playerGroup.Index))
 			|| (PlayerInfos[player].Behaviors.Count <= 0 && playerGroup.Index == Config.PlayerGroups.NoBehaviorGroupIndex);
@@ -1354,12 +1362,22 @@ namespace Werewolf
 				SetPlayerCardHighlightVisible(endGamePlayerInfo.Player, true);
 			}
 
-			PlayerGroupData playerGroupData = Config.PlayerGroups.GetPlayerGroupData(winningPlayerGroupIndex);
-			DisplayTitle(playerGroupData.Image, string.Format(Config.WinningPlayerGroupText, playerGroupData.Name));
+			if (winningPlayerGroupIndex > -1)
+			{
+				PlayerGroupData playerGroupData = Config.PlayerGroups.GetPlayerGroupData(winningPlayerGroupIndex);
+				DisplayTitle(playerGroupData.Image, string.Format(Config.WinningPlayerGroupText, playerGroupData.Name));
+			}
+			else
+			{
+				DisplayTitle(null, Config.NoWinnerText);
+			}
 
-			yield return new WaitForSeconds(3.0f);
-
-			// TODO: Display end game summary
+			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration);
+			HideUI();
+			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			
+			_UIManager.EndGameScreen.Initialize(endGamePlayerInfos);
+			_UIManager.FadeIn(_UIManager.EndGameScreen, Config.UITransitionNormalDuration);
 		}
 
 		#region RPC Calls
@@ -1999,7 +2017,7 @@ namespace Werewolf
 		{
 			PlayerGroup playerGroup;
 
-			for (int i = _playerGroups.Count - 1; i >= 0; i--)
+			for (int i = 0; i < _playerGroups.Count; i++)
 			{
 				if (_playerGroups[i].Index == playerGroupIndex)
 				{
@@ -2012,7 +2030,7 @@ namespace Werewolf
 					_playerGroups[i].Players.Add(player);
 					return;
 				}
-				else if (_playerGroups[i].Index > playerGroupIndex)
+				else if (_playerGroups[i].Index < playerGroupIndex)
 				{
 					playerGroup = new();
 					playerGroup.Index = playerGroupIndex;

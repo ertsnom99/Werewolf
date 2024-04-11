@@ -2,125 +2,127 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Werewolf;
 using Werewolf.Data;
 
-public class ServantBehavior : RoleBehavior
+namespace Werewolf
 {
-	[SerializeField]
-	private float _servantRevealDuration = 3.0f;
-
-	private bool _isWaitingForPromptAnswer;
-	private PlayerRef _playerRevealed;
-
-	private GameManager _gameManager;
-
-	public override void Init()
+	public class ServantBehavior : RoleBehavior
 	{
-		_gameManager = GameManager.Instance;
+		[SerializeField]
+		private float _servantRevealDuration = 3.0f;
 
-		_gameManager.WaitBeforeDeathRevealStarted += OnWaitBeforeDeathRevealStarted;
-		_gameManager.WaitBeforeDeathRevealEnded += OnWaitBeforeDeathRevealEnded;
-	}
+		private bool _isWaitingForPromptAnswer;
+		private PlayerRef _playerRevealed;
 
-	public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
+		private GameManager _gameManager;
 
-	public override bool OnRoleCall()
-	{
-		return false;
-	}
-
-	public override void OnRoleTimeOut() { }
-
-	private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<string> marks, float revealDuration)
-	{
-		if (Player == PlayerRef.None
-			|| !_gameManager.PlayerInfos[Player].IsAlive
-			|| Player == playerRevealed
-			|| !marks.Contains(_gameManager.Config.ExecutionMarkForDeath)
-			|| !_gameManager.PromptPlayer(Player, "Take this role?", revealDuration, "Take", OnTakeRole))
+		public override void Init()
 		{
-			return;
+			_gameManager = GameManager.Instance;
+
+			_gameManager.WaitBeforeDeathRevealStarted += OnWaitBeforeDeathRevealStarted;
+			_gameManager.WaitBeforeDeathRevealEnded += OnWaitBeforeDeathRevealEnded;
 		}
 
-		_isWaitingForPromptAnswer = true;
-		_playerRevealed = playerRevealed;
-	}
+		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-	private void OnTakeRole(PlayerRef player)
-	{
-		_isWaitingForPromptAnswer = false;
-		_gameManager.StopPlayerDeathReveal();
-
-		StartCoroutine(ChangeRole());
-	}
-
-	private IEnumerator ChangeRole()
-	{
-		RoleData RoleToTake = _gameManager.PlayerInfos[_playerRevealed].Role;
-		RoleData servantRole = _gameManager.PlayerInfos[Player].Role;
-
-		_gameManager.TransferRole(_playerRevealed, Player, false);
-
-		foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
+		public override bool OnRoleCall()
 		{
-			if (playerInfo.Key == Player)
-			{
-				_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
-				_gameManager.RPC_DisplayTitle(playerInfo.Key, $"Your new role is: {RoleToTake.Name}");
-				continue;
-			}
-
-			if (playerInfo.Key == _playerRevealed)
-			{
-				_gameManager.RPC_HideUI(_playerRevealed);
-			}
-
-			_gameManager.RPC_MoveCardToCamera(playerInfo.Key, Player, true, servantRole.GameplayTag.CompactTagId);
-			_gameManager.RPC_DestroyPlayerCard(playerInfo.Key, _playerRevealed);
-			_gameManager.RPC_DisplayTitle(playerInfo.Key, "The servant has decided to take this role!");
+			return false;
 		}
+
+		public override void OnRoleTimeOut() { }
+
+		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<string> marks, float revealDuration)
+		{
+			if (Player == PlayerRef.None
+				|| !_gameManager.PlayerInfos[Player].IsAlive
+				|| Player == playerRevealed
+				|| !marks.Contains(_gameManager.Config.ExecutionMarkForDeath)
+				|| !_gameManager.PromptPlayer(Player, "Take this role?", revealDuration, "Take", OnTakeRole))
+			{
+				return;
+			}
+
+			_isWaitingForPromptAnswer = true;
+			_playerRevealed = playerRevealed;
+		}
+
+		private void OnTakeRole(PlayerRef player)
+		{
+			_isWaitingForPromptAnswer = false;
+			_gameManager.StopPlayerDeathReveal();
+
+			StartCoroutine(ChangeRole());
+		}
+
+		private IEnumerator ChangeRole()
+		{
+			RoleData RoleToTake = _gameManager.PlayerInfos[_playerRevealed].Role;
+			RoleData servantRole = _gameManager.PlayerInfos[Player].Role;
+
+			_gameManager.TransferRole(_playerRevealed, Player, false);
+
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
+			{
+				if (playerInfo.Key == Player)
+				{
+					_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
+					_gameManager.RPC_DisplayTitle(playerInfo.Key, $"Your new role is: {RoleToTake.Name}");
+					continue;
+				}
+
+				if (playerInfo.Key == _playerRevealed)
+				{
+					_gameManager.RPC_HideUI(_playerRevealed);
+				}
+
+				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, Player, true, servantRole.GameplayTag.CompactTagId);
+				_gameManager.RPC_DestroyPlayerCard(playerInfo.Key, _playerRevealed);
+				_gameManager.RPC_DisplayTitle(playerInfo.Key, "The servant has decided to take this role!");
+			}
 #if UNITY_SERVER && UNITY_EDITOR
-		_gameManager.ChangePlayerCardRole(Player, servantRole);
-		_gameManager.MoveCardToCamera(Player, true);
-		_gameManager.DestroyPlayerCard(_playerRevealed);
-		_gameManager.DisplayTitle(null, "The servant has decided to take this role!");
+			_gameManager.ChangePlayerCardRole(Player, servantRole);
+			_gameManager.MoveCardToCamera(Player, true);
+			_gameManager.DestroyPlayerCard(_playerRevealed);
+			_gameManager.DisplayTitle(null, "The servant has decided to take this role!");
 #endif
-		yield return new WaitForSeconds(_servantRevealDuration);
+			yield return new WaitForSeconds(_servantRevealDuration);
 
-		foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
-		{
-			if (playerInfo.Key == Player)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
 			{
-				_gameManager.RPC_DestroyPlayerCard(Player, _playerRevealed);
-				continue;
+				if (playerInfo.Key == Player)
+				{
+					_gameManager.RPC_DestroyPlayerCard(Player, _playerRevealed);
+					continue;
+				}
+
+				_gameManager.RPC_PutCardBackDown(playerInfo.Key, Player, true);
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			_gameManager.ChangePlayerCardRole(Player, RoleToTake);
+			_gameManager.PutCardBackDown(Player, false);
+#endif
+			yield return new WaitForSeconds(_gameManager.Config.MoveToCameraDuration);
+			_gameManager.SetPlayerDeathRevealCompleted();
+
+			Destroy(gameObject);
+		}
+
+		private void OnWaitBeforeDeathRevealEnded(PlayerRef playerRevealed)
+		{
+			if (!_isWaitingForPromptAnswer)
+			{
+				return;
 			}
 
-			_gameManager.RPC_PutCardBackDown(playerInfo.Key, Player, true);
+			_gameManager.StopPromptingPlayer(Player);
 		}
-#if UNITY_SERVER && UNITY_EDITOR
-		_gameManager.ChangePlayerCardRole(Player, RoleToTake);
-		_gameManager.PutCardBackDown(Player, false);
-#endif
-		yield return new WaitForSeconds(_gameManager.Config.MoveToCameraDuration);
-		_gameManager.SetPlayerDeathRevealCompleted();
 
-		Destroy(gameObject);
-	}
-
-	private void OnWaitBeforeDeathRevealEnded(PlayerRef playerRevealed)
-	{
-		if (!_isWaitingForPromptAnswer)
+		private void OnDestroy()
 		{
-			return;
+			_gameManager.WaitBeforeDeathRevealStarted -= OnWaitBeforeDeathRevealStarted;
+			_gameManager.WaitBeforeDeathRevealEnded -= OnWaitBeforeDeathRevealEnded;
 		}
-
-		_gameManager.StopPromptingPlayer(Player);
-	}
-
-	private void OnDestroy()
-	{
-		_gameManager.WaitBeforeDeathRevealStarted -= OnWaitBeforeDeathRevealStarted;
-		_gameManager.WaitBeforeDeathRevealEnded -= OnWaitBeforeDeathRevealEnded;
 	}
 }

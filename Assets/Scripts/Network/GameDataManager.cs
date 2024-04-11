@@ -34,7 +34,7 @@ namespace Werewolf.Network
 		public NetworkArray<RoleSetup> AvailableRoles { get; }
 	}
 
-	public class GameDataManager : NetworkBehaviour, INetworkRunnerCallbacks
+	public class GameDataManager : NetworkBehaviourSingleton<GameDataManager>, INetworkRunnerCallbacks
 	{
 		[Networked, Capacity(GameConfig.MAX_PLAYER_COUNT)]
 		public NetworkDictionary<PlayerRef, PlayerInfo> PlayerInfos { get; }
@@ -55,8 +55,9 @@ namespace Werewolf.Network
 
 		public static event Action OnSpawned;
 
-		private void Awake()
+		protected override void Awake()
 		{
+			base.Awake();
 			DontDestroyOnLoad(gameObject);
 		}
 
