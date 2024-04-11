@@ -170,6 +170,12 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public string WinningPlayerGroupText { get; private set; }
 
+		[field: SerializeField]
+		public string NoWinnerText { get; private set; }
+
+		[field: SerializeField]
+		public float EndGameTitleHoldDuration { get; private set; }
+
 		[field: Header("Captain")]
 		[field: SerializeField]
 		public string CaptainRevealText { get; private set; }
