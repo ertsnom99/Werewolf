@@ -13,35 +13,36 @@ namespace Werewolf.Network
 	public class ServerGameController : SimulationBehaviour, INetworkRunnerCallbacks
 	{
 		[SerializeField]
-		private GameDataManager _gameDataManagerPrefab;
+		private NetworkDataManager _networkDataManagerPrefab;
 
-		private GameDataManager _gameDataManager;
+		private NetworkDataManager _networkDataManager;
 
 		public void OnSceneLoadDone(NetworkRunner runner)
 		{
 			switch (runner.SceneManager.MainRunnerScene.buildIndex)
 			{
 				case (int)SceneDefs.MENU:
-					_gameDataManager = runner.Spawn(_gameDataManagerPrefab, Vector3.zero, Quaternion.identity);
-					_gameDataManager.OnGameDataReadyChanged += OnGameDataReadyChanged;
-					runner.AddCallbacks(_gameDataManager);
+					_networkDataManager = runner.Spawn(_networkDataManagerPrefab, Vector3.zero, Quaternion.identity);
+					_networkDataManager.OnRolesSetupReadyChanged += OnRolesSetupReadyChanged;
+					runner.AddCallbacks(_networkDataManager);
 					break;
 				case (int)SceneDefs.GAME:
-					GameManager.Instance.PrepareGame(_gameDataManager.RolesSetup);
+					GameManager.Instance.PrepareGame(_networkDataManager.RolesSetup);
 					break;
 			}
 		}
 
-		private void OnGameDataReadyChanged()
+		private void OnRolesSetupReadyChanged()
 		{
-			if (!_gameDataManager.GameDataReady)
+			if (!_networkDataManager.RolesSetupReady)
 			{
 				return;
 			}
 
-			_gameDataManager.OnGameDataReadyChanged -= OnGameDataReadyChanged;
+			_networkDataManager.OnRolesSetupReadyChanged -= OnRolesSetupReadyChanged;
 
 			Runner.SessionInfo.IsOpen = false;
+			_networkDataManager.SetPlayersInGame();
 			Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.GAME), LoadSceneMode.Single);
 		}
 

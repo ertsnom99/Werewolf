@@ -143,7 +143,7 @@ namespace Werewolf
 
 		private GameplayLoopStep _currentGameplayLoopStep;
 
-		private GameDataManager _gameDataManager;
+		private NetworkDataManager _networkDataManager;
 		private GameplayDatabaseManager _gameplayDatabaseManager;
 		private UIManager _UIManager;
 		private VoteManager _voteManager;
@@ -206,7 +206,7 @@ namespace Werewolf
 		#region Pre Gameplay Loop
 		public void PrepareGame(RolesSetup rolesSetup)
 		{
-			GetGameDataManager();
+			GetNetworkDataManager();
 
 			SelectRolesToDistribute(rolesSetup);
 
@@ -228,9 +228,9 @@ namespace Werewolf
 			CheckPreGameplayLoopProgress();
 		}
 
-		private void GetGameDataManager()
+		private void GetNetworkDataManager()
 		{
-			_gameDataManager = FindObjectOfType<GameDataManager>();
+			_networkDataManager = FindObjectOfType<NetworkDataManager>();
 		}
 
 		#region Roles Selection
@@ -238,8 +238,8 @@ namespace Werewolf
 		{
 			// Convert GameplayTagIDs to RoleData
 			RoleData defaultRole = _gameplayDatabaseManager.GetGameplayData<RoleData>(rolesSetup.DefaultRole);
-			GameDataManager.ConvertToRoleSetupDatas(rolesSetup.MandatoryRoles, out List<RoleSetupData> mandatoryRoles);
-			GameDataManager.ConvertToRoleSetupDatas(rolesSetup.AvailableRoles, out List<RoleSetupData> availableRoles);
+			NetworkDataManager.ConvertToRoleSetupDatas(rolesSetup.MandatoryRoles, out List<RoleSetupData> mandatoryRoles);
+			NetworkDataManager.ConvertToRoleSetupDatas(rolesSetup.AvailableRoles, out List<RoleSetupData> availableRoles);
 
 			List<RoleData> rolesToDistribute = new();
 
@@ -254,7 +254,7 @@ namespace Werewolf
 			int attempts = 0;
 
 			// Complete with available roles at random or default role
-			while (rolesToDistribute.Count < _gameDataManager.PlayerInfos.Count)
+			while (rolesToDistribute.Count < _networkDataManager.PlayerInfos.Count)
 			{
 				int startingRoleCount = rolesToDistribute.Count;
 
@@ -275,7 +275,7 @@ namespace Werewolf
 					attempts++;
 					continue;
 				}
-				else if (roleSetup.UseCount > _gameDataManager.PlayerInfos.Count - rolesToDistribute.Count)
+				else if (roleSetup.UseCount > _networkDataManager.PlayerInfos.Count - rolesToDistribute.Count)
 				{
 					excludedRuleSetups.Add(roleSetup);
 					continue;
@@ -355,7 +355,7 @@ namespace Werewolf
 		#region Roles Distribution
 		private void DistributeRoles()
 		{
-			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _networkDataManager.PlayerInfos)
 			{
                 RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
                 RolesToDistribute.Remove(selectedRole);
@@ -490,9 +490,9 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_GivePlayerRole([RpcTarget] PlayerRef player, int roleGameplayTagID)
 		{
-			if (!_gameDataManager)
+			if (!_networkDataManager)
 			{
-				GetGameDataManager();
+				GetNetworkDataManager();
 			}
 
 			CreatePlayerCards(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
@@ -511,7 +511,7 @@ namespace Werewolf
 		{
 			if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
 			{
-				foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
+				foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _networkDataManager.PlayerInfos)
 				{
 					RPC_GivePlayerRole(playerInfo.Key, PlayerInfos[playerInfo.Key].Role.GameplayTag.CompactTagId);
 				}
@@ -536,12 +536,12 @@ namespace Werewolf
 
 			Log.Info($"{player} is ready!");
 
-			if (!_gameDataManager)
+			if (!_networkDataManager)
 			{
-				GetGameDataManager();
+				GetNetworkDataManager();
 			}
 
-			if (_playersReady.Count < _gameDataManager.PlayerInfos.Count)
+			if (_playersReady.Count < _networkDataManager.PlayerInfos.Count)
 			{
 				return false;
 			}
@@ -2930,7 +2930,7 @@ namespace Werewolf
 				card.SetOriginalPosition(card.transform.position);
 				card.SetPlayer(playerInfo.Key);
 				card.SetRole(playerInfo.Value.Role);
-				card.SetNickname(_gameDataManager.PlayerInfos[playerInfo.Key].Nickname);
+				card.SetNickname(_networkDataManager.PlayerInfos[playerInfo.Key].Nickname);
 				card.DetachGroundCanvas();
 				card.Flip();
 
@@ -2981,7 +2981,7 @@ namespace Werewolf
 #endif
 		private void CreatePlayerCards(PlayerRef bottomPlayer, RoleData playerRole)
 		{
-			NetworkDictionary<PlayerRef, Network.PlayerInfo> playerInfos = _gameDataManager.PlayerInfos;
+			NetworkDictionary<PlayerRef, Network.PlayerInfo> playerInfos = _networkDataManager.PlayerInfos;
 			int playerCount = playerInfos.Count;
 
 			int counter = -1;
@@ -3095,7 +3095,7 @@ namespace Werewolf
 
 		private void AdjustCamera()
 		{
-			Camera.main.transform.position = Camera.main.transform.position.normalized * Config.CameraOffset.Evaluate(_gameDataManager.PlayerInfos.Count);
+			Camera.main.transform.position = Camera.main.transform.position.normalized * Config.CameraOffset.Evaluate(_networkDataManager.PlayerInfos.Count);
 		}
 		#endregion
 	}

@@ -19,12 +19,12 @@ namespace Werewolf.UI
 		[SerializeField]
 		private EndGamePlayer _endGamePlayerPrefab;
 
-		private GameDataManager _gameDataManager;
+		private NetworkDataManager _networkDataManager;
 		private GameplayDatabaseManager _gameplayDatabaseManager;
 
 		private void Start()
 		{
-			_gameDataManager = GameDataManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
 		}
 
@@ -49,11 +49,11 @@ namespace Werewolf.UI
 
 				if (roleData)
 				{
-					endGamePlayer.Initialize(roleData.Image, _gameDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname, roleData.Name);
+					endGamePlayer.Initialize(roleData.Image, _networkDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname, roleData.Name);
 				}
 				else
 				{
-					endGamePlayer.Initialize(_gameDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname);
+					endGamePlayer.Initialize(_networkDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname);
 				}
 			}
 
