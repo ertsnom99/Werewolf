@@ -25,24 +25,24 @@ namespace Werewolf
 		[SerializeField]
 		private Button _leaveRoomBtn;
 
-		private GameDataManager _gameDataManager;
+		private NetworkDataManager _networkDataManager;
 
 		private PlayerRef _localPlayer;
 
 		private int _minPlayer = -1;
 
-		public void SetGameDataManager(GameDataManager gameDataManager, PlayerRef localPlayer)
+		public void SetNetworkDataManager(NetworkDataManager networkDataManager, PlayerRef localPlayer)
 		{
-			_gameDataManager = gameDataManager;
+			_networkDataManager = networkDataManager;
 			_localPlayer = localPlayer;
 
-			if (!_gameDataManager || _localPlayer == null)
+			if (!_networkDataManager || _localPlayer == null)
 			{
 				return;
 			}
 
-			_gameDataManager.OnPlayerNicknamesChanged += UpdatePlayerList;
-			_gameDataManager.OnInvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
+			_networkDataManager.OnPlayerInfosChanged += UpdatePlayerList;
+			_networkDataManager.OnInvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
 			UpdatePlayerList();
 		}
 
@@ -53,7 +53,7 @@ namespace Werewolf
 
 		public void UpdatePlayerList()
 		{
-			if (!_gameDataManager || _localPlayer == null)
+			if (!_networkDataManager || _localPlayer == null)
 			{
 				return;
 			}
@@ -65,12 +65,19 @@ namespace Werewolf
 			}
 
 			// Fill list
+			bool areAllPlayersInLobby = true;
 			bool isOdd = true;
 			bool localPlayerIsLeader = false;
 
-			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _gameDataManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _networkDataManager.PlayerInfos)
 			{
-                PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
+				if (playerInfo.Value.IsInGame)
+				{
+					areAllPlayersInLobby = false;
+					continue;
+				}
+
+				PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
 				playerEntry.SetPlayerData(playerInfo.Value, _localPlayer, isOdd);
 
 				if (playerInfo.Value.PlayerRef == _localPlayer)
@@ -82,8 +89,12 @@ namespace Werewolf
 			}
 
 			// Update buttons
-			_startGameBtn.interactable = localPlayerIsLeader && _minPlayer > -1 && _gameDataManager.PlayerInfos.Count >= _minPlayer && !_gameDataManager.GameDataReady;
-			_leaveRoomBtn.interactable = !_gameDataManager.GameDataReady;
+			_startGameBtn.interactable = areAllPlayersInLobby
+										&& localPlayerIsLeader
+										&& _minPlayer > -1
+										&& _networkDataManager.PlayerInfos.Count >= _minPlayer
+										&& !_networkDataManager.RolesSetupReady;
+			_leaveRoomBtn.interactable = !_networkDataManager.RolesSetupReady;
 		}
 
 		private void ShowInvalidRolesSetupWarning()
@@ -100,13 +111,13 @@ namespace Werewolf
 		{
 			ClearWarning();
 
-			if (!_gameDataManager)
+			if (!_networkDataManager)
 			{
 				return;
 			}
 
-			_gameDataManager.OnPlayerNicknamesChanged -= UpdatePlayerList;
-			_gameDataManager.OnInvalidRolesSetupReceived -= ShowInvalidRolesSetupWarning;
+			_networkDataManager.OnPlayerInfosChanged -= UpdatePlayerList;
+			_networkDataManager.OnInvalidRolesSetupReceived -= ShowInvalidRolesSetupWarning;
 		}
 	}
 }

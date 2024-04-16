@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using System.Threading.Tasks;
-using UnityEngine.SceneManagement;
-using Werewolf.Network.Configs;
 using Werewolf.Network;
 using Werewolf.Data;
 
@@ -31,7 +29,7 @@ namespace Werewolf
 
 		private NetworkRunner _runner;
 
-		private GameDataManager _gameDataManager;
+		private NetworkDataManager _networkDataManager;
 
 		private void Awake()
 		{
@@ -79,9 +77,9 @@ namespace Werewolf
 
 		public void LeaveGame()
 		{
-			if (_gameDataManager)
+			if (_networkDataManager)
 			{
-				_gameDataManager.OnGameDataReadyChanged -= OnGameDataReadyChanged;
+				_networkDataManager.OnRolesSetupReadyChanged -= OnRolesSetupReadyChanged;
 			}
 
 			_runner.Shutdown();
@@ -89,35 +87,35 @@ namespace Werewolf
 
 		public void StartGame()
 		{
-			if (!_gameDataManager)
+			if (!_networkDataManager)
 			{
 				return;
 			}
 
 			_roomMenu.ClearWarning();
 			// TODO : send the selected game setup
-			_gameDataManager.RPC_SetRolesSetup(GameDataManager.ConvertToRolesSetup(_debugGameSetupData), _debugGameSetupData.MinPlayerCount);
+			_networkDataManager.RPC_SetRolesSetup(NetworkDataManager.ConvertToRolesSetup(_debugGameSetupData), _debugGameSetupData.MinPlayerCount);
 		}
 
-		private void OnGameDataManagerSpawned()
+		private void OnNetworkDataManagerSpawned()
 		{
-			if (!_gameDataManager)
+			if (!_networkDataManager)
 			{
-				GameDataManager.OnSpawned -= OnGameDataManagerSpawned;
-				_gameDataManager = FindObjectOfType<GameDataManager>();
+				NetworkDataManager.OnSpawned -= OnNetworkDataManagerSpawned;
+				_networkDataManager = FindObjectOfType<NetworkDataManager>();
 			}
 
-			_gameDataManager.OnGameDataReadyChanged += OnGameDataReadyChanged;
-			_roomMenu.SetGameDataManager(_gameDataManager, _runner.LocalPlayer);
+			_networkDataManager.OnRolesSetupReadyChanged += OnRolesSetupReadyChanged;
+			_roomMenu.SetNetworkDataManager(_networkDataManager, _runner.LocalPlayer);
 			// TODO : Change min player everytime the leader select a new game setup
 			_roomMenu.SetMinPlayer(_debugGameSetupData.MinPlayerCount);
 
-			_gameDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
+			_networkDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
 
 			DisplayRoomMenu();
 		}
 
-		private void OnGameDataReadyChanged()
+		private void OnRolesSetupReadyChanged()
 		{
 			_roomMenu.UpdatePlayerList();
 		}
@@ -134,14 +132,6 @@ namespace Werewolf
 
 		private Task<StartGameResult> ConnectToServer(NetworkRunner runner, string sessionName)
 		{
-			SceneRef scene = SceneRef.FromIndex((int)SceneDefs.MENU);
-			NetworkSceneInfo sceneInfo = new();
-
-			if (scene.IsValid)
-			{
-				sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
-			}
-
 			return runner.StartGame(new()
 			{
 				SessionName = sessionName,
@@ -154,15 +144,15 @@ namespace Werewolf
 		{
 			Log.Info($"{nameof(OnConnectedToServer)}: {nameof(runner.CurrentConnectionType)}: {runner.CurrentConnectionType}, {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
 
-			_gameDataManager = FindObjectOfType<GameDataManager>();
+			_networkDataManager = FindObjectOfType<NetworkDataManager>();
 
-			if (_gameDataManager)
+			if (_networkDataManager)
 			{
-				OnGameDataManagerSpawned();
+				OnNetworkDataManagerSpawned();
 			}
 			else
 			{
-				GameDataManager.OnSpawned += OnGameDataManagerSpawned;
+				NetworkDataManager.OnSpawned += OnNetworkDataManagerSpawned;
 			}
 		}
 
@@ -248,12 +238,12 @@ namespace Werewolf
 
 		private void OnDisable()
 		{
-			if (!_gameDataManager)
+			if (!_networkDataManager)
 			{
 				return;
 			}
 
-			_gameDataManager.OnGameDataReadyChanged -= OnGameDataReadyChanged;
+			_networkDataManager.OnRolesSetupReadyChanged -= OnRolesSetupReadyChanged;
 		}
 	}
 }
