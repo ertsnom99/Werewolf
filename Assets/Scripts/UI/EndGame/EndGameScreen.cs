@@ -1,3 +1,5 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
@@ -19,6 +21,11 @@ namespace Werewolf.UI
 		[SerializeField]
 		private EndGamePlayer _endGamePlayerPrefab;
 
+		[SerializeField]
+		private TMP_Text _countdownText;
+
+		private GameConfig _config;
+
 		private NetworkDataManager _networkDataManager;
 		private GameplayDatabaseManager _gameplayDatabaseManager;
 
@@ -28,7 +35,12 @@ namespace Werewolf.UI
 			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
 		}
 
-		public void Initialize(EndGamePlayerInfo[] endGamePlayerInfos)
+		public void SetConfig(GameConfig config)
+		{
+			_config = config;
+		}
+
+		public void Initialize(EndGamePlayerInfo[] endGamePlayerInfos, float returnToLobbyCountdownDuration)
 		{
 			foreach(EndGamePlayerInfo endGamePlayerInfo in endGamePlayerInfos)
 			{
@@ -60,6 +72,20 @@ namespace Werewolf.UI
 			bool anyWinners = _winners.childCount > 0;
 			_winnersTitle.SetActive(anyWinners);
 			_winners.gameObject.SetActive(anyWinners);
+
+			StartCoroutine(StartReturnToLobbyCountdown(returnToLobbyCountdownDuration));
+		}
+
+		private IEnumerator StartReturnToLobbyCountdown(float returnToLobbyCountdownDuration)
+		{
+			float currentCountdown = returnToLobbyCountdownDuration;
+
+			while (currentCountdown > 0)
+			{
+				_countdownText.text = string.Format(_config.ReturnToLobbyCountdownText, Mathf.CeilToInt(currentCountdown));
+				yield return 0;
+				currentCountdown = Mathf.Max(currentCountdown - Time.deltaTime, .0f);
+			}
 		}
 
 		protected override void OnFadeStarts(float targetOpacity) { }

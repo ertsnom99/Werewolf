@@ -65,18 +65,11 @@ namespace Werewolf
 			}
 
 			// Fill list
-			bool areAllPlayersInLobby = true;
 			bool isOdd = true;
 			bool localPlayerIsLeader = false;
 
 			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _networkDataManager.PlayerInfos)
 			{
-				if (playerInfo.Value.IsInGame)
-				{
-					areAllPlayersInLobby = false;
-					continue;
-				}
-
 				PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
 				playerEntry.SetPlayerData(playerInfo.Value, _localPlayer, isOdd);
 
@@ -89,8 +82,7 @@ namespace Werewolf
 			}
 
 			// Update buttons
-			_startGameBtn.interactable = areAllPlayersInLobby
-										&& localPlayerIsLeader
+			_startGameBtn.interactable = localPlayerIsLeader
 										&& _minPlayer > -1
 										&& _networkDataManager.PlayerInfos.Count >= _minPlayer
 										&& !_networkDataManager.RolesSetupReady;

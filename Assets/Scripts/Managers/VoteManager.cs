@@ -290,6 +290,8 @@ namespace Werewolf
 
 			while (elapsedTime < duration && (_lockedInVoteCount < Voters.Count || allLockedInElapsedTime < _config.AllLockedInDelayToEndVote))
 			{
+				yield return 0;
+
 				if (_lockedInVoteCount < Voters.Count && allLockedInElapsedTime > .0f)
 				{
 					allLockedInElapsedTime = .0f;
@@ -300,7 +302,6 @@ namespace Werewolf
 				}
 
 				elapsedTime += Time.deltaTime;
-				yield return 0;
 			}
 
 			EndVote();

@@ -69,8 +69,8 @@ namespace Werewolf
 
 			while (elapsedTime < _gameManager.Config.NightCallMaximumDuration)
 			{
-				elapsedTime += Time.deltaTime;
 				yield return 0;
+				elapsedTime += Time.deltaTime;
 			}
 
 			_gameManager.StopChoosingPlayer(Player);

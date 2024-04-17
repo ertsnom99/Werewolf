@@ -42,7 +42,6 @@ namespace Werewolf.Network
 			_networkDataManager.OnRolesSetupReadyChanged -= OnRolesSetupReadyChanged;
 
 			Runner.SessionInfo.IsOpen = false;
-			_networkDataManager.SetPlayersInGame();
 			Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.GAME), LoadSceneMode.Single);
 		}
 

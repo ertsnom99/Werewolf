@@ -4,8 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Werewolf.Data;
 using Werewolf.Network;
+using Werewolf.Network.Configs;
 using Werewolf.UI;
 
 namespace Werewolf
@@ -101,8 +103,8 @@ namespace Werewolf
 		private IEnumerator _startCaptainExecutionCoroutine;
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
-		private Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new ();
-		private Dictionary<PlayerRef, Action> _flipCardCallbacks = new ();
+		private Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new();
+		private Dictionary<PlayerRef, Action> _flipCardCallbacks = new();
 		private Dictionary<PlayerRef, Action> _putCardBackDownCallbacks = new();
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _promptPlayerCallbacks = new();
@@ -195,6 +197,7 @@ namespace Werewolf
 			_UIManager.TitleScreen.SetConfig(Config);
 			_UIManager.ChoiceScreen.SetConfig(Config);
 			_UIManager.VoteScreen.SetConfig(Config);
+			_UIManager.EndGameScreen.SetConfig(Config);
 		}
 
 		public override void Spawned()
@@ -333,7 +336,7 @@ namespace Werewolf
 
 			roleBehavior.SetPrimaryRoleType(role.PrimaryType);
 
-			foreach(int playerGroupIndex in role.PlayerGroupIndexes)
+			foreach (int playerGroupIndex in role.PlayerGroupIndexes)
 			{
 				roleBehavior.AddPlayerGroupIndex(playerGroupIndex);
 			}
@@ -357,24 +360,24 @@ namespace Werewolf
 		{
 			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _networkDataManager.PlayerInfos)
 			{
-                RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
-                RolesToDistribute.Remove(selectedRole);
+				RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
+				RolesToDistribute.Remove(selectedRole);
 
-                List<RoleBehavior> selectedBehaviors = new();
+				List<RoleBehavior> selectedBehaviors = new();
 
 				foreach (KeyValuePair<RoleBehavior, RoleData> unassignedRoleBehavior in _unassignedRoleBehaviors)
 				{
 					if (unassignedRoleBehavior.Value == selectedRole)
 					{
-                        RoleBehavior selectedBehavior = unassignedRoleBehavior.Key;
+						RoleBehavior selectedBehavior = unassignedRoleBehavior.Key;
 						selectedBehavior.SetPlayer(playerInfo.Key);
 						selectedBehaviors.Add(selectedBehavior);
-                        _unassignedRoleBehaviors.Remove(unassignedRoleBehavior.Key);
+						_unassignedRoleBehaviors.Remove(unassignedRoleBehavior.Key);
 						break;
 					}
 				}
 
-                PlayerInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
+				PlayerInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
 			}
 
 			_rolesDistributionDone = true;
@@ -396,7 +399,7 @@ namespace Werewolf
 			{
 				if (playerInfo.Value.Behaviors.Count <= 0)
 				{
-					foreach(int playerGroupIndex in playerInfo.Value.Role.PlayerGroupIndexes)
+					foreach (int playerGroupIndex in playerInfo.Value.Role.PlayerGroupIndexes)
 					{
 						AddPlayerToPlayerGroup(playerGroupIndex, playerInfo.Key);
 					}
@@ -404,7 +407,7 @@ namespace Werewolf
 					continue;
 				}
 
-				foreach(int playerGroupIndex in playerInfo.Value.Behaviors[0].GetCurrentPlayerGroups())
+				foreach (int playerGroupIndex in playerInfo.Value.Behaviors[0].GetCurrentPlayerGroups())
 				{
 					AddPlayerToPlayerGroup(playerGroupIndex, playerInfo.Key);
 				}
@@ -641,7 +644,7 @@ namespace Werewolf
 		#region Election
 		private IEnumerator StartElectionDebate()
 		{
-			foreach(KeyValuePair<PlayerRef, PlayerInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in PlayerInfos)
 			{
 				PromptPlayer(playerInfo.Key,
 							Config.ElectionPromptTitleText,
@@ -814,8 +817,8 @@ namespace Werewolf
 
 					while (!IsNightCallOver(elapsedTime))
 					{
-						elapsedTime += Time.deltaTime;
 						yield return 0;
+						elapsedTime += Time.deltaTime;
 					}
 
 					// End the turn of all players that are still not done playing
@@ -1332,6 +1335,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupIndex));
 #endif
+			StartCoroutine(ReturnToLobby());
 		}
 
 		private bool IsPlayerInGroup(PlayerRef player, PlayerGroup playerGroup)
@@ -1375,9 +1379,15 @@ namespace Werewolf
 			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration);
 			HideUI();
 			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
-			
-			_UIManager.EndGameScreen.Initialize(endGamePlayerInfos);
+
+			_UIManager.EndGameScreen.Initialize(endGamePlayerInfos, Config.ReturnToLobbyCountdownDuration);
 			_UIManager.FadeIn(_UIManager.EndGameScreen, Config.UITransitionNormalDuration);
+		}
+
+		private IEnumerator ReturnToLobby()
+		{
+			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration + Config.UITransitionNormalDuration + Config.ReturnToLobbyCountdownDuration);
+			Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.MENU), LoadSceneMode.Single);
 		}
 
 		#region RPC Calls
@@ -1552,14 +1562,14 @@ namespace Werewolf
 
 			while (elapsedTime < Config.CaptainCardMovementDuration)
 			{
-				elapsedTime += Time.deltaTime;
-
 				float progress = elapsedTime / Config.CaptainCardMovementDuration;
 
 				_captainCard.transform.position = Vector3.Lerp(startingPosition, newPosition, Config.CaptainCardMovementXY.Evaluate(progress))
 												+ Vector3.up * Config.CaptainCardMovementYOffset.Evaluate(progress);
 
 				yield return 0;
+
+				elapsedTime += Time.deltaTime;
 			}
 		}
 
@@ -1605,8 +1615,8 @@ namespace Werewolf
 
 			while (_playersWaitingFor.Count > 0 && elapsedTime < duration)
 			{
-				elapsedTime += Time.deltaTime;
 				yield return 0;
+				elapsedTime += Time.deltaTime;
 			}
 
 			RPC_OnDebateEnded();
@@ -2567,14 +2577,14 @@ namespace Werewolf
 
 			while (elapsedTime < duration)
 			{
-				elapsedTime += Time.deltaTime;
-
 				float progress = elapsedTime / duration;
 
 				card.transform.position = Vector3.Lerp(startingPosition, targetPosition, progress);
 				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
 
 				yield return 0;
+
+				elapsedTime += Time.deltaTime;
 			}
 
 			MovementCompleted?.Invoke();
@@ -2616,13 +2626,12 @@ namespace Werewolf
 
 			while (elapsedTime < duration)
 			{
-				elapsedTime += Time.deltaTime;
-
 				float progress = elapsedTime / duration;
-
 				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
 
 				yield return 0;
+
+				elapsedTime += Time.deltaTime;
 			}
 
 			FlipCompleted?.Invoke();
@@ -2666,14 +2675,13 @@ namespace Werewolf
 
 			while (elapsedTime < duration)
 			{
-				elapsedTime += Time.deltaTime;
-
 				float progress = elapsedTime / duration;
-
 				card.transform.position = Vector3.Lerp(startingPosition, card.OriginalPosition, progress);
 				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
 
 				yield return 0;
+
+				elapsedTime += Time.deltaTime;
 			}
 
 			if (returnFaceDown)

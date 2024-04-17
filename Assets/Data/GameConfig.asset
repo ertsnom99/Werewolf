@@ -137,6 +137,8 @@ MonoBehaviour:
   <WinningPlayerGroupText>k__BackingField: The {0} won!
   <NoWinnerText>k__BackingField: No one won!
   <EndGameTitleHoldDuration>k__BackingField: 3
+  <ReturnToLobbyCountdownText>k__BackingField: Returning to Lobby in {0}...
+  <ReturnToLobbyCountdownDuration>k__BackingField: 5
   <CaptainRevealText>k__BackingField: Here is the captain!
   <ChooseNextCaptainText>k__BackingField: Choose the next captain
   <CaptainChoiceDuration>k__BackingField: 10
