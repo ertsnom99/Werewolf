@@ -176,6 +176,12 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float EndGameTitleHoldDuration { get; private set; }
 
+		[field: SerializeField]
+		public string ReturnToLobbyCountdownText { get; private set; }
+
+		[field: SerializeField]
+		public float ReturnToLobbyCountdownDuration { get; private set; }
+
 		[field: Header("Captain")]
 		[field: SerializeField]
 		public string CaptainRevealText { get; private set; }

@@ -14,7 +14,6 @@ namespace Werewolf.Network
 		[Networked, Capacity(24)]
 		public string Nickname { get => default; set { } }
 		public bool IsLeader;
-		public bool IsInGame;
 	}
 
 	[Serializable]
@@ -92,7 +91,6 @@ namespace Werewolf.Network
 			playerData.PlayerRef = playerRef;
 			playerData.Nickname = nickname;
 			playerData.IsLeader = PlayerInfos.Count <= 0;
-			playerData.IsInGame = false;
 
 			PlayerInfos.Set(playerRef, playerData);
 		}
@@ -115,20 +113,6 @@ namespace Werewolf.Network
 
 			RolesSetup = rolesSetup;
 			RolesSetupReady = true;
-		}
-
-		public void SetPlayersInGame()
-		{
-			foreach(KeyValuePair<PlayerRef, PlayerInfo> playerInfos in PlayerInfos)
-			{
-				PlayerInfo playerData = new();
-				playerData.PlayerRef = playerInfos.Value.PlayerRef;
-				playerData.Nickname = playerInfos.Value.Nickname;
-				playerData.IsLeader = playerInfos.Value.IsLeader;
-				playerData.IsInGame = true;
-
-				PlayerInfos.Set(playerInfos.Key, playerData);
-			}
 		}
 
 		private bool IsSetupValid(RolesSetup rolesSetup, int minPlayerCount)

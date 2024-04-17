@@ -58,7 +58,6 @@ public class ImageFade : MonoBehaviour
 	{
 		while (true)
 		{
-			_fadeProgress += Time.deltaTime * _fadeSpeed;
 			float fadeValue = Mathf.Clamp01(Mathf.Lerp(_fadeStart, _fadeTarget, _fadeProgress));
 
 			SetFade(fadeValue);
@@ -75,6 +74,8 @@ public class ImageFade : MonoBehaviour
 			}
 
 			yield return 0;
+
+			_fadeProgress += Time.deltaTime * _fadeSpeed;
 		}
 	}
 

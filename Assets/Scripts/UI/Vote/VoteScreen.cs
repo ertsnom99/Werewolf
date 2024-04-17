@@ -74,9 +74,9 @@ namespace Werewolf.UI
 
 			while (timeLeft > 0)
 			{
-				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
-				_countdownText.text = string.Format(_config.CountdownText, (int)timeLeft);
+				_countdownText.text = string.Format(_config.CountdownText, Mathf.CeilToInt(timeLeft));
 				yield return 0;
+				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
 			}
 		}
 
@@ -124,9 +124,9 @@ namespace Werewolf.UI
 
 			while (timeLeft > 0)
 			{
-				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
 				SetLockedInDelayScale(timeLeft / maxDuration);
 				yield return 0;
+				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
 			}
 		}
 
@@ -146,6 +146,8 @@ namespace Werewolf.UI
 			{
 				return;
 			}
+
+			_countdownText.text = string.Format(_config.CountdownText, 0);
 
 			if (_countdownCoroutine == null)
 			{

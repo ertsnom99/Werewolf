@@ -78,13 +78,13 @@ namespace Werewolf
 
 			while (transitionProgress < _config.DaytimeLightTransitionDuration)
 			{
-				transitionProgress += Time.deltaTime;
 				float progressRatio = Mathf.Clamp01(transitionProgress / _config.DaytimeLightTransitionDuration);
-
 				_light.color = Color.Lerp(startingColor, targetColor, progressRatio);
 				_light.colorTemperature = Mathf.Lerp(startingTemperature, targetTemperature, progressRatio);
 
 				yield return 0;
+
+				transitionProgress += Time.deltaTime;
 			}
 		}
 
