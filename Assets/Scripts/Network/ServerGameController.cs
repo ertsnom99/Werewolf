@@ -15,16 +15,23 @@ namespace Werewolf.Network
 		[SerializeField]
 		private NetworkDataManager _networkDataManagerPrefab;
 
-		private NetworkDataManager _networkDataManager;
+		private static NetworkDataManager _networkDataManager;
 
 		public void OnSceneLoadDone(NetworkRunner runner)
 		{
 			switch (runner.SceneManager.MainRunnerScene.buildIndex)
 			{
 				case (int)SceneDefs.MENU:
-					_networkDataManager = runner.Spawn(_networkDataManagerPrefab, Vector3.zero, Quaternion.identity);
+					if (!_networkDataManager)
+					{
+						_networkDataManager = runner.Spawn(_networkDataManagerPrefab, Vector3.zero, Quaternion.identity);
+						runner.AddCallbacks(_networkDataManager);
+					}
+
 					_networkDataManager.OnRolesSetupReadyChanged += OnRolesSetupReadyChanged;
-					runner.AddCallbacks(_networkDataManager);
+					_networkDataManager.ClearRolesSetup();
+					Runner.SessionInfo.IsOpen = true;
+
 					break;
 				case (int)SceneDefs.GAME:
 					GameManager.Instance.PrepareGame(_networkDataManager.RolesSetup);

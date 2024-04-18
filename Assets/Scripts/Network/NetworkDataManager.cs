@@ -43,7 +43,7 @@ namespace Werewolf.Network
 		public RolesSetup RolesSetup { get; private set; }
 
 		[Networked]
-		public bool RolesSetupReady { get; set; }
+		public bool RolesSetupReady { get; private set; }
 
 		private ChangeDetector _changeDetector;
 
@@ -195,6 +195,12 @@ namespace Werewolf.Network
 			}
 		}
 		#endregion
+
+		public void ClearRolesSetup()
+		{
+			RolesSetup = new RolesSetup();
+			RolesSetupReady = false;
+		}
 
 		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
 		{
