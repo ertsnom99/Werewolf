@@ -1382,11 +1382,19 @@ namespace Werewolf
 
 			_UIManager.EndGameScreen.Initialize(endGamePlayerInfos, Config.ReturnToLobbyCountdownDuration);
 			_UIManager.FadeIn(_UIManager.EndGameScreen, Config.UITransitionNormalDuration);
+
+			yield return new WaitForSeconds(Config.ReturnToLobbyCountdownDuration);
+
+			_UIManager.LoadingScreen.Initialize("");
+			_UIManager.FadeIn(_UIManager.LoadingScreen, Config.LoadingScreenTransitionDuration);
 		}
 
 		private IEnumerator ReturnToLobby()
 		{
-			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration + Config.UITransitionNormalDuration + Config.ReturnToLobbyCountdownDuration);
+			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration +
+											Config.UITransitionNormalDuration +
+											Config.ReturnToLobbyCountdownDuration +
+											Config.LoadingScreenTransitionDuration);
 			Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.MENU), LoadSceneMode.Single);
 		}
 
