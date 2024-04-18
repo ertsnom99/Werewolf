@@ -27,31 +27,38 @@ namespace Werewolf
 		[SerializeField]
 		private GameSetupData _debugGameSetupData;
 
-		private NetworkRunner _runner;
+		private static NetworkRunner _runner;
 
 		private NetworkDataManager _networkDataManager;
 
 		private void Awake()
 		{
-			DisplayMainMenu();
 			_mainMenu.ResetMenu("");
+			DisplayMainMenu();
 		}
 
 		private void Start()
 		{
-			if (CommandLineUtilities.TryGetArg(out string nickname, "-nickname"))
+			if (_runner)
 			{
-				_mainMenu.SetNickname(nickname);
+				ShowRoomMenu(false);
 			}
-
-			if (CommandLineUtilities.TryGetArg(out string sessionName, "-sessionName"))
+			else
 			{
-				_mainMenu.SetSessionName(sessionName);
-			}
+				if (CommandLineUtilities.TryGetArg(out string nickname, "-nickname"))
+				{
+					_mainMenu.SetNickname(nickname);
+				}
 
-			if (CommandLineUtilities.TryGetArg(out string _, "_autoJoin"))
-			{
-				JoinGame();
+				if (CommandLineUtilities.TryGetArg(out string sessionName, "-sessionName"))
+				{
+					_mainMenu.SetSessionName(sessionName);
+				}
+
+				if (CommandLineUtilities.TryGetArg(out string _, "_autoJoin"))
+				{
+					JoinGame();
+				}
 			}
 		}
 
@@ -99,6 +106,11 @@ namespace Werewolf
 
 		private void OnNetworkDataManagerSpawned()
 		{
+			ShowRoomMenu();
+		}
+
+		private void ShowRoomMenu(bool setNickname = true)
+		{
 			if (!_networkDataManager)
 			{
 				NetworkDataManager.OnSpawned -= OnNetworkDataManagerSpawned;
@@ -106,11 +118,15 @@ namespace Werewolf
 			}
 
 			_networkDataManager.OnRolesSetupReadyChanged += OnRolesSetupReadyChanged;
-			_roomMenu.SetNetworkDataManager(_networkDataManager, _runner.LocalPlayer);
+
 			// TODO : Change min player everytime the leader select a new game setup
 			_roomMenu.SetMinPlayer(_debugGameSetupData.MinPlayerCount);
+			_roomMenu.SetNetworkDataManager(_networkDataManager, _runner.LocalPlayer);
 
-			_networkDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
+			if (setNickname)
+			{
+				_networkDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
+			}
 
 			DisplayRoomMenu();
 		}
@@ -163,12 +179,12 @@ namespace Werewolf
 			switch (shutdownReason)
 			{
 				case ShutdownReason.Ok:
-					DisplayMainMenu();
 					_mainMenu.ResetMenu("");
+					DisplayMainMenu();
 					break;
 				default:
-					DisplayMainMenu();
 					_mainMenu.ResetMenu($"Runner shutdown: {shutdownReason}");
+					DisplayMainMenu();
 					break;
 			}
 		}
@@ -177,16 +193,16 @@ namespace Werewolf
 		{
 			Log.Info($"{nameof(OnDisconnectedFromServer)} - {reason}: {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
 
-			DisplayMainMenu();
 			_mainMenu.ResetMenu($"Disconnected from server: {reason}");
+			DisplayMainMenu();
 		}
 
 		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
 		{
 			Log.Info($"{nameof(OnConnectFailed)}: {nameof(remoteAddress)}: {remoteAddress}, {nameof(reason)}: {reason}");
 
-			DisplayMainMenu();
 			_mainMenu.ResetMenu($"Connection failed: {reason}");
+			DisplayMainMenu();
 		}
 		#endregion
 
