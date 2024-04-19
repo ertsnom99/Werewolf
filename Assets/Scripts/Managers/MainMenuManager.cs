@@ -41,7 +41,9 @@ namespace Werewolf
 		{
 			if (_runner)
 			{
-				ShowRoomMenu(false);
+				_runner.AddCallbacks(this);
+				PrepareRoomMenu(false);
+				DisplayRoomMenu();
 			}
 			else
 			{
@@ -106,10 +108,11 @@ namespace Werewolf
 
 		private void OnNetworkDataManagerSpawned()
 		{
-			ShowRoomMenu();
+			PrepareRoomMenu();
+			DisplayRoomMenu();
 		}
 
-		private void ShowRoomMenu(bool setNickname = true)
+		private void PrepareRoomMenu(bool setNickname = true)
 		{
 			if (!_networkDataManager)
 			{
@@ -127,8 +130,6 @@ namespace Werewolf
 			{
 				_networkDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
 			}
-
-			DisplayRoomMenu();
 		}
 
 		private void OnRolesSetupReadyChanged()
@@ -260,6 +261,16 @@ namespace Werewolf
 			}
 
 			_networkDataManager.OnRolesSetupReadyChanged -= OnRolesSetupReadyChanged;
+		}
+
+		private void OnDestroy()
+		{
+			if (!_runner)
+			{
+				return;
+			}
+
+			_runner.RemoveCallbacks(this);
 		}
 	}
 }
