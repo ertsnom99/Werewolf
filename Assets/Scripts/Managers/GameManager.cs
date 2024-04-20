@@ -1570,14 +1570,13 @@ namespace Werewolf
 
 			while (elapsedTime < Config.CaptainCardMovementDuration)
 			{
+				yield return 0;
+
+				elapsedTime += Time.deltaTime;
 				float progress = elapsedTime / Config.CaptainCardMovementDuration;
 
 				_captainCard.transform.position = Vector3.Lerp(startingPosition, newPosition, Config.CaptainCardMovementXY.Evaluate(progress))
 												+ Vector3.up * Config.CaptainCardMovementYOffset.Evaluate(progress);
-
-				yield return 0;
-
-				elapsedTime += Time.deltaTime;
 			}
 		}
 
@@ -2585,14 +2584,13 @@ namespace Werewolf
 
 			while (elapsedTime < duration)
 			{
+				yield return 0;
+
+				elapsedTime += Time.deltaTime;
 				float progress = elapsedTime / duration;
 
 				card.transform.position = Vector3.Lerp(startingPosition, targetPosition, progress);
 				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
-
-				yield return 0;
-
-				elapsedTime += Time.deltaTime;
 			}
 
 			MovementCompleted?.Invoke();
@@ -2634,12 +2632,12 @@ namespace Werewolf
 
 			while (elapsedTime < duration)
 			{
-				float progress = elapsedTime / duration;
-				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
-
 				yield return 0;
 
 				elapsedTime += Time.deltaTime;
+				float progress = elapsedTime / duration;
+
+				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
 			}
 
 			FlipCompleted?.Invoke();
@@ -2683,13 +2681,13 @@ namespace Werewolf
 
 			while (elapsedTime < duration)
 			{
-				float progress = elapsedTime / duration;
-				card.transform.position = Vector3.Lerp(startingPosition, card.OriginalPosition, progress);
-				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
-
 				yield return 0;
 
 				elapsedTime += Time.deltaTime;
+				float progress = elapsedTime / duration;
+
+				card.transform.position = Vector3.Lerp(startingPosition, card.OriginalPosition, progress);
+				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
 			}
 
 			if (returnFaceDown)

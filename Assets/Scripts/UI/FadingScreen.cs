@@ -65,8 +65,8 @@ namespace Werewolf.UI
 				yield return 0;
 
 				transitionProgress += Time.deltaTime;
-
 				float progressRatio = Mathf.Clamp01(transitionProgress / transitionDuration);
+
 				_canvasGroup.alpha = Mathf.Lerp(startingOpacity, targetOpacity, progressRatio);
 			}
 
