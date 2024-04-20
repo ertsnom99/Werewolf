@@ -82,9 +82,11 @@ namespace Werewolf.UI
 
 			while (currentCountdown > 0)
 			{
-				_countdownText.text = string.Format(_config.ReturnToLobbyCountdownText, Mathf.CeilToInt(currentCountdown));
 				yield return 0;
+
 				currentCountdown = Mathf.Max(currentCountdown - Time.deltaTime, .0f);
+
+				_countdownText.text = string.Format(_config.ReturnToLobbyCountdownText, Mathf.CeilToInt(currentCountdown));
 			}
 		}
 
