@@ -8,7 +8,7 @@ using Werewolf.Data;
 namespace Werewolf.Network
 {
 	[Serializable]
-	public struct PlayerInfo : INetworkStruct
+	public struct PlayerNetworkInfo : INetworkStruct
 	{
 		public PlayerRef PlayerRef;
 		[Networked, Capacity(24)]
@@ -37,7 +37,7 @@ namespace Werewolf.Network
 	public class NetworkDataManager : NetworkBehaviourSingleton<NetworkDataManager>, INetworkRunnerCallbacks
 	{
 		[Networked, Capacity(GameConfig.MAX_PLAYER_COUNT)]
-		public NetworkDictionary<PlayerRef, PlayerInfo> PlayerInfos { get; }
+		public NetworkDictionary<PlayerRef, PlayerNetworkInfo> PlayerInfos { get; }
 
 		[field: SerializeField]
 		public RolesSetup RolesSetup { get; private set; }
@@ -48,11 +48,8 @@ namespace Werewolf.Network
 		private ChangeDetector _changeDetector;
 
 		public event Action OnPlayerInfosChanged;
-
 		public event Action OnInvalidRolesSetupReceived;
-
 		public event Action OnRolesSetupReadyChanged;
-
 		public static event Action OnSpawned;
 
 		protected override void Awake()
@@ -84,47 +81,16 @@ namespace Werewolf.Network
 			}
 		}
 
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_SetPlayerNickname(PlayerRef playerRef, string nickname)
-		{
-			PlayerInfo playerData = new();
-			playerData.PlayerRef = playerRef;
-			playerData.Nickname = nickname;
-			playerData.IsLeader = PlayerInfos.Count <= 0;
-
-			PlayerInfos.Set(playerRef, playerData);
-		}
-
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_SetRolesSetup(RolesSetup rolesSetup, int minPlayerCount, RpcInfo info = default)
-		{
-			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader
-				|| RolesSetupReady
-				|| PlayerInfos.Count < minPlayerCount)
-			{
-				return;
-			}
-
-			if (!IsSetupValid(rolesSetup, minPlayerCount))
-			{
-				RPC_WarnInvalidRolesSetup(info.Source);
-				return;
-			}
-
-			RolesSetup = rolesSetup;
-			RolesSetupReady = true;
-		}
-
 		private bool IsSetupValid(RolesSetup rolesSetup, int minPlayerCount)
 		{
 			//TODO: Check if setup is valid
 			return true;
 		}
 
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_WarnInvalidRolesSetup([RpcTarget] PlayerRef player)
+		public void ClearRolesSetup()
 		{
-			OnInvalidRolesSetupReceived?.Invoke();
+			RolesSetup = new RolesSetup();
+			RolesSetupReady = false;
 		}
 
 		#region Convertion Methods
@@ -196,11 +162,44 @@ namespace Werewolf.Network
 		}
 		#endregion
 
-		public void ClearRolesSetup()
+		#region RPC Calls
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_SetPlayerNickname(PlayerRef playerRef, string nickname)
 		{
-			RolesSetup = new RolesSetup();
-			RolesSetupReady = false;
+			PlayerNetworkInfo playerData = new();
+			playerData.PlayerRef = playerRef;
+			playerData.Nickname = nickname;
+			playerData.IsLeader = PlayerInfos.Count <= 0;
+
+			PlayerInfos.Set(playerRef, playerData);
 		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_SetRolesSetup(RolesSetup rolesSetup, int minPlayerCount, RpcInfo info = default)
+		{
+			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader
+				|| RolesSetupReady
+				|| PlayerInfos.Count < minPlayerCount)
+			{
+				return;
+			}
+
+			if (!IsSetupValid(rolesSetup, minPlayerCount))
+			{
+				RPC_WarnInvalidRolesSetup(info.Source);
+				return;
+			}
+
+			RolesSetup = rolesSetup;
+			RolesSetupReady = true;
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_WarnInvalidRolesSetup([RpcTarget] PlayerRef player)
+		{
+			OnInvalidRolesSetupReceived?.Invoke();
+		}
+		#endregion
 
 		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
 		{
@@ -218,9 +217,9 @@ namespace Werewolf.Network
 				return;
 			}
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> playerInfo in PlayerInfos)
 			{
-				PlayerInfo newPlayerData = new();
+				PlayerNetworkInfo newPlayerData = new();
 				newPlayerData.PlayerRef = playerInfo.Value.PlayerRef;
 				newPlayerData.Nickname = playerInfo.Value.Nickname;
 				newPlayerData.IsLeader = true;

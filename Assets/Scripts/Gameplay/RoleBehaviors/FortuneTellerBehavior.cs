@@ -21,7 +21,7 @@ namespace Werewolf
 		{
 			List<PlayerRef> immunePlayers = new() { Player };
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerInfos)
 			{
 				if (playerInfo.Value.IsAlive)
 				{

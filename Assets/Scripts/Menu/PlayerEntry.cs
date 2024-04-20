@@ -30,7 +30,7 @@ namespace Werewolf
 		[SerializeField]
 		private Color _otherPlayerColor = Color.white;
 
-		public void SetPlayerData(Network.PlayerInfo playerInfo, PlayerRef localPlayer, bool isOdd)
+		public void SetPlayerData(Network.PlayerNetworkInfo playerInfo, PlayerRef localPlayer, bool isOdd)
 		{
 			_background.color = isOdd ? _oddBackgroundColor : _evenBackgroundColor;
 			_nicknameText.text = playerInfo.Nickname;

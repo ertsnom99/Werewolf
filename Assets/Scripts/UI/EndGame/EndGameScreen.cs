@@ -40,9 +40,9 @@ namespace Werewolf.UI
 			_config = config;
 		}
 
-		public void Initialize(EndGamePlayerInfo[] endGamePlayerInfos, float returnToLobbyCountdownDuration)
+		public void Initialize(PlayerEndGameInfo[] endGamePlayerInfos, float returnToLobbyCountdownDuration)
 		{
-			foreach(EndGamePlayerInfo endGamePlayerInfo in endGamePlayerInfos)
+			foreach(PlayerEndGameInfo endGamePlayerInfo in endGamePlayerInfos)
 			{
 				RectTransform parent;
 

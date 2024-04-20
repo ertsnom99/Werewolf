@@ -63,7 +63,7 @@ namespace Werewolf
 
 			_gameManager.TransferRole(_playerRevealed, Player, false);
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerInfos)
 			{
 				if (playerInfo.Key == Player)
 				{
@@ -89,7 +89,7 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(_servantRevealDuration);
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerInfos)
 			{
 				if (playerInfo.Key == Player)
 				{

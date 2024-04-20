@@ -45,7 +45,7 @@ namespace Werewolf
 
 			_gameManager.WaitForPlayer(Player);
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerInfos)
 			{
 				if (playerInfo.Key == Player)
 				{
@@ -121,7 +121,7 @@ namespace Werewolf
 			StopCoroutine(_startChoiceTimerCoroutine);
 			_startChoiceTimerCoroutine = null;
 
-			foreach (KeyValuePair<PlayerRef, PlayerInfo> playerInfo in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerInfos)
 			{
 				if (playerInfo.Key == Player)
 				{

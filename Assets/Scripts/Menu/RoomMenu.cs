@@ -68,7 +68,7 @@ namespace Werewolf
 			bool isOdd = true;
 			bool localPlayerIsLeader = false;
 
-			foreach (KeyValuePair<PlayerRef, Network.PlayerInfo> playerInfo in _networkDataManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, Network.PlayerNetworkInfo> playerInfo in _networkDataManager.PlayerInfos)
 			{
 				PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
 				playerEntry.SetPlayerData(playerInfo.Value, _localPlayer, isOdd);
