@@ -45,14 +45,14 @@ namespace Werewolf
 
 			_gameManager.WaitForPlayer(Player);
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
 				if (playerInfo.Key == Player)
 				{
 					continue;
 				}
 
-				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, Player, true, _gameManager.PlayerInfos[Player].Role.GameplayTag.CompactTagId);
+				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, Player, true, _gameManager.PlayerGameInfos[Player].Role.GameplayTag.CompactTagId);
 				_gameManager.RPC_DisplayTitle(playerInfo.Key, "The hunter is choosing who to kill!");
 			}
 #if UNITY_SERVER && UNITY_EDITOR
@@ -76,13 +76,13 @@ namespace Werewolf
 			_gameManager.StopChoosingPlayer(Player);
 
 			int iterationCount = 0;
-			PlayerRef[] players = _gameManager.PlayerInfos.Keys.ToArray();
-			int playerIndex = Random.Range(0, _gameManager.PlayerInfos.Count);
+			PlayerRef[] players = _gameManager.PlayerGameInfos.Keys.ToArray();
+			int playerIndex = Random.Range(0, _gameManager.PlayerGameInfos.Count);
 			PlayerRef selectedPlayer = PlayerRef.None;
 
-			while (iterationCount < _gameManager.PlayerInfos.Count)
+			while (iterationCount < _gameManager.PlayerGameInfos.Count)
 			{
-				if (players[playerIndex] != Player && _gameManager.PlayerInfos[players[playerIndex]].IsAlive)
+				if (players[playerIndex] != Player && _gameManager.PlayerGameInfos[players[playerIndex]].IsAlive)
 				{
 					selectedPlayer = players[playerIndex];
 					break;
@@ -90,7 +90,7 @@ namespace Werewolf
 
 				playerIndex++;
 
-				if (playerIndex >= _gameManager.PlayerInfos.Count)
+				if (playerIndex >= _gameManager.PlayerGameInfos.Count)
 				{
 					playerIndex = 0;
 				}
@@ -121,7 +121,7 @@ namespace Werewolf
 			StopCoroutine(_startChoiceTimerCoroutine);
 			_startChoiceTimerCoroutine = null;
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
 				if (playerInfo.Key == Player)
 				{

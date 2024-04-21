@@ -35,7 +35,7 @@ namespace Werewolf
 
 		private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
 
-		public Dictionary<PlayerRef, PlayerGameInfo> PlayerInfos { get; private set; }
+		public Dictionary<PlayerRef, PlayerGameInfo> PlayerGameInfos { get; private set; }
 
 		private List<PlayerRef> _captainCandidates = new List<PlayerRef>();
 		private PlayerRef _captain;
@@ -174,7 +174,7 @@ namespace Werewolf
 			base.Awake();
 
 			RolesToDistribute = new();
-			PlayerInfos = new();
+			PlayerGameInfos = new();
 
 			if (!Config)
 			{
@@ -192,7 +192,7 @@ namespace Werewolf
 			_daytimeManager = DaytimeManager.Instance;
 
 			_voteManager.SetConfig(Config);
-			_voteManager.SetPlayers(PlayerInfos);
+			_voteManager.SetPlayers(PlayerGameInfos);
 			_daytimeManager.SetConfig(Config);
 			_UIManager.TitleScreen.SetConfig(Config);
 			_UIManager.ChoiceScreen.SetConfig(Config);
@@ -217,7 +217,7 @@ namespace Werewolf
 			DistributeRoles();
 			PostRoleDistribution?.Invoke();
 
-			AlivePlayerCount = PlayerInfos.Count;
+			AlivePlayerCount = PlayerGameInfos.Count;
 
 			DeterminePlayerGroups();
 			DetermineNightCalls();
@@ -377,7 +377,7 @@ namespace Werewolf
 					}
 				}
 
-				PlayerInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
+				PlayerGameInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
 			}
 
 			_rolesDistributionDone = true;
@@ -395,7 +395,7 @@ namespace Werewolf
 
 		private void DeterminePlayerGroups()
 		{
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				if (playerInfo.Value.Behaviors.Count <= 0)
 				{
@@ -417,11 +417,11 @@ namespace Werewolf
 		private void DetermineNightCalls()
 		{
 			// Remove any players that do not have a behavior that needs to be called at night
-			List<PlayerRef> players = PlayerInfos.Keys.ToList();
+			List<PlayerRef> players = PlayerGameInfos.Keys.ToList();
 
 			for (int i = players.Count - 1; i >= 0; i--)
 			{
-				List<RoleBehavior> behaviors = PlayerInfos[players[i]].Behaviors;
+				List<RoleBehavior> behaviors = PlayerGameInfos[players[i]].Behaviors;
 
 				if (behaviors.Count > 0 && behaviors[0].NightPriorities.Count > 0)
 				{
@@ -436,7 +436,7 @@ namespace Werewolf
 
 			foreach (PlayerRef player in players)
 			{
-				foreach (Priority priority in PlayerInfos[player].Behaviors[0].NightPriorities)
+				foreach (Priority priority in PlayerGameInfos[player].Behaviors[0].NightPriorities)
 				{
 					if (priorities.Contains(priority.index))
 					{
@@ -456,7 +456,7 @@ namespace Werewolf
 
 				foreach (PlayerRef player in players)
 				{
-					foreach (Priority priority in PlayerInfos[player].Behaviors[0].NightPriorities)
+					foreach (Priority priority in PlayerGameInfos[player].Behaviors[0].NightPriorities)
 					{
 						if (priority.index == priorities[i])
 						{
@@ -480,7 +480,7 @@ namespace Werewolf
 
 				foreach (PlayerRef player in nightCall.Players)
 				{
-					roles += $"{PlayerInfos[player].Role.Name} || ";
+					roles += $"{PlayerGameInfos[player].Role.Name} || ";
 				}
 
 				Debug.Log(roles);
@@ -516,7 +516,7 @@ namespace Werewolf
 			{
 				foreach (KeyValuePair<PlayerRef, Network.PlayerNetworkInfo> playerInfo in _networkDataManager.PlayerInfos)
 				{
-					RPC_GivePlayerRole(playerInfo.Key, PlayerInfos[playerInfo.Key].Role.GameplayTag.CompactTagId);
+					RPC_GivePlayerRole(playerInfo.Key, PlayerGameInfos[playerInfo.Key].Role.GameplayTag.CompactTagId);
 				}
 
 				_allRolesSent = true;
@@ -644,7 +644,7 @@ namespace Werewolf
 		#region Election
 		private IEnumerator StartElectionDebate()
 		{
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				PromptPlayer(playerInfo.Key,
 							Config.ElectionPromptTitleText,
@@ -658,7 +658,7 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(Config.ElectionPromptDuration);
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				StopPromptingPlayer(playerInfo.Key, false);
 			}
@@ -767,7 +767,7 @@ namespace Werewolf
 				{
 					bool skipPlayer = false;
 
-					foreach (RoleBehavior behavior in PlayerInfos[player].Behaviors)
+					foreach (RoleBehavior behavior in PlayerGameInfos[player].Behaviors)
 					{
 						int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -798,7 +798,7 @@ namespace Werewolf
 
 					int displayRoleGameplayTagID = GetDisplayedRoleGameplayTagID(nightCall);
 
-					foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+					foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 					{
 						if (_playersWaitingFor.Contains(playerInfo.Key))
 						{
@@ -851,7 +851,7 @@ namespace Werewolf
 			RoleData alias = null;
 			bool aliasFound = false;
 
-			foreach (RoleBehavior behavior in PlayerInfos[nightCall.Players[0]].Behaviors)
+			foreach (RoleBehavior behavior in PlayerGameInfos[nightCall.Players[0]].Behaviors)
 			{
 				foreach (Priority nightPrioritie in behavior.NightPriorities)
 				{
@@ -878,7 +878,7 @@ namespace Werewolf
 			}
 			else
 			{
-				return PlayerInfos[nightCall.Players[0]].Role.GameplayTag.CompactTagId;
+				return PlayerGameInfos[nightCall.Players[0]].Role.GameplayTag.CompactTagId;
 			}
 		}
 
@@ -933,7 +933,7 @@ namespace Werewolf
 				{
 					PlayerRef deadPlayer = _marksForDeath[0].Player;
 
-					if (!PlayerInfos[deadPlayer].IsAlive)
+					if (!PlayerGameInfos[deadPlayer].IsAlive)
 					{
 						_marksForDeath.RemoveAt(0);
 						continue;
@@ -1015,7 +1015,7 @@ namespace Werewolf
 				MoveCardToCamera(player,
 								playerRevealed,
 								!waitBeforeReveal,
-								!waitBeforeReveal ? PlayerInfos[playerRevealed].Role.GameplayTag.CompactTagId : -1,
+								!waitBeforeReveal ? PlayerGameInfos[playerRevealed].Role.GameplayTag.CompactTagId : -1,
 								() => StopWaintingForPlayer(player));
 			}
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1040,7 +1040,7 @@ namespace Werewolf
 					FlipCard(player,
 							playerRevealed,
 							() => StopWaintingForPlayer(player),
-							PlayerInfos[playerRevealed].Role.GameplayTag.CompactTagId);
+							PlayerGameInfos[playerRevealed].Role.GameplayTag.CompactTagId);
 				}
 
 				while (_playersWaitingFor.Count > 0)
@@ -1094,12 +1094,12 @@ namespace Werewolf
 
 		private void SetPlayerDead(PlayerRef deadPlayer)
 		{
-			PlayerInfos[deadPlayer] = new PlayerGameInfo { Role = PlayerInfos[deadPlayer].Role, Behaviors = PlayerInfos[deadPlayer].Behaviors, IsAlive = false };
+			PlayerGameInfos[deadPlayer] = new PlayerGameInfo { Role = PlayerGameInfos[deadPlayer].Role, Behaviors = PlayerGameInfos[deadPlayer].Behaviors, IsAlive = false };
 			AlivePlayerCount--;
 
 			RemovePlayerFromAllPlayerGroups(deadPlayer);
 
-			foreach (RoleBehavior behavior in PlayerInfos[deadPlayer].Behaviors)
+			foreach (RoleBehavior behavior in PlayerGameInfos[deadPlayer].Behaviors)
 			{
 				foreach (Priority priority in behavior.NightPriorities)
 				{
@@ -1209,7 +1209,7 @@ namespace Werewolf
 									false,
 									OnCaptainChooseExecutedPlayer);
 
-			foreach (var player in PlayerInfos)
+			foreach (var player in PlayerGameInfos)
 			{
 				if (player.Key == _captain)
 				{
@@ -1308,7 +1308,7 @@ namespace Werewolf
 		{
 			List<PlayerEndGameInfo> endGamePlayerInfos = new List<PlayerEndGameInfo>();
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				int role = -1;
 
@@ -1340,8 +1340,8 @@ namespace Werewolf
 
 		private bool IsPlayerInGroup(PlayerRef player, PlayerGroup playerGroup)
 		{
-			return (PlayerInfos[player].Behaviors.Count > 0 && PlayerInfos[player].Behaviors[0].PlayerGroupIndexes.Contains(playerGroup.Index))
-			|| (PlayerInfos[player].Behaviors.Count <= 0 && playerGroup.Index == Config.PlayerGroups.NoBehaviorGroupIndex);
+			return (PlayerGameInfos[player].Behaviors.Count > 0 && PlayerGameInfos[player].Behaviors[0].PlayerGroupIndexes.Contains(playerGroup.Index))
+			|| (PlayerGameInfos[player].Behaviors.Count <= 0 && playerGroup.Index == Config.PlayerGroups.NoBehaviorGroupIndex);
 		}
 
 		private IEnumerator StartEndGameSequence(PlayerEndGameInfo[] endGamePlayerInfos, int winningPlayerGroupIndex)
@@ -1433,7 +1433,7 @@ namespace Werewolf
 		{
 			List<PlayerRef> players = new List<PlayerRef>();
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				if (playerInfo.Key == playerToExclude)
 				{
@@ -1450,7 +1450,7 @@ namespace Werewolf
 		{
 			List<PlayerRef> players = new List<PlayerRef>();
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				if (playersToExclude.Contains(playerInfo.Key))
 				{
@@ -1468,7 +1468,7 @@ namespace Werewolf
 		{
 			List<PlayerRef> captainChoices = new List<PlayerRef>();
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				if (!playerInfo.Value.IsAlive || playerInfo.Key == _captain)
 				{
@@ -1496,7 +1496,7 @@ namespace Werewolf
 									false,
 									OnChoosedNextCaptain);
 
-			foreach (var player in PlayerInfos)
+			foreach (var player in PlayerGameInfos)
 			{
 				if (player.Key == _captain)
 				{
@@ -1604,7 +1604,7 @@ namespace Werewolf
 		#region Debate
 		private IEnumerator StartDebate(string text, float duration)
 		{
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				RPC_OnDebateStarted(playerInfo.Key, text, duration, playerInfo.Value.IsAlive);
 
@@ -1717,7 +1717,7 @@ namespace Werewolf
 
 			_voteManager.PrepareVote(maxDuration, allowedToNotVote, failToVotePenalty, modifiers);
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				if (playerInfo.Value.IsAlive)
 				{
@@ -1851,7 +1851,7 @@ namespace Werewolf
 				roleBehavior.SetIsPrimaryBehavior(true);
 			}
 
-			PlayerInfos[player] = new() { Role = roleData, Behaviors = PlayerInfos[player].Behaviors, IsAlive = PlayerInfos[player].IsAlive };
+			PlayerGameInfos[player] = new() { Role = roleData, Behaviors = PlayerGameInfos[player].Behaviors, IsAlive = PlayerGameInfos[player].IsAlive };
 
 			RPC_ChangePlayerCardRole(player, roleData.GameplayTag.CompactTagId);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1863,16 +1863,16 @@ namespace Werewolf
 		{
 			RemovePrimaryBehavior(to, destroyOldBehavior);
 
-			if (PlayerInfos[from].Behaviors.Count <= 0)
+			if (PlayerGameInfos[from].Behaviors.Count <= 0)
 			{
-				foreach (int villageGroup in PlayerInfos[from].Role.PlayerGroupIndexes)
+				foreach (int villageGroup in PlayerGameInfos[from].Role.PlayerGroupIndexes)
 				{
 					AddPlayerToPlayerGroup(villageGroup, to);
 				}
 			}
 			else
 			{
-				foreach (RoleBehavior behavior in PlayerInfos[from].Behaviors)
+				foreach (RoleBehavior behavior in PlayerGameInfos[from].Behaviors)
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
@@ -1883,12 +1883,12 @@ namespace Werewolf
 				}
 			}
 
-			PlayerInfos[to] = new() { Role = PlayerInfos[from].Role, Behaviors = PlayerInfos[to].Behaviors, IsAlive = PlayerInfos[to].IsAlive };
-			PlayerInfos[from] = new() { Role = null, Behaviors = PlayerInfos[from].Behaviors, IsAlive = PlayerInfos[from].IsAlive };
+			PlayerGameInfos[to] = new() { Role = PlayerGameInfos[from].Role, Behaviors = PlayerGameInfos[to].Behaviors, IsAlive = PlayerGameInfos[to].IsAlive };
+			PlayerGameInfos[from] = new() { Role = null, Behaviors = PlayerGameInfos[from].Behaviors, IsAlive = PlayerGameInfos[from].IsAlive };
 
-			RPC_ChangePlayerCardRole(to, PlayerInfos[to].Role.GameplayTag.CompactTagId);
+			RPC_ChangePlayerCardRole(to, PlayerGameInfos[to].Role.GameplayTag.CompactTagId);
 #if UNITY_SERVER && UNITY_EDITOR
-			_playerCards[to].SetRole(PlayerInfos[to].Role);
+			_playerCards[to].SetRole(PlayerGameInfos[to].Role);
 #endif
 		}
 
@@ -1929,7 +1929,7 @@ namespace Werewolf
 				AddPlayerToPlayerGroup(playerGroupIndex, player);
 			}
 
-			PlayerInfos[player].Behaviors.Add(behavior);
+			PlayerGameInfos[player].Behaviors.Add(behavior);
 			behavior.SetPlayer(player);
 #if UNITY_SERVER && UNITY_EDITOR
 			behavior.transform.position = _playerCards[player].transform.position;
@@ -1938,16 +1938,16 @@ namespace Werewolf
 
 		private void RemovePrimaryBehavior(PlayerRef player, bool destroyOldBehavior = true)
 		{
-			if (PlayerInfos[player].Behaviors.Count <= 0)
+			if (PlayerGameInfos[player].Behaviors.Count <= 0)
 			{
-				foreach (int playerGroupIndex in PlayerInfos[player].Role.PlayerGroupIndexes)
+				foreach (int playerGroupIndex in PlayerGameInfos[player].Role.PlayerGroupIndexes)
 				{
 					RemovePlayerFromGroup(playerGroupIndex, player);
 				}
 			}
 			else
 			{
-				foreach (RoleBehavior behavior in PlayerInfos[player].Behaviors)
+				foreach (RoleBehavior behavior in PlayerGameInfos[player].Behaviors)
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
@@ -1967,14 +1967,14 @@ namespace Werewolf
 				RemovePlayerFromNightCall(priority, player);
 			}
 
-			for (int i = PlayerInfos[player].Behaviors.Count - 1; i >= 0; i--)
+			for (int i = PlayerGameInfos[player].Behaviors.Count - 1; i >= 0; i--)
 			{
-				if (PlayerInfos[player].Behaviors[i] != behavior)
+				if (PlayerGameInfos[player].Behaviors[i] != behavior)
 				{
 					continue;
 				}
 
-				PlayerInfos[player].Behaviors.RemoveAt(i);
+				PlayerGameInfos[player].Behaviors.RemoveAt(i);
 				break;
 			}
 
@@ -1996,7 +1996,7 @@ namespace Werewolf
 		{
 			List<RoleBehavior> behaviorsToRemove = new();
 
-			foreach (RoleBehavior behavior in PlayerInfos[player].Behaviors)
+			foreach (RoleBehavior behavior in PlayerGameInfos[player].Behaviors)
 			{
 				int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -2535,7 +2535,7 @@ namespace Werewolf
 			}
 
 			_revealPlayerRoleCallbacks.Add(revealTo, callback);
-			RPC_RevealPlayerRole(revealTo, playerRevealed, PlayerInfos[playerRevealed].Role.GameplayTag.CompactTagId, waitBeforeReveal, returnFaceDown);
+			RPC_RevealPlayerRole(revealTo, playerRevealed, PlayerGameInfos[playerRevealed].Role.GameplayTag.CompactTagId, waitBeforeReveal, returnFaceDown);
 
 			return true;
 		}
@@ -2927,12 +2927,12 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 		private void CreatePlayerCardsForServer()
 		{
-			float rotationIncrement = 360.0f / PlayerInfos.Count;
-			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(PlayerInfos.Count);
+			float rotationIncrement = 360.0f / PlayerGameInfos.Count;
+			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(PlayerGameInfos.Count);
 
 			int counter = -1;
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				counter++;
 

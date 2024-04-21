@@ -36,7 +36,7 @@ namespace Werewolf
 		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<string> marks, float revealDuration)
 		{
 			if (Player == PlayerRef.None
-				|| !_gameManager.PlayerInfos[Player].IsAlive
+				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| Player == playerRevealed
 				|| !marks.Contains(_gameManager.Config.ExecutionMarkForDeath)
 				|| !_gameManager.PromptPlayer(Player, "Take this role?", revealDuration, "Take", OnTakeRole))
@@ -58,12 +58,12 @@ namespace Werewolf
 
 		private IEnumerator ChangeRole()
 		{
-			RoleData RoleToTake = _gameManager.PlayerInfos[_playerRevealed].Role;
-			RoleData servantRole = _gameManager.PlayerInfos[Player].Role;
+			RoleData RoleToTake = _gameManager.PlayerGameInfos[_playerRevealed].Role;
+			RoleData servantRole = _gameManager.PlayerGameInfos[Player].Role;
 
 			_gameManager.TransferRole(_playerRevealed, Player, false);
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
 				if (playerInfo.Key == Player)
 				{
@@ -89,7 +89,7 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(_servantRevealDuration);
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
 				if (playerInfo.Key == Player)
 				{
