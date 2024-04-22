@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 using Werewolf.Network.Configs;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 namespace Werewolf.Network
 {
@@ -72,12 +73,26 @@ namespace Werewolf.Network
 			_gameManager.RPC_ConfirmPlayerReadyToPlay();
 		}
 
+		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+		{
+			if (runner.SceneManager == null)
+			{
+				return;
+			}
+
+			switch (runner.SceneManager.MainRunnerScene.buildIndex)
+			{
+				case (int)SceneDefs.GAME:
+					MainMenuManager.START_MESSAGE = $"Runner shutdown: {shutdownReason}";
+					SceneManager.LoadScene((int)SceneDefs.MENU);
+					break;
+			}
+		}
+
 		#region Unused Callbacks
 		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
 
 		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
-
-		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
 
 		public void OnConnectedToServer(NetworkRunner runner) { }
 
