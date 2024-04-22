@@ -21,11 +21,6 @@ namespace Werewolf
 
 		private readonly int MIN_NICKNAME_CHARACTER_COUNT = 3;
 
-		private void Start()
-		{
-			ResetMenu("");
-		}
-
 		public void ResetMenu(string message)
 		{
 			_nicknameInputField.interactable = true;

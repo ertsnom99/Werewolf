@@ -31,6 +31,8 @@ namespace Werewolf
 
 		private NetworkDataManager _networkDataManager;
 
+		public static string START_MESSAGE = string.Empty;
+
 		private void Awake()
 		{
 			_mainMenu.ResetMenu("");
@@ -47,20 +49,27 @@ namespace Werewolf
 			}
 			else
 			{
-				if (CommandLineUtilities.TryGetArg(out string nickname, "-nickname"))
+				_mainMenu.ResetMenu(START_MESSAGE);
+
+				if (START_MESSAGE == string.Empty)
 				{
-					_mainMenu.SetNickname(nickname);
+					if (CommandLineUtilities.TryGetArg(out string nickname, "-nickname"))
+					{
+						_mainMenu.SetNickname(nickname);
+					}
+
+					if (CommandLineUtilities.TryGetArg(out string sessionName, "-sessionName"))
+					{
+						_mainMenu.SetSessionName(sessionName);
+					}
+
+					if (CommandLineUtilities.TryGetArg(out string _, "_autoJoin"))
+					{
+						JoinGame();
+					}
 				}
 
-				if (CommandLineUtilities.TryGetArg(out string sessionName, "-sessionName"))
-				{
-					_mainMenu.SetSessionName(sessionName);
-				}
-
-				if (CommandLineUtilities.TryGetArg(out string _, "_autoJoin"))
-				{
-					JoinGame();
-				}
+				START_MESSAGE = string.Empty;
 			}
 		}
 
