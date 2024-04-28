@@ -267,5 +267,9 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public string SkipTurnText { get; private set; }
+
+		[field: Header("Network")]
+		[field: SerializeField]
+		public string PlayerLeftMarkForDeath { get; private set; }
 	}
 }

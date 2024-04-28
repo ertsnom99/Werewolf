@@ -2,8 +2,10 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network.Configs;
 
 namespace Werewolf.Network
 {
@@ -14,6 +16,7 @@ namespace Werewolf.Network
 		[Networked, Capacity(24)]
 		public string Nickname { get => default; set { } }
 		public bool IsLeader;
+		public bool IsConnected;
 	}
 
 	[Serializable]
@@ -170,6 +173,7 @@ namespace Werewolf.Network
 			playerData.PlayerRef = playerRef;
 			playerData.Nickname = nickname;
 			playerData.IsLeader = PlayerInfos.Count <= 0;
+			playerData.IsConnected = true;
 
 			PlayerInfos.Set(playerRef, playerData);
 		}
@@ -208,20 +212,31 @@ namespace Werewolf.Network
 				return;
 			}
 
-			bool removingFirstPlayer = PlayerInfos.Get(player).IsLeader;
+			switch (runner.SceneManager.MainRunnerScene.buildIndex)
+			{
+				case (int)SceneDefs.MENU:
+					RemovePlayerInfos(player);
+					break;
+				case (int)SceneDefs.GAME:
+					SetPlayerDisconnected(player);
+					break;
+			}
+		}
+
+		private void RemovePlayerInfos(PlayerRef player)
+		{
+			bool removingLeader = PlayerInfos.Get(player).IsLeader;
 
 			PlayerInfos.Remove(player);
 
-			if (!removingFirstPlayer)
+			if (!removingLeader)
 			{
 				return;
 			}
 
 			foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> playerInfo in PlayerInfos)
 			{
-				PlayerNetworkInfo newPlayerData = new();
-				newPlayerData.PlayerRef = playerInfo.Value.PlayerRef;
-				newPlayerData.Nickname = playerInfo.Value.Nickname;
+				PlayerNetworkInfo newPlayerData = playerInfo.Value;
 				newPlayerData.IsLeader = true;
 
 				PlayerInfos.Set(playerInfo.Key, newPlayerData);
@@ -230,9 +245,51 @@ namespace Werewolf.Network
 			}
 		}
 
-		#region Unused Callbacks
-		public void OnSceneLoadDone(NetworkRunner runner) { }
+		private void SetPlayerDisconnected(PlayerRef player)
+		{
+			PlayerNetworkInfo newPlayerData = PlayerInfos[player];
+			newPlayerData.IsConnected = false;
 
+			PlayerInfos.Set(player, newPlayerData);
+		}
+
+		public void OnSceneLoadDone(NetworkRunner runner)
+		{
+			if (runner.SceneManager.MainRunnerScene.buildIndex != (int)SceneDefs.MENU)
+			{
+				return;
+			}
+
+			KeyValuePair<PlayerRef, PlayerNetworkInfo>[] disconnectedPlayers = PlayerInfos.Where(kv => !kv.Value.IsConnected).ToArray();
+
+			bool isLeaderGone = false;
+
+			foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> disconnectedPlayer in disconnectedPlayers)
+			{
+				if (PlayerInfos[disconnectedPlayer.Key].IsLeader)
+				{
+					isLeaderGone = true;
+				}
+
+				PlayerInfos.Remove(disconnectedPlayer.Key);
+			}
+
+			if (!isLeaderGone)
+			{
+				return;
+			}
+
+			foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> playerInfo in PlayerInfos)
+			{
+				PlayerNetworkInfo playerNetworkInfo = playerInfo.Value;
+				playerNetworkInfo.IsLeader = true;
+
+				PlayerInfos.Set(playerInfo.Key, playerNetworkInfo);
+				break;
+			}
+		}
+
+		#region Unused Callbacks
 		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
 
 		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }

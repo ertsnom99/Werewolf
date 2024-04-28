@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -14,12 +15,16 @@ namespace Werewolf
 
 		private IEnumerator _startChoiceTimerCoroutine;
 
+		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
 
 		public override void Init()
 		{
+			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
+
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
+			_gameManager.OnPostPlayerLeft += OnPostPlayerLeft;
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
@@ -33,21 +38,27 @@ namespace Werewolf
 
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer)
 		{
-			if (Player != deadPlayer || _gameManager.AlivePlayerCount <= 1 || !_gameManager.AskClientToChoosePlayer(Player,
-																			new[] { Player },
-																			"Choose a player to kill",
-																			_gameManager.Config.NightCallMaximumDuration,
-																			false,
-																			OnPlayerSelected))
+			if (Player != deadPlayer || _gameManager.AlivePlayerCount <= 1)
 			{
 				return;
 			}
 
 			_gameManager.WaitForPlayer(Player);
 
+			if (!_gameManager.AskClientToChoosePlayer(Player,
+													new[] { Player },
+													"Choose a player to kill",
+													_gameManager.Config.NightCallMaximumDuration,
+													false,
+													OnPlayerSelected))
+			{
+				SelectRandomPlayer();
+				return;
+			}
+
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
-				if (playerInfo.Key == Player)
+				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected || playerInfo.Key == Player)
 				{
 					continue;
 				}
@@ -74,7 +85,22 @@ namespace Werewolf
 			}
 
 			_gameManager.StopChoosingPlayer(Player);
+			SelectRandomPlayer();
+		}
 
+		private void OnPostPlayerLeft(PlayerRef deadPlayer)
+		{
+			if (_startChoiceTimerCoroutine == null)
+			{
+				return;
+			}
+
+			_gameManager.WaitForPlayer(Player);
+			SelectRandomPlayer();
+		}
+
+		private void SelectRandomPlayer()
+		{
 			int iterationCount = 0;
 			PlayerRef[] players = _gameManager.PlayerGameInfos.Keys.ToArray();
 			int playerIndex = Random.Range(0, _gameManager.PlayerGameInfos.Count);
@@ -113,26 +139,25 @@ namespace Werewolf
 
 		private void OnPlayerSelected(PlayerRef selectedPlayer)
 		{
-			if (_startChoiceTimerCoroutine == null)
+			if (_startChoiceTimerCoroutine != null)
 			{
-				return;
-			}
+				StopCoroutine(_startChoiceTimerCoroutine);
+				_startChoiceTimerCoroutine = null;
 
-			StopCoroutine(_startChoiceTimerCoroutine);
-			_startChoiceTimerCoroutine = null;
-
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
-			{
-				if (playerInfo.Key == Player)
+				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 				{
-					continue;
-				}
+					if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected || playerInfo.Key == Player)
+					{
+						continue;
+					}
 
-				_gameManager.RPC_PutCardBackDown(playerInfo.Key, Player, false);
-			}
+					_gameManager.RPC_PutCardBackDown(playerInfo.Key, Player, false);
+				}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.PutCardBackDown(Player, false);
+				_gameManager.PutCardBackDown(Player, false);
 #endif
+			}
+
 			if (selectedPlayer != PlayerRef.None)
 			{
 				_gameManager.AddMarkForDeath(selectedPlayer, "Shot", 1);
@@ -173,6 +198,7 @@ namespace Werewolf
 		private void OnDestroy()
 		{
 			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
+			_gameManager.OnPostPlayerLeft -= OnPostPlayerLeft;
 		}
 	}
 }

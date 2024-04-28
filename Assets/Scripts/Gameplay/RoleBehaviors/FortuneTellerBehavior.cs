@@ -1,4 +1,5 @@
 using Fusion;
+using System.Collections;
 using System.Collections.Generic;
 using Werewolf.Data;
 
@@ -31,14 +32,23 @@ namespace Werewolf
 				immunePlayers.Add(playerInfo.Key);
 			}
 
-			_choosingPlayer = _gameManager.AskClientToChoosePlayer(Player,
-																immunePlayers.ToArray(),
-																"Choose a player to see his role",
-																_gameManager.Config.NightCallMaximumDuration,
-																true,
-																OnPlayerSelected);
+			if (!_gameManager.AskClientToChoosePlayer(Player,
+													immunePlayers.ToArray(),
+													"Choose a player to see his role",
+													_gameManager.Config.NightCallMaximumDuration,
+													true,
+													OnPlayerSelected))
+			{
+				StartCoroutine(WaitToStopWaitingForPlayer());
+			}
 
-			return _choosingPlayer;
+			return true;
+		}
+
+		private IEnumerator WaitToStopWaitingForPlayer()
+		{
+			yield return 0;
+			_gameManager.StopWaintingForPlayer(Player);
 		}
 
 		private void OnPlayerSelected(PlayerRef player)

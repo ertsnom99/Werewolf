@@ -112,13 +112,32 @@ namespace Werewolf
 
 		public void RemoveVoter(PlayerRef voter)
 		{
-			if (_step != Step.Preparing || !Voters.Contains(voter))
+			if (_step == Step.NotVoting || !Voters.Contains(voter))
 			{
 				return;
 			}
 
 			Voters.Remove(voter);
 			_immuneFromPlayers.Remove(voter);
+			_votes.Remove(voter);
+
+			if (_step != Step.Voting)
+			{
+				return;
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			_playerCards[voter].SetVotingStatusVisible(false);
+			UpdateVisualFeedback();
+#endif
+			foreach (PlayerRef otherVoter in Voters)
+			{
+				RPC_RemoveClientVoter(otherVoter, voter);
+			}
+
+			foreach (PlayerRef spectator in _spectators)
+			{
+				RPC_RemoveClientVoter(spectator, voter);
+			}
 		}
 
 		public void AddVoteImmunity(PlayerRef player)
@@ -560,6 +579,14 @@ namespace Werewolf
 		{
 			_votes[voter].VotedFor = votedFor;
 			_votes[voter].LockedIn = islocked;
+			UpdateVisualFeedback();
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_RemoveClientVoter([RpcTarget] PlayerRef player, PlayerRef voter)
+		{
+			_votes.Remove(voter);
+			_playerCards[voter].SetVotingStatusVisible(false);
 			UpdateVisualFeedback();
 		}
 

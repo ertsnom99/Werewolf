@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
@@ -70,7 +71,18 @@ namespace Werewolf
 				}
 			}
 
-			return _gameManager.AskClientToChooseReservedRole(this, _gameManager.Config.NightCallMaximumDuration, _reservedOnlyWerewolfs, OnRoleSelected);
+			if (!_gameManager.AskClientToChooseReservedRole(this, _gameManager.Config.NightCallMaximumDuration, _reservedOnlyWerewolfs, OnRoleSelected))
+			{
+				StartCoroutine(WaitOnRoleSelected(-1));
+			}
+
+			return true;
+		}
+
+		private IEnumerator WaitOnRoleSelected(int choiceIndex)
+		{
+			yield return 0;
+			OnRoleSelected(choiceIndex);
 		}
 
 		private void OnRoleSelected(int choiceIndex)
