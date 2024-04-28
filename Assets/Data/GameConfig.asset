@@ -211,3 +211,4 @@ MonoBehaviour:
   <UITransitionFastDuration>k__BackingField: 0.1
   <CountdownText>k__BackingField: 'Time left: {0}'
   <SkipTurnText>k__BackingField: Skip turn
+  <PlayerLeftMarkForDeath>k__BackingField: Disconnected

@@ -34,7 +34,18 @@ namespace Werewolf.Network
 
 					break;
 				case (int)SceneDefs.GAME:
+					runner.AddCallbacks(GameManager.Instance);
 					GameManager.Instance.PrepareGame(_networkDataManager.RolesSetup);
+					break;
+			}
+		}
+
+		public void OnSceneLoadStart(NetworkRunner runner)
+		{
+			switch (runner.SceneManager.MainRunnerScene.buildIndex)
+			{
+				case (int)SceneDefs.GAME:
+					runner.RemoveCallbacks(GameManager.Instance);
 					break;
 			}
 		}
@@ -54,35 +65,20 @@ namespace Werewolf.Network
 
 		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
 		{
-			if (!runner.IsServer)
-			{
-				return;
-			}
-
 			Log.Info($"Player joined: {player}");
 		}
 
 		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
 		{
-			if (!runner.IsServer)
-			{
-				return;
-			}
-
-			// TODO: If a player leave after the game started, give him a mark for death
 			Log.Info($"Player left: {player}");
 
-			if (runner.ActivePlayers.Count() > 0)
+			if (runner.ActivePlayers.Count() > 0 || runner.SceneManager.MainRunnerScene.buildIndex != (int)SceneDefs.GAME)
 			{
 				return;
 			}
 
-			if (runner.SceneManager.MainRunnerScene.buildIndex == (int)SceneDefs.GAME)
-			{
-				Log.Info("Last player left, shutdown...");
-
-				runner.Shutdown();
-			}
+			Log.Info("Last player left, shutdown...");
+			Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.MENU), LoadSceneMode.Single);
 		}
 
 		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
@@ -114,8 +110,6 @@ namespace Werewolf.Network
 		public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
 
 		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
-
-		public void OnSceneLoadStart(NetworkRunner runner) { }
 
 		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
 

@@ -1,4 +1,5 @@
 using Fusion;
+using Fusion.Sockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Werewolf
 		public bool Won;
 	}
 
-	public class GameManager : NetworkBehaviourSingleton<GameManager>
+	public class GameManager : NetworkBehaviourSingleton<GameManager>, INetworkRunnerCallbacks
 	{
 		#region Server variables
 		public List<RoleData> RolesToDistribute { get; private set; }
@@ -56,7 +57,6 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 		private Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new();
 #endif
-		private List<PlayerRef> _playersReady = new();
 
 		private bool _rolesDistributionDone = false;
 		private bool _allPlayersReadyToReceiveRole = false;
@@ -162,6 +162,7 @@ namespace Werewolf
 		public event Action<PlayerRef, List<string>, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
 		public event Action<PlayerRef> PlayerDeathRevealEnded;
+		public event Action<PlayerRef> OnPostPlayerLeft;
 
 		// Client events
 		public event Action OnRoleReceived;
@@ -209,7 +210,7 @@ namespace Werewolf
 		#region Pre Gameplay Loop
 		public void PrepareGame(RolesSetup rolesSetup)
 		{
-			GetNetworkDataManager();
+			_networkDataManager = NetworkDataManager.Instance;
 
 			SelectRolesToDistribute(rolesSetup);
 
@@ -229,11 +230,6 @@ namespace Werewolf
 			_voteManager.SetPlayerCards(_playerCards);
 #endif
 			CheckPreGameplayLoopProgress();
-		}
-
-		private void GetNetworkDataManager()
-		{
-			_networkDataManager = FindObjectOfType<NetworkDataManager>();
 		}
 
 		#region Roles Selection
@@ -495,7 +491,7 @@ namespace Werewolf
 		{
 			if (!_networkDataManager)
 			{
-				GetNetworkDataManager();
+				_networkDataManager = NetworkDataManager.Instance;
 			}
 
 			CreatePlayerCards(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
@@ -512,11 +508,29 @@ namespace Werewolf
 		#region Loop Progress
 		private void CheckPreGameplayLoopProgress()
 		{
-			if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
+			if (_rolesDistributionDone && !_allPlayersReadyToReceiveRole)
 			{
-				foreach (KeyValuePair<PlayerRef, Network.PlayerNetworkInfo> playerInfo in _networkDataManager.PlayerInfos)
+				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in PlayerGameInfos)
 				{
-					RPC_GivePlayerRole(playerInfo.Key, PlayerGameInfos[playerInfo.Key].Role.GameplayTag.CompactTagId);
+					if (!_networkDataManager.PlayerInfos[playerGameInfo.Key].IsConnected)
+					{
+						continue;
+					}
+
+					WaitForPlayer(playerGameInfo.Key);
+				}
+			}
+			else if (_rolesDistributionDone && _allPlayersReadyToReceiveRole && !_allRolesSent)
+			{
+				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in PlayerGameInfos)
+				{
+					if (!_networkDataManager.PlayerInfos[playerGameInfo.Key].IsConnected)
+					{
+						continue;
+					}
+
+					WaitForPlayer(playerGameInfo.Key);
+					RPC_GivePlayerRole(playerGameInfo.Key, PlayerGameInfos[playerGameInfo.Key].Role.GameplayTag.CompactTagId);
 				}
 
 				_allRolesSent = true;
@@ -528,43 +542,22 @@ namespace Werewolf
 			}
 		}
 
-		private bool AddPlayerReady(PlayerRef player)
-		{
-			if (_playersReady.Contains(player))
-			{
-				return false;
-			}
-
-			_playersReady.Add(player);
-
-			Log.Info($"{player} is ready!");
-
-			if (!_networkDataManager)
-			{
-				GetNetworkDataManager();
-			}
-
-			if (_playersReady.Count < _networkDataManager.PlayerInfos.Count)
-			{
-				return false;
-			}
-
-			return true;
-		}
-
 		#region RPC Calls
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_ConfirmPlayerReadyToReceiveRole(RpcInfo info = default)
 		{
-			if (!AddPlayerReady(info.Source))
+			StopWaintingForPlayer(info.Source);
+
+			Log.Info($"{info.Source} is ready!");
+
+			if (_playersWaitingFor.Count > 0)
 			{
 				return;
 			}
 
 			_allPlayersReadyToReceiveRole = true;
-			_playersReady.Clear();
 
-			Log.Info("All players are ready!");
+			Log.Info("All players are ready to receive their role!");
 
 			CheckPreGameplayLoopProgress();
 		}
@@ -572,7 +565,9 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
 		{
-			if (!AddPlayerReady(info.Source))
+			StopWaintingForPlayer(info.Source);
+
+			if (_playersWaitingFor.Count > 0)
 			{
 				return;
 			}
@@ -800,7 +795,7 @@ namespace Werewolf
 
 					foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 					{
-						if (_playersWaitingFor.Contains(playerInfo.Key))
+						if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected || _playersWaitingFor.Contains(playerInfo.Key))
 						{
 							continue;
 						}
@@ -941,7 +936,10 @@ namespace Werewolf
 
 					yield return new WaitForSeconds(Config.DelayBeforeRevealingDeadPlayer);
 
-					RPC_DisplayPlayerDiedTitle(deadPlayer);
+					if (_networkDataManager.PlayerInfos[deadPlayer].IsConnected)
+					{
+						RPC_DisplayPlayerDiedTitle(deadPlayer);
+					}
 
 					_isPlayerDeathRevealCompleted = false;
 
@@ -1011,6 +1009,11 @@ namespace Werewolf
 		{
 			foreach (PlayerRef player in revealTo)
 			{
+				if (!_networkDataManager.PlayerInfos[player].IsConnected)
+				{
+					continue;
+				}
+
 				_playersWaitingFor.Add(player);
 				MoveCardToCamera(player,
 								playerRevealed,
@@ -1036,6 +1039,11 @@ namespace Werewolf
 
 				foreach (PlayerRef player in revealTo)
 				{
+					if (!_networkDataManager.PlayerInfos[player].IsConnected)
+					{
+						continue;
+					}
+
 					_playersWaitingFor.Add(player);
 					FlipCard(player,
 							playerRevealed,
@@ -1053,6 +1061,11 @@ namespace Werewolf
 
 			foreach (PlayerRef player in revealTo)
 			{
+				if (!_networkDataManager.PlayerInfos[player].IsConnected)
+				{
+					continue;
+				}
+
 				_playersWaitingFor.Add(player);
 				PutCardBackDown(player,
 								playerRevealed,
@@ -1202,16 +1215,20 @@ namespace Werewolf
 			List<PlayerRef> executionChoices = mostVotedPlayers.ToList();
 			executionChoices.Remove(_captain);
 
-			AskClientToChoosePlayer(_captain,
+			if (!AskClientToChoosePlayer(_captain,
 									GetPlayersExcluding(executionChoices.ToArray()),
 									Config.ExecutionDrawYouChooseText,
 									Config.ExecutionCaptainChoiceDuration,
 									false,
-									OnCaptainChooseExecutedPlayer);
+									OnCaptainChooseExecutedPlayer))
+			{
+				StartCoroutine(ExecutePlayer(mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)]));
+				yield break;
+			}
 
 			foreach (var player in PlayerGameInfos)
 			{
-				if (player.Key == _captain)
+				if (!_networkDataManager.PlayerInfos[player.Key].IsConnected || player.Key == _captain)
 				{
 					continue;
 				}
@@ -1489,16 +1506,20 @@ namespace Werewolf
 				yield break;
 			}
 
-			AskClientToChoosePlayer(_captain,
+			if (!AskClientToChoosePlayer(_captain,
 									GetPlayersExcluding(captainChoices.ToArray()),
 									Config.ChooseNextCaptainText,
 									Config.CaptainChoiceDuration,
 									false,
-									OnChoosedNextCaptain);
+									OnChoosedNextCaptain))
+			{
+				StartCoroutine(EndChoosingNextCaptain(captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)]));
+				yield break;
+			}
 
 			foreach (var player in PlayerGameInfos)
 			{
-				if (player.Key == _captain)
+				if (!_networkDataManager.PlayerInfos[player.Key].IsConnected || player.Key == _captain)
 				{
 					continue;
 				}
@@ -1508,7 +1529,13 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			DisplayTitle(null, Config.OldCaptainChoosingText);
 #endif
-			yield return new WaitForSeconds(Config.CaptainChoiceDuration);
+			float elapsedTime = .0f;
+
+			while (_networkDataManager.PlayerInfos[_captain].IsConnected && elapsedTime < Config.CaptainChoiceDuration)
+			{
+				yield return 0;
+				elapsedTime += Time.deltaTime;
+			}
 
 			StartCoroutine(EndChoosingNextCaptain(captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)]));
 		}
@@ -1606,6 +1633,11 @@ namespace Werewolf
 		{
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
+				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_OnDebateStarted(playerInfo.Key, text, duration, playerInfo.Value.IsAlive);
 
 				if (!playerInfo.Value.IsAlive)
@@ -1719,6 +1751,11 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
+				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+				{
+					continue;
+				}
+
 				if (playerInfo.Value.IsAlive)
 				{
 					_voteManager.AddVoter(playerInfo.Key);
@@ -1853,9 +1890,12 @@ namespace Werewolf
 
 			PlayerGameInfos[player] = new() { Role = roleData, Behaviors = PlayerGameInfos[player].Behaviors, IsAlive = PlayerGameInfos[player].IsAlive };
 
-			RPC_ChangePlayerCardRole(player, roleData.GameplayTag.CompactTagId);
+			if (_networkDataManager.PlayerInfos[player].IsConnected)
+			{
+				RPC_ChangePlayerCardRole(player, roleData.GameplayTag.CompactTagId);
+			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_playerCards[player].SetRole(roleData);
+			ChangePlayerCardRole(player, roleData);
 #endif
 		}
 
@@ -1886,9 +1926,12 @@ namespace Werewolf
 			PlayerGameInfos[to] = new() { Role = PlayerGameInfos[from].Role, Behaviors = PlayerGameInfos[to].Behaviors, IsAlive = PlayerGameInfos[to].IsAlive };
 			PlayerGameInfos[from] = new() { Role = null, Behaviors = PlayerGameInfos[from].Behaviors, IsAlive = PlayerGameInfos[from].IsAlive };
 
-			RPC_ChangePlayerCardRole(to, PlayerGameInfos[to].Role.GameplayTag.CompactTagId);
+			if (_networkDataManager.PlayerInfos[to].IsConnected)
+			{
+				RPC_ChangePlayerCardRole(to, PlayerGameInfos[to].Role.GameplayTag.CompactTagId);
+			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_playerCards[to].SetRole(PlayerGameInfos[to].Role);
+			ChangePlayerCardRole(to, PlayerGameInfos[to].Role);
 #endif
 		}
 
@@ -2304,7 +2347,7 @@ namespace Werewolf
 		// Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
 		public bool AskClientToChooseReservedRole(RoleBehavior ReservedRoleOwner, float maximumDuration, bool mustChooseOne, Action<int> callback)
 		{
-			if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
+			if (!_networkDataManager.PlayerInfos[ReservedRoleOwner.Player].IsConnected || !_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
 			{
 				return false;
 			}
@@ -2331,6 +2374,12 @@ namespace Werewolf
 		public void StopChoosingReservedRole(PlayerRef reservedRoleOwner)
 		{
 			_chooseReservedRoleCallbacks.Remove(reservedRoleOwner);
+
+			if (!_networkDataManager.PlayerInfos[reservedRoleOwner].IsConnected)
+			{
+				return;
+			}
+
 			RPC_ClientStopChoosingReservedRole(reservedRoleOwner);
 		}
 
@@ -2396,7 +2445,7 @@ namespace Werewolf
 		#region Choose a Player
 		public bool AskClientToChoosePlayer(PlayerRef choosingPlayer, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool canChooseNobody, Action<PlayerRef> callback)
 		{
-			if (_choosePlayerCallbacks.ContainsKey(choosingPlayer))
+			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayerCallbacks.ContainsKey(choosingPlayer))
 			{
 				return false;
 			}
@@ -2421,6 +2470,12 @@ namespace Werewolf
 		public void StopChoosingPlayer(PlayerRef player)
 		{
 			_choosePlayerCallbacks.Remove(player);
+
+			if (!_networkDataManager.PlayerInfos[player].IsConnected)
+			{
+				return;
+			}
+
 			RPC_ClientStopChoosingPlayer(player);
 		}
 
@@ -2529,7 +2584,7 @@ namespace Werewolf
 		#region Role Reveal
 		public bool RevealPlayerRole(PlayerRef playerRevealed, PlayerRef revealTo, bool waitBeforeReveal, bool returnFaceDown, Action<PlayerRef> callback)
 		{
-			if (_revealPlayerRoleCallbacks.ContainsKey(revealTo))
+			if (!_networkDataManager.PlayerInfos[revealTo].IsConnected || _revealPlayerRoleCallbacks.ContainsKey(revealTo))
 			{
 				return false;
 			}
@@ -2598,7 +2653,7 @@ namespace Werewolf
 
 		private bool MoveCardToCamera(PlayerRef movedFor, PlayerRef cardPlayer, bool showRevealed, int gameplayDataID, Action movementCompleted)
 		{
-			if (_moveCardToCameraCallbacks.ContainsKey(movedFor))
+			if (!_networkDataManager.PlayerInfos[movedFor].IsConnected || _moveCardToCameraCallbacks.ContainsKey(movedFor))
 			{
 				return false;
 			}
@@ -2645,7 +2700,7 @@ namespace Werewolf
 
 		private bool FlipCard(PlayerRef flipFor, PlayerRef cardPlayer, Action flipCompleted, int gameplayDataID = -1)
 		{
-			if (_flipCardCallbacks.ContainsKey(flipFor))
+			if (!_networkDataManager.PlayerInfos[flipFor].IsConnected || _flipCardCallbacks.ContainsKey(flipFor))
 			{
 				return false;
 			}
@@ -2700,7 +2755,7 @@ namespace Werewolf
 
 		private bool PutCardBackDown(PlayerRef putFor, PlayerRef cardPlayer, bool returnFaceDown, Action putDownCompleted)
 		{
-			if (_putCardBackDownCallbacks.ContainsKey(putFor))
+			if (!_networkDataManager.PlayerInfos[putFor].IsConnected || _putCardBackDownCallbacks.ContainsKey(putFor))
 			{
 				return false;
 			}
@@ -2812,7 +2867,7 @@ namespace Werewolf
 		#region Prompt Player
 		public bool PromptPlayer(PlayerRef promptedPlayer, string prompt, float duration, string confirmButtonText , Action<PlayerRef> callback, bool fastFade = true)
 		{
-			if (_promptPlayerCallbacks.ContainsKey(promptedPlayer))
+			if (!_networkDataManager.PlayerInfos[promptedPlayer].IsConnected || _promptPlayerCallbacks.ContainsKey(promptedPlayer))
 			{
 				return false;
 			}
@@ -2831,6 +2886,11 @@ namespace Werewolf
 
 		public void StopPromptingPlayer(PlayerRef player, bool fastFade = true)
 		{
+			if (!_networkDataManager.PlayerInfos[player].IsConnected)
+			{
+				return;
+			}
+
 			_promptPlayerCallbacks.Remove(player);
 			RPC_StopPromptingPlayer(player, fastFade);
 		}
@@ -3111,6 +3171,71 @@ namespace Werewolf
 		{
 			Camera.main.transform.position = Camera.main.transform.position.normalized * Config.CameraOffset.Evaluate(_networkDataManager.PlayerInfos.Count);
 		}
+		#endregion
+
+		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+		{
+			if (PlayerGameInfos[player].IsAlive)
+			{
+				AddMarkForDeath(player, Config.PlayerLeftMarkForDeath);
+			}
+
+			if (_playersWaitingFor.Contains(player) && _currentGameplayLoopStep == GameplayLoopStep.RoleCall)
+			{
+				PlayerGameInfos[player].Behaviors[0].SetTimedOut(true);
+				PlayerGameInfos[player].Behaviors[0].OnRoleTimeOut();
+			}
+
+			StopWaintingForPlayer(player);
+
+			_voteManager.RemoveVoter(player);
+
+			_chooseReservedRoleCallbacks.Remove(player);
+			_choosePlayerCallbacks.Remove(player);
+			_revealPlayerRoleCallbacks.Remove(player);
+			_moveCardToCameraCallbacks.Remove(player);
+			_flipCardCallbacks.Remove(player);
+			_putCardBackDownCallbacks.Remove(player);
+
+			OnPostPlayerLeft?.Invoke(player);
+		}
+
+		#region Unused Callbacks
+		public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+
+		public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+
+		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+
+		public void OnInput(NetworkRunner runner, NetworkInput input) { }
+
+		public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+
+		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+
+		public void OnConnectedToServer(NetworkRunner runner) { }
+
+		public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
+
+		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+
+		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+
+		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
+
+		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+
+		public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
+
+		public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+
+		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
+
+		public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+
+		public void OnSceneLoadDone(NetworkRunner runner) { }
+
+		public void OnSceneLoadStart(NetworkRunner runner) { }
 		#endregion
 	}
 }

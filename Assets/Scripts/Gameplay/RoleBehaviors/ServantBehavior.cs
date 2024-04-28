@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -14,10 +15,12 @@ namespace Werewolf
 		private bool _isWaitingForPromptAnswer;
 		private PlayerRef _playerRevealed;
 
+		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
 
 		public override void Init()
 		{
+			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
 
 			_gameManager.WaitBeforeDeathRevealStarted += OnWaitBeforeDeathRevealStarted;
@@ -65,6 +68,11 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
+				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+				{
+					continue;
+				}
+
 				if (playerInfo.Key == Player)
 				{
 					_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
@@ -91,6 +99,11 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
+				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+				{
+					continue;
+				}
+
 				if (playerInfo.Key == Player)
 				{
 					_gameManager.RPC_DestroyPlayerCard(Player, _playerRevealed);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -13,11 +14,13 @@ namespace Werewolf
 
 		private bool _preparedVote;
 
+		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
 		private VoteManager _voteManager;
 
 		public override void Init()
 		{
+			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
 			_voteManager = VoteManager.Instance;
 		}
@@ -27,7 +30,12 @@ namespace Werewolf
 		public override bool OnRoleCall()
 		{
 			_preparedVote = _voteManager.PrepareVote(_commonData.VoteMaxDuration, true, false);
-			_voteManager.AddVoter(Player);
+
+			if (_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				_voteManager.AddVoter(Player);
+			}
+
 			_voteManager.AddVoteImmunity(Player);
 
 			_voteManager.VoteCompletedCallback += OnVoteEnded;
