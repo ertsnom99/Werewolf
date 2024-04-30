@@ -212,3 +212,4 @@ MonoBehaviour:
   <CountdownText>k__BackingField: 'Time left: {0}'
   <SkipTurnText>k__BackingField: Skip turn
   <PlayerLeftMarkForDeath>k__BackingField: Disconnected
+  <DisconnectedTextDuration>k__BackingField: 5

@@ -199,6 +199,7 @@ namespace Werewolf
 			_UIManager.ChoiceScreen.SetConfig(Config);
 			_UIManager.VoteScreen.SetConfig(Config);
 			_UIManager.EndGameScreen.SetConfig(Config);
+			_UIManager.DisconnectedScreen.SetConfig(Config);
 		}
 
 		public override void Spawned()
@@ -2925,6 +2926,48 @@ namespace Werewolf
 		#endregion
 		#endregion
 
+		#region Player Disconnection
+		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+		{
+			if (PlayerGameInfos[player].IsAlive)
+			{
+				AddMarkForDeath(player, Config.PlayerLeftMarkForDeath);
+			}
+
+			if (_playersWaitingFor.Contains(player) && _currentGameplayLoopStep == GameplayLoopStep.RoleCall)
+			{
+				PlayerGameInfos[player].Behaviors[0].SetTimedOut(true);
+				PlayerGameInfos[player].Behaviors[0].OnRoleTimeOut();
+			}
+
+			StopWaintingForPlayer(player);
+
+			_voteManager.RemoveVoter(player);
+
+			_chooseReservedRoleCallbacks.Remove(player);
+			_choosePlayerCallbacks.Remove(player);
+			_revealPlayerRoleCallbacks.Remove(player);
+			_moveCardToCameraCallbacks.Remove(player);
+			_flipCardCallbacks.Remove(player);
+			_putCardBackDownCallbacks.Remove(player);
+
+			OnPostPlayerLeft?.Invoke(player);
+
+			RPC_DisplayPlayerDisconnected(player);
+#if UNITY_SERVER && UNITY_EDITOR
+			_UIManager.DisconnectedScreen.DisplayDisconnectedPlayer(player);
+#endif
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayPlayerDisconnected(PlayerRef player)
+		{
+			_UIManager.DisconnectedScreen.DisplayDisconnectedPlayer(player);
+		}
+		#endregion
+		#endregion
+
 		#region UI
 		public void DisplayTitle(Sprite image, string title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
 		{
@@ -3172,33 +3215,6 @@ namespace Werewolf
 			Camera.main.transform.position = Camera.main.transform.position.normalized * Config.CameraOffset.Evaluate(_networkDataManager.PlayerInfos.Count);
 		}
 		#endregion
-
-		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-		{
-			if (PlayerGameInfos[player].IsAlive)
-			{
-				AddMarkForDeath(player, Config.PlayerLeftMarkForDeath);
-			}
-
-			if (_playersWaitingFor.Contains(player) && _currentGameplayLoopStep == GameplayLoopStep.RoleCall)
-			{
-				PlayerGameInfos[player].Behaviors[0].SetTimedOut(true);
-				PlayerGameInfos[player].Behaviors[0].OnRoleTimeOut();
-			}
-
-			StopWaintingForPlayer(player);
-
-			_voteManager.RemoveVoter(player);
-
-			_chooseReservedRoleCallbacks.Remove(player);
-			_choosePlayerCallbacks.Remove(player);
-			_revealPlayerRoleCallbacks.Remove(player);
-			_moveCardToCameraCallbacks.Remove(player);
-			_flipCardCallbacks.Remove(player);
-			_putCardBackDownCallbacks.Remove(player);
-
-			OnPostPlayerLeft?.Invoke(player);
-		}
 
 		#region Unused Callbacks
 		public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
