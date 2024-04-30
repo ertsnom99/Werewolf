@@ -21,6 +21,9 @@ namespace Werewolf
 		[field: SerializeField]
 		public EndGameScreen EndGameScreen { get; private set; }
 
+		[field: SerializeField]
+		public DisconnectedScreen DisconnectedScreen { get; private set; }
+
 		private FadingScreen _currentFadingScreen;
 
 		public void FadeIn(FadingScreen fadingScreen, float transitionDuration)

@@ -271,5 +271,8 @@ namespace Werewolf.Data
 		[field: Header("Network")]
 		[field: SerializeField]
 		public string PlayerLeftMarkForDeath { get; private set; }
+
+		[field: SerializeField]
+		public float DisconnectedTextDuration { get; private set; }
 	}
 }
