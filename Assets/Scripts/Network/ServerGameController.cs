@@ -34,18 +34,7 @@ namespace Werewolf.Network
 
 					break;
 				case (int)SceneDefs.GAME:
-					runner.AddCallbacks(GameManager.Instance);
 					GameManager.Instance.PrepareGame(_networkDataManager.RolesSetup);
-					break;
-			}
-		}
-
-		public void OnSceneLoadStart(NetworkRunner runner)
-		{
-			switch (runner.SceneManager.MainRunnerScene.buildIndex)
-			{
-				case (int)SceneDefs.GAME:
-					runner.RemoveCallbacks(GameManager.Instance);
 					break;
 			}
 		}
@@ -110,6 +99,8 @@ namespace Werewolf.Network
 		public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
 
 		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
+
+		public void OnSceneLoadStart(NetworkRunner runner) { }
 
 		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
 

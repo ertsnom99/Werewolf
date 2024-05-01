@@ -50,10 +50,11 @@ namespace Werewolf.Network
 
 		private ChangeDetector _changeDetector;
 
+		public static event Action OnSpawned;
 		public event Action OnPlayerInfosChanged;
 		public event Action OnInvalidRolesSetupReceived;
 		public event Action OnRolesSetupReadyChanged;
-		public static event Action OnSpawned;
+		public event Action<PlayerRef> OnPlayerDisconnected;
 
 		protected override void Awake()
 		{
@@ -221,6 +222,8 @@ namespace Werewolf.Network
 					SetPlayerDisconnected(player);
 					break;
 			}
+
+			OnPlayerDisconnected?.Invoke(player);
 		}
 
 		private void RemovePlayerInfos(PlayerRef player)
