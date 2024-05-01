@@ -24,7 +24,7 @@ namespace Werewolf
 			_gameManager = GameManager.Instance;
 
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
-			_gameManager.OnPostPlayerLeft += OnPostPlayerLeft;
+			_gameManager.OnPostPlayerDisconnected += OnPostPlayerLeft;
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
@@ -198,7 +198,7 @@ namespace Werewolf
 		private void OnDestroy()
 		{
 			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
-			_gameManager.OnPostPlayerLeft -= OnPostPlayerLeft;
+			_gameManager.OnPostPlayerDisconnected -= OnPostPlayerLeft;
 		}
 	}
 }

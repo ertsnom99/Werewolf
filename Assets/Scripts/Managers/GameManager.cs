@@ -29,7 +29,7 @@ namespace Werewolf
 		public bool Won;
 	}
 
-	public class GameManager : NetworkBehaviourSingleton<GameManager>, INetworkRunnerCallbacks
+	public class GameManager : NetworkBehaviourSingleton<GameManager>
 	{
 		#region Server variables
 		public List<RoleData> RolesToDistribute { get; private set; }
@@ -162,7 +162,7 @@ namespace Werewolf
 		public event Action<PlayerRef, List<string>, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
 		public event Action<PlayerRef> PlayerDeathRevealEnded;
-		public event Action<PlayerRef> OnPostPlayerLeft;
+		public event Action<PlayerRef> OnPostPlayerDisconnected;
 
 		// Client events
 		public event Action OnRoleReceived;
@@ -212,6 +212,7 @@ namespace Werewolf
 		public void PrepareGame(RolesSetup rolesSetup)
 		{
 			_networkDataManager = NetworkDataManager.Instance;
+			_networkDataManager.OnPlayerDisconnected += OnPlayerDisconnected;
 
 			SelectRolesToDistribute(rolesSetup);
 
@@ -1409,6 +1410,9 @@ namespace Werewolf
 
 		private IEnumerator ReturnToLobby()
 		{
+#if UNITY_SERVER
+			_networkDataManager.OnPlayerDisconnected -= OnPlayerDisconnected;
+#endif
 			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration +
 											Config.UITransitionNormalDuration +
 											Config.ReturnToLobbyCountdownDuration +
@@ -2927,7 +2931,7 @@ namespace Werewolf
 		#endregion
 
 		#region Player Disconnection
-		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+		public void OnPlayerDisconnected(PlayerRef player)
 		{
 			if (PlayerGameInfos[player].IsAlive)
 			{
@@ -2951,7 +2955,7 @@ namespace Werewolf
 			_flipCardCallbacks.Remove(player);
 			_putCardBackDownCallbacks.Remove(player);
 
-			OnPostPlayerLeft?.Invoke(player);
+			OnPostPlayerDisconnected?.Invoke(player);
 
 			RPC_DisplayPlayerDisconnected(player);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -3214,44 +3218,6 @@ namespace Werewolf
 		{
 			Camera.main.transform.position = Camera.main.transform.position.normalized * Config.CameraOffset.Evaluate(_networkDataManager.PlayerInfos.Count);
 		}
-		#endregion
-
-		#region Unused Callbacks
-		public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-
-		public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-
-		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
-
-		public void OnInput(NetworkRunner runner, NetworkInput input) { }
-
-		public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-
-		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
-
-		public void OnConnectedToServer(NetworkRunner runner) { }
-
-		public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
-
-		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
-
-		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
-
-		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
-
-		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
-
-		public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
-
-		public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
-
-		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
-
-		public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
-
-		public void OnSceneLoadDone(NetworkRunner runner) { }
-
-		public void OnSceneLoadStart(NetworkRunner runner) { }
 		#endregion
 	}
 }
