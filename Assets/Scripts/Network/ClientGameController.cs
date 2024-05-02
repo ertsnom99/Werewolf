@@ -6,14 +6,22 @@ using UnityEngine;
 using Werewolf.Network.Configs;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Werewolf.UI;
 
 namespace Werewolf.Network
 {
+	[RequireComponent(typeof(NetworkRunner))]
 	[SimulationBehaviour(Modes = SimulationModes.Client)]
 	public class ClientGameController : MonoBehaviour, INetworkRunnerCallbacks
 	{
+		private NetworkRunner _networkRunner;
 		private GameManager _gameManager;
 		private UIManager _UIManager;
+
+		private void Awake()
+		{
+			_networkRunner = GetComponent<NetworkRunner>();
+		}
 
 		public void OnSceneLoadDone(NetworkRunner runner)
 		{
@@ -22,6 +30,8 @@ namespace Werewolf.Network
 				case (int)SceneDefs.GAME:
 					_UIManager = UIManager.Instance;
 					_UIManager.SetFade(_UIManager.LoadingScreen, 1.0f);
+
+					QuitScreen.OnQuit += QuitGame;
 
 					if (!GameManager.HasSpawned)
 					{
@@ -34,6 +44,11 @@ namespace Werewolf.Network
 
 					break;
 			}
+		}
+
+		private void QuitGame()
+		{
+			_networkRunner.Shutdown();
 		}
 
 		private void OnGameManagerSpawned()
@@ -75,17 +90,14 @@ namespace Werewolf.Network
 
 		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
 		{
-			if (runner.SceneManager == null)
+			if (runner.SceneManager?.MainRunnerScene.buildIndex == (int)SceneDefs.GAME)
 			{
-				return;
-			}
-
-			switch (runner.SceneManager.MainRunnerScene.buildIndex)
-			{
-				case (int)SceneDefs.GAME:
+				if (shutdownReason != ShutdownReason.Ok)
+				{
 					MainMenuManager.START_MESSAGE = $"Runner shutdown: {shutdownReason}";
-					SceneManager.LoadScene((int)SceneDefs.MENU);
-					break;
+				}
+
+				SceneManager.LoadScene((int)SceneDefs.MENU);
 			}
 		}
 

@@ -31,6 +31,7 @@ namespace Werewolf
 
 		private NetworkDataManager _networkDataManager;
 
+		public static bool JUST_OPEN = true;
 		public static string START_MESSAGE = string.Empty;
 
 		private void Awake()
@@ -51,7 +52,7 @@ namespace Werewolf
 			{
 				_mainMenu.ResetMenu(START_MESSAGE);
 
-				if (START_MESSAGE == string.Empty)
+				if (JUST_OPEN)
 				{
 					if (CommandLineUtilities.TryGetArg(out string nickname, "-nickname"))
 					{
@@ -71,6 +72,8 @@ namespace Werewolf
 
 				START_MESSAGE = string.Empty;
 			}
+
+			JUST_OPEN = false;
 		}
 
 		public void JoinGame()

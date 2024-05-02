@@ -1410,9 +1410,6 @@ namespace Werewolf
 
 		private IEnumerator ReturnToLobby()
 		{
-#if UNITY_SERVER
-			_networkDataManager.OnPlayerDisconnected -= OnPlayerDisconnected;
-#endif
 			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration +
 											Config.UITransitionNormalDuration +
 											Config.ReturnToLobbyCountdownDuration +
@@ -3219,5 +3216,12 @@ namespace Werewolf
 			Camera.main.transform.position = Camera.main.transform.position.normalized * Config.CameraOffset.Evaluate(_networkDataManager.PlayerInfos.Count);
 		}
 		#endregion
+
+#if UNITY_SERVER
+		private void OnDisable()
+		{
+			_networkDataManager.OnPlayerDisconnected -= OnPlayerDisconnected;
+		}
+#endif
 	}
 }
