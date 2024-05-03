@@ -13,7 +13,10 @@ namespace Werewolf
 	{
 		[Header("Menu")]
 		[SerializeField]
-		private MainMenu _mainMenu;
+		private GameObject _mainMenu;
+
+		[SerializeField]
+		private JoinMenu _joinMenu;
 
 		[SerializeField]
 		private RoomMenu _roomMenu;
@@ -33,77 +36,82 @@ namespace Werewolf
 
 		public static bool JUST_OPEN = true;
 		public static string START_MESSAGE = string.Empty;
-
-		private void Awake()
-		{
-			_mainMenu.ResetMenu("");
-			DisplayMainMenu();
-		}
+		public static bool GAME_STARTED = false;
 
 		private void Start()
 		{
+			_joinMenu.JoinSession += JoinSession;
+			_joinMenu.Return += OpenMainMenu;
+			_roomMenu.StartGame += StartGame;
+			_roomMenu.LeaveSession += LeaveSession;
+
 			if (_runner)
 			{
 				_runner.AddCallbacks(this);
-				PrepareRoomMenu(false);
-				DisplayRoomMenu();
+				OpenRoomMenu(false);
 			}
 			else
 			{
-				_mainMenu.ResetMenu(START_MESSAGE);
+				if (GAME_STARTED)
+				{
+					OpenJoinMenu(START_MESSAGE);
+				}
 
 				if (JUST_OPEN)
 				{
 					if (CommandLineUtilities.TryGetArg(out string nickname, "-nickname"))
 					{
-						_mainMenu.SetNickname(nickname);
+						_joinMenu.SetNickname(nickname);
 					}
 
 					if (CommandLineUtilities.TryGetArg(out string sessionName, "-sessionName"))
 					{
-						_mainMenu.SetSessionName(sessionName);
+						_joinMenu.SetSessionName(sessionName);
 					}
 
 					if (CommandLineUtilities.TryGetArg(out string _, "_autoJoin"))
 					{
-						JoinGame();
+						_joinMenu.OnJoinSession();
 					}
 				}
-
-				START_MESSAGE = string.Empty;
 			}
 
 			JUST_OPEN = false;
+			START_MESSAGE = string.Empty;
+			GAME_STARTED = false;
 		}
 
-		public void JoinGame()
+		public void OpenJoinMenu(string message)
 		{
-			if (!_mainMenu)
-			{
-				Debug.LogError("_mainMenu of the MainMenuManager is null");
-				return;
-			}
+			_joinMenu.Initialize(message);
+			DisplayJoinMenu();
+		}
 
-			if (!_roomMenu)
-			{
-				Debug.LogError("_roomMenu of the MainMenuManager is null");
-				return;
-			}
-
-			_mainMenu.DisableMenu("Joining session...");
-
+		private void JoinSession()
+		{
 			_runner = GetRunner("Client");
-			ConnectToServer(_runner, _mainMenu.GetSessionName());
+			ConnectToServer(_runner, _joinMenu.GetSessionName());
 		}
 
-		public void LeaveGame()
+		public void OpenRoomMenu(bool setNickname = true)
 		{
-			if (_networkDataManager)
+			if (!_networkDataManager)
 			{
-				_networkDataManager.OnRolesSetupReadyChanged -= OnRolesSetupReadyChanged;
+				NetworkDataManager.OnSpawned -= OnNetworkDataManagerSpawned;
+				_networkDataManager = FindObjectOfType<NetworkDataManager>();
 			}
 
-			_runner.Shutdown();
+			_networkDataManager.OnRolesSetupReadyChanged += _roomMenu.UpdatePlayerList;
+
+			// TODO : Change min player everytime the leader select a new game setup
+			_roomMenu.Initialize(_networkDataManager, _debugGameSetupData.MinPlayerCount, _runner.LocalPlayer);
+
+			if (setNickname)
+			{
+				_networkDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _joinMenu.GetNickname());
+			}
+
+			DisplayRoomMenu();
 		}
 
 		public void StartGame()
@@ -113,41 +121,67 @@ namespace Werewolf
 				return;
 			}
 
-			_roomMenu.ClearWarning();
 			// TODO : send the selected game setup
 			_networkDataManager.RPC_SetRolesSetup(NetworkDataManager.ConvertToRolesSetup(_debugGameSetupData), _debugGameSetupData.MinPlayerCount);
 		}
 
 		private void OnNetworkDataManagerSpawned()
 		{
-			PrepareRoomMenu();
-			DisplayRoomMenu();
+			OpenRoomMenu();
 		}
 
-		private void PrepareRoomMenu(bool setNickname = true)
+		private void LeaveSession()
 		{
-			if (!_networkDataManager)
+			if (_networkDataManager)
 			{
-				NetworkDataManager.OnSpawned -= OnNetworkDataManagerSpawned;
-				_networkDataManager = FindObjectOfType<NetworkDataManager>();
+				_networkDataManager.OnRolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
 			}
 
-			_networkDataManager.OnRolesSetupReadyChanged += OnRolesSetupReadyChanged;
-
-			// TODO : Change min player everytime the leader select a new game setup
-			_roomMenu.SetMinPlayer(_debugGameSetupData.MinPlayerCount);
-			_roomMenu.SetNetworkDataManager(_networkDataManager, _runner.LocalPlayer);
-
-			if (setNickname)
-			{
-				_networkDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _mainMenu.GetNickname());
-			}
+			_runner.Shutdown();
 		}
 
-		private void OnRolesSetupReadyChanged()
+		public void OpenRulesAndRolesMenu()
 		{
-			_roomMenu.UpdatePlayerList();
+
 		}
+
+		public void OpenMatchHistoryMenu()
+		{
+
+		}
+
+		private void OpenMainMenu()
+		{
+			DisplayMainMenu();
+		}
+
+		public void Quit()
+		{
+			Application.Quit();
+		}
+
+		#region UI
+		private void DisplayMainMenu()
+		{
+			_mainMenu.gameObject.SetActive(true);
+			_joinMenu.gameObject.SetActive(false);
+			_roomMenu.gameObject.SetActive(false);
+		}
+
+		private void DisplayJoinMenu()
+		{
+			_mainMenu.gameObject.SetActive(false);
+			_joinMenu.gameObject.SetActive(true);
+			_roomMenu.gameObject.SetActive(false);
+		}
+
+		private void DisplayRoomMenu()
+		{
+			_mainMenu.gameObject.SetActive(false);
+			_joinMenu.gameObject.SetActive(false);
+			_roomMenu.gameObject.SetActive(true);
+		}
+		#endregion
 
 		#region Connection
 		private NetworkRunner GetRunner(string name)
@@ -192,12 +226,10 @@ namespace Werewolf
 			switch (shutdownReason)
 			{
 				case ShutdownReason.Ok:
-					_mainMenu.ResetMenu("");
-					DisplayMainMenu();
+					OpenJoinMenu("");
 					break;
 				default:
-					_mainMenu.ResetMenu($"Runner shutdown: {shutdownReason}");
-					DisplayMainMenu();
+					OpenJoinMenu($"Runner shutdown: {shutdownReason}");
 					break;
 			}
 		}
@@ -205,31 +237,18 @@ namespace Werewolf
 		public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
 		{
 			Log.Info($"{nameof(OnDisconnectedFromServer)} - {reason}: {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
-
-			_mainMenu.ResetMenu($"Disconnected from server: {reason}");
-			DisplayMainMenu();
+			OpenJoinMenu($"Disconnected from server: {reason}");
 		}
 
 		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
 		{
 			Log.Info($"{nameof(OnConnectFailed)}: {nameof(remoteAddress)}: {remoteAddress}, {nameof(reason)}: {reason}");
-
-			_mainMenu.ResetMenu($"Connection failed: {reason}");
-			DisplayMainMenu();
-		}
-		#endregion
-
-		#region UI
-		private void DisplayMainMenu()
-		{
-			_mainMenu.gameObject.SetActive(true);
-			_roomMenu.gameObject.SetActive(false);
+			OpenJoinMenu($"Connection failed: {reason}");
 		}
 
-		private void DisplayRoomMenu()
+		public void OnSceneLoadStart(NetworkRunner runner)
 		{
-			_mainMenu.gameObject.SetActive(false);
-			_roomMenu.gameObject.SetActive(true);
+			GAME_STARTED = true;
 		}
 		#endregion
 
@@ -261,8 +280,6 @@ namespace Werewolf
 		public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
 
 		public void OnSceneLoadDone(NetworkRunner runner) { }
-
-		public void OnSceneLoadStart(NetworkRunner runner) { }
 		#endregion
 
 		private void OnDisable()
@@ -272,7 +289,7 @@ namespace Werewolf
 				return;
 			}
 
-			_networkDataManager.OnRolesSetupReadyChanged -= OnRolesSetupReadyChanged;
+			_networkDataManager.OnRolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
 		}
 
 		private void OnDestroy()
