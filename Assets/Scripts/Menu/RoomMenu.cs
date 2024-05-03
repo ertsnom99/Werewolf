@@ -1,4 +1,5 @@
 using Fusion;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace Werewolf
 		private Button _startGameBtn;
 
 		[SerializeField]
-		private Button _leaveRoomBtn;
+		private Button _leaveSessionBtn;
 
 		private NetworkDataManager _networkDataManager;
 
@@ -31,9 +32,13 @@ namespace Werewolf
 
 		private int _minPlayer = -1;
 
-		public void SetNetworkDataManager(NetworkDataManager networkDataManager, PlayerRef localPlayer)
+		public event Action StartGame;
+		public event Action LeaveSession;
+
+		public void Initialize(NetworkDataManager networkDataManager, int minPlayer, PlayerRef localPlayer)
 		{
 			_networkDataManager = networkDataManager;
+			_minPlayer = minPlayer;
 			_localPlayer = localPlayer;
 
 			if (!_networkDataManager || _localPlayer == null)
@@ -86,7 +91,7 @@ namespace Werewolf
 										&& _minPlayer > -1
 										&& _networkDataManager.PlayerInfos.Count >= _minPlayer
 										&& !_networkDataManager.RolesSetupReady;
-			_leaveRoomBtn.interactable = !_networkDataManager.RolesSetupReady;
+			_leaveSessionBtn.interactable = !_networkDataManager.RolesSetupReady;
 		}
 
 		private void ShowInvalidRolesSetupWarning()
@@ -94,9 +99,20 @@ namespace Werewolf
 			_warningText.text = "An invalid roles setup was sent to the server";
 		}
 
-		public void ClearWarning()
+		private void ClearWarning()
 		{
 			_warningText.text = "";
+		}
+
+		public void OnStartGame()
+		{
+			ClearWarning();
+			StartGame?.Invoke();
+		}
+
+		public void OnLeaveSession()
+		{
+			LeaveSession?.Invoke();
 		}
 
 		private void OnDisable()

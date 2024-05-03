@@ -1,10 +1,11 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Werewolf
 {
-	public class MainMenu : MonoBehaviour
+	public class JoinMenu : MonoBehaviour
 	{
 		[Header("UI")]
 		[SerializeField]
@@ -19,9 +20,12 @@ namespace Werewolf
 		[SerializeField]
 		private TMP_Text _messageText;
 
+		public event Action JoinSession;
+		public event Action Return;
+
 		private readonly int MIN_NICKNAME_CHARACTER_COUNT = 3;
 
-		public void ResetMenu(string message)
+		public void Initialize(string message)
 		{
 			_nicknameInputField.interactable = true;
 			_sessionNameInputField.interactable = true;
@@ -34,14 +38,6 @@ namespace Werewolf
 			string nickname = GetNickname();
 			bool enteredValidNickname = !string.IsNullOrEmpty(nickname) && nickname.Length >= MIN_NICKNAME_CHARACTER_COUNT;
 			_joinBtn.interactable = enteredValidNickname;
-		}
-
-		public void DisableMenu(string message)
-		{
-			_nicknameInputField.interactable = false;
-			_sessionNameInputField.interactable = false;
-			_joinBtn.interactable = false;
-			_messageText.text = message;
 		}
 
 		public string GetNickname()
@@ -72,6 +68,21 @@ namespace Werewolf
 		public void SetSessionName(string sessionName)
 		{
 			_sessionNameInputField.text = sessionName;
+		}
+
+		public void OnJoinSession()
+		{
+			_nicknameInputField.interactable = false;
+			_sessionNameInputField.interactable = false;
+			_joinBtn.interactable = false;
+			_messageText.text = "Joining session...";
+
+			JoinSession?.Invoke();
+		}
+
+		public void OnReturn()
+		{
+			Return?.Invoke();
 		}
 	}
 }
