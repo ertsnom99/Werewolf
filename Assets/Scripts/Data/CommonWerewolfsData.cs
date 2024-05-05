@@ -9,6 +9,6 @@ namespace Werewolf.Data
 		public float VoteMaxDuration { get; private set; }
 
 		[field: SerializeField]
-		public string DeathMark { get; private set; }
+		public string MarkForDeath { get; private set; }
 	}
 }

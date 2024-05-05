@@ -141,15 +141,8 @@ namespace Werewolf.UI
 			_confirmButton.interactable = false;
 		}
 
-		protected override void OnFadeStarts(float targetOpacity)
+		public void StopCountdown()
 		{
-			if (targetOpacity >= 1)
-			{
-				return;
-			}
-
-			_countdownText.text = string.Format(_config.CountdownText, 0);
-
 			if (_countdownCoroutine == null)
 			{
 				return;
@@ -157,6 +150,18 @@ namespace Werewolf.UI
 
 			StopCoroutine(_countdownCoroutine);
 			_countdownCoroutine = null;
+		}
+
+		protected override void OnFadeStarts(float targetOpacity)
+		{
+			if (targetOpacity >= 1)
+			{
+				return;
+			}
+
+			//_countdownText.text = string.Format(_config.CountdownText, 0);
+
+			StopCountdown();
 		}
 	}
 }

@@ -56,12 +56,12 @@ namespace Werewolf
 
 			PlayerRef firstPlayerVotedFor = votes.Count == 1 ? votes.Keys.ToArray()[0] : PlayerRef.None;
 
-			if (!_preparedVote || firstPlayerVotedFor == PlayerRef.None || votes[firstPlayerVotedFor] < _voteManager.Voters.Count)
+			if (!_preparedVote || firstPlayerVotedFor.IsNone || votes[firstPlayerVotedFor] < _voteManager.Voters.Count)
 			{
 				return;
 			}
 
-			_gameManager.AddMarkForDeath(votes.Keys.ToArray()[0], _commonData.DeathMark);
+			_gameManager.AddMarkForDeath(votes.Keys.ToArray()[0], _commonData.MarkForDeath);
 		}
 
 		private void OnStartWaitingForPlayersRollCall()

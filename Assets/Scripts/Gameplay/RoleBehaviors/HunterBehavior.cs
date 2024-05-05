@@ -49,7 +49,7 @@ namespace Werewolf
 													new[] { Player },
 													"Choose a player to kill",
 													_gameManager.Config.NightCallMaximumDuration,
-													false,
+													true,
 													OnPlayerSelected))
 			{
 				SelectRandomPlayer();
@@ -124,7 +124,7 @@ namespace Werewolf
 				iterationCount++;
 			}
 
-			if (selectedPlayer == PlayerRef.None)
+			if (selectedPlayer.IsNone)
 			{
 				Debug.LogError("The hunter could not find a player to kill!!!");
 
@@ -158,7 +158,7 @@ namespace Werewolf
 #endif
 			}
 
-			if (selectedPlayer != PlayerRef.None)
+			if (!selectedPlayer.IsNone)
 			{
 				_gameManager.AddMarkForDeath(selectedPlayer, "Shot", 1);
 				_gameManager.RPC_SetPlayerCardHighlightVisible(selectedPlayer, true);
