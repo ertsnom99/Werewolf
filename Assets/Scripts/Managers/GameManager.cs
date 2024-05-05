@@ -81,15 +81,18 @@ namespace Werewolf
 
 		private int _currentNightCallIndex = 0;
 		private List<PlayerRef> _playersWaitingFor = new();
+		private bool _holdNightCall;
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _choosePlayerCallbacks = new();
+
+		private Dictionary<PlayerRef, Action<int>> _makeChoiceCallbacks = new();
 
 		private List<MarkForDeath> _marksForDeath = new();
 
 		public struct MarkForDeath
 		{
 			public PlayerRef Player;
-			public List<string> Marks;
+			public List<string> MarksForDeath;
 		}
 
 		private bool _isPlayerDeathRevealCompleted;
@@ -887,9 +890,15 @@ namespace Werewolf
 			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.ToLower()));// TODO: Give real image
 		}
 
+		public void HoldNightCall(bool holdNightCall)
+		{
+			_holdNightCall = holdNightCall;
+		}
+
 		private bool IsNightCallOver(float elapsedTime)
 		{
 			return !_voteManager.IsVoting()
+				&& !_holdNightCall
 				&& _revealPlayerRoleCallbacks.Count <= 0
 				&& ((_playersWaitingFor.Count <= 0 && elapsedTime >= Config.NightCallMinimumDuration) || elapsedTime >= Config.NightCallMaximumDuration);
 		}
@@ -948,7 +957,7 @@ namespace Werewolf
 					_revealPlayerDeathCoroutine = RevealPlayerDeath(deadPlayer,
 																	GetPlayersExcluding(deadPlayer),
 																	true,
-																	_marksForDeath[0].Marks,
+																	_marksForDeath[0].MarksForDeath,
 																	false,
 																	OnRevealPlayerDeathEnded);
 					StartCoroutine(_revealPlayerDeathCoroutine);
@@ -1170,7 +1179,7 @@ namespace Werewolf
 			{
 				StartCoroutine(ExecutePlayer(mostVotedPlayers[0]));
 			}
-			else if (_captain == PlayerRef.None)
+			else if (_captain.IsNone)
 			{
 				StartCoroutine(StartSecondaryExecution(mostVotedPlayers));
 			}
@@ -1221,7 +1230,7 @@ namespace Werewolf
 									GetPlayersExcluding(executionChoices.ToArray()),
 									Config.ExecutionDrawYouChooseText,
 									Config.ExecutionCaptainChoiceDuration,
-									false,
+									true,
 									OnCaptainChooseExecutedPlayer))
 			{
 				StartCoroutine(ExecutePlayer(mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)]));
@@ -1291,7 +1300,7 @@ namespace Werewolf
 		{
 			Dictionary<PlayerRef, int> modifiers = new();
 
-			if (_captain != PlayerRef.None)
+			if (!_captain.IsNone)
 			{
 				modifiers.Add(_captain, CAPTAIN_VOTE_MODIFIER);
 			}
@@ -1512,7 +1521,7 @@ namespace Werewolf
 									GetPlayersExcluding(captainChoices.ToArray()),
 									Config.ChooseNextCaptainText,
 									Config.CaptainChoiceDuration,
-									false,
+									true,
 									OnChoosedNextCaptain))
 			{
 				StartCoroutine(EndChoosingNextCaptain(captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)]));
@@ -1864,6 +1873,12 @@ namespace Werewolf
 		}
 
 		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_SetPlayerCardHighlightVisible([RpcTarget] PlayerRef player, PlayerRef highlightedPlayer, bool isVisible)
+		{
+			SetPlayerCardHighlightVisible(highlightedPlayer, isVisible);
+		}
+
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_SetPlayerCardHighlightVisible(PlayerRef player, bool isVisible)
 		{
@@ -2347,7 +2362,7 @@ namespace Werewolf
 		}
 
 		// Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
-		public bool AskClientToChooseReservedRole(RoleBehavior ReservedRoleOwner, float maximumDuration, bool mustChooseOne, Action<int> callback)
+		public bool AskClientToChooseReservedRole(RoleBehavior ReservedRoleOwner, float maximumDuration, bool mustChoose, Action<int> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[ReservedRoleOwner.Player].IsConnected || !_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
 			{
@@ -2363,13 +2378,14 @@ namespace Werewolf
 			}
 
 			_chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, rolesContainer, mustChooseOne);
+			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, rolesContainer, mustChoose);
 
 			return true;
 		}
 
 		private void GiveReservedRoleChoice(int choice)
 		{
+			_UIManager.ChoiceScreen.ConfirmChoice -= GiveReservedRoleChoice;
 			RPC_GiveReservedRoleChoice(choice);
 		}
 
@@ -2399,7 +2415,7 @@ namespace Werewolf
 				}
 
 				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
-				choices.Add(new() { Image = roleData.Image, Value = roleGameplayTag });
+				choices.Add(new() { Image = roleData.Image, Name = roleData.name });
 			}
 
 			_UIManager.ChoiceScreen.ConfirmChoice += GiveReservedRoleChoice;
@@ -2438,6 +2454,7 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		private void RPC_ClientStopChoosingReservedRole([RpcTarget] PlayerRef player)
 		{
+			_UIManager.ChoiceScreen.StopCountdown();
 			_UIManager.ChoiceScreen.DisableConfirmButton();
 			_UIManager.ChoiceScreen.ConfirmChoice -= GiveReservedRoleChoice;
 		}
@@ -2445,7 +2462,7 @@ namespace Werewolf
 		#endregion
 
 		#region Choose a Player
-		public bool AskClientToChoosePlayer(PlayerRef choosingPlayer, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool canChooseNobody, Action<PlayerRef> callback)
+		public bool AskClientToChoosePlayer(PlayerRef choosingPlayer, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool mustChoose, Action<PlayerRef> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayerCallbacks.ContainsKey(choosingPlayer))
 			{
@@ -2453,7 +2470,7 @@ namespace Werewolf
 			}
 
 			_choosePlayerCallbacks.Add(choosingPlayer, callback);
-			RPC_ClientChoosePlayer(choosingPlayer, immunePlayers, displayText, maximumDuration, canChooseNobody);
+			RPC_ClientChoosePlayer(choosingPlayer, immunePlayers, displayText, maximumDuration, mustChoose);
 
 			return true;
 		}
@@ -2500,7 +2517,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientChoosePlayer([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool canChooseNobody)
+		private void RPC_ClientChoosePlayer([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool mustChoose)
 		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
@@ -2519,9 +2536,9 @@ namespace Werewolf
 				playerCard.Value.OnCardClick += OnClientChooseCard;
 			}
 
-			DisplayTitle(null, displayText, maximumDuration, canChooseNobody, Config.SkipTurnText);// TODO: Give real image
+			DisplayTitle(null, displayText, maximumDuration, !mustChoose, Config.SkipTurnText);// TODO: Give real image
 			
-			if (!canChooseNobody)
+			if (mustChoose)
 			{
 				return;
 			}
@@ -2549,37 +2566,152 @@ namespace Werewolf
 		#endregion
 		#endregion
 
-		#region Mark For Death
-		public void AddMarkForDeath(PlayerRef player, string mark)
+		#region Make Choice
+		public bool AskClientToMakeChoice(PlayerRef choosingPlayer, int[] choiceIndexes, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose, Action<int> callback)
 		{
-			_marksForDeath.Add(new() { Player = player, Marks = new() { mark } });
-			OnMarkForDeathAdded?.Invoke(player, mark);
+			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _makeChoiceCallbacks.ContainsKey(choosingPlayer))
+			{
+				return false;
+			}
+
+			_makeChoiceCallbacks.Add(choosingPlayer, callback);
+			RPC_MakeChoice(choosingPlayer, choiceIndexes, maximumDuration, chooseText, choosedText, didNotChoosedText, mustChoose);
+
+			return true;
 		}
 
-		public void AddMarkForDeath(PlayerRef player, string mark, int index)
+		private void GiveChoice(int choice)
+		{
+			_UIManager.ChoiceScreen.ConfirmChoice -= GiveChoice;
+			RPC_GiveChoice(choice);
+		}
+
+		public void StopChoosing(PlayerRef player)
+		{
+			_makeChoiceCallbacks.Remove(player);
+
+			if (!_networkDataManager.PlayerInfos[player].IsConnected)
+			{
+				return;
+			}
+
+			RPC_ClientStopChoosing(player);
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_MakeChoice([RpcTarget] PlayerRef player, int[] choiceIndexes, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose)
+		{
+			List<Choice.ChoiceData> choices = new();
+
+			foreach (int choiceIndex in choiceIndexes)
+			{
+				if (choiceIndex < 0 || choiceIndex >= Config.ChoicesData.Choices.Length)
+				{
+					Debug.LogError($"No choice exist for index {choiceIndex}");
+					continue;
+				}
+
+				ChoiceData chocieData = Config.ChoicesData.Choices[choiceIndex];
+				choices.Add(new() { Image = chocieData.Image, Name = chocieData.Name });
+			}
+
+			_UIManager.ChoiceScreen.ConfirmChoice += GiveChoice;
+
+			_UIManager.ChoiceScreen.Initialize(maximumDuration, chooseText, choosedText, didNotChoosedText, choices.ToArray(), mustChoose);
+			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionNormalDuration);
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_GiveChoice(int choice, RpcInfo info = default)
+		{
+			if (!_makeChoiceCallbacks.ContainsKey(info.Source))
+			{
+				return;
+			}
+
+			_makeChoiceCallbacks[info.Source](choice);
+			_makeChoiceCallbacks.Remove(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_ClientStopChoosing([RpcTarget] PlayerRef player)
+		{
+			_UIManager.ChoiceScreen.StopCountdown();
+			_UIManager.ChoiceScreen.DisableConfirmButton();
+			_UIManager.ChoiceScreen.ConfirmChoice -= GiveChoice;
+		}
+		#endregion
+		#endregion
+
+		#region Mark For Death
+		public void AddMarkForDeath(PlayerRef player, string markForDeath)
+		{
+			_marksForDeath.Add(new() { Player = player, MarksForDeath = new() { markForDeath } });
+			OnMarkForDeathAdded?.Invoke(player, markForDeath);
+		}
+
+		public void AddMarkForDeath(PlayerRef player, string markForDeath, int index)
 		{
 			if (_marksForDeath.Count < index)
 			{
-				_marksForDeath.Add(new() { Player = player, Marks = new() { mark } });
+				_marksForDeath.Add(new() { Player = player, MarksForDeath = new() { markForDeath } });
 			}
 			else
 			{
-				_marksForDeath.Insert(index, new() { Player = player, Marks = new() { mark } });
+				_marksForDeath.Insert(index, new() { Player = player, MarksForDeath = new() { markForDeath } });
 			}
 
-			OnMarkForDeathAdded?.Invoke(player, mark);
+			OnMarkForDeathAdded?.Invoke(player, markForDeath);
 		}
 
-		public void RemoveMarkForDeath(PlayerRef player)
+		public void RemoveMarkForDeath(PlayerRef player, string markForDeath)
 		{
 			for (int i = 0; i < _marksForDeath.Count; i++)
 			{
-				if (_marksForDeath[i].Player == player)
+				if (_marksForDeath[i].Player != player)
+				{
+					continue;
+				}
+
+				_marksForDeath[i].MarksForDeath.Remove(markForDeath);
+
+				if (_marksForDeath[i].MarksForDeath.Count <= 0)
 				{
 					_marksForDeath.RemoveAt(i);
-					return;
+				}
+
+				return;
+			}
+		}
+
+		public void RemoveAllMarkForDeath(PlayerRef player)
+		{
+			for (int i = 0; i < _marksForDeath.Count; i++)
+			{
+				if (_marksForDeath[i].Player != player)
+				{
+					continue;
+				}
+
+				_marksForDeath.RemoveAt(i);
+				return;
+			}
+		}
+
+		public PlayerRef[] GetPlayersWithMarkForDeath(string inMarkForDeath)
+		{
+			List<PlayerRef> players = new();
+
+			foreach(MarkForDeath markForDeath in _marksForDeath)
+			{
+				if (markForDeath.MarksForDeath.Contains(inMarkForDeath))
+				{
+					players.Add(markForDeath.Player);
 				}
 			}
+
+			return players.ToArray();
 		}
 		#endregion
 
@@ -2947,6 +3079,7 @@ namespace Werewolf
 
 			_chooseReservedRoleCallbacks.Remove(player);
 			_choosePlayerCallbacks.Remove(player);
+			_makeChoiceCallbacks.Remove(player);
 			_revealPlayerRoleCallbacks.Remove(player);
 			_moveCardToCameraCallbacks.Remove(player);
 			_flipCardCallbacks.Remove(player);
@@ -3011,6 +3144,19 @@ namespace Werewolf
 		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, string title)
 		{
 			DisplayTitle(null, title);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int titleIndex)
+		{
+			if (titleIndex < 0 || titleIndex >= Config.TitlesData.Titles.Length)
+			{
+				Debug.LogError($"No title exist for index {titleIndex}");
+				return;
+			}
+
+			TitleData titleData = Config.TitlesData.Titles[titleIndex];
+			DisplayTitle(titleData.Image, titleData.Text);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]

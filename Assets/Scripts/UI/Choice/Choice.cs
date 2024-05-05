@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,16 +17,17 @@ namespace Werewolf.UI
 		[SerializeField]
 		private Button _button;
 
-		private bool _isSelected;
+		[SerializeField]
+		private TMP_Text _nameText;
 
-		public int Value { get; private set; }
+		private bool _isSelected;
 
 		public event Action<Choice> OnSelected;
 
 		public struct ChoiceData
 		{
 			public Sprite Image;
-			public int Value;
+			public string Name;
 		}
 
 		public void Start()
@@ -42,7 +44,7 @@ namespace Werewolf.UI
 		public void SetChoice(ChoiceData choice)
 		{
 			_image.sprite = choice.Image;
-			Value = choice.Value;
+			_nameText.text = choice.Name;
 		}
 
 		public void SetSelected(bool isSelected)

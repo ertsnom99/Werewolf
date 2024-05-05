@@ -238,6 +238,22 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public string DidNotChoosedRoleText { get; private set; }
 
+		[field: Header("Make Choice")]
+		[field: SerializeField]
+		public ChoicesData ChoicesData { get; private set; }
+
+		[field: SerializeField]
+		public string ChooseText { get; private set; }
+
+		[field: SerializeField]
+		public string ChooseObligatoryText { get; private set; }
+
+		[field: SerializeField]
+		public string ChoosedText { get; private set; }
+
+		[field: SerializeField]
+		public string DidNotChoosedText { get; private set; }
+
 		[field: Header("Role Reveal")]
 		[field: SerializeField]
 		public float MoveToCameraDuration { get; private set; }
@@ -256,12 +272,14 @@ namespace Werewolf.Data
 
 		[field: Header("UI")]
 		[field: SerializeField]
+		public TitlesData TitlesData { get; private set; }
+
+		[field: SerializeField]
 		public float UITransitionNormalDuration { get; private set; }
 
 		[field: SerializeField]
 		public float UITransitionFastDuration { get; private set; }
 
-		[field: Header("UI Text")]
 		[field: SerializeField]
 		public string CountdownText { get; private set; }
 

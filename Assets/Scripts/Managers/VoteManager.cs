@@ -386,7 +386,7 @@ namespace Werewolf
 
 				_playerCards[vote.Key].UpdateVotingStatus(!vote.Value.LockedIn);
 
-				if (vote.Value.VotedFor == PlayerRef.None)
+				if (vote.Value.VotedFor.IsNone)
 				{
 					continue;
 				}
@@ -408,7 +408,7 @@ namespace Werewolf
 			{
 				foreach (PlayerRef voter in Voters)
 				{
-					if (_votes[voter].VotedFor != PlayerRef.None)
+					if (!_votes[voter].VotedFor.IsNone)
 					{
 						continue;
 					}
@@ -431,7 +431,7 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, Vote> vote in _votes)
 			{
-				if (vote.Value.VotedFor == PlayerRef.None)
+				if (vote.Value.VotedFor.IsNone)
 				{
 					continue;
 				}

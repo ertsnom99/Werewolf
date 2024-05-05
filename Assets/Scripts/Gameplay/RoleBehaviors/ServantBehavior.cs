@@ -38,7 +38,7 @@ namespace Werewolf
 
 		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<string> marks, float revealDuration)
 		{
-			if (Player == PlayerRef.None
+			if (Player.IsNone
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| Player == playerRevealed
 				|| !marks.Contains(_gameManager.Config.ExecutionMarkForDeath)

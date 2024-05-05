@@ -36,7 +36,7 @@ namespace Werewolf
 													immunePlayers.ToArray(),
 													"Choose a player to see his role",
 													_gameManager.Config.NightCallMaximumDuration,
-													true,
+													false,
 													OnPlayerSelected))
 			{
 				StartCoroutine(WaitToStopWaitingForPlayer());
@@ -60,7 +60,7 @@ namespace Werewolf
 
 			_choosingPlayer = false;
 
-			if (player == PlayerRef.None || !_gameManager.RevealPlayerRole(player, Player, false, true, OnRoleRevealed))
+			if (player.IsNone || !_gameManager.RevealPlayerRole(player, Player, false, true, OnRoleRevealed))
 			{
 				_gameManager.StopWaintingForPlayer(Player);
 			}
