@@ -9,10 +9,10 @@ namespace Werewolf
 	public class WitchBehavior : RoleBehavior
 	{
 		[SerializeField]
-		private int _markForDeathTitleIndex;
+		private int _markForDeathImageIndex;
 
 		[SerializeField]
-		private int _noPotionToUseTitleIndex;
+		private int _noPotionToUseImageIndex;
 
 		[SerializeField]
 		private float _playerHighlightHoldDuration;
@@ -24,13 +24,13 @@ namespace Werewolf
 		private float _choiceSelectedHoldDuration;
 
 		[SerializeField]
-		private int _saveChoiceIndex;
+		private int _saveImageIndex;
 
 		[SerializeField]
 		private string _markForDeathRemovedByLifePotion;
 
 		[SerializeField]
-		private int _killChoiceIndex;
+		private int _killImageIndex;
 
 		[SerializeField]
 		private float _choosePlayerDuration;
@@ -72,7 +72,7 @@ namespace Werewolf
 			{
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _markedForDeathPlayer, true);
 
-				_gameManager.RPC_DisplayTitle(Player, _markForDeathTitleIndex);
+				_gameManager.RPC_DisplayTitle(Player, _markForDeathImageIndex);
 				yield return new WaitForSeconds(_playerHighlightHoldDuration);
 
 				_gameManager.RPC_HideUI(Player);
@@ -107,7 +107,7 @@ namespace Werewolf
 			{
 				if (showTitles)
 				{
-					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitleIndex);
+					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImageIndex);
 				}
 
 				return false;
@@ -126,7 +126,7 @@ namespace Werewolf
 			{
 				if (showTitles)
 				{
-					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitleIndex);
+					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImageIndex);
 				}
 
 				return false;
@@ -134,15 +134,15 @@ namespace Werewolf
 
 			if (!canSavePlayer)
 			{
-				_choices = new int[] { _killChoiceIndex };
+				_choices = new int[] { _killImageIndex };
 			}
 			else if (!_hasDeathPotion)
 			{
-				_choices = new int[] { _saveChoiceIndex };
+				_choices = new int[] { _saveImageIndex };
 			}
 			else
 			{
-				_choices = new int[] { _saveChoiceIndex, _killChoiceIndex };
+				_choices = new int[] { _saveImageIndex, _killImageIndex };
 			}
 
 			return _gameManager.AskClientToMakeChoice(Player,
@@ -168,7 +168,7 @@ namespace Werewolf
 
 			int choice = choiceIndex >= 0 ? _choices[choiceIndex] : -1;
 
-			if (choice == _saveChoiceIndex)
+			if (choice == _saveImageIndex)
 			{
 				_gameManager.RemoveMarkForDeath(_markedForDeathPlayer, _markForDeathRemovedByLifePotion);
 				_hasLifePotion = false;
@@ -176,7 +176,7 @@ namespace Werewolf
 				StartCoroutine(RefreshPotions(_choiceSelectedHoldDuration, true));
 				return;
 			}
-			else if (choice == _killChoiceIndex)
+			else if (choice == _killImageIndex)
 			{
 				StartCoroutine(ChoosePlayerToKill());
 				return;

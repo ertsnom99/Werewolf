@@ -237,9 +237,6 @@ namespace Werewolf.Data
 
 		[field: Header("Make Choice")]
 		[field: SerializeField]
-		public ChoicesData ChoicesData { get; private set; }
-
-		[field: SerializeField]
 		public string ChooseText { get; private set; }
 
 		[field: SerializeField]
@@ -269,7 +266,7 @@ namespace Werewolf.Data
 
 		[field: Header("UI")]
 		[field: SerializeField]
-		public TitlesData TitlesData { get; private set; }
+		public ImagesData ImagesData { get; private set; }
 
 		[field: SerializeField]
 		public float UITransitionNormalDuration { get; private set; }
