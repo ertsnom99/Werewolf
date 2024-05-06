@@ -34,8 +34,6 @@ namespace Werewolf
 			return false;
 		}
 
-		public override void OnRoleTimeOut() { }
-
 		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<string> marks, float revealDuration)
 		{
 			if (Player.IsNone

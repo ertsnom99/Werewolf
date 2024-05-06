@@ -134,6 +134,6 @@ namespace Werewolf
 			return true;
 		}
 
-		public override void OnRoleTimeOut() { }
+		public override void OnRoleCallDisconnected() { }
 	}
 }

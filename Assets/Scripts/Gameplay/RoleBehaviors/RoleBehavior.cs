@@ -27,8 +27,6 @@ namespace Werewolf
 		[field: ReadOnly]
 		public PlayerRef Player { get; private set; }
 
-		protected bool _timedOut = false;
-
 		public void AddPlayerGroupIndex(int playerGroupIndex)
 		{
 			if (PlayerGroupIndexes == null)
@@ -91,11 +89,9 @@ namespace Werewolf
 
 		public abstract bool OnRoleCall();
 
-		public void SetTimedOut(bool timedOut)
+		public virtual void OnRoleCallDisconnected()
 		{
-			_timedOut = timedOut;
+			StopAllCoroutines();
 		}
-
-		public abstract void OnRoleTimeOut();
 	}
 }

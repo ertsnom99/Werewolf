@@ -11,6 +11,9 @@ namespace Werewolf
 	public class HunterBehavior : RoleBehavior
 	{
 		[SerializeField]
+		private float _choosePlayerMaximumDuration = 10.0f;
+
+		[SerializeField]
 		private float _selectedPlayerHighlightDuration = 3.0f;
 
 		private IEnumerator _startChoiceTimerCoroutine;
@@ -34,8 +37,6 @@ namespace Werewolf
 			return false;
 		}
 
-		public override void OnRoleTimeOut() { }
-
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer)
 		{
 			if (Player != deadPlayer || _gameManager.AlivePlayerCount <= 1)
@@ -48,7 +49,7 @@ namespace Werewolf
 			if (!_gameManager.AskClientToChoosePlayer(Player,
 													new[] { Player },
 													"Choose a player to kill",
-													_gameManager.Config.NightCallMaximumDuration,
+													_choosePlayerMaximumDuration,
 													true,
 													OnPlayerSelected))
 			{
@@ -78,24 +79,13 @@ namespace Werewolf
 		{
 			float elapsedTime = .0f;
 
-			while (elapsedTime < _gameManager.Config.NightCallMaximumDuration)
+			while (elapsedTime < _choosePlayerMaximumDuration)
 			{
 				yield return 0;
 				elapsedTime += Time.deltaTime;
 			}
 
 			_gameManager.StopChoosingPlayer(Player);
-			SelectRandomPlayer();
-		}
-
-		private void OnPostPlayerLeft(PlayerRef deadPlayer)
-		{
-			if (_startChoiceTimerCoroutine == null)
-			{
-				return;
-			}
-
-			_gameManager.WaitForPlayer(Player);
 			SelectRandomPlayer();
 		}
 
@@ -129,7 +119,15 @@ namespace Werewolf
 				Debug.LogError("The hunter could not find a player to kill!!!");
 
 				_startChoiceTimerCoroutine = null;
-				StartCoroutine(HideUIBeforeStopWaintingForPlayer());
+
+				if (_networkDataManager.PlayerInfos[Player].IsConnected)
+				{
+					StartCoroutine(HideUIBeforeStopWaintingForPlayer());
+				}
+				else
+				{
+					_gameManager.StopWaintingForPlayer(Player);
+				}
 			}
 			else
 			{
@@ -173,6 +171,7 @@ namespace Werewolf
 
 			StartCoroutine(HideUIBeforeStopWaintingForPlayer());
 		}
+
 		private IEnumerator HideUIBeforeStopWaintingForPlayer()
 		{
 			_gameManager.RPC_HideUI();
@@ -193,6 +192,17 @@ namespace Werewolf
 			_gameManager.SetPlayerCardHighlightVisible(selectedPlayer, false);
 #endif
 			_gameManager.StopWaintingForPlayer(Player);
+		}
+
+		private void OnPostPlayerLeft(PlayerRef deadPlayer)
+		{
+			if (_startChoiceTimerCoroutine == null)
+			{
+				return;
+			}
+
+			_gameManager.WaitForPlayer(Player);
+			SelectRandomPlayer();
 		}
 
 		private void OnDestroy()

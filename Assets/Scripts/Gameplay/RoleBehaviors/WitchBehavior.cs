@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
-using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -17,6 +16,9 @@ namespace Werewolf
 
 		[SerializeField]
 		private float _playerHighlightHoldDuration;
+
+		[SerializeField]
+		private float _choosePotionMaximumDuration = 10.0f;
 
 		[SerializeField]
 		private float _choiceSelectedHoldDuration;
@@ -45,23 +47,17 @@ namespace Werewolf
 		private IEnumerator _endChoosePlayerCoroutine;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
-		private float _roleCallTimeLeft;
+		private float _choosePotionTimeLeft;
 
-		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
 
 		public override void Init()
 		{
-			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
-
-			_networkDataManager.OnPlayerDisconnected += OnPlayerDisconnected;
 		}
 
-		// TODO: Must react if witch disconnect mid way (StopAllCoroutine())
 		public override bool OnRoleCall()
 		{
-			_gameManager.HoldNightCall(true);
 			StartCoroutine(ReveilMarkedForDeathPlayer());
 
 			return true;
@@ -90,7 +86,7 @@ namespace Werewolf
 
 		private void OnReveilMarkedForDeathPlayerFinished()
 		{
-			_roleCallTimeLeft = _gameManager.Config.NightCallMaximumDuration;
+			_choosePotionTimeLeft = _choosePotionMaximumDuration;
 
 			if (DisplayPotionChoices())
 			{
@@ -151,7 +147,7 @@ namespace Werewolf
 
 			return _gameManager.AskClientToMakeChoice(Player,
 													_choices,
-													_roleCallTimeLeft,
+													_choosePotionTimeLeft,
 													"You can choose a potion to use",
 													"You chose this potion",
 													"You didn't choose any potion",
@@ -282,10 +278,10 @@ namespace Werewolf
 
 		private IEnumerator EndRoleCallAfterTime()
 		{
-			while (_roleCallTimeLeft > 0)
+			while (_choosePotionTimeLeft > 0)
 			{
 				yield return 0;
-				_roleCallTimeLeft -= Time.deltaTime;
+				_choosePotionTimeLeft -= Time.deltaTime;
 			}
 
 			_gameManager.StopChoosing(Player);
@@ -296,23 +292,8 @@ namespace Werewolf
 		private void EndRoleCall()
 		{
 			_gameManager.StopWaintingForPlayer(Player);
-			_gameManager.HoldNightCall(false);
 		}
-
-		public override void OnRoleTimeOut() { }
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
-
-		public void OnPlayerDisconnected(PlayerRef player)
-		{
-			StopAllCoroutines();
-
-			_gameManager.HoldNightCall(false);
-		}
-
-		private void OnDisable()
-		{
-			_networkDataManager.OnPlayerDisconnected -= OnPlayerDisconnected;
-		}
 	}
 }
