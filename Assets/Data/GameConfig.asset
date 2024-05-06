@@ -111,7 +111,6 @@ MonoBehaviour:
   <RolePlayingTextSingular>k__BackingField: The {0} is playing...
   <RolePlayingTextPlurial>k__BackingField: The {0}s are playing...
   <NightCallMinimumDuration>k__BackingField: 5
-  <NightCallMaximumDuration>k__BackingField: 10
   <NightCallChangeDelay>k__BackingField: 2
   <DeathRevealSomeoneDiedText>k__BackingField: Some people died...
   <DeathRevealNooneDiedText>k__BackingField: No one died tonight!
@@ -202,8 +201,6 @@ MonoBehaviour:
   <ChooseRoleObligatoryText>k__BackingField: You MUST choose one
   <ChoosedRoleText>k__BackingField: Your choice
   <DidNotChoosedRoleText>k__BackingField: You didn't choose one
-  <ChoicesData>k__BackingField: {fileID: 11400000, guid: 1529476e0716a96439f629e418245c9a,
-    type: 2}
   <ChooseText>k__BackingField: You MAY choose one
   <ChooseObligatoryText>k__BackingField: You MUST choose one
   <ChoosedText>k__BackingField: Your choice
@@ -213,7 +210,7 @@ MonoBehaviour:
   <RoleRevealWaitDuration>k__BackingField: 2
   <RoleRevealFlipDuration>k__BackingField: 0.25
   <RoleRevealHoldDuration>k__BackingField: 1.5
-  <TitlesData>k__BackingField: {fileID: 11400000, guid: b64beaf8ed6f0044ebe431e15a0bb27f,
+  <ImagesData>k__BackingField: {fileID: 11400000, guid: fe40d48f080d39f4b8e2adbf60edb59b,
     type: 2}
   <UITransitionNormalDuration>k__BackingField: 0.75
   <UITransitionFastDuration>k__BackingField: 0.1

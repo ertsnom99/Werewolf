@@ -9,11 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea50501879af87947ac9f254f39ad6b2, type: 3}
-  m_Name: ChoicesData
+  m_Script: {fileID: 11500000, guid: 603c28c198bbb114e8545e9fb9b7fad7, type: 3}
+  m_Name: ImagesData
   m_EditorClassIdentifier: 
-  <Choices>k__BackingField:
-  - Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
-    Name: Save
+  <Images>k__BackingField:
   - Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
-    Name: Kill
+    Text: This player will die tonight
+  - Image: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: No potion left to use
+  - Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Save
+  - Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Kill

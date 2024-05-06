@@ -2579,14 +2579,14 @@ namespace Werewolf
 
 			foreach (int choiceIndex in choiceIndexes)
 			{
-				if (choiceIndex < 0 || choiceIndex >= Config.ChoicesData.Choices.Length)
+				if (choiceIndex < 0 || choiceIndex >= Config.ImagesData.Images.Length)
 				{
 					Debug.LogError($"No choice exist for index {choiceIndex}");
 					continue;
 				}
 
-				ChoiceData chocieData = Config.ChoicesData.Choices[choiceIndex];
-				choices.Add(new() { Image = chocieData.Image, Name = chocieData.Name });
+				ImageData chocieData = Config.ImagesData.Images[choiceIndex];
+				choices.Add(new() { Image = chocieData.Image, Name = chocieData.Text });
 			}
 
 			_UIManager.ChoiceScreen.ConfirmChoice += GiveChoice;
@@ -3121,13 +3121,13 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int titleIndex)
 		{
-			if (titleIndex < 0 || titleIndex >= Config.TitlesData.Titles.Length)
+			if (titleIndex < 0 || titleIndex >= Config.ImagesData.Images.Length)
 			{
 				Debug.LogError($"No title exist for index {titleIndex}");
 				return;
 			}
 
-			TitleData titleData = Config.TitlesData.Titles[titleIndex];
+			ImageData titleData = Config.ImagesData.Images[titleIndex];
 			DisplayTitle(titleData.Image, titleData.Text);
 		}
 

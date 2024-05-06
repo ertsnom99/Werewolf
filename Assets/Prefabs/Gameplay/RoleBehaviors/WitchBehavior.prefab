@@ -48,12 +48,13 @@ MonoBehaviour:
   <PlayerGroupIndexes>k__BackingField: 
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _markForDeathTitleIndex: 0
-  _noPotionToUseTitleIndex: 1
+  _markForDeathImageIndex: 0
+  _noPotionToUseImageIndex: 1
   _playerHighlightHoldDuration: 3
+  _choosePotionMaximumDuration: 10
   _choiceSelectedHoldDuration: 2
-  _saveChoiceIndex: 0
+  _saveImageIndex: 2
   _markForDeathRemovedByLifePotion: Mauled
-  _killChoiceIndex: 1
+  _killImageIndex: 3
   _choosePlayerDuration: 5
   _markForDeathAddedByDeathPotion: Poisoned
