@@ -17,12 +17,10 @@ MonoBehaviour:
   <MandatoryRoles>k__BackingField:
   - Pool:
     - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
-    UseCount: 1
+    - {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
+    UseCount: 2
   - Pool:
     - {fileID: 11400000, guid: 42cdb8e84ec451d409c8ec23ec8429c5, type: 2}
-    UseCount: 1
-  - Pool:
-    - {fileID: 11400000, guid: 7ac908ee88d1bfe46a54ee85727d69ae, type: 2}
     UseCount: 1
   - Pool:
     - {fileID: 11400000, guid: df20f7c9173f79b49b80ee0d0d2e6278, type: 2}

@@ -10,6 +10,9 @@ namespace Werewolf
 		[SerializeField]
 		private RoleData[] _rolesToAdd;
 
+		[SerializeField]
+		private float _chooseReservedRoleMaximumDuration = 10.0f;
+
 		private GameManager.IndexedReservedRoles _reservedRoles;
 		private bool _reservedOnlyWerewolfs;
 
@@ -71,7 +74,7 @@ namespace Werewolf
 				}
 			}
 
-			if (!_gameManager.AskClientToChooseReservedRole(this, _gameManager.Config.NightCallMaximumDuration, _reservedOnlyWerewolfs, OnRoleSelected))
+			if (!_gameManager.AskClientToChooseReservedRole(this, _chooseReservedRoleMaximumDuration, _reservedOnlyWerewolfs, OnRoleSelected))
 			{
 				StartCoroutine(WaitOnRoleSelected(-1));
 			}
@@ -87,11 +90,6 @@ namespace Werewolf
 
 		private void OnRoleSelected(int choiceIndex)
 		{
-			if (_timedOut)
-			{
-				return;
-			}
-
 			if (choiceIndex > -1)
 			{
 				_gameManager.ChangeRole(Player, _reservedRoles.Roles[choiceIndex], _reservedRoles.Behaviors[choiceIndex]);
@@ -111,7 +109,7 @@ namespace Werewolf
 			}
 		}
 
-		public override void OnRoleTimeOut()
+		public override void OnRoleCallDisconnected()
 		{
 			_gameManager.StopChoosingReservedRole(Player);
 

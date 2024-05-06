@@ -70,6 +70,9 @@ namespace Werewolf
 			_voteManager.StartVote();
 		}
 
-		public override void OnRoleTimeOut() { }
+		private void OnDestroy()
+		{
+			_gameManager.StartWaitingForPlayersRollCall -= OnStartWaitingForPlayersRollCall;
+		}
 	}
 }

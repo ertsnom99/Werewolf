@@ -1,13 +1,15 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using Werewolf.Data;
 
 namespace Werewolf
 {
 	public class FortuneTellerBehavior : RoleBehavior
 	{
-		private bool _choosingPlayer;
+		[SerializeField]
+		private float _choosePlayerMaximumDuration = 10.0f;
 
 		private GameManager _gameManager;
 
@@ -35,7 +37,7 @@ namespace Werewolf
 			if (!_gameManager.AskClientToChoosePlayer(Player,
 													immunePlayers.ToArray(),
 													"Choose a player to see his role",
-													_gameManager.Config.NightCallMaximumDuration,
+													_choosePlayerMaximumDuration,
 													false,
 													OnPlayerSelected))
 			{
@@ -53,13 +55,6 @@ namespace Werewolf
 
 		private void OnPlayerSelected(PlayerRef player)
 		{
-			if (_timedOut)
-			{
-				return;
-			}
-
-			_choosingPlayer = false;
-
 			if (player.IsNone || !_gameManager.RevealPlayerRole(player, Player, false, true, OnRoleRevealed))
 			{
 				_gameManager.StopWaintingForPlayer(Player);
@@ -69,16 +64,6 @@ namespace Werewolf
 		private void OnRoleRevealed(PlayerRef revealTo)
 		{
 			_gameManager.StopWaintingForPlayer(Player);
-		}
-
-		public override void OnRoleTimeOut()
-		{
-			if (!_choosingPlayer)
-			{
-				return;
-			}
-
-			_gameManager.StopChoosingPlayer(Player);
 		}
 	}
 }

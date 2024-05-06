@@ -375,7 +375,7 @@ namespace Werewolf
 				card.Value.ClearVotes();
 			}
 
-			bool allLockedIn = true;
+			bool allLockedIn = _votes.Count > 0;
 
 			foreach (KeyValuePair<PlayerRef, Vote> vote in _votes)
 			{

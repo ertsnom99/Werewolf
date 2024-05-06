@@ -111,9 +111,6 @@ namespace Werewolf.Data
 		public float NightCallMinimumDuration { get; private set; }
 
 		[field: SerializeField]
-		public float NightCallMaximumDuration { get; private set; }
-
-		[field: SerializeField]
 		public float NightCallChangeDelay { get; private set; }
 
 		[field: Header("Death Reveal")]

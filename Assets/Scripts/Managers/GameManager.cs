@@ -81,7 +81,6 @@ namespace Werewolf
 
 		private int _currentNightCallIndex = 0;
 		private List<PlayerRef> _playersWaitingFor = new();
-		private bool _holdNightCall;
 
 		private Dictionary<PlayerRef, Action<PlayerRef>> _choosePlayerCallbacks = new();
 
@@ -773,7 +772,6 @@ namespace Werewolf
 
 						if (nightPrioritiesIndexes.Contains(nightCall.PriorityIndex))
 						{
-							behavior.SetTimedOut(false);
 							skipPlayer = !behavior.OnRoleCall();
 
 							if (!skipPlayer)
@@ -815,22 +813,10 @@ namespace Werewolf
 #endif
 					float elapsedTime = .0f;
 
-					while (!IsNightCallOver(elapsedTime))
+					while (_playersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration)
 					{
 						yield return 0;
 						elapsedTime += Time.deltaTime;
-					}
-
-					// End the turn of all players that are still not done playing
-					if (_playersWaitingFor.Count > 0)
-					{
-						foreach (PlayerRef player in _playersWaitingFor)
-						{
-							actifBehaviors[player].SetTimedOut(true);
-							actifBehaviors[player].OnRoleTimeOut();
-						}
-
-						_playersWaitingFor.Clear();
 					}
 
 					RPC_HideUI();
@@ -888,19 +874,6 @@ namespace Werewolf
 			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
 
 			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.ToLower()));// TODO: Give real image
-		}
-
-		public void HoldNightCall(bool holdNightCall)
-		{
-			_holdNightCall = holdNightCall;
-		}
-
-		private bool IsNightCallOver(float elapsedTime)
-		{
-			return !_voteManager.IsVoting()
-				&& !_holdNightCall
-				&& _revealPlayerRoleCallbacks.Count <= 0
-				&& ((_playersWaitingFor.Count <= 0 && elapsedTime >= Config.NightCallMinimumDuration) || elapsedTime >= Config.NightCallMaximumDuration);
 		}
 
 		#region RPC Calls
@@ -3067,10 +3040,9 @@ namespace Werewolf
 				AddMarkForDeath(player, Config.PlayerLeftMarkForDeath);
 			}
 
-			if (_playersWaitingFor.Contains(player) && _currentGameplayLoopStep == GameplayLoopStep.RoleCall)
+			if (_currentGameplayLoopStep == GameplayLoopStep.RoleCall && _playersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
 			{
-				PlayerGameInfos[player].Behaviors[0].SetTimedOut(true);
-				PlayerGameInfos[player].Behaviors[0].OnRoleTimeOut();
+				PlayerGameInfos[player].Behaviors[0].OnRoleCallDisconnected();
 			}
 
 			StopWaintingForPlayer(player);
