@@ -91,14 +91,7 @@ namespace Werewolf.UI
 
 		protected override void OnFadeStarts(float targetOpacity)
 		{
-			if (targetOpacity >= 1)
-			{
-				return;
-			}
-
-			_countdownText.text = string.Format(_config.CountdownText, 0);
-
-			if (_countdownCoroutine == null)
+			if (targetOpacity >= 1 || _countdownCoroutine == null)
 			{
 				return;
 			}

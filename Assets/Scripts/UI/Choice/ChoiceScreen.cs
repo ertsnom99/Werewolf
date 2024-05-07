@@ -159,8 +159,6 @@ namespace Werewolf.UI
 				return;
 			}
 
-			//_countdownText.text = string.Format(_config.CountdownText, 0);
-
 			StopCountdown();
 		}
 	}

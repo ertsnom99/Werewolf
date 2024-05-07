@@ -57,10 +57,7 @@ namespace Werewolf.UI
 			_warningText.SetActive(displayWarning);
 			UpdateButtonText();
 
-			if (_countdownCoroutine != null)
-			{
-				StopCoroutine(_countdownCoroutine);
-			}
+			StopCountdown();
 
 			SetLockinButtonVisible(displayButton);
 
@@ -144,15 +141,8 @@ namespace Werewolf.UI
 			_lockInButton.gameObject.SetActive(isVisible);
 		}
 
-		protected override void OnFadeStarts(float targetOpacity)
+		public void StopCountdown()
 		{
-			if (targetOpacity >= 1)
-			{
-				return;
-			}
-
-			_countdownText.text = string.Format(_config.CountdownText, 0);
-
 			if (_countdownCoroutine == null)
 			{
 				return;
@@ -160,6 +150,16 @@ namespace Werewolf.UI
 
 			StopCoroutine(_countdownCoroutine);
 			_countdownCoroutine = null;
+		}
+
+		protected override void OnFadeStarts(float targetOpacity)
+		{
+			if (targetOpacity >= 1)
+			{
+				return;
+			}
+
+			StopCountdown();
 		}
 	}
 }
