@@ -35,6 +35,6 @@ MonoBehaviour:
     Leader: {fileID: 0}
   - Index: 6
     Name: Couple
-    Image: {fileID: 0}
+    Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Leader: {fileID: 0}
   <NoBehaviorGroupIndex>k__BackingField: 1

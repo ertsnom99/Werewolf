@@ -54,7 +54,7 @@ namespace Werewolf
 			_gameManager.ReserveRoles(this, roles.ToArray(), false);
 		}
 
-		public override bool OnRoleCall()
+		public override bool OnRoleCall(int priorityIndex)
 		{
 			_reservedRoles = _gameManager.GetReservedRoles(this);
 

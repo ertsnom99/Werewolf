@@ -27,9 +27,9 @@ namespace Werewolf
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-		public override bool OnRoleCall()
+		public override bool OnRoleCall(int priorityIndex)
 		{
-			_preparedVote = _voteManager.PrepareVote(_commonData.VoteMaxDuration, true, false);
+			_preparedVote = _voteManager.PrepareVote(_commonData.VoteMaxDuration, true, false, ChoicePurpose.Kill);
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
@@ -38,7 +38,7 @@ namespace Werewolf
 
 			_voteManager.AddVoteImmunity(Player);
 
-			_voteManager.VoteCompletedCallback += OnVoteEnded;
+			_voteManager.VoteCompleted += OnVoteEnded;
 
 			if (_preparedVote)
 			{
@@ -50,7 +50,7 @@ namespace Werewolf
 
 		private void OnVoteEnded(Dictionary<PlayerRef, int> votes)
 		{
-			_voteManager.VoteCompletedCallback -= OnVoteEnded;
+			_voteManager.VoteCompleted -= OnVoteEnded;
 
 			_gameManager.StopWaintingForPlayer(Player);
 
@@ -69,6 +69,8 @@ namespace Werewolf
 			_gameManager.StartWaitingForPlayersRollCall -= OnStartWaitingForPlayersRollCall;
 			_voteManager.StartVote();
 		}
+
+		public override void OnRoleCallDisconnected() { }
 
 		private void OnDestroy()
 		{

@@ -39,6 +39,11 @@ namespace Werewolf
 			}
 		}
 
+		public virtual int[] GetCurrentPlayerGroups()
+		{
+			return PlayerGroupIndexes.ToArray();
+		}
+
 		public void AddNightPriority(Priority nightPriority)
 		{
 			if (NightPriorities == null)
@@ -82,16 +87,10 @@ namespace Werewolf
 
 		public abstract void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles);
 
-		public virtual int[] GetCurrentPlayerGroups()
-		{
-			return PlayerGroupIndexes.ToArray();
-		}
+		public abstract bool OnRoleCall(int priorityIndex);
 
-		public abstract bool OnRoleCall();
+		public virtual void GetTitlesOverride(int priorityIndex, ref Dictionary<PlayerRef, int> titlesOverride) { }
 
-		public virtual void OnRoleCallDisconnected()
-		{
-			StopAllCoroutines();
-		}
+		public abstract void OnRoleCallDisconnected();
 	}
 }

@@ -29,7 +29,7 @@ namespace Werewolf
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-		public override bool OnRoleCall()
+		public override bool OnRoleCall(int priorityIndex)
 		{
 			return false;
 		}
@@ -129,6 +129,8 @@ namespace Werewolf
 
 			_gameManager.StopPromptingPlayer(Player);
 		}
+
+		public override void OnRoleCallDisconnected() { }
 
 		private void OnDestroy()
 		{

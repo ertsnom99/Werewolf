@@ -11,6 +11,8 @@ namespace Werewolf
 		[SerializeField]
 		private float _choosePlayerMaximumDuration = 10.0f;
 
+		private IEnumerator _endRoleCallAfterTimeCoroutine;
+
 		private GameManager _gameManager;
 
 		public override void Init()
@@ -20,29 +22,25 @@ namespace Werewolf
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-		public override bool OnRoleCall()
+		public override bool OnRoleCall(int priorityIndex)
 		{
-			List<PlayerRef> immunePlayers = new() { Player };
+			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDeadList();
+			immunePlayers.Add(Player);
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
-			{
-				if (playerInfo.Value.IsAlive)
-				{
-					continue;
-				}
-
-				immunePlayers.Add(playerInfo.Key);
-			}
-
-			if (!_gameManager.AskClientToChoosePlayer(Player,
-													immunePlayers.ToArray(),
+			if (!_gameManager.AskClientToChoosePlayers(Player,
+													immunePlayers,
 													"Choose a player to see his role",
 													_choosePlayerMaximumDuration,
 													false,
+													1,
+													ChoicePurpose.Other,
 													OnPlayerSelected))
 			{
 				StartCoroutine(WaitToStopWaitingForPlayer());
 			}
+
+			_endRoleCallAfterTimeCoroutine = EndRoleCallAfterTime();
+			StartCoroutine(_endRoleCallAfterTimeCoroutine);
 
 			return true;
 		}
@@ -53,9 +51,11 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnPlayerSelected(PlayerRef player)
+		private void OnPlayerSelected(PlayerRef[] player)
 		{
-			if (player.IsNone || !_gameManager.RevealPlayerRole(player, Player, false, true, OnRoleRevealed))
+			StopCoroutine(_endRoleCallAfterTimeCoroutine);
+
+			if (player.Length <= 0 || player[0].IsNone || !_gameManager.RevealPlayerRole(player[0], Player, false, true, OnRoleRevealed))
 			{
 				_gameManager.StopWaintingForPlayer(Player);
 			}
@@ -64,6 +64,24 @@ namespace Werewolf
 		private void OnRoleRevealed(PlayerRef revealTo)
 		{
 			_gameManager.StopWaintingForPlayer(Player);
+		}
+
+		private IEnumerator EndRoleCallAfterTime()
+		{
+			float timeLeft = _choosePlayerMaximumDuration;
+
+			while (timeLeft > 0)
+			{
+				yield return 0;
+				timeLeft -= Time.deltaTime;
+			}
+
+			_gameManager.StopWaintingForPlayer(Player);
+		}
+
+		public override void OnRoleCallDisconnected()
+		{
+			StopAllCoroutines();
 		}
 	}
 }

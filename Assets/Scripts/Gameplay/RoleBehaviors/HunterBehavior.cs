@@ -27,12 +27,12 @@ namespace Werewolf
 			_gameManager = GameManager.Instance;
 
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
-			_gameManager.OnPostPlayerDisconnected += OnPostPlayerLeft;
+			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-		public override bool OnRoleCall()
+		public override bool OnRoleCall(int priorityIndex)
 		{
 			return false;
 		}
@@ -46,12 +46,17 @@ namespace Werewolf
 
 			_gameManager.WaitForPlayer(Player);
 
-			if (!_gameManager.AskClientToChoosePlayer(Player,
-													new[] { Player },
+			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDeadList();
+			immunePlayers.Add(Player);
+
+			if (!_gameManager.AskClientToChoosePlayers(Player,
+													immunePlayers,
 													"Choose a player to kill",
 													_choosePlayerMaximumDuration,
 													true,
-													OnPlayerSelected))
+													1,
+													ChoicePurpose.Kill,
+													OnPlayersSelected))
 			{
 				SelectRandomPlayer();
 				return;
@@ -85,7 +90,7 @@ namespace Werewolf
 				elapsedTime += Time.deltaTime;
 			}
 
-			_gameManager.StopChoosingPlayer(Player);
+			_gameManager.StopChoosingPlayers(Player);
 			SelectRandomPlayer();
 		}
 
@@ -135,6 +140,11 @@ namespace Werewolf
 			}
 		}
 
+		private void OnPlayersSelected(PlayerRef[] selectedPlayers)
+		{
+			OnPlayerSelected(selectedPlayers[0]);
+		}
+
 		private void OnPlayerSelected(PlayerRef selectedPlayer)
 		{
 			if (_startChoiceTimerCoroutine != null)
@@ -165,7 +175,7 @@ namespace Werewolf
 				_gameManager.SetPlayerCardHighlightVisible(selectedPlayer, true);
 				_gameManager.HideUI();
 #endif
-				StartCoroutine(WaitBeforeRemovingHighlight(selectedPlayer));
+				StartCoroutine(WaitToRemeHighlight(selectedPlayer));
 				return;
 			}
 
@@ -183,7 +193,7 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private IEnumerator WaitBeforeRemovingHighlight(PlayerRef selectedPlayer)
+		private IEnumerator WaitToRemeHighlight(PlayerRef selectedPlayer)
 		{
 			yield return new WaitForSeconds(_selectedPlayerHighlightDuration);
 
@@ -205,10 +215,15 @@ namespace Werewolf
 			SelectRandomPlayer();
 		}
 
+		public override void OnRoleCallDisconnected()
+		{
+			StopAllCoroutines();
+		}
+
 		private void OnDestroy()
 		{
 			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
-			_gameManager.OnPostPlayerDisconnected -= OnPostPlayerLeft;
+			_gameManager.PostPlayerDisconnected -= OnPostPlayerLeft;
 		}
 	}
 }
