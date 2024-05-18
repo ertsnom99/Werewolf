@@ -64,6 +64,16 @@ namespace Werewolf.UI
 			StartCoroutine(_countdownCoroutine);
 		}
 
+		public void StopCountdown()
+		{
+			if (_countdownCoroutine == null)
+			{
+				return;
+			}
+
+			StopCoroutine(_countdownCoroutine);
+		}
+
 		private IEnumerator Countdown(float countdownDuration)
 		{
 			float timeLeft = countdownDuration;

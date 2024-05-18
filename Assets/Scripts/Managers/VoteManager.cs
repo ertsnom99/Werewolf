@@ -32,6 +32,8 @@ namespace Werewolf
 		private Dictionary<PlayerRef, int> _modifiers;
 		private int _lockedInVoteCount;
 
+		private ChoicePurpose _purpose;
+
 		private Step _step;
 
 		private enum Step
@@ -49,7 +51,8 @@ namespace Werewolf
 
 		private UIManager _UIManager;
 
-		public event Action<Dictionary<PlayerRef, int>> VoteCompletedCallback;
+		public event Action<ChoicePurpose> VoteStarting;
+		public event Action<Dictionary<PlayerRef, int>> VoteCompleted;
 
 		protected override void Awake()
 		{
@@ -75,7 +78,7 @@ namespace Werewolf
 			_players = players;
 		}
 
-		public bool PrepareVote(float maxDuration, bool allowedToNotVote, bool failToVotePenalty, Dictionary<PlayerRef, int> modifiers = null)
+		public bool PrepareVote(float maxDuration, bool allowedToNotVote, bool failToVotePenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
 		{
 			if (_step != Step.NotVoting)
 			{
@@ -94,6 +97,7 @@ namespace Werewolf
 			_modifiers = modifiers;
 			_lockedInVoteCount = 0;
 
+			_purpose = purpose;
 			_step = Step.Preparing;
 
 			return true;
@@ -206,6 +210,8 @@ namespace Werewolf
 			{
 				return;
 			}
+
+			VoteStarting?.Invoke(_purpose);
 
 			float voteDuration;
 
@@ -447,10 +453,10 @@ namespace Werewolf
 				totalVotes.Add(vote.Value.VotedFor, voteValue);
 			}
 
-			VoteCompletedCallback?.Invoke(totalVotes);
+			VoteCompleted?.Invoke(totalVotes);
 
 			_voteCoroutine = null;
-			VoteCompletedCallback = null;
+			VoteCompleted = null;
 #if UNITY_SERVER && UNITY_EDITOR
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{

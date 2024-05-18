@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -49,18 +50,33 @@ namespace Werewolf
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 		private float _choosePotionTimeLeft;
 
+		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
 
 		public override void Init()
 		{
+			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
 		}
 
-		public override bool OnRoleCall()
-		{
-			StartCoroutine(ReveilMarkedForDeathPlayer());
+		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
+		public override bool OnRoleCall(int priorityIndex)
+		{
+			if (!_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				StartCoroutine(WaitToStopWaitingForPlayer());
+				return true;
+			}
+
+			StartCoroutine(ReveilMarkedForDeathPlayer());
 			return true;
+		}
+
+		private IEnumerator WaitToStopWaitingForPlayer()
+		{
+			yield return 0;
+			_gameManager.StopWaintingForPlayer(Player);
 		}
 
 		private IEnumerator ReveilMarkedForDeathPlayer()
@@ -192,24 +208,17 @@ namespace Werewolf
 			_gameManager.RPC_HideUI(Player);
 			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
 
-			List<PlayerRef> immunePlayers = new() { Player };
+			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDeadList();
+			immunePlayers.Add(Player);
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
-			{
-				if (playerInfo.Value.IsAlive)
-				{
-					continue;
-				}
-
-				immunePlayers.Add(playerInfo.Key);
-			}
-
-			if (_gameManager.AskClientToChoosePlayer(Player,
-													immunePlayers.ToArray(),
+			if (_gameManager.AskClientToChoosePlayers(Player,
+													immunePlayers,
 													"Choose a player to kill",
 													_choosePlayerDuration,
 													true,
-													OnChosePlayer))
+													1,
+													ChoicePurpose.Kill,
+													OnChosePlayers))
 			{
 				_endChoosePlayerCoroutine = EndChoosePlayer(_choosePlayerDuration);
 				StartCoroutine(_endChoosePlayerCoroutine);
@@ -225,8 +234,13 @@ namespace Werewolf
 		{
 			yield return new WaitForSeconds(duration);
 
-			_gameManager.StopChoosingPlayer(Player);
+			_gameManager.StopChoosingPlayers(Player);
 			OnChosePlayer(PlayerRef.None);
+		}
+
+		private void OnChosePlayers(PlayerRef[] players)
+		{
+			OnChosePlayer(players[0]);
 		}
 
 		private void OnChosePlayer(PlayerRef player)
@@ -294,6 +308,9 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
+		public override void OnRoleCallDisconnected()
+		{
+			StopAllCoroutines();
+		}
 	}
 }

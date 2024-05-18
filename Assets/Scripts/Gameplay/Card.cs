@@ -76,6 +76,7 @@ namespace Werewolf
 		private bool _inSelectionMode;
 		private bool _isClickable;
 		private bool _isSelected;
+		private bool _isHighlightBlocked;
 
 		private List<VoteDot> _voteDots = new();
 		private int _voteAmount;
@@ -134,6 +135,7 @@ namespace Werewolf
 			_inSelectionMode = inSelectionMode;
 			SetClickable(isClickable);
 			_notClickableCache.SetActive(inSelectionMode && !isClickable);
+			SetHighlightBlocked(false);
 		}
 
 		public void SetClickable(bool isClickable)
@@ -145,6 +147,11 @@ namespace Werewolf
 		{
 			_isSelected = isSelected;
 			_nicknameText.color = _isSelected ? _selectedColor : _notSelectedColor;
+		}
+
+		public void SetHighlightBlocked(bool isHighlightBlocked)
+		{
+			_isHighlightBlocked = isHighlightBlocked;
 		}
 
 		public void ResetSelectionMode()
@@ -217,7 +224,7 @@ namespace Werewolf
 
 		public void MouseExited()
 		{
-			if (!_inSelectionMode || !_isClickable)
+			if (!_inSelectionMode || !_isClickable || _isHighlightBlocked)
 			{
 				return;
 			}

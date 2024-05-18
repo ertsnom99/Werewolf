@@ -1,5 +1,4 @@
 using Fusion;
-using Fusion.Sockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +17,12 @@ namespace Werewolf
 		public RoleData Role;
 		public List<RoleBehavior> Behaviors;
 		public bool IsAlive;
+	}
+
+	public enum ChoicePurpose
+	{
+		Kill,
+		Other
 	}
 
 	[Serializable]
@@ -80,9 +85,12 @@ namespace Werewolf
 		}
 
 		private int _currentNightCallIndex = 0;
-		private List<PlayerRef> _playersWaitingFor = new();
+		public List<PlayerRef> PlayersWaitingFor { get; private set; }
 
-		private Dictionary<PlayerRef, Action<PlayerRef>> _choosePlayerCallbacks = new();
+		private Dictionary<PlayerRef, Action<PlayerRef[]>> _choosePlayersCallbacks = new();
+		private List<PlayerRef> _immunePlayersForGettingChosen = new();
+		private int _playerAmountToSelect;
+		private List<PlayerRef> _selectedPlayers = new List<PlayerRef>();
 
 		private Dictionary<PlayerRef, Action<int>> _makeChoiceCallbacks = new();
 
@@ -160,11 +168,12 @@ namespace Werewolf
 		public event Action PostRoleDistribution;
 		public event Action PreStartGame;
 		public event Action StartWaitingForPlayersRollCall;
-		public event Action<PlayerRef, string> OnMarkForDeathAdded;
+		public event Action<PlayerRef, ChoicePurpose> PreClientChoosesPlayers;
+		public event Action<PlayerRef, string> MarkForDeathAdded;
 		public event Action<PlayerRef, List<string>, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
 		public event Action<PlayerRef> PlayerDeathRevealEnded;
-		public event Action<PlayerRef> OnPostPlayerDisconnected;
+		public event Action<PlayerRef> PostPlayerDisconnected;
 
 		// Client events
 		public event Action OnRoleReceived;
@@ -178,6 +187,7 @@ namespace Werewolf
 
 			RolesToDistribute = new();
 			PlayerGameInfos = new();
+			PlayersWaitingFor = new();
 
 			if (!Config)
 			{
@@ -554,7 +564,7 @@ namespace Werewolf
 
 			Log.Info($"{info.Source} is ready!");
 
-			if (_playersWaitingFor.Count > 0)
+			if (PlayersWaitingFor.Count > 0)
 			{
 				return;
 			}
@@ -571,7 +581,7 @@ namespace Werewolf
 		{
 			StopWaintingForPlayer(info.Source);
 
-			if (_playersWaitingFor.Count > 0)
+			if (PlayersWaitingFor.Count > 0)
 			{
 				return;
 			}
@@ -668,7 +678,7 @@ namespace Werewolf
 
 			if (_captainCandidates.Count > 1)
 			{
-				StartCoroutine(HighlightPlayers(_captainCandidates.ToArray()));
+				StartCoroutine(HighlightPlayersToggle(_captainCandidates.ToArray()));
 				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidateText, Config.ElectionMultipleCandidateDuration);
 				StartCoroutine(StartDebate(Config.ElectionDebateText, Config.ElectionDebateDuration));
 				yield break;
@@ -699,7 +709,14 @@ namespace Werewolf
 
 		private void StartElection()
 		{
-			StartVoteForAllPlayers(OnElectionVotesCounted, Config.ElectionVoteDuration, false, false, null, true, GetPlayersExcluding(_captainCandidates.ToArray()));
+			StartVoteForAllPlayers(OnElectionVotesCounted,
+								Config.ElectionVoteDuration,
+								false,
+								false,
+								ChoicePurpose.Other,
+								null,
+								true,
+								GetPlayersExcluding(_captainCandidates.ToArray()));
 		}
 
 		private void OnElectionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -760,6 +777,7 @@ namespace Werewolf
 			{
 				NightCall nightCall = _nightCalls[_currentNightCallIndex];
 				Dictionary<PlayerRef, RoleBehavior> actifBehaviors = new();
+				Dictionary<PlayerRef, int> titlesOverride = new();
 
 				// Role call all the roles that must play
 				foreach (PlayerRef player in nightCall.Players)
@@ -772,25 +790,26 @@ namespace Werewolf
 
 						if (nightPrioritiesIndexes.Contains(nightCall.PriorityIndex))
 						{
-							skipPlayer = !behavior.OnRoleCall();
+							skipPlayer = !behavior.OnRoleCall(nightCall.PriorityIndex);
 
 							if (!skipPlayer)
 							{
-								_playersWaitingFor.Add(player);
+								PlayersWaitingFor.Add(player);
 								actifBehaviors.Add(player, behavior);
+								behavior.GetTitlesOverride(nightCall.PriorityIndex, ref titlesOverride);
 							}
 
 							break;
 						}
 					}
 
-					if (!skipPlayer && !_playersWaitingFor.Contains(player))
+					if (!skipPlayer && !PlayersWaitingFor.Contains(player))
 					{
 						Debug.LogError($"{player} is suppose to play, but he has no behavior with the PriorityIndex {nightCall.PriorityIndex}");
 					}
 				}
 
-				if (_playersWaitingFor.Count > 0)
+				if (PlayersWaitingFor.Count > 0)
 				{
 					StartWaitingForPlayersRollCall?.Invoke();
 
@@ -798,12 +817,19 @@ namespace Werewolf
 
 					foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 					{
-						if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected || _playersWaitingFor.Contains(playerInfo.Key))
+						if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected || PlayersWaitingFor.Contains(playerInfo.Key))
 						{
 							continue;
 						}
 
-						RPC_DisplayRolePlaying(playerInfo.Key, displayRoleGameplayTagID);
+						if (titlesOverride.Count <= 0 || !titlesOverride.ContainsKey(playerInfo.Key))
+						{
+							RPC_DisplayRolePlaying(playerInfo.Key, displayRoleGameplayTagID);
+						}
+						else
+						{
+							RPC_DisplayTitle(playerInfo.Key, titlesOverride[playerInfo.Key]);
+						}
 					}
 #if UNITY_SERVER && UNITY_EDITOR
 					if (!_voteManager.IsPreparingToVote())
@@ -813,7 +839,7 @@ namespace Werewolf
 #endif
 					float elapsedTime = .0f;
 
-					while (_playersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration)
+					while (PlayersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration)
 					{
 						yield return 0;
 						elapsedTime += Time.deltaTime;
@@ -948,7 +974,7 @@ namespace Werewolf
 
 					PlayerDeathRevealEnded?.Invoke(deadPlayer);
 
-					while (_playersWaitingFor.Count > 0)
+					while (PlayersWaitingFor.Count > 0)
 					{
 						yield return 0;
 					}
@@ -998,7 +1024,7 @@ namespace Werewolf
 					continue;
 				}
 
-				_playersWaitingFor.Add(player);
+				PlayersWaitingFor.Add(player);
 				MoveCardToCamera(player,
 								playerRevealed,
 								!waitBeforeReveal,
@@ -1008,7 +1034,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			MoveCardToCamera(playerRevealed, waitBeforeReveal);
 #endif
-			while (_playersWaitingFor.Count > 0)
+			while (PlayersWaitingFor.Count > 0)
 			{
 				yield return 0;
 			}
@@ -1028,14 +1054,14 @@ namespace Werewolf
 						continue;
 					}
 
-					_playersWaitingFor.Add(player);
+					PlayersWaitingFor.Add(player);
 					FlipCard(player,
 							playerRevealed,
 							() => StopWaintingForPlayer(player),
 							PlayerGameInfos[playerRevealed].Role.GameplayTag.CompactTagId);
 				}
 
-				while (_playersWaitingFor.Count > 0)
+				while (PlayersWaitingFor.Count > 0)
 				{
 					yield return 0;
 				}
@@ -1050,7 +1076,7 @@ namespace Werewolf
 					continue;
 				}
 
-				_playersWaitingFor.Add(player);
+				PlayersWaitingFor.Add(player);
 				PutCardBackDown(player,
 								playerRevealed,
 								returnFaceDown,
@@ -1059,7 +1085,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			PutCardBackDown(playerRevealed, returnFaceDown);
 #endif
-			while (_playersWaitingFor.Count > 0)
+			while (PlayersWaitingFor.Count > 0)
 			{
 				yield return 0;
 			}
@@ -1143,6 +1169,7 @@ namespace Werewolf
 									Config.ExecutionVoteDuration,
 									false,
 									true,
+									ChoicePurpose.Kill,
 									GetExecutionVoteModifiers());
 		}
 
@@ -1171,6 +1198,7 @@ namespace Werewolf
 									Config.ExecutionVoteDuration,
 									false,
 									false,
+									ChoicePurpose.Kill,
 									GetExecutionVoteModifiers(),
 									false,
 									GetPlayersExcluding(mostVotedPlayers));
@@ -1199,12 +1227,14 @@ namespace Werewolf
 			List<PlayerRef> executionChoices = mostVotedPlayers.ToList();
 			executionChoices.Remove(_captain);
 
-			if (!AskClientToChoosePlayer(_captain,
-									GetPlayersExcluding(executionChoices.ToArray()),
-									Config.ExecutionDrawYouChooseText,
-									Config.ExecutionCaptainChoiceDuration,
-									true,
-									OnCaptainChooseExecutedPlayer))
+			if (!AskClientToChoosePlayers(_captain,
+										GetPlayersExcluding(executionChoices.ToArray()).ToList(),
+										Config.ExecutionDrawYouChooseText,
+										Config.ExecutionCaptainChoiceDuration,
+										true,
+										1,
+										ChoicePurpose.Other,
+										OnCaptainChooseExecutedPlayer))
 			{
 				StartCoroutine(ExecutePlayer(mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)]));
 				yield break;
@@ -1226,7 +1256,7 @@ namespace Werewolf
 
 			_startCaptainExecutionCoroutine = null;
 
-			StopChoosingPlayer(_captain);
+			StopChoosingPlayers(_captain);
 
 			RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1237,14 +1267,14 @@ namespace Werewolf
 			StartCoroutine(ExecutePlayer(mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)]));
 		}
 
-		private void OnCaptainChooseExecutedPlayer(PlayerRef executedPlayer)
+		private void OnCaptainChooseExecutedPlayer(PlayerRef[] executedPlayer)
 		{
 			if (_startCaptainExecutionCoroutine == null)
 			{
 				return;
 			}
 
-			StartCoroutine(EndCaptainExecution(executedPlayer));
+			StartCoroutine(EndCaptainExecution(executedPlayer[0]));
 		}
 
 		private IEnumerator EndCaptainExecution(PlayerRef executedPlayer)
@@ -1287,7 +1317,7 @@ namespace Werewolf
 		{
 			if (_playerGroups.Count <= 0)
 			{
-				PrepareEndGameSequence(null);
+				PrepareEndGameSequence(new() { Index = -1, Players = new() });
 				return true;
 			}
 
@@ -1305,7 +1335,7 @@ namespace Werewolf
 			return false;
 		}
 
-		private void PrepareEndGameSequence(PlayerGroup? winningPlayerGroup)
+		private void PrepareEndGameSequence(PlayerGroup winningPlayerGroup)
 		{
 			List<PlayerEndGameInfo> endGamePlayerInfos = new List<PlayerEndGameInfo>();
 
@@ -1321,7 +1351,7 @@ namespace Werewolf
 				endGamePlayerInfos.Add(new() { Player = playerInfo.Key,
 												Role = role,
 												IsAlive = playerInfo.Value.IsAlive,
-												Won = winningPlayerGroup != null ? IsPlayerInGroup(playerInfo.Key, (PlayerGroup)winningPlayerGroup) : false });
+												Won = winningPlayerGroup.Index > -1 ? winningPlayerGroup.Players.Contains(playerInfo.Key) : false });
 #if UNITY_SERVER && UNITY_EDITOR
 				if (endGamePlayerInfos[endGamePlayerInfos.Count - 1].Won)
 				{
@@ -1330,19 +1360,13 @@ namespace Werewolf
 #endif
 			}
 
-			int winningPlayerGroupIndex = winningPlayerGroup != null ? ((PlayerGroup)winningPlayerGroup).Index : -1;
+			int winningPlayerGroupIndex = winningPlayerGroup.Index > -1 ? winningPlayerGroup.Index : -1;
 
 			RPC_StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupIndex);
 #if UNITY_SERVER && UNITY_EDITOR
 			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupIndex));
 #endif
 			StartCoroutine(ReturnToLobby());
-		}
-
-		private bool IsPlayerInGroup(PlayerRef player, PlayerGroup playerGroup)
-		{
-			return (PlayerGameInfos[player].Behaviors.Count > 0 && PlayerGameInfos[player].Behaviors[0].PlayerGroupIndexes.Contains(playerGroup.Index))
-			|| (PlayerGameInfos[player].Behaviors.Count <= 0 && playerGroup.Index == Config.PlayerGroups.NoBehaviorGroupIndex);
 		}
 
 		private IEnumerator StartEndGameSequence(PlayerEndGameInfo[] endGamePlayerInfos, int winningPlayerGroupIndex)
@@ -1410,25 +1434,42 @@ namespace Werewolf
 
 		public void WaitForPlayer(PlayerRef player)
 		{
-			if (_playersWaitingFor.Contains(player))
+			if (PlayersWaitingFor.Contains(player))
 			{
 				return;
 			}
 
-			_playersWaitingFor.Add(player);
+			PlayersWaitingFor.Add(player);
 		}
 
 		public void StopWaintingForPlayer(PlayerRef player)
 		{
-			if (!_playersWaitingFor.Contains(player))
+			if (!PlayersWaitingFor.Contains(player))
 			{
 				return;
 			}
 
-			_playersWaitingFor.Remove(player);
+			PlayersWaitingFor.Remove(player);
 		}
 		#endregion
 		#endregion
+
+		public List<PlayerRef> GetPlayersDeadList()
+		{
+			List<PlayerRef> playersAlive = new();
+
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
+			{
+				if (playerInfo.Value.IsAlive)
+				{
+					continue;
+				}
+
+				playersAlive.Add(playerInfo.Key);
+			}
+
+			return playersAlive;
+		}
 
 		private PlayerRef[] GetPlayersExcluding(PlayerRef playerToExclude)
 		{
@@ -1490,12 +1531,14 @@ namespace Werewolf
 				yield break;
 			}
 
-			if (!AskClientToChoosePlayer(_captain,
-									GetPlayersExcluding(captainChoices.ToArray()),
-									Config.ChooseNextCaptainText,
-									Config.CaptainChoiceDuration,
-									true,
-									OnChoosedNextCaptain))
+			if (!AskClientToChoosePlayers(_captain,
+										GetPlayersExcluding(captainChoices.ToArray()).ToList(),
+										Config.ChooseNextCaptainText,
+										Config.CaptainChoiceDuration,
+										true,
+										1,
+										ChoicePurpose.Other,
+										OnChoosedNextCaptain))
 			{
 				StartCoroutine(EndChoosingNextCaptain(captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)]));
 				yield break;
@@ -1524,14 +1567,14 @@ namespace Werewolf
 			StartCoroutine(EndChoosingNextCaptain(captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)]));
 		}
 
-		private void OnChoosedNextCaptain(PlayerRef nextCaptain)
+		private void OnChoosedNextCaptain(PlayerRef[] nextCaptain)
 		{
 			if (_chooseNextCaptainCoroutine == null)
 			{
 				return;
 			}
 
-			StartCoroutine(EndChoosingNextCaptain(nextCaptain));
+			StartCoroutine(EndChoosingNextCaptain(nextCaptain[0]));
 		}
 
 		private IEnumerator EndChoosingNextCaptain(PlayerRef nextCaptain)
@@ -1539,7 +1582,7 @@ namespace Werewolf
 			StopCoroutine(_chooseNextCaptainCoroutine);
 			_chooseNextCaptainCoroutine = null;
 
-			StopChoosingPlayer(_captain);
+			StopChoosingPlayers(_captain);
 
 			RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1636,14 +1679,14 @@ namespace Werewolf
 #endif
 			float elapsedTime = .0f;
 
-			while (_playersWaitingFor.Count > 0 && elapsedTime < duration)
+			while (PlayersWaitingFor.Count > 0 && elapsedTime < duration)
 			{
 				yield return 0;
 				elapsedTime += Time.deltaTime;
 			}
 
 			RPC_OnDebateEnded();
-			_playersWaitingFor.Clear();
+			PlayersWaitingFor.Clear();
 
 #if UNITY_SERVER && UNITY_EDITOR
 			OnDebateEnded();
@@ -1720,6 +1763,7 @@ namespace Werewolf
 											float maxDuration,
 											bool allowedToNotVote,
 											bool failToVotePenalty,
+											ChoicePurpose purpose,
 											Dictionary<PlayerRef, int> modifiers = null,
 											bool canVoteForSelf = false,
 											PlayerRef[] ImmunePlayers = null)
@@ -1731,7 +1775,7 @@ namespace Werewolf
 
 			_votesCountedCallback = votesCountedCallback;
 
-			_voteManager.PrepareVote(maxDuration, allowedToNotVote, failToVotePenalty, modifiers);
+			_voteManager.PrepareVote(maxDuration, allowedToNotVote, failToVotePenalty, purpose, modifiers);
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
@@ -1762,7 +1806,7 @@ namespace Werewolf
 				_voteManager.AddVoteImmunity(playerInfo.Key);
 			}
 
-			_voteManager.VoteCompletedCallback += OnVoteEnded;
+			_voteManager.VoteCompleted += OnVoteEnded;
 			_voteManager.StartVote();
 
 			return true;
@@ -1770,7 +1814,7 @@ namespace Werewolf
 
 		private void OnVoteEnded(Dictionary<PlayerRef, int> votes)
 		{
-			_voteManager.VoteCompletedCallback -= OnVoteEnded;
+			_voteManager.VoteCompleted -= OnVoteEnded;
 
 			int mostVoteCount = 0;
 			List<PlayerRef> mostVotedPlayers = new List<PlayerRef>();
@@ -1797,14 +1841,6 @@ namespace Werewolf
 		#endregion
 
 		#region Highlight Players
-		private void HighlightPlayer(PlayerRef player)
-		{
-			RPC_SetPlayerCardHighlightVisible(player, true);
-#if UNITY_SERVER && UNITY_EDITOR
-			SetPlayerCardHighlightVisible(player, true);
-#endif
-		}
-
 		private IEnumerator HighlightPlayerToggle(PlayerRef player)
 		{
 			RPC_SetPlayerCardHighlightVisible(player, true);
@@ -1819,30 +1855,31 @@ namespace Werewolf
 #endif
 		}
 
-		private IEnumerator HighlightPlayers(PlayerRef[] players)
+		private IEnumerator HighlightPlayersToggle(PlayerRef[] players)
 		{
-			foreach(PlayerRef player in players)
-			{
-				RPC_SetPlayerCardHighlightVisible(player, true);
+			RPC_SetPlayersCardHighlightVisible(players, true);
 #if UNITY_SERVER && UNITY_EDITOR
-				SetPlayerCardHighlightVisible(player, true);
+			SetPlayersCardHighlightVisible(players, true);
 #endif
-			}
-
 			yield return new WaitForSeconds(Config.HighlightDuration);
 
-			foreach (PlayerRef player in players)
-			{
-				RPC_SetPlayerCardHighlightVisible(player, false);
+			RPC_SetPlayersCardHighlightVisible(players, false);
 #if UNITY_SERVER && UNITY_EDITOR
-				SetPlayerCardHighlightVisible(player, false);
+			SetPlayersCardHighlightVisible(players, false);
 #endif
-			}
 		}
 
 		public void SetPlayerCardHighlightVisible(PlayerRef player, bool isVisible)
 		{
 			_playerCards[player].SetHighlightVisible(isVisible);
+		}
+
+		public void SetPlayersCardHighlightVisible(PlayerRef[] players, bool isVisible)
+		{
+			foreach (PlayerRef player in players)
+			{
+				_playerCards[player].SetHighlightVisible(isVisible);
+			}
 		}
 
 		#region RPC Calls
@@ -1853,9 +1890,21 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_SetPlayerCardHighlightVisible(PlayerRef player, bool isVisible)
+		public void RPC_SetPlayerCardHighlightVisible(PlayerRef highlightedPlayer, bool isVisible)
 		{
-			SetPlayerCardHighlightVisible(player, isVisible);
+			SetPlayerCardHighlightVisible(highlightedPlayer, isVisible);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_SetPlayersCardHighlightVisible([RpcTarget] PlayerRef player, PlayerRef[] highlightedPlayers, bool isVisible)
+		{
+			SetPlayersCardHighlightVisible(highlightedPlayers, isVisible);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_SetPlayersCardHighlightVisible(PlayerRef[] highlightedPlayers, bool isVisible)
+		{
+			SetPlayersCardHighlightVisible(highlightedPlayers, isVisible);
 		}
 		#endregion
 		#endregion
@@ -2434,44 +2483,78 @@ namespace Werewolf
 		#endregion
 		#endregion
 
-		#region Choose a Player
-		public bool AskClientToChoosePlayer(PlayerRef choosingPlayer, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool mustChoose, Action<PlayerRef> callback)
+		#region Choose a Players
+		public bool AskClientToChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> immunePlayers, string displayText, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
 		{
-			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayerCallbacks.ContainsKey(choosingPlayer))
+			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayersCallbacks.ContainsKey(choosingPlayer))
 			{
 				return false;
 			}
 
-			_choosePlayerCallbacks.Add(choosingPlayer, callback);
-			RPC_ClientChoosePlayer(choosingPlayer, immunePlayers, displayText, maximumDuration, mustChoose);
+			_choosePlayersCallbacks.Add(choosingPlayer, callback);
+
+			_immunePlayersForGettingChosen = immunePlayers;
+			PreClientChoosesPlayers?.Invoke(choosingPlayer, purpose);
+
+			RPC_ClientChoosePlayers(choosingPlayer, _immunePlayersForGettingChosen.ToArray(), displayText, maximumDuration, mustChoose, playerAmount);
 
 			return true;
 		}
 
+		public void AddImmunePlayerForGettingChosen(PlayerRef player)
+		{
+			if (_immunePlayersForGettingChosen.Contains(player))
+			{
+				return;
+			}
+
+			_immunePlayersForGettingChosen.Add(player);
+		}
+
 		private void OnClientChooseNoCard()
 		{
-			OnClientChooseCard(null);
+			StopChoosingPlayers();
+			RPC_GivePlayerChoices(new PlayerRef[0]);
 		}
 
 		private void OnClientChooseCard(Card card)
 		{
-			StopChoosingPlayer();
-			RPC_GivePlayerChoice(card ? card.Player : PlayerRef.None);
+			if (_selectedPlayers.Contains(card.Player))
+			{
+				_selectedPlayers.Remove(card.Player);
+
+				card.SetHighlightBlocked(false);
+				SetPlayerCardHighlightVisible(card.Player, false);
+				return;
+			}
+
+			_selectedPlayers.Add(card.Player);
+			
+			card.SetHighlightBlocked(true);
+			SetPlayerCardHighlightVisible(card.Player, true);
+
+			if (_selectedPlayers.Count < _playerAmountToSelect)
+			{
+				return;
+			}
+
+			StopChoosingPlayers();
+			RPC_GivePlayerChoices(_selectedPlayers.ToArray());
 		}
 
-		public void StopChoosingPlayer(PlayerRef player)
+		public void StopChoosingPlayers(PlayerRef player)
 		{
-			_choosePlayerCallbacks.Remove(player);
+			_choosePlayersCallbacks.Remove(player);
 
 			if (!_networkDataManager.PlayerInfos[player].IsConnected)
 			{
 				return;
 			}
 
-			RPC_ClientStopChoosingPlayer(player);
+			RPC_ClientStopChoosingPlayers(player);
 		}
 
-		private void StopChoosingPlayer()
+		private void StopChoosingPlayers()
 		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
@@ -2484,14 +2567,23 @@ namespace Werewolf
 				playerCard.Value.OnCardClick -= OnClientChooseCard;
 			}
 
+			foreach(PlayerRef selectedPlayer in _selectedPlayers)
+			{
+				SetPlayerCardHighlightVisible(selectedPlayer, false);
+			}
+
 			_UIManager.TitleScreen.Confirm -= OnClientChooseNoCard;
 			_UIManager.TitleScreen.SetConfirmButtonInteractable(false);
+			_UIManager.TitleScreen.StopCountdown();
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientChoosePlayer([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool mustChoose)
+		private void RPC_ClientChoosePlayers([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool mustChoose, int playerAmount)
 		{
+			_playerAmountToSelect = playerAmount;
+			_selectedPlayers.Clear();
+
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
 				if (!playerCard.Value)
@@ -2520,21 +2612,21 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_GivePlayerChoice(PlayerRef player, RpcInfo info = default)
+		public void RPC_GivePlayerChoices(PlayerRef[] players, RpcInfo info = default)
 		{
-			if (!_choosePlayerCallbacks.ContainsKey(info.Source))
+			if (!_choosePlayersCallbacks.ContainsKey(info.Source))
 			{
 				return;
 			}
 
-			_choosePlayerCallbacks[info.Source](player);
-			_choosePlayerCallbacks.Remove(info.Source);
+			_choosePlayersCallbacks[info.Source](players);
+			_choosePlayersCallbacks.Remove(info.Source);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientStopChoosingPlayer([RpcTarget] PlayerRef player)
+		private void RPC_ClientStopChoosingPlayers([RpcTarget] PlayerRef player)
 		{
-			StopChoosingPlayer();
+			StopChoosingPlayers();
 		}
 		#endregion
 		#endregion
@@ -2621,7 +2713,7 @@ namespace Werewolf
 		public void AddMarkForDeath(PlayerRef player, string markForDeath)
 		{
 			_marksForDeath.Add(new() { Player = player, MarksForDeath = new() { markForDeath } });
-			OnMarkForDeathAdded?.Invoke(player, markForDeath);
+			MarkForDeathAdded?.Invoke(player, markForDeath);
 		}
 
 		public void AddMarkForDeath(PlayerRef player, string markForDeath, int index)
@@ -2635,7 +2727,7 @@ namespace Werewolf
 				_marksForDeath.Insert(index, new() { Player = player, MarksForDeath = new() { markForDeath } });
 			}
 
-			OnMarkForDeathAdded?.Invoke(player, markForDeath);
+			MarkForDeathAdded?.Invoke(player, markForDeath);
 		}
 
 		public void RemoveMarkForDeath(PlayerRef player, string markForDeath)
@@ -3040,7 +3132,7 @@ namespace Werewolf
 				AddMarkForDeath(player, Config.PlayerLeftMarkForDeath);
 			}
 
-			if (_currentGameplayLoopStep == GameplayLoopStep.RoleCall && _playersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
+			if (_currentGameplayLoopStep == GameplayLoopStep.RoleCall && PlayersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
 			{
 				PlayerGameInfos[player].Behaviors[0].OnRoleCallDisconnected();
 			}
@@ -3050,14 +3142,14 @@ namespace Werewolf
 			_voteManager.RemoveVoter(player);
 
 			_chooseReservedRoleCallbacks.Remove(player);
-			_choosePlayerCallbacks.Remove(player);
+			_choosePlayersCallbacks.Remove(player);
 			_makeChoiceCallbacks.Remove(player);
 			_revealPlayerRoleCallbacks.Remove(player);
 			_moveCardToCameraCallbacks.Remove(player);
 			_flipCardCallbacks.Remove(player);
 			_putCardBackDownCallbacks.Remove(player);
 
-			OnPostPlayerDisconnected?.Invoke(player);
+			PostPlayerDisconnected?.Invoke(player);
 
 			RPC_DisplayPlayerDisconnected(player);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -3113,21 +3205,34 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayTitle(int imageIndex)
+		{
+			if (imageIndex < 0 || imageIndex >= Config.ImagesData.Images.Length)
+			{
+				Debug.LogError($"No title exist for index {imageIndex}");
+				return;
+			}
+
+			ImageData titleData = Config.ImagesData.Images[imageIndex];
+			DisplayTitle(titleData.Image, titleData.Text);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, string title)
 		{
 			DisplayTitle(null, title);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int titleIndex)
+		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int imageIndex)
 		{
-			if (titleIndex < 0 || titleIndex >= Config.ImagesData.Images.Length)
+			if (imageIndex < 0 || imageIndex >= Config.ImagesData.Images.Length)
 			{
-				Debug.LogError($"No title exist for index {titleIndex}");
+				Debug.LogError($"No title exist for index {imageIndex}");
 				return;
 			}
 
-			ImageData titleData = Config.ImagesData.Images[titleIndex];
+			ImageData titleData = Config.ImagesData.Images[imageIndex];
 			DisplayTitle(titleData.Image, titleData.Text);
 		}
 
