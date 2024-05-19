@@ -46,7 +46,7 @@ namespace Werewolf
 
 			_gameManager.WaitForPlayer(Player);
 
-			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDeadList();
+			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDead();
 			immunePlayers.Add(Player);
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,

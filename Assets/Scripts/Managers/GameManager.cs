@@ -412,7 +412,7 @@ namespace Werewolf
 				{
 					foreach (int playerGroupIndex in playerInfo.Value.Role.PlayerGroupIndexes)
 					{
-						AddPlayerToPlayerGroup(playerGroupIndex, playerInfo.Key);
+						AddPlayerToPlayerGroup(playerInfo.Key, playerGroupIndex);
 					}
 
 					continue;
@@ -420,7 +420,7 @@ namespace Werewolf
 
 				foreach (int playerGroupIndex in playerInfo.Value.Behaviors[0].GetCurrentPlayerGroups())
 				{
-					AddPlayerToPlayerGroup(playerGroupIndex, playerInfo.Key);
+					AddPlayerToPlayerGroup(playerInfo.Key, playerGroupIndex);
 				}
 			}
 		}
@@ -1456,9 +1456,10 @@ namespace Werewolf
 		#endregion
 		#endregion
 
-		public List<PlayerRef> GetPlayersDeadList()
+		#region Players
+		public List<PlayerRef> GetPlayersDead()
 		{
-			List<PlayerRef> playersAlive = new();
+			List<PlayerRef> playersDead = new();
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
@@ -1467,10 +1468,10 @@ namespace Werewolf
 					continue;
 				}
 
-				playersAlive.Add(playerInfo.Key);
+				playersDead.Add(playerInfo.Key);
 			}
 
-			return playersAlive;
+			return playersDead;
 		}
 
 		private PlayerRef[] GetPlayersExcluding(PlayerRef playerToExclude)
@@ -1506,6 +1507,48 @@ namespace Werewolf
 
 			return players.ToArray();
 		}
+
+		public List<PlayerRef> FindSurroundingPlayers(PlayerRef player)
+		{
+			List<PlayerRef> SurroundingPlayers = new();
+
+			List<PlayerRef> allPlayers = PlayerGameInfos.Keys.ToList();
+			int playerIndex = allPlayers.IndexOf(player);
+
+			FindNextSurroundingPlayer(playerIndex, -1, allPlayers, ref SurroundingPlayers);
+			FindNextSurroundingPlayer(playerIndex, 1, allPlayers, ref SurroundingPlayers);
+
+			return SurroundingPlayers;
+		}
+
+		private void FindNextSurroundingPlayer(int playerIndex, int iteration, List<PlayerRef> allPlayers, ref List<PlayerRef> SurroundingPlayers)
+		{
+			int currentIndex = playerIndex;
+
+			do
+			{
+				currentIndex += iteration;
+
+				if (currentIndex < 0)
+				{
+					currentIndex = allPlayers.Count - 1;
+				}
+				else if (currentIndex >= allPlayers.Count)
+				{
+					currentIndex = 0;
+				}
+
+				PlayerRef currentPlayer = allPlayers[currentIndex];
+
+				if (PlayerGameInfos[currentPlayer].IsAlive && !SurroundingPlayers.Contains(currentPlayer))
+				{
+					SurroundingPlayers.Add(currentPlayer);
+					break;
+				}
+			}
+			while (currentIndex != playerIndex);
+		}
+		#endregion
 
 		#region Captain
 		private IEnumerator ChooseNextCaptain()
@@ -1920,7 +1963,7 @@ namespace Werewolf
 			{
 				foreach (int playerGroupIndex in roleData.PlayerGroupIndexes)
 				{
-					AddPlayerToPlayerGroup(playerGroupIndex, player);
+					AddPlayerToPlayerGroup(player, playerGroupIndex);
 				}
 			}
 			else
@@ -1948,7 +1991,7 @@ namespace Werewolf
 			{
 				foreach (int villageGroup in PlayerGameInfos[from].Role.PlayerGroupIndexes)
 				{
-					AddPlayerToPlayerGroup(villageGroup, to);
+					AddPlayerToPlayerGroup(to, villageGroup);
 				}
 			}
 			else
@@ -2010,7 +2053,7 @@ namespace Werewolf
 
 			foreach (int playerGroupIndex in behavior.GetCurrentPlayerGroups())
 			{
-				AddPlayerToPlayerGroup(playerGroupIndex, player);
+				AddPlayerToPlayerGroup(player, playerGroupIndex);
 			}
 
 			PlayerGameInfos[player].Behaviors.Add(behavior);
@@ -2026,7 +2069,7 @@ namespace Werewolf
 			{
 				foreach (int playerGroupIndex in PlayerGameInfos[player].Role.PlayerGroupIndexes)
 				{
-					RemovePlayerFromGroup(playerGroupIndex, player);
+					RemovePlayerFromGroup(player, playerGroupIndex);
 				}
 			}
 			else
@@ -2064,7 +2107,7 @@ namespace Werewolf
 
 			foreach (int group in behavior.GetCurrentPlayerGroups())
 			{
-				RemovePlayerFromGroup(group, player);
+				RemovePlayerFromGroup(player, group);
 			}
 
 			if (!destroyBehavior)
@@ -2114,7 +2157,7 @@ namespace Werewolf
 		#endregion
 
 		#region Player Group Change
-		public void AddPlayerToPlayerGroup(int playerGroupIndex, PlayerRef player)
+		public void AddPlayerToPlayerGroup(PlayerRef player, int playerGroupIndex)
 		{
 			PlayerGroup playerGroup;
 
@@ -2149,7 +2192,7 @@ namespace Werewolf
 			_playerGroups.Add(playerGroup);
 		}
 
-		public void RemovePlayerFromGroup(int playerGroupIndex, PlayerRef player)
+		public void RemovePlayerFromGroup(PlayerRef player, int playerGroupIndex)
 		{
 			for (int i = 0; i < _playerGroups.Count; i++)
 			{
@@ -2180,6 +2223,22 @@ namespace Werewolf
 					_playerGroups.RemoveAt(i);
 				}
 			}
+		}
+
+		public bool IsPlayerInPlayerGroups(PlayerRef player, int[] playerGroupIndexes)
+		{
+			bool inPlayerGroup = false;
+
+			foreach(PlayerGroup playerGroup in _playerGroups)
+			{
+				if(playerGroupIndexes.Contains(playerGroup.Index) && playerGroup.Players.Contains(player))
+				{
+					inPlayerGroup = true;
+					break;
+				}
+			}
+
+			return inPlayerGroup;
 		}
 		#endregion
 

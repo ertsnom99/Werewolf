@@ -28,4 +28,5 @@ MonoBehaviour:
   - index: 5
     alias: {fileID: 0}
   <DayPriorities>k__BackingField: []
-  <Behavior>k__BackingField: {fileID: 0}
+  <Behavior>k__BackingField: {fileID: 6478022945204151896, guid: a2f614bbc46ff3b47af4ad80fa82ab20,
+    type: 3}
