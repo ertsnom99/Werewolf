@@ -129,7 +129,7 @@ namespace Werewolf
 			}
 		}
 
-		public override bool OnRoleCall(int priorityIndex)
+		public override bool OnRoleCall(int nightCount, int priorityIndex)
 		{
 			return true;
 		}

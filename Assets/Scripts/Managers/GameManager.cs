@@ -84,6 +84,7 @@ namespace Werewolf
 			public List<PlayerRef> Players;
 		}
 
+		private int _nightCount = 0;
 		private int _currentNightCallIndex = 0;
 		public List<PlayerRef> PlayersWaitingFor { get; private set; }
 
@@ -627,6 +628,7 @@ namespace Werewolf
 					StartElection();
 					break;
 				case GameplayLoopStep.NightTransition:
+					_nightCount++;
 					StartCoroutine(ChangeDaytime(Daytime.Night));
 					break;
 				case GameplayLoopStep.RoleCall:
@@ -790,7 +792,7 @@ namespace Werewolf
 
 						if (nightPrioritiesIndexes.Contains(nightCall.PriorityIndex))
 						{
-							skipPlayer = !behavior.OnRoleCall(nightCall.PriorityIndex);
+							skipPlayer = !behavior.OnRoleCall(_nightCount, nightCall.PriorityIndex);
 
 							if (!skipPlayer)
 							{
