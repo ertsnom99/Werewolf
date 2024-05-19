@@ -6,30 +6,54 @@ using Werewolf.Data;
 
 namespace Werewolf
 {
-	public class FortuneTellerBehavior : RoleBehavior
+	public class SaviourBehavior : RoleBehavior
 	{
 		[SerializeField]
 		private float _choosePlayerMaximumDuration = 10.0f;
 
+		[SerializeField]
+		private float _playerHighlightHoldDuration = 3.0f;
+
+		[SerializeField]
+		private string _markForDeathRemovedByProtection;
+
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
+
+		private int _lastSelectionNightCount;
+		private PlayerRef _selectedPlayer;
 
 		private GameManager _gameManager;
 
 		public override void Init()
 		{
 			_gameManager = GameManager.Instance;
+
+			_gameManager.MarkForDeathAdded += OnMarkForDeathAdded;
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex)
 		{
+			if (_lastSelectionNightCount + 1 < nightCount)
+			{
+				_selectedPlayer = PlayerRef.None;
+			}
+
+			_lastSelectionNightCount = nightCount;
+
 			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDeadList();
 			immunePlayers.Add(Player);
 
+			if (!_selectedPlayer.IsNone)
+			{
+				immunePlayers.Add(_selectedPlayer);
+				_selectedPlayer = PlayerRef.None;
+			}
+
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
-													"Choose a player to see his role",
+													"Choose a player to protect",
 													_choosePlayerMaximumDuration,
 													false,
 													1,
@@ -48,6 +72,7 @@ namespace Werewolf
 		private IEnumerator WaitToStopWaitingForPlayer()
 		{
 			yield return 0;
+			_selectedPlayer = PlayerRef.None;
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
@@ -55,14 +80,23 @@ namespace Werewolf
 		{
 			StopCoroutine(_endRoleCallAfterTimeCoroutine);
 
-			if (player.Length <= 0 || player[0].IsNone || !_gameManager.RevealPlayerRole(player[0], Player, false, true, OnRoleRevealed))
+			if (player.Length <= 0 || player[0].IsNone)
 			{
+				_selectedPlayer = PlayerRef.None;
 				_gameManager.StopWaintingForPlayer(Player);
+				return;
 			}
+
+			_selectedPlayer = player[0];
+			StartCoroutine(HighlightSelectedPlayer());
 		}
 
-		private void OnRoleRevealed(PlayerRef revealTo)
+		private IEnumerator HighlightSelectedPlayer()
 		{
+			_gameManager.RPC_HideUI(Player);
+			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _selectedPlayer, true);
+			yield return new WaitForSeconds(_playerHighlightHoldDuration);
+			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _selectedPlayer, false);
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
@@ -79,9 +113,24 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
+		private void OnMarkForDeathAdded(PlayerRef player, string markForDeath)
+		{
+			if (player != _selectedPlayer || markForDeath != _markForDeathRemovedByProtection)
+			{
+				return;
+			}
+
+			_gameManager.RemoveMarkForDeath(player, _markForDeathRemovedByProtection);
+		}
+
 		public override void OnRoleCallDisconnected()
 		{
 			StopAllCoroutines();
+		}
+
+		private void OnDestroy()
+		{
+			_gameManager.MarkForDeathAdded -= OnMarkForDeathAdded;
 		}
 	}
 }

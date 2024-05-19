@@ -87,7 +87,7 @@ namespace Werewolf
 
 		public abstract void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles);
 
-		public abstract bool OnRoleCall(int priorityIndex);
+		public abstract bool OnRoleCall(int nightCount, int priorityIndex);
 
 		public virtual void GetTitlesOverride(int priorityIndex, ref Dictionary<PlayerRef, int> titlesOverride) { }
 

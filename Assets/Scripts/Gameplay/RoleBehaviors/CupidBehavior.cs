@@ -76,7 +76,7 @@ namespace Werewolf
 			return new int[1] { PlayerGroupIndexes[0] };
 		}
 
-		public override bool OnRoleCall(int priorityIndex)
+		public override bool OnRoleCall(int nightCount, int priorityIndex)
 		{
 			if (priorityIndex == NightPriorities[0].index)
 			{
