@@ -98,7 +98,7 @@ namespace Werewolf
 				return false;
 			}
 
-			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDeadList();
+			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDead();
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
@@ -207,7 +207,7 @@ namespace Werewolf
 		{
 			foreach (PlayerRef player in _couple)
 			{
-				_gameManager.AddPlayerToPlayerGroup(PlayerGroupIndexes[1], player);
+				_gameManager.AddPlayerToPlayerGroup(player, PlayerGroupIndexes[1]);
 			}
 		}
 

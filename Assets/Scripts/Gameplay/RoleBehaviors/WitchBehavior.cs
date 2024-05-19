@@ -208,7 +208,7 @@ namespace Werewolf
 			_gameManager.RPC_HideUI(Player);
 			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
 
-			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDeadList();
+			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDead();
 			immunePlayers.Add(Player);
 
 			if (_gameManager.AskClientToChoosePlayers(Player,

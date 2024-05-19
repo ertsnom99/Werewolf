@@ -42,8 +42,7 @@ namespace Werewolf
 
 			_lastSelectionNightCount = nightCount;
 
-			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDeadList();
-			immunePlayers.Add(Player);
+			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDead();
 
 			if (!_selectedPlayer.IsNone)
 			{
