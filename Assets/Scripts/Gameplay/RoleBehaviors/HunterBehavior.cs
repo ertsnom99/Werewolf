@@ -206,7 +206,7 @@ namespace Werewolf
 
 		private void OnPostPlayerLeft(PlayerRef deadPlayer)
 		{
-			if (_startChoiceTimerCoroutine == null)
+			if (deadPlayer != Player || _startChoiceTimerCoroutine == null)
 			{
 				return;
 			}

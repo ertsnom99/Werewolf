@@ -78,11 +78,11 @@ namespace Werewolf
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex)
 		{
-			if (priorityIndex == NightPriorities[0].index)
+			if (!IsCoupleSelected() && priorityIndex == NightPriorities[0].index)
 			{
 				return ChooseCouple();
 			}
-			else if (priorityIndex == NightPriorities[1].index)
+			else if (!_showedCouple && priorityIndex == NightPriorities[1].index)
 			{
 				return ShowCouple();
 			}
@@ -90,14 +90,14 @@ namespace Werewolf
 			return false;
 		}
 
+		private bool IsCoupleSelected()
+		{
+			return !_couple[0].IsNone && !_couple[1].IsNone && _couple[0] != _couple[1];
+		}
+
 		#region Choose Couple
 		private bool ChooseCouple()
 		{
-			if (!_couple[0].IsNone || !_couple[1].IsNone || _couple[0] != _couple[1])
-			{
-				return false;
-			}
-
 			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDead();
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,
@@ -216,11 +216,6 @@ namespace Werewolf
 		#region Show Couple
 		private bool ShowCouple()
 		{
-			if (_showedCouple)
-			{
-				return false;
-			}
-
 			for (int i = 0; i < _couple.Length; i++)
 			{
 				if (!_networkDataManager.PlayerInfos[_couple[i]].IsConnected)
@@ -291,7 +286,7 @@ namespace Werewolf
 
 		private void OnPreClientChoosesPlayers(PlayerRef player, ChoicePurpose purpose)
 		{
-			if (purpose != ChoicePurpose.Kill || _couple[0].IsNone || _couple[1].IsNone || !_couple.Contains(player))
+			if (purpose != ChoicePurpose.Kill || !IsCoupleSelected() || !_couple.Contains(player))
 			{
 				return;
 			}
@@ -303,7 +298,7 @@ namespace Werewolf
 
 		private void OnVoteStarting(ChoicePurpose purpose)
 		{
-			if (purpose != ChoicePurpose.Kill || _couple[0].IsNone || _couple[1].IsNone)
+			if (purpose != ChoicePurpose.Kill || !IsCoupleSelected())
 			{
 				return;
 			}
@@ -369,7 +364,7 @@ namespace Werewolf
 
 		private void OnPostPlayerLeft(PlayerRef deadPlayer)
 		{
-			if (_waitToRemoveDeadCoupleHighlightCoroutine == null)
+			if (deadPlayer != Player || _waitToRemoveDeadCoupleHighlightCoroutine == null)
 			{
 				return;
 			}
