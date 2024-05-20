@@ -140,6 +140,7 @@ public class FoxBehavior : RoleBehavior
 			timeLeft -= Time.deltaTime;
 		}
 
+		_gameManager.StopChoosingPlayers(Player);
 		_gameManager.StopWaintingForPlayer(Player);
 	}
 

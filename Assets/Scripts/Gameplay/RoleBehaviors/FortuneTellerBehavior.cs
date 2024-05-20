@@ -76,6 +76,7 @@ namespace Werewolf
 				timeLeft -= Time.deltaTime;
 			}
 
+			_gameManager.StopChoosingPlayers(Player);
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
