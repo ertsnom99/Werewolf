@@ -16,6 +16,8 @@ namespace Werewolf
 		private GameManager.IndexedReservedRoles _reservedRoles;
 		private bool _reservedOnlyWerewolfs;
 
+		private IEnumerator _endRoleCallAfterTimeCoroutine;
+
 		private GameManager _gameManager;
 
 		public override void Init()
@@ -79,6 +81,9 @@ namespace Werewolf
 				StartCoroutine(WaitOnRoleSelected(-1));
 			}
 
+			_endRoleCallAfterTimeCoroutine = EndRoleCallAfterTime();
+			StartCoroutine(_endRoleCallAfterTimeCoroutine);
+
 			return true;
 		}
 
@@ -86,6 +91,19 @@ namespace Werewolf
 		{
 			yield return 0;
 			OnRoleSelected(choiceIndex);
+		}
+
+		private IEnumerator EndRoleCallAfterTime()
+		{
+			float timeLeft = _chooseReservedRoleMaximumDuration;
+
+			while (timeLeft > 0)
+			{
+				yield return 0;
+				timeLeft -= Time.deltaTime;
+			}
+
+			OnRoleSelected(-1);
 		}
 
 		private void OnRoleSelected(int choiceIndex)
