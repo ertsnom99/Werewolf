@@ -1,4 +1,5 @@
 using Assets.Scripts.Data.Tags;
+using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace Werewolf
 		private int _saveImageIndex;
 
 		[SerializeField]
+		[GameplayTagID]
 		private GameplayTag _markForDeathRemovedByLifePotion;
 
 		[SerializeField]
@@ -38,6 +40,7 @@ namespace Werewolf
 		private float _choosePlayerDuration;
 
 		[SerializeField]
+		[GameplayTagID]
 		private GameplayTag _markForDeathAddedByDeathPotion;
 
 		private bool _hasLifePotion = true;

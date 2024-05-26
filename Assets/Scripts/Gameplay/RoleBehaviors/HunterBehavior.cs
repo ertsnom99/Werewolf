@@ -1,4 +1,5 @@
 using Assets.Scripts.Data.Tags;
+using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace Werewolf
 		private float _choosePlayerMaximumDuration = 10.0f;
 
 		[SerializeField]
+		[GameplayTagID]
 		private GameplayTag _markForDeathAddedByShot;
 
 		[SerializeField]
