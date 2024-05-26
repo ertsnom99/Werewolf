@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c84873d15c5cd48b63654ac978fb2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
   <PlayerGroupIndexes>k__BackingField: 
   <NightPriorities>k__BackingField: []
@@ -53,5 +54,7 @@ MonoBehaviour:
   _showCoupleHighlightHoldDuration: 5
   _revealCoupleImageIndex: 4
   _revealOtherPlayersImageIndex: 5
+  _markForDeathAddedByCoupleDeath: {fileID: -6186687672928004612, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _coupleDeathImageIndex: 6
   _coupleDeathHighlightHoldDuration: 5

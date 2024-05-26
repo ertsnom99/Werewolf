@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da3f0b96332c6f45b352a0d86e706fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
   <PlayerGroupIndexes>k__BackingField: 
   <NightPriorities>k__BackingField: []
@@ -54,7 +55,9 @@ MonoBehaviour:
   _choosePotionMaximumDuration: 10
   _choiceSelectedHoldDuration: 2
   _saveImageIndex: 2
-  _markForDeathRemovedByLifePotion: Mauled
+  _markForDeathRemovedByLifePotion: {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _killImageIndex: 3
   _choosePlayerDuration: 5
-  _markForDeathAddedByDeathPotion: Poisoned
+  _markForDeathAddedByDeathPotion: {fileID: 4944564988679888176, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: CommonWerewolfsData
   m_EditorClassIdentifier: 
   <VoteMaxDuration>k__BackingField: 30
-  <MarkForDeath>k__BackingField: Mauled
+  <MarkForDeath>k__BackingField: {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}

@@ -1,3 +1,4 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections;
@@ -100,7 +101,7 @@ namespace Werewolf
 		public struct MarkForDeath
 		{
 			public PlayerRef Player;
-			public List<string> MarksForDeath;
+			public List<GameplayTag> MarksForDeath;
 		}
 
 		private bool _isPlayerDeathRevealCompleted;
@@ -171,8 +172,8 @@ namespace Werewolf
 		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
 		public event Action<PlayerRef, ChoicePurpose> PreClientChoosesPlayers;
-		public event Action<PlayerRef, string> MarkForDeathAdded;
-		public event Action<PlayerRef, List<string>, float> WaitBeforeDeathRevealStarted;
+		public event Action<PlayerRef, GameplayTag> MarkForDeathAdded;
+		public event Action<PlayerRef, List<GameplayTag>, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
 		public event Action<PlayerRef> PlayerDeathRevealEnded;
 		public event Action<PlayerRef> PostPlayerDisconnected;
@@ -1021,7 +1022,7 @@ namespace Werewolf
 			DisplayTitle(null, Config.PlayerDiedText);// TODO: Give real image
 		}
 
-		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, List<string> marks, bool returnFaceDown, Action RevealPlayerCompleted)
+		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, List<GameplayTag> marks, bool returnFaceDown, Action RevealPlayerCompleted)
 		{
 			foreach (PlayerRef player in revealTo)
 			{
@@ -2789,13 +2790,13 @@ namespace Werewolf
 		#endregion
 
 		#region Mark For Death
-		public void AddMarkForDeath(PlayerRef player, string markForDeath)
+		public void AddMarkForDeath(PlayerRef player, GameplayTag markForDeath)
 		{
 			_marksForDeath.Add(new() { Player = player, MarksForDeath = new() { markForDeath } });
 			MarkForDeathAdded?.Invoke(player, markForDeath);
 		}
 
-		public void AddMarkForDeath(PlayerRef player, string markForDeath, int index)
+		public void AddMarkForDeath(PlayerRef player, GameplayTag markForDeath, int index)
 		{
 			if (_marksForDeath.Count < index)
 			{
@@ -2809,7 +2810,7 @@ namespace Werewolf
 			MarkForDeathAdded?.Invoke(player, markForDeath);
 		}
 
-		public void RemoveMarkForDeath(PlayerRef player, string markForDeath)
+		public void RemoveMarkForDeath(PlayerRef player, GameplayTag markForDeath)
 		{
 			for (int i = 0; i < _marksForDeath.Count; i++)
 			{
@@ -2843,7 +2844,7 @@ namespace Werewolf
 			}
 		}
 
-		public PlayerRef[] GetPlayersWithMarkForDeath(string inMarkForDeath)
+		public PlayerRef[] GetPlayersWithMarkForDeath(GameplayTag inMarkForDeath)
 		{
 			List<PlayerRef> players = new();
 

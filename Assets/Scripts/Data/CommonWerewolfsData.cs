@@ -1,3 +1,4 @@
+using Assets.Scripts.Data.Tags;
 using UnityEngine;
 
 namespace Werewolf.Data
@@ -9,6 +10,6 @@ namespace Werewolf.Data
 		public float VoteMaxDuration { get; private set; }
 
 		[field: SerializeField]
-		public string MarkForDeath { get; private set; }
+		public GameplayTag MarkForDeath { get; private set; }
 	}
 }

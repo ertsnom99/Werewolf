@@ -1,3 +1,4 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections;
@@ -30,6 +31,9 @@ namespace Werewolf
 		private int _revealOtherPlayersImageIndex;
 
 		[Header("Couple Death")]
+		[SerializeField]
+		private GameplayTag _markForDeathAddedByCoupleDeath;
+
 		[SerializeField]
 		private int _coupleDeathImageIndex;
 
@@ -336,7 +340,7 @@ namespace Werewolf
 				yield return 0;
 			}
 
-			_gameManager.AddMarkForDeath(otherCouplePlayer, "LoveSickness", 1);
+			_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 1);
 
 			_gameManager.RPC_DisplayTitle(_coupleDeathImageIndex);
 			_gameManager.RPC_SetPlayersCardHighlightVisible(_couple, true);
