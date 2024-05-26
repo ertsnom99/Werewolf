@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 
@@ -6,6 +8,17 @@ namespace Werewolf
 {
 	public class ComedianBehavior : RoleBehavior
 	{
+		[SerializeField]
+		private RoleData[] _prohibitedRoles;
+
+		[SerializeField]
+		private float _chooseReservedRoleMaximumDuration = 10.0f;
+
+		private GameManager.IndexedReservedRoles _reservedRoles;
+		private RoleBehavior _currentRoleBehavior;
+
+		private IEnumerator _endRoleCallAfterTimeCoroutine;
+
 		private GameManager _gameManager;
 
 		private readonly int NEEDED_ROLE_COUNT = 3;
@@ -13,6 +26,8 @@ namespace Werewolf
 		public override void Init()
 		{
 			_gameManager = GameManager.Instance;
+
+			_gameManager.RollCallBegin += OnRollCallBegin;
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles)
@@ -70,7 +85,7 @@ namespace Werewolf
 				return;
 			}
 
-			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), true);
+			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), true, false);
 		}
 
 		private bool CanTakeRolesFromSetup(RoleSetupData roleSetup, List<RoleData> selectedRoles)
@@ -101,8 +116,9 @@ namespace Werewolf
 		private bool IsRoleValid(RoleData role, List<RoleData> selectedRoles)
 		{
 			return !selectedRoles.Contains(role)
+					&& !_prohibitedRoles.Contains(role)
 					&& role.PrimaryType == PrimaryRoleType.Villager
-					&& role.SecondaryType != SecondaryRoleType.None
+					&& role.SecondaryType == SecondaryRoleType.None
 					&& role.Behavior
 					&& !role.Behavior.GetType().Equals(GetType());
 		}
@@ -129,11 +145,104 @@ namespace Werewolf
 			}
 		}
 
+		private void OnRollCallBegin()
+		{
+			if (!_currentRoleBehavior)
+			{
+				return;
+			}
+
+			_gameManager.RemoveBehavior(Player, _currentRoleBehavior, false, false);
+			_currentRoleBehavior = null;
+		}
+
 		public override bool OnRoleCall(int nightCount, int priorityIndex)
 		{
+			_reservedRoles = _gameManager.GetReservedRoles(this);
+
+			if (_reservedRoles.Roles == null || _reservedRoles.Roles.Length < 0)
+			{
+				return false;
+			}
+
+			if (!_gameManager.AskClientToChooseReservedRole(this, _chooseReservedRoleMaximumDuration, false, OnRoleSelected))
+			{
+				StartCoroutine(WaitOnRoleSelected(-1));
+			}
+
+			_endRoleCallAfterTimeCoroutine = EndRoleCallAfterTime();
+			StartCoroutine(_endRoleCallAfterTimeCoroutine);
+
 			return true;
 		}
 
-		public override void OnRoleCallDisconnected() { }
+		private IEnumerator WaitOnRoleSelected(int choiceIndex)
+		{
+			yield return 0;
+			OnRoleSelected(choiceIndex);
+		}
+
+		private IEnumerator EndRoleCallAfterTime()
+		{
+			float timeLeft = _chooseReservedRoleMaximumDuration;
+
+			while (timeLeft > 0)
+			{
+				yield return 0;
+				timeLeft -= Time.deltaTime;
+			}
+
+			OnRoleSelected(-1);
+		}
+
+		private void OnRoleSelected(int choiceIndex)
+		{
+			if (_endRoleCallAfterTimeCoroutine != null)
+			{
+				StopCoroutine(_endRoleCallAfterTimeCoroutine);
+				_endRoleCallAfterTimeCoroutine = null;
+			}
+
+			if (choiceIndex <= -1)
+			{
+				_gameManager.StopWaintingForPlayer(Player);
+				return;
+			}
+
+			int counter = 0;
+			int selectedReservedRoleIndex;
+
+			for (selectedReservedRoleIndex = 0; selectedReservedRoleIndex < _reservedRoles.Behaviors.Length; selectedReservedRoleIndex++)
+			{
+				if (!_reservedRoles.Behaviors[selectedReservedRoleIndex])
+				{
+					continue;
+				}
+
+				if (counter == choiceIndex)
+				{
+					_currentRoleBehavior = _reservedRoles.Behaviors[selectedReservedRoleIndex];
+					break;
+				}
+
+				counter++;
+			}
+
+			_gameManager.AddBehavior(Player, _currentRoleBehavior, false);
+			_gameManager.RemoveReservedRoles(this, new int[1] { selectedReservedRoleIndex });
+			_gameManager.StopWaintingForPlayer(Player);
+		}
+
+		public override void OnRoleCallDisconnected()
+		{
+			StopAllCoroutines();
+
+			_gameManager.StopChoosingReservedRole(Player);
+		}
+
+		private void OnDestroy()
+		{
+			_gameManager.RollCallBegin -= OnRollCallBegin;
+		}
 	}
 }

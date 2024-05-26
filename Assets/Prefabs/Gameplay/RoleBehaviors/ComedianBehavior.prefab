@@ -44,3 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aa7fd09b295f7d41be2e312f4486e3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroupIndexes>k__BackingField: 
+  <NightPriorities>k__BackingField: []
+  <IsPrimaryBehavior>k__BackingField: 0
+  _prohibitedRoles:
+  - {fileID: 11400000, guid: 487a3d6743b9ccd4f8af37c479c3365c, type: 2}
+  - {fileID: 11400000, guid: ab3288c5368621349841361cd66f7bfa, type: 2}
+  - {fileID: 11400000, guid: 28d64caafe8877649a56d1661a9604fb, type: 2}

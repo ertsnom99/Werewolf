@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,7 +54,7 @@ namespace Werewolf
 				_gameManager.RemoveRoleToDistribute(_gameManager.RolesToDistribute[randomIndex]);
 			}
 
-			_gameManager.ReserveRoles(this, roles.ToArray(), false);
+			_gameManager.ReserveRoles(this, roles.ToArray(), false, true);
 		}
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex)
@@ -108,6 +109,14 @@ namespace Werewolf
 
 		private void OnRoleSelected(int choiceIndex)
 		{
+			if (_endRoleCallAfterTimeCoroutine != null)
+			{
+				StopCoroutine(_endRoleCallAfterTimeCoroutine);
+				_endRoleCallAfterTimeCoroutine = null;
+			}
+
+			PlayerRef previousPlayer = Player;
+
 			if (choiceIndex > -1)
 			{
 				_gameManager.ChangeRole(Player, _reservedRoles.Roles[choiceIndex], _reservedRoles.Behaviors[choiceIndex]);
@@ -118,8 +127,7 @@ namespace Werewolf
 			}
 
 			_gameManager.RemoveReservedRoles(this, new int[0]);
-			_gameManager.RemovePlayerFromNightCall(NightPriorities[0].index, Player);
-			_gameManager.StopWaintingForPlayer(Player);
+			_gameManager.StopWaintingForPlayer(previousPlayer);
 
 			if (choiceIndex > -1 || _reservedOnlyWerewolfs)
 			{
@@ -129,6 +137,14 @@ namespace Werewolf
 
 		public override void OnRoleCallDisconnected()
 		{
+			if (_endRoleCallAfterTimeCoroutine == null)
+			{
+				return;
+			}
+
+			StopCoroutine(_endRoleCallAfterTimeCoroutine);
+			_endRoleCallAfterTimeCoroutine = null;
+			
 			_gameManager.StopChoosingReservedRole(Player);
 
 			if (_reservedOnlyWerewolfs)
@@ -137,7 +153,6 @@ namespace Werewolf
 			}
 
 			_gameManager.RemoveReservedRoles(this, new int[0]);
-			_gameManager.RemovePlayerFromNightCall(NightPriorities[0].index, Player);
 
 			if (_reservedOnlyWerewolfs)
 			{

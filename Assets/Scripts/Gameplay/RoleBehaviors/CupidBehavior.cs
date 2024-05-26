@@ -329,6 +329,8 @@ namespace Werewolf
 
 		private IEnumerator WaitToHighlightDeadCouple(PlayerRef otherCouplePlayer)
 		{
+			yield return 0;
+
 			while (_gameManager.PlayersWaitingFor.Count > 1)
 			{
 				yield return 0;

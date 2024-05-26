@@ -45,5 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroupIndexes>k__BackingField: 
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
+  _choosePlayerImageIndex: 10
+  _choosePlayerMaximumDuration: 10
+  _selectedPlayerHighlightDuration: 3

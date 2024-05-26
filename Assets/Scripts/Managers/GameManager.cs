@@ -168,6 +168,7 @@ namespace Werewolf
 		public event Action PreRoleDistribution;
 		public event Action PostRoleDistribution;
 		public event Action PreStartGame;
+		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
 		public event Action<PlayerRef, ChoicePurpose> PreClientChoosesPlayers;
 		public event Action<PlayerRef, string> MarkForDeathAdded;
@@ -345,6 +346,7 @@ namespace Werewolf
 			// Temporairy store the behaviors, because they must be attributed to specific players later
 			RoleBehavior roleBehavior = Instantiate(role.Behavior, transform);
 
+			roleBehavior.SetRoleGameplayTag(role.GameplayTag);
 			roleBehavior.SetPrimaryRoleType(role.PrimaryType);
 
 			foreach (int playerGroupIndex in role.PlayerGroupIndexes)
@@ -773,6 +775,8 @@ namespace Werewolf
 		#region Night Call
 		private IEnumerator CallRoles()
 		{
+			RollCallBegin?.Invoke();
+
 			_currentNightCallIndex = 0;
 
 			while (_currentNightCallIndex < _nightCalls.Count)
@@ -863,7 +867,7 @@ namespace Werewolf
 		private int GetDisplayedRoleGameplayTagID(NightCall nightCall)
 		{
 			RoleData alias = null;
-			bool aliasFound = false;
+			RoleBehavior behaviorCalled = null;
 
 			foreach (RoleBehavior behavior in PlayerGameInfos[nightCall.Players[0]].Behaviors)
 			{
@@ -875,12 +879,12 @@ namespace Werewolf
 					}
 
 					alias = nightPrioritie.alias;
-					aliasFound = true;
+					behaviorCalled = behavior;
 
 					break;
 				}
 
-				if (aliasFound)
+				if (behaviorCalled)
 				{
 					break;
 				}
@@ -892,7 +896,7 @@ namespace Werewolf
 			}
 			else
 			{
-				return PlayerGameInfos[nightCall.Players[0]].Role.GameplayTag.CompactTagId;
+				return behaviorCalled.RoleGameplayTag.CompactTagId;
 			}
 		}
 
@@ -2000,7 +2004,7 @@ namespace Werewolf
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
-						RemoveBehavior(from, behavior, false);
+						RemoveBehavior(from, behavior, true, false);
 						AddBehavior(to, behavior);
 						break;
 					}
@@ -2034,7 +2038,7 @@ namespace Werewolf
 		#endregion
 
 		#region Behavior Change
-		private void AddBehavior(PlayerRef player, RoleBehavior behavior)
+		public void AddBehavior(PlayerRef player, RoleBehavior behavior, bool addPlayerToPlayerGroup = true)
 		{
 			int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -2051,9 +2055,12 @@ namespace Werewolf
 				AddPlayerToNightCall(priority, player);
 			}
 
-			foreach (int playerGroupIndex in behavior.GetCurrentPlayerGroups())
+			if (addPlayerToPlayerGroup)
 			{
-				AddPlayerToPlayerGroup(player, playerGroupIndex);
+				foreach (int playerGroupIndex in behavior.GetCurrentPlayerGroups())
+				{
+					AddPlayerToPlayerGroup(player, playerGroupIndex);
+				}
 			}
 
 			PlayerGameInfos[player].Behaviors.Add(behavior);
@@ -2078,14 +2085,14 @@ namespace Werewolf
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
-						RemoveBehavior(player, behavior, destroyOldBehavior);
+						RemoveBehavior(player, behavior, true, destroyOldBehavior);
 						break;
 					}
 				}
 			}
 		}
 
-		private void RemoveBehavior(PlayerRef player, RoleBehavior behavior, bool destroyBehavior = true)
+		public void RemoveBehavior(PlayerRef player, RoleBehavior behavior, bool removePlayerFromGroup = true, bool destroyBehavior = true)
 		{
 			int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -2105,10 +2112,15 @@ namespace Werewolf
 				break;
 			}
 
-			foreach (int group in behavior.GetCurrentPlayerGroups())
+			if (removePlayerFromGroup)
 			{
-				RemovePlayerFromGroup(player, group);
+				foreach (int group in behavior.GetCurrentPlayerGroups())
+				{
+					RemovePlayerFromGroup(player, group);
+				}
 			}
+
+			behavior.SetPlayer(PlayerRef.None);
 
 			if (!destroyBehavior)
 			{
@@ -2311,7 +2323,7 @@ namespace Werewolf
 		#endregion
 
 		#region Role Reservation
-		public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] roles, bool AreFaceUp)
+		public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] roles, bool areFaceUp, bool arePrimaryBehavior)
 		{
 			RolesContainer rolesContainer = new();
 			RoleBehavior[] behaviors = new RoleBehavior[roles.Length];
@@ -2320,13 +2332,14 @@ namespace Werewolf
 
 			for (int i = 0; i < roles.Length; i++)
 			{
-				rolesContainer.Roles.Set(i, AreFaceUp ? roles[i].GameplayTag.CompactTagId : -1);
+				rolesContainer.Roles.Set(i, areFaceUp ? roles[i].GameplayTag.CompactTagId : -1);
 
 				foreach (KeyValuePair<RoleBehavior, RoleData> unassignedRoleBehavior in _unassignedRoleBehaviors)
 				{
 					if (unassignedRoleBehavior.Value == roles[i])
 					{
 						behaviors[i] = unassignedRoleBehavior.Key;
+						behaviors[i].SetIsPrimaryBehavior(arePrimaryBehavior);
 						_unassignedRoleBehaviors.Remove(unassignedRoleBehavior.Key);
 						break;
 					}
@@ -2457,6 +2470,11 @@ namespace Werewolf
 
 			for (int i = 0; i < roleDatas.Length; i++)
 			{
+				if (!roleDatas[i])
+				{
+					continue;
+				}
+
 				rolesContainer.Roles.Set(i, roleDatas[i].GameplayTag.CompactTagId);
 			}
 
@@ -2494,7 +2512,7 @@ namespace Werewolf
 			{
 				if (roleGameplayTag <= 0)
 				{
-					break;
+					continue;
 				}
 
 				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
@@ -3195,7 +3213,10 @@ namespace Werewolf
 
 			if (_currentGameplayLoopStep == GameplayLoopStep.RoleCall && PlayersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
 			{
-				PlayerGameInfos[player].Behaviors[0].OnRoleCallDisconnected();
+				foreach (RoleBehavior behavior in PlayerGameInfos[player].Behaviors)
+				{
+					behavior.OnRoleCallDisconnected();
+				}
 			}
 
 			StopWaintingForPlayer(player);
@@ -3234,6 +3255,20 @@ namespace Werewolf
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionNormalDuration);
 		}
 
+		public void DisplayTitle(int imageIndex, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
+		{
+			if (imageIndex < 0 || imageIndex >= Config.ImagesData.Images.Length)
+			{
+				Debug.LogError($"No title exist for index {imageIndex}");
+				return;
+			}
+
+			ImageData titleData = Config.ImagesData.Images[imageIndex];
+
+			_UIManager.TitleScreen.Initialize(titleData.Image, titleData.Text, countdownDuration, showConfirmButton, confirmButtonText);
+			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionNormalDuration);
+		}
+
 		private IEnumerator DisplayTitleForAllPlayers(string title, float holdDuration)
 		{
 			if (holdDuration < Config.UITransitionNormalDuration)
@@ -3268,14 +3303,7 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_DisplayTitle(int imageIndex)
 		{
-			if (imageIndex < 0 || imageIndex >= Config.ImagesData.Images.Length)
-			{
-				Debug.LogError($"No title exist for index {imageIndex}");
-				return;
-			}
-
-			ImageData titleData = Config.ImagesData.Images[imageIndex];
-			DisplayTitle(titleData.Image, titleData.Text);
+			DisplayTitle(imageIndex);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -3287,14 +3315,7 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int imageIndex)
 		{
-			if (imageIndex < 0 || imageIndex >= Config.ImagesData.Images.Length)
-			{
-				Debug.LogError($"No title exist for index {imageIndex}");
-				return;
-			}
-
-			ImageData titleData = Config.ImagesData.Images[imageIndex];
-			DisplayTitle(titleData.Image, titleData.Text);
+			DisplayTitle(imageIndex);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
