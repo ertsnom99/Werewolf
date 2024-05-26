@@ -1,3 +1,4 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,9 @@ namespace Werewolf
 
 		[SerializeField]
 		private float _choosePlayerMaximumDuration = 10.0f;
+
+		[SerializeField]
+		private GameplayTag _markForDeathAddedByShot;
 
 		[SerializeField]
 		private float _selectedPlayerHighlightDuration = 3.0f;
@@ -156,7 +160,7 @@ namespace Werewolf
 
 			if (!selectedPlayer.IsNone)
 			{
-				_gameManager.AddMarkForDeath(selectedPlayer, "Shot", 1);
+				_gameManager.AddMarkForDeath(selectedPlayer, _markForDeathAddedByShot, 1);
 				_gameManager.RPC_SetPlayerCardHighlightVisible(selectedPlayer, true);
 				_gameManager.RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR

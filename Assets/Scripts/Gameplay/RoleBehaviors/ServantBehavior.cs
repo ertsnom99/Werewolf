@@ -1,3 +1,4 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace Werewolf
 			return false;
 		}
 
-		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<string> marks, float revealDuration)
+		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<GameplayTag> marks, float revealDuration)
 		{
 			if (Player.IsNone
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive

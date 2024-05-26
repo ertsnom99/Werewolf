@@ -132,7 +132,8 @@ MonoBehaviour:
   <ExecutionDrawCaptainChooseText>k__BackingField: The vote was a draw! The captain
     will choose who to execute.
   <ExecutionCaptainChoiceDuration>k__BackingField: 10
-  <ExecutionMarkForDeath>k__BackingField: Hanged
+  <ExecutionMarkForDeath>k__BackingField: {fileID: 8184940356768289636, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   <WinningPlayerGroupText>k__BackingField: The {0} won!
   <NoWinnerText>k__BackingField: No one won!
   <EndGameTitleHoldDuration>k__BackingField: 3
@@ -216,5 +217,6 @@ MonoBehaviour:
   <UITransitionFastDuration>k__BackingField: 0.1
   <CountdownText>k__BackingField: 'Time left: {0}'
   <SkipTurnText>k__BackingField: Skip turn
-  <PlayerLeftMarkForDeath>k__BackingField: Disconnected
+  <PlayerLeftMarkForDeath>k__BackingField: {fileID: 9216349172710836488, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   <DisconnectedTextDuration>k__BackingField: 5

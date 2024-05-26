@@ -1,3 +1,4 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Werewolf
 		private float _playerHighlightHoldDuration = 3.0f;
 
 		[SerializeField]
-		private string _markForDeathRemovedByProtection;
+		private GameplayTag _markForDeathRemovedByProtection;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
@@ -113,7 +114,7 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnMarkForDeathAdded(PlayerRef player, string markForDeath)
+		private void OnMarkForDeathAdded(PlayerRef player, GameplayTag markForDeath)
 		{
 			if (player != _selectedPlayer || markForDeath != _markForDeathRemovedByProtection)
 			{
