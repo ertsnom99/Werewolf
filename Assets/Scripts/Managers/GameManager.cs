@@ -3213,9 +3213,9 @@ namespace Werewolf
 
 			if (_currentGameplayLoopStep == GameplayLoopStep.RoleCall && PlayersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
 			{
-				foreach (RoleBehavior behavior in PlayerGameInfos[player].Behaviors)
+				for (int i = 0; i < PlayerGameInfos[player].Behaviors.Count; i++)
 				{
-					behavior.OnRoleCallDisconnected();
+					PlayerGameInfos[player].Behaviors[i].OnRoleCallDisconnected();
 				}
 			}
 
