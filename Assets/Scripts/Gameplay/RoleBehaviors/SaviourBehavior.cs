@@ -1,4 +1,5 @@
 using Assets.Scripts.Data.Tags;
+using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Werewolf
 		private float _playerHighlightHoldDuration = 3.0f;
 
 		[SerializeField]
+		[GameplayTagID]
 		private GameplayTag _markForDeathRemovedByProtection;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;

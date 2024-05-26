@@ -1,4 +1,5 @@
 using Assets.Scripts.Data.Tags;
+using Assets.Scripts.Editor.Tags;
 using UnityEngine;
 
 namespace Werewolf.Data
@@ -162,6 +163,7 @@ namespace Werewolf.Data
 		public float ExecutionCaptainChoiceDuration { get; private set; }
 
 		[field: SerializeField]
+		[field: GameplayTagID]
 		public GameplayTag ExecutionMarkForDeath { get; private set; }
 
 		[field: Header("End Game")]
@@ -283,6 +285,7 @@ namespace Werewolf.Data
 
 		[field: Header("Network")]
 		[field: SerializeField]
+		[field: GameplayTagID]
 		public GameplayTag PlayerLeftMarkForDeath { get; private set; }
 
 		[field: SerializeField]

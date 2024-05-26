@@ -1,4 +1,5 @@
 using Assets.Scripts.Data.Tags;
+using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System;
 using System.Collections;
@@ -32,6 +33,7 @@ namespace Werewolf
 
 		[Header("Couple Death")]
 		[SerializeField]
+		[GameplayTagID]
 		private GameplayTag _markForDeathAddedByCoupleDeath;
 
 		[SerializeField]
