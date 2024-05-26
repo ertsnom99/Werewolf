@@ -61,6 +61,7 @@ namespace Werewolf
 		{
 			RoleData RoleToTake = _gameManager.PlayerGameInfos[_playerRevealed].Role;
 			RoleData servantRole = _gameManager.PlayerGameInfos[Player].Role;
+			PlayerRef previousPlayer = Player;
 
 			_gameManager.TransferRole(_playerRevealed, Player, false);
 
@@ -71,7 +72,7 @@ namespace Werewolf
 					continue;
 				}
 
-				if (playerInfo.Key == Player)
+				if (playerInfo.Key == previousPlayer)
 				{
 					_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
 					_gameManager.RPC_DisplayTitle(playerInfo.Key, $"Your new role is: {RoleToTake.Name}");
@@ -83,13 +84,13 @@ namespace Werewolf
 					_gameManager.RPC_HideUI(_playerRevealed);
 				}
 
-				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, Player, true, servantRole.GameplayTag.CompactTagId);
+				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, previousPlayer, true, servantRole.GameplayTag.CompactTagId);
 				_gameManager.RPC_DestroyPlayerCard(playerInfo.Key, _playerRevealed);
 				_gameManager.RPC_DisplayTitle(playerInfo.Key, "The servant has decided to take this role!");
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.ChangePlayerCardRole(Player, servantRole);
-			_gameManager.MoveCardToCamera(Player, true);
+			_gameManager.ChangePlayerCardRole(previousPlayer, servantRole);
+			_gameManager.MoveCardToCamera(previousPlayer, true);
 			_gameManager.DestroyPlayerCard(_playerRevealed);
 			_gameManager.DisplayTitle(null, "The servant has decided to take this role!");
 #endif
@@ -102,17 +103,17 @@ namespace Werewolf
 					continue;
 				}
 
-				if (playerInfo.Key == Player)
+				if (playerInfo.Key == previousPlayer)
 				{
-					_gameManager.RPC_DestroyPlayerCard(Player, _playerRevealed);
+					_gameManager.RPC_DestroyPlayerCard(previousPlayer, _playerRevealed);
 					continue;
 				}
 
-				_gameManager.RPC_PutCardBackDown(playerInfo.Key, Player, true);
+				_gameManager.RPC_PutCardBackDown(playerInfo.Key, previousPlayer, true);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.ChangePlayerCardRole(Player, RoleToTake);
-			_gameManager.PutCardBackDown(Player, false);
+			_gameManager.ChangePlayerCardRole(previousPlayer, RoleToTake);
+			_gameManager.PutCardBackDown(previousPlayer, false);
 #endif
 			yield return new WaitForSeconds(_gameManager.Config.MoveToCameraDuration);
 			_gameManager.SetPlayerDeathRevealCompleted();

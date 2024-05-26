@@ -11,6 +11,9 @@ namespace Werewolf
 	public class HunterBehavior : RoleBehavior
 	{
 		[SerializeField]
+		private int _choosePlayerImageIndex;
+
+		[SerializeField]
 		private float _choosePlayerMaximumDuration = 10.0f;
 
 		[SerializeField]
@@ -69,12 +72,10 @@ namespace Werewolf
 					continue;
 				}
 
-				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, Player, true, _gameManager.PlayerGameInfos[Player].Role.GameplayTag.CompactTagId);
-				_gameManager.RPC_DisplayTitle(playerInfo.Key, "The hunter is choosing who to kill!");
+				_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosePlayerImageIndex);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.MoveCardToCamera(Player, true);
-			_gameManager.DisplayTitle(null, "The hunter is choosing who to kill!");
+			_gameManager.DisplayTitle(_choosePlayerImageIndex);
 #endif
 			_startChoiceTimerCoroutine = StartChoiceTimer();
 			StartCoroutine(_startChoiceTimerCoroutine);
@@ -151,19 +152,6 @@ namespace Werewolf
 			{
 				StopCoroutine(_startChoiceTimerCoroutine);
 				_startChoiceTimerCoroutine = null;
-
-				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
-				{
-					if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected || playerInfo.Key == Player)
-					{
-						continue;
-					}
-
-					_gameManager.RPC_PutCardBackDown(playerInfo.Key, Player, false);
-				}
-#if UNITY_SERVER && UNITY_EDITOR
-				_gameManager.PutCardBackDown(Player, false);
-#endif
 			}
 
 			if (!selectedPlayer.IsNone)

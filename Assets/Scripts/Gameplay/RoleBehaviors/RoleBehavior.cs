@@ -1,3 +1,5 @@
+using Assets.Scripts.Data.Tags;
+using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +9,11 @@ namespace Werewolf
 {
 	public abstract class RoleBehavior : MonoBehaviour
 	{
+		[field: SerializeField]
+		[field: ReadOnly]
+		[field: GameplayTagID]
+		public GameplayTag RoleGameplayTag { get; protected set; }
+
 		[field: SerializeField]
 		[field: ReadOnly]
 		public PrimaryRoleType PrimaryRoleType { get; private set; }
@@ -26,6 +33,16 @@ namespace Werewolf
 		[field: SerializeField]
 		[field: ReadOnly]
 		public PlayerRef Player { get; private set; }
+
+		public void SetRoleGameplayTag(GameplayTag roleGameplayTag)
+		{
+			RoleGameplayTag = roleGameplayTag;
+		}
+
+		public void SetPrimaryRoleType(PrimaryRoleType primaryRoleType)
+		{
+			PrimaryRoleType = primaryRoleType;
+		}
 
 		public void AddPlayerGroupIndex(int playerGroupIndex)
 		{
@@ -71,11 +88,6 @@ namespace Werewolf
 		public void SetIsPrimaryBehavior(bool isPrimaryBehavior)
 		{
 			IsPrimaryBehavior = isPrimaryBehavior;
-		}
-
-		public void SetPrimaryRoleType(PrimaryRoleType primaryRoleType)
-		{
-			PrimaryRoleType = primaryRoleType;
 		}
 
 		public void SetPlayer(PlayerRef player)

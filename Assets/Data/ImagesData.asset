@@ -33,3 +33,5 @@ MonoBehaviour:
     Text: There is one or more werewolf in this group!
   - Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
     Text: There is no werewolf in this group! You just lost your power!
+  - Image: {fileID: -330916012, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: The hunter is choosing who to kill!
