@@ -44,7 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ee98aa4dcf7364baf51e4b666e319e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
   <PlayerGroupIndexes>k__BackingField: 
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
+  _choosePlayerImage: {fileID: 8739123847444604939, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _choosePlayerMaximumDuration: 10

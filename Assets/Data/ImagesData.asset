@@ -12,26 +12,144 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 603c28c198bbb114e8545e9fb9b7fad7, type: 3}
   m_Name: ImagesData
   m_EditorClassIdentifier: 
-  <Images>k__BackingField:
-  - Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
-    Text: This player will die tonight
-  - Image: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
-    Text: No potion left to use
-  - Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
-    Text: Save
-  - Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
-    Text: Kill
-  - Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+  _images:
+  - GameplayTag: {fileID: -5375341707992204064, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Do you want to be the captain?
+  - GameplayTag: {fileID: 3935916943633048771, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Multiple players want to be captain. The village will debate, then vote!
+  - GameplayTag: {fileID: -2222359258656955773, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Debate about who should be captain
+  - GameplayTag: {fileID: -2412456246043308623, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1221642604, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: No one wanted to be the captain!
+  - GameplayTag: {fileID: 8582886363894869589, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 705772914, guid: 57e5fee1eb9618343bcdb98861e6b594, type: 3}
+    Text: The sun is rising, the village wakes up...
+  - GameplayTag: {fileID: -6924916128729707147, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1681703266, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text: The sun is setting, the village goes to sleep...
+  - GameplayTag: {fileID: 3414206372492271902, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text: Some people died...
+  - GameplayTag: {fileID: -2834002916931835057, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: No one died tonight!
+  - GameplayTag: {fileID: 1534591760579037349, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text: You died!
+  - GameplayTag: {fileID: -467428146297135536, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text: Debate about who will be executed!
+  - GameplayTag: {fileID: -6473885156194452207, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 1002782032, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text: The vote was a draw! A new vote will start to break the draw
+  - GameplayTag: {fileID: -7417608976458301737, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: The vote was a draw again! No one will be executed
+  - GameplayTag: {fileID: -8197723905688610027, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text: The vote was a draw! Choose who to execute.
+  - GameplayTag: {fileID: -3234978832333433636, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text: The vote was a draw! The captain will choose who to execute.
+  - GameplayTag: {fileID: -46525750058059440, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text: No one won!
+  - GameplayTag: {fileID: -4152609035969618942, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Here is the captain!
+  - GameplayTag: {fileID: 385745502131665813, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Choose the next captain
+  - GameplayTag: {fileID: 6957548192255917565, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: The old captain is choosing the new one
+  - GameplayTag: {fileID: 8209229256807389745, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Choose the couple
+  - GameplayTag: {fileID: 5075221199770472978, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Text: You are now in a couple
-  - Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+  - GameplayTag: {fileID: 7700595151910905832, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Text: The couple is recognizing each other
-  - Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+  - GameplayTag: {fileID: 7456238396284510153, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Text: The couple can't live appart from each other!
-  - Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+  - GameplayTag: {fileID: 8739123847444604939, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 983793743, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Choose a player to see his role
+  - GameplayTag: {fileID: -3897550941697366323, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
     Text: Can't use your power, because you lost it!
-  - Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+  - GameplayTag: {fileID: 1290680065302481199, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text: Choose the middle player to check
+  - GameplayTag: {fileID: 3146112165964210076, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
     Text: There is one or more werewolf in this group!
-  - Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+  - GameplayTag: {fileID: 4838366214633630053, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
     Text: There is no werewolf in this group! You just lost your power!
-  - Image: {fileID: -330916012, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+  - GameplayTag: {fileID: 3817651400509371634, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -330916012, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Choose a player to kill
+  - GameplayTag: {fileID: -2521136356514112087, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -330916012, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Text: The hunter is choosing who to kill!
+  - GameplayTag: {fileID: 7494298166840074912, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 357046205, guid: d27adb3f7039d1a45a0389b130f6c9c3, type: 3}
+    Text: Choose a player to protect
+  - GameplayTag: {fileID: 7828248529302745967, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: This player will die tonight
+  - GameplayTag: {fileID: -8715855821755236391, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: No potion left to use
+  - GameplayTag: {fileID: -8974482386819651042, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Save
+  - GameplayTag: {fileID: -4830026793023973320, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Kill
+  - GameplayTag: {fileID: 7564377360445445541, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Choose a player to kill!

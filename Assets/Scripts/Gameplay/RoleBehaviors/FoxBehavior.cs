@@ -1,15 +1,19 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Werewolf;
 using Werewolf.Data;
 
 public class FoxBehavior : RoleBehavior
 {
+	[Header("Find Werewolfs")]
 	[SerializeField]
-	private int _lostPowerImageIndex;
+	private GameplayTag _lostPowerImage;
+
+	[SerializeField]
+	private GameplayTag _choosePlayerImage;
 
 	[SerializeField]
 	private float _choosePlayerMaximumDuration = 10.0f;
@@ -18,10 +22,10 @@ public class FoxBehavior : RoleBehavior
 	private int[] _werewolfPlayerGroupIndexes;
 
 	[SerializeField]
-	private int _foundWerewolfImageIndex;
+	private GameplayTag _foundWerewolfImage;
 
 	[SerializeField]
-	private int _foundNoWerewolfImageIndex;
+	private GameplayTag _foundNoWerewolfImage;
 
 	[SerializeField]
 	private float _foundWerewolfDuration = 3.0f;
@@ -51,7 +55,7 @@ public class FoxBehavior : RoleBehavior
 
 		if (!_gameManager.AskClientToChoosePlayers(Player,
 												immunePlayers,
-												"Choose the middle player to check",
+												_choosePlayerImage.CompactTagId,//"Choose the middle player to check",
 												_choosePlayerMaximumDuration,
 												false,
 												1,
@@ -69,7 +73,7 @@ public class FoxBehavior : RoleBehavior
 
 	private IEnumerator ShowLostPower()
 	{
-		_gameManager.RPC_DisplayTitle(Player, _lostPowerImageIndex);
+		_gameManager.RPC_DisplayTitle(Player, _lostPowerImage.CompactTagId);
 		yield return 0;
 		_gameManager.StopWaintingForPlayer(Player);
 	}
@@ -112,11 +116,11 @@ public class FoxBehavior : RoleBehavior
 
 		if (werewolfFound)
 		{
-			_gameManager.RPC_DisplayTitle(Player, _foundWerewolfImageIndex);
+			_gameManager.RPC_DisplayTitle(Player, _foundWerewolfImage.CompactTagId);
 		}
 		else
 		{
-			_gameManager.RPC_DisplayTitle(Player, _foundNoWerewolfImageIndex);
+			_gameManager.RPC_DisplayTitle(Player, _foundNoWerewolfImage.CompactTagId);
 			_hasPower = false;
 		}
 

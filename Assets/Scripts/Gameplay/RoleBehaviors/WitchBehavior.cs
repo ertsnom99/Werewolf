@@ -1,5 +1,4 @@
 using Assets.Scripts.Data.Tags;
-using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,36 +10,50 @@ namespace Werewolf
 {
 	public class WitchBehavior : RoleBehavior
 	{
+		[Header("Player Dead Tonight")]
 		[SerializeField]
-		private int _markForDeathImageIndex;
-
-		[SerializeField]
-		private int _noPotionToUseImageIndex;
+		private GameplayTag _playerDeadTonightImage;
 
 		[SerializeField]
 		private float _playerHighlightHoldDuration;
+
+		[Header("Potion Choice")]
+		[SerializeField]
+		private GameplayTag _noPotionToUseImage;
 
 		[SerializeField]
 		private float _choosePotionMaximumDuration = 10.0f;
 
 		[SerializeField]
+		private string _choosePotionText;
+
+		[SerializeField]
+		private string _choosedPotionText;
+
+		[SerializeField]
+		private string _choosedNoPotionText;
+
+		[SerializeField]
 		private float _choiceSelectedHoldDuration;
 
+		[Header("Life Potion")]
 		[SerializeField]
-		private int _saveImageIndex;
+		private GameplayTag _saveImage;
 
 		[SerializeField]
-		[GameplayTagID]
 		private GameplayTag _markForDeathRemovedByLifePotion;
 
+		[Header("Death Potion")]
 		[SerializeField]
-		private int _killImageIndex;
+		private GameplayTag _killImage;
+
+		[SerializeField]
+		private GameplayTag _choosePlayerImage;
 
 		[SerializeField]
 		private float _choosePlayerDuration;
 
 		[SerializeField]
-		[GameplayTagID]
 		private GameplayTag _markForDeathAddedByDeathPotion;
 
 		private bool _hasLifePotion = true;
@@ -92,7 +105,7 @@ namespace Werewolf
 			{
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _markedForDeathPlayer, true);
 
-				_gameManager.RPC_DisplayTitle(Player, _markForDeathImageIndex);
+				_gameManager.RPC_DisplayTitle(Player, _playerDeadTonightImage.CompactTagId);
 				yield return new WaitForSeconds(_playerHighlightHoldDuration);
 
 				_gameManager.RPC_HideUI(Player);
@@ -127,7 +140,7 @@ namespace Werewolf
 			{
 				if (showTitles)
 				{
-					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImageIndex);
+					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImage.CompactTagId);
 				}
 
 				return false;
@@ -146,7 +159,7 @@ namespace Werewolf
 			{
 				if (showTitles)
 				{
-					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImageIndex);
+					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImage.CompactTagId);
 				}
 
 				return false;
@@ -154,23 +167,23 @@ namespace Werewolf
 
 			if (!canSavePlayer)
 			{
-				_choices = new int[] { _killImageIndex };
+				_choices = new int[] { _killImage.CompactTagId };
 			}
 			else if (!_hasDeathPotion)
 			{
-				_choices = new int[] { _saveImageIndex };
+				_choices = new int[] { _saveImage.CompactTagId };
 			}
 			else
 			{
-				_choices = new int[] { _saveImageIndex, _killImageIndex };
+				_choices = new int[] { _saveImage.CompactTagId, _killImage.CompactTagId };
 			}
 
 			return _gameManager.AskClientToMakeChoice(Player,
 													_choices,
 													_choosePotionTimeLeft,
-													"You can choose a potion to use",
-													"You chose this potion",
-													"You didn't choose any potion",
+													_choosePotionText,
+													_choosedPotionText,
+													_choosedNoPotionText,
 													false,
 													OnPotionSelected);
 		}
@@ -188,7 +201,7 @@ namespace Werewolf
 
 			int choice = choiceIndex >= 0 ? _choices[choiceIndex] : -1;
 
-			if (choice == _saveImageIndex)
+			if (choice == _saveImage.CompactTagId)
 			{
 				_gameManager.RemoveMarkForDeath(_markedForDeathPlayer, _markForDeathRemovedByLifePotion);
 				_hasLifePotion = false;
@@ -196,7 +209,7 @@ namespace Werewolf
 				StartCoroutine(RefreshPotions(_choiceSelectedHoldDuration, true));
 				return;
 			}
-			else if (choice == _killImageIndex)
+			else if (choice == _killImage.CompactTagId)
 			{
 				StartCoroutine(ChoosePlayerToKill());
 				return;
@@ -217,7 +230,7 @@ namespace Werewolf
 
 			if (_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
-													"Choose a player to kill",
+													_choosePlayerImage.CompactTagId,
 													_choosePlayerDuration,
 													true,
 													1,

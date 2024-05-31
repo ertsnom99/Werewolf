@@ -49,6 +49,8 @@ MonoBehaviour:
   <PlayerGroupIndexes>k__BackingField: 
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
+  _choosePlayerImage: {fileID: 7494298166840074912, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _choosePlayerMaximumDuration: 10
   _playerHighlightHoldDuration: 3
   _markForDeathRemovedByProtection: {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632,

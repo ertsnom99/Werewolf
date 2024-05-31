@@ -49,15 +49,26 @@ MonoBehaviour:
   <PlayerGroupIndexes>k__BackingField: 
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _markForDeathImageIndex: 0
-  _noPotionToUseImageIndex: 1
+  _playerDieTonightImage: {fileID: 7828248529302745967, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _playerDeadTonightImage: {fileID: 7828248529302745967, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _playerHighlightHoldDuration: 3
+  _noPotionToUseImage: {fileID: -8715855821755236391, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _choosePotionMaximumDuration: 10
+  _choosePotionText: You can choose a potion to use
+  _choosedPotionText: You chose this potion
+  _choosedNoPotionText: You didn't choose any potion
   _choiceSelectedHoldDuration: 2
-  _saveImageIndex: 2
+  _saveImage: {fileID: -8974482386819651042, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _markForDeathRemovedByLifePotion: {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  _killImageIndex: 3
+  _killImage: {fileID: -4830026793023973320, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _choosePlayerImage: {fileID: 7564377360445445541, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _choosePlayerDuration: 5
   _markForDeathAddedByDeathPotion: {fileID: 4944564988679888176, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}

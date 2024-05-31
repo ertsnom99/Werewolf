@@ -1,5 +1,4 @@
 using Assets.Scripts.Data.Tags;
-using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,14 +11,17 @@ namespace Werewolf
 {
 	public class HunterBehavior : RoleBehavior
 	{
+		[Header("Shoot Player")]
 		[SerializeField]
-		private int _choosePlayerImageIndex;
+		private GameplayTag _choosePlayerImage;
 
 		[SerializeField]
 		private float _choosePlayerMaximumDuration = 10.0f;
 
 		[SerializeField]
-		[GameplayTagID]
+		private GameplayTag _choosingPlayerImage;
+
+		[SerializeField]
 		private GameplayTag _markForDeathAddedByShot;
 
 		[SerializeField]
@@ -60,7 +62,7 @@ namespace Werewolf
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
-													"Choose a player to kill",
+													_choosePlayerImage.CompactTagId,
 													_choosePlayerMaximumDuration,
 													true,
 													1,
@@ -78,10 +80,10 @@ namespace Werewolf
 					continue;
 				}
 
-				_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosePlayerImageIndex);
+				_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosingPlayerImage.CompactTagId);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.DisplayTitle(_choosePlayerImageIndex);
+			_gameManager.DisplayTitle(_choosingPlayerImage.CompactTagId);
 #endif
 			_startChoiceTimerCoroutine = StartChoiceTimer();
 			StartCoroutine(_startChoiceTimerCoroutine);

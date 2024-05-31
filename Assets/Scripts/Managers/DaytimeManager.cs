@@ -63,7 +63,7 @@ namespace Werewolf
 			CurrentDaytime = daytime;
 			_inTransition = true;
 
-			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _config.DayTransitionText : _config.NightTransitionText));
+			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _config.DayTransitionImage.CompactTagId : _config.NightTransitionImage.CompactTagId));
 			StartCoroutine(TransitionDaytime());
 		}
 
@@ -88,9 +88,16 @@ namespace Werewolf
 			}
 		}
 
-		private IEnumerator TransitionTitle(string text)
+		private IEnumerator TransitionTitle(int imageID)
 		{
-			_UIManager.TitleScreen.Initialize(null, text);// TODO: Give real image
+			ImageData titleData = default;
+
+			if (!_config.ImagesData.GetImageData(imageID, ref titleData))
+			{
+				yield break;
+			}
+
+			_UIManager.TitleScreen.Initialize(titleData.Image, titleData.Text);
 
 			yield return new WaitForSeconds(_config.DaytimeTextFadeInDelay);
 
