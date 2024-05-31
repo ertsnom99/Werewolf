@@ -93,7 +93,7 @@ namespace Werewolf.Network
 
 		public void ClearRolesSetup()
 		{
-			RolesSetup = new RolesSetup();
+			RolesSetup = new();
 			RolesSetupReady = false;
 		}
 

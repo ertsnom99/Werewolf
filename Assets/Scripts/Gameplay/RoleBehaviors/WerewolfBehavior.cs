@@ -9,6 +9,7 @@ namespace Werewolf
 {
 	public class WerewolfBehavior : RoleBehavior
 	{
+		[Header("Data")]
 		[SerializeField]
 		private CommonWerewolfsData _commonData;
 

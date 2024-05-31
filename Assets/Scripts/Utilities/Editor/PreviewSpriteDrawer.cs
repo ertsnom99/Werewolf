@@ -48,8 +48,8 @@ namespace UnityEditor
 
         private void DrawTexturePreview(Rect position, Sprite sprite)
         {
-            Vector2 fullSize = new Vector2(sprite.texture.width, sprite.texture.height);
-            Vector2 size = new Vector2(sprite.textureRect.width, sprite.textureRect.height);
+            Vector2 fullSize = new(sprite.texture.width, sprite.texture.height);
+            Vector2 size = new(sprite.textureRect.width, sprite.textureRect.height);
 
             Rect coords = sprite.textureRect;
             coords.x /= fullSize.x;

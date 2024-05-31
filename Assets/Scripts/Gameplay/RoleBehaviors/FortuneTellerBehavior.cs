@@ -1,3 +1,4 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,10 @@ namespace Werewolf
 {
 	public class FortuneTellerBehavior : RoleBehavior
 	{
+		[Header("Choose Player")]
+		[SerializeField]
+		private GameplayTag _choosePlayerImage;
+
 		[SerializeField]
 		private float _choosePlayerMaximumDuration = 10.0f;
 
@@ -29,7 +34,7 @@ namespace Werewolf
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
-													"Choose a player to see his role",
+													_choosePlayerImage.CompactTagId,//"Choose a player to see his role",
 													_choosePlayerMaximumDuration,
 													false,
 													1,

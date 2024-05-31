@@ -49,12 +49,17 @@ MonoBehaviour:
   <PlayerGroupIndexes>k__BackingField: 
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
+  _chooseCoupleImage: {fileID: 8209229256807389745, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _chooseCoupleMaximumDuration: 10
   _choseCoupleHighlightHoldDuration: 3
   _showCoupleHighlightHoldDuration: 5
-  _revealCoupleImageIndex: 4
-  _revealOtherPlayersImageIndex: 5
+  _inCoupleImage: {fileID: 5075221199770472978, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _coupleRecognizingEachOtherImage: {fileID: 7700595151910905832, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _markForDeathAddedByCoupleDeath: {fileID: -6186687672928004612, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  _coupleDeathImageIndex: 6
+  _coupleDeathImage: {fileID: 7456238396284510153, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _coupleDeathHighlightHoldDuration: 5

@@ -1,5 +1,4 @@
 using Assets.Scripts.Data.Tags;
-using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +9,10 @@ namespace Werewolf
 {
 	public class SaviourBehavior : RoleBehavior
 	{
+		[Header("Save Player")]
+		[SerializeField]
+		private GameplayTag _choosePlayerImage;
+
 		[SerializeField]
 		private float _choosePlayerMaximumDuration = 10.0f;
 
@@ -17,7 +20,6 @@ namespace Werewolf
 		private float _playerHighlightHoldDuration = 3.0f;
 
 		[SerializeField]
-		[GameplayTagID]
 		private GameplayTag _markForDeathRemovedByProtection;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
@@ -55,7 +57,7 @@ namespace Werewolf
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
-													"Choose a player to protect",
+													_choosePlayerImage.CompactTagId,//"Choose a player to protect",
 													_choosePlayerMaximumDuration,
 													false,
 													1,

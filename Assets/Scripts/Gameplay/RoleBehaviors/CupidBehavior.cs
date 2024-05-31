@@ -1,5 +1,4 @@
 using Assets.Scripts.Data.Tags;
-using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System;
 using System.Collections;
@@ -16,6 +15,9 @@ namespace Werewolf
 	{
 		[Header("Choose Couple")]
 		[SerializeField]
+		private GameplayTag _chooseCoupleImage;
+
+		[SerializeField]
 		private float _chooseCoupleMaximumDuration = 10.0f;
 
 		[SerializeField]
@@ -26,18 +28,17 @@ namespace Werewolf
 		private float _showCoupleHighlightHoldDuration = 3.0f;
 
 		[SerializeField]
-		private int _revealCoupleImageIndex;
+		private GameplayTag _inCoupleImage;
 
 		[SerializeField]
-		private int _revealOtherPlayersImageIndex;
+		private GameplayTag _coupleRecognizingEachOtherImage;
 
 		[Header("Couple Death")]
 		[SerializeField]
-		[GameplayTagID]
 		private GameplayTag _markForDeathAddedByCoupleDeath;
 
 		[SerializeField]
-		private int _coupleDeathImageIndex;
+		private GameplayTag _coupleDeathImage;
 
 		[SerializeField]
 		private float _coupleDeathHighlightHoldDuration = 3.0f;
@@ -108,7 +109,7 @@ namespace Werewolf
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
-													"Choose the couple",
+													_chooseCoupleImage.CompactTagId,
 													_chooseCoupleMaximumDuration,
 													true,
 													2,
@@ -234,7 +235,7 @@ namespace Werewolf
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _revealOtherPlayersImageIndex);
+				_gameManager.RPC_DisplayTitle(Player, _coupleRecognizingEachOtherImage.CompactTagId);
 			}
 
 			_showedCouple = true;
@@ -281,11 +282,11 @@ namespace Werewolf
 			{
 				if (_couple.Contains(playerInfo.Key))
 				{
-					titlesOverride.Add(playerInfo.Key, _revealCoupleImageIndex);
+					titlesOverride.Add(playerInfo.Key, _inCoupleImage.CompactTagId);
 				}
 				else
 				{
-					titlesOverride.Add(playerInfo.Key, _revealOtherPlayersImageIndex);
+					titlesOverride.Add(playerInfo.Key, _coupleRecognizingEachOtherImage.CompactTagId);
 				}
 			}
 		}
@@ -344,7 +345,7 @@ namespace Werewolf
 
 			_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 1);
 
-			_gameManager.RPC_DisplayTitle(_coupleDeathImageIndex);
+			_gameManager.RPC_DisplayTitle(_coupleDeathImage.CompactTagId);
 			_gameManager.RPC_SetPlayersCardHighlightVisible(_couple, true);
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayersCardHighlightVisible(_couple, true);

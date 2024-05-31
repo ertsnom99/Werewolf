@@ -8,6 +8,7 @@ namespace Werewolf
 {
 	public class ComedianBehavior : RoleBehavior
 	{
+		[Header("Choose Role")]
 		[SerializeField]
 		private RoleData[] _prohibitedRoles;
 

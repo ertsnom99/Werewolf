@@ -44,7 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4678afe46769f4089d9e4298f44212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroupIndexes>k__BackingField: 
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
+  _takeRolePrompt: Take this role?
+  _confirmTakeRoleButtonText: Take
+  _newRoleText: 'Your new role is: {0}'
+  _tookThisRoleText: The servant has decided to take this role!
   _servantRevealDuration: 3

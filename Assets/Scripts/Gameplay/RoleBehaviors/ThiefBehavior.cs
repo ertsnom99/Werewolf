@@ -8,6 +8,7 @@ namespace Werewolf
 {
 	public class ThiefBehavior : RoleBehavior
 	{
+		[Header("Choose Role")]
 		[SerializeField]
 		private RoleData[] _rolesToAdd;
 

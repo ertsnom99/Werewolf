@@ -1,5 +1,4 @@
 using Assets.Scripts.Data.Tags;
-using Assets.Scripts.Editor.Tags;
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +10,6 @@ namespace Werewolf
 	{
 		[field: SerializeField]
 		[field: ReadOnly]
-		[field: GameplayTagID]
 		public GameplayTag RoleGameplayTag { get; protected set; }
 
 		[field: SerializeField]

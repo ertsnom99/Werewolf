@@ -44,7 +44,7 @@ namespace Werewolf
 
 		public Dictionary<PlayerRef, PlayerGameInfo> PlayerGameInfos { get; private set; }
 
-		private List<PlayerRef> _captainCandidates = new List<PlayerRef>();
+		private List<PlayerRef> _captainCandidates = new();
 		private PlayerRef _captain;
 		private GameObject _captainCard;
 
@@ -92,7 +92,7 @@ namespace Werewolf
 		private Dictionary<PlayerRef, Action<PlayerRef[]>> _choosePlayersCallbacks = new();
 		private List<PlayerRef> _immunePlayersForGettingChosen = new();
 		private int _playerAmountToSelect;
-		private List<PlayerRef> _selectedPlayers = new List<PlayerRef>();
+		private List<PlayerRef> _selectedPlayers = new();
 
 		private Dictionary<PlayerRef, Action<int>> _makeChoiceCallbacks = new();
 
@@ -206,6 +206,8 @@ namespace Werewolf
 			_UIManager = UIManager.Instance;
 			_voteManager = VoteManager.Instance;
 			_daytimeManager = DaytimeManager.Instance;
+
+			Config.ImagesData.Init();
 
 			_voteManager.SetConfig(Config);
 			_voteManager.SetPlayers(PlayerGameInfos);
@@ -644,7 +646,7 @@ namespace Werewolf
 					StartCoroutine(StartDeathReveal(true));
 					break;
 				case GameplayLoopStep.ExecutionDebate:
-					StartCoroutine(StartDebate(Config.ExecutionDebateText, Config.ExecutionDebateDuration));
+					StartCoroutine(StartDebate(Config.ExecutionDebateImage.CompactTagId, Config.ExecutionDebateDuration));
 					break;
 				case GameplayLoopStep.Execution:
 					StartExecution();
@@ -661,14 +663,14 @@ namespace Werewolf
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				PromptPlayer(playerInfo.Key,
-							Config.ElectionPromptTitleText,
+							Config.ElectionPromptTitleImage.CompactTagId,
 							Config.ElectionPromptDuration,
 							Config.ElectionPromptButtonText,
 							OnPlayerWantsToBeCaptain,
 							false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(null, Config.ElectionPromptTitleText, Config.ElectionPromptDuration);
+			DisplayTitle(Config.ElectionPromptTitleImage.CompactTagId, Config.ElectionPromptDuration);
 #endif
 			yield return new WaitForSeconds(Config.ElectionPromptDuration);
 
@@ -684,8 +686,8 @@ namespace Werewolf
 			if (_captainCandidates.Count > 1)
 			{
 				StartCoroutine(HighlightPlayersToggle(_captainCandidates.ToArray()));
-				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidateText, Config.ElectionMultipleCandidateDuration);
-				StartCoroutine(StartDebate(Config.ElectionDebateText, Config.ElectionDebateDuration));
+				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidateImage.CompactTagId, Config.ElectionMultipleCandidateDuration);
+				StartCoroutine(StartDebate(Config.ElectionDebateImage.CompactTagId, Config.ElectionDebateDuration));
 				yield break;
 			}
 			else if (_captainCandidates.Count == 1)
@@ -695,7 +697,7 @@ namespace Werewolf
 			}
 			else
 			{
-				yield return DisplayTitleForAllPlayers(Config.ElectionNoCandidateText, Config.ElectionNoCandidateDuration);
+				yield return DisplayTitleForAllPlayers(Config.ElectionNoCandidateImage.CompactTagId, Config.ElectionNoCandidateDuration);
 			}
 
 			_currentGameplayLoopStep = GameplayLoopStep.Election;
@@ -906,7 +908,7 @@ namespace Werewolf
 			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
 			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
 
-			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.ToLower()));// TODO: Give real image
+			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.ToLower()));
 		}
 
 		#region RPC Calls
@@ -1014,12 +1016,12 @@ namespace Werewolf
 
 		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
 		{
-			DisplayTitle(null, hasAnyPlayerDied ? Config.DeathRevealSomeoneDiedText : Config.DeathRevealNooneDiedText);// TODO: Give real image
+			DisplayTitle(hasAnyPlayerDied ? Config.DeathRevealSomeoneDiedImage.CompactTagId : Config.DeathRevealNoOneDiedImage.CompactTagId);
 		}
 
 		private void DisplayPlayerDiedTitle()
 		{
-			DisplayTitle(null, Config.PlayerDiedText);// TODO: Give real image
+			DisplayTitle(Config.PlayerDiedImage.CompactTagId);
 		}
 
 		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, List<GameplayTag> marks, bool returnFaceDown, Action RevealPlayerCompleted)
@@ -1124,7 +1126,7 @@ namespace Werewolf
 
 		private void SetPlayerDead(PlayerRef deadPlayer)
 		{
-			PlayerGameInfos[deadPlayer] = new PlayerGameInfo { Role = PlayerGameInfos[deadPlayer].Role, Behaviors = PlayerGameInfos[deadPlayer].Behaviors, IsAlive = false };
+			PlayerGameInfos[deadPlayer] = new() { Role = PlayerGameInfos[deadPlayer].Role, Behaviors = PlayerGameInfos[deadPlayer].Behaviors, IsAlive = false };
 			AlivePlayerCount--;
 
 			RemovePlayerFromAllPlayerGroups(deadPlayer);
@@ -1199,7 +1201,7 @@ namespace Werewolf
 
 		private IEnumerator StartSecondaryExecution(PlayerRef[] mostVotedPlayers)
 		{
-			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteText, Config.ExecutionTitleHoldDuration);
+			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteImage.CompactTagId, Config.ExecutionTitleHoldDuration);
 
 			StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
 									Config.ExecutionVoteDuration,
@@ -1225,7 +1227,7 @@ namespace Werewolf
 
 		private IEnumerator DisplayFailedExecution()
 		{
-			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainText, Config.ExecutionTitleHoldDuration);
+			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainImage.CompactTagId, Config.ExecutionTitleHoldDuration);
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
@@ -1236,7 +1238,7 @@ namespace Werewolf
 
 			if (!AskClientToChoosePlayers(_captain,
 										GetPlayersExcluding(executionChoices.ToArray()).ToList(),
-										Config.ExecutionDrawYouChooseText,
+										Config.ExecutionDrawYouChooseImage.CompactTagId,
 										Config.ExecutionCaptainChoiceDuration,
 										true,
 										1,
@@ -1254,10 +1256,10 @@ namespace Werewolf
 					continue;
 				}
 
-				RPC_DisplayTitle(player.Key, Config.ExecutionDrawCaptainChooseText);
+				RPC_DisplayTitle(player.Key, Config.ExecutionDrawCaptainChooseImage.CompactTagId);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(null, Config.ExecutionDrawCaptainChooseText);
+			DisplayTitle(Config.ExecutionDrawCaptainChooseImage.CompactTagId);
 #endif
 			yield return new WaitForSeconds(Config.ExecutionCaptainChoiceDuration);
 
@@ -1344,7 +1346,7 @@ namespace Werewolf
 
 		private void PrepareEndGameSequence(PlayerGroup winningPlayerGroup)
 		{
-			List<PlayerEndGameInfo> endGamePlayerInfos = new List<PlayerEndGameInfo>();
+			List<PlayerEndGameInfo> endGamePlayerInfos = new();
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
@@ -1405,7 +1407,7 @@ namespace Werewolf
 			}
 			else
 			{
-				DisplayTitle(null, Config.NoWinnerText);
+				DisplayTitle(Config.NoWinnerImage.CompactTagId);
 			}
 
 			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration);
@@ -1481,7 +1483,7 @@ namespace Werewolf
 
 		private PlayerRef[] GetPlayersExcluding(PlayerRef playerToExclude)
 		{
-			List<PlayerRef> players = new List<PlayerRef>();
+			List<PlayerRef> players = new();
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
@@ -1498,7 +1500,7 @@ namespace Werewolf
 
 		private PlayerRef[] GetPlayersExcluding(PlayerRef[] playersToExclude)
 		{
-			List<PlayerRef> players = new List<PlayerRef>();
+			List<PlayerRef> players = new();
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
@@ -1558,7 +1560,7 @@ namespace Werewolf
 		#region Captain
 		private IEnumerator ChooseNextCaptain()
 		{
-			List<PlayerRef> captainChoices = new List<PlayerRef>();
+			List<PlayerRef> captainChoices = new();
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
@@ -1583,7 +1585,7 @@ namespace Werewolf
 
 			if (!AskClientToChoosePlayers(_captain,
 										GetPlayersExcluding(captainChoices.ToArray()).ToList(),
-										Config.ChooseNextCaptainText,
+										Config.ChooseNextCaptainImage.CompactTagId,
 										Config.CaptainChoiceDuration,
 										true,
 										1,
@@ -1601,10 +1603,10 @@ namespace Werewolf
 					continue;
 				}
 
-				RPC_DisplayTitle(player.Key, Config.OldCaptainChoosingText);
+				RPC_DisplayTitle(player.Key, Config.OldCaptainChoosingImage.CompactTagId);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(null, Config.OldCaptainChoosingText);
+			DisplayTitle(Config.OldCaptainChoosingImage.CompactTagId);
 #endif
 			float elapsedTime = .0f;
 
@@ -1664,7 +1666,7 @@ namespace Werewolf
 			}
 
 			StartCoroutine(HighlightPlayerToggle(_captain));
-			yield return DisplayTitleForAllPlayers(Config.CaptainRevealText, Config.HighlightDuration);
+			yield return DisplayTitleForAllPlayers(Config.CaptainRevealImage.CompactTagId, Config.HighlightDuration);
 		}
 
 		private IEnumerator MoveCaptainCard(Vector3 newPosition)
@@ -1706,7 +1708,7 @@ namespace Werewolf
 		#endregion
 
 		#region Debate
-		private IEnumerator StartDebate(string text, float duration)
+		private IEnumerator StartDebate(int imageID, float duration)
 		{
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
@@ -1715,7 +1717,7 @@ namespace Werewolf
 					continue;
 				}
 
-				RPC_OnDebateStarted(playerInfo.Key, text, duration, playerInfo.Value.IsAlive);
+				RPC_OnDebateStarted(playerInfo.Key, imageID, duration, playerInfo.Value.IsAlive);
 
 				if (!playerInfo.Value.IsAlive)
 				{
@@ -1725,7 +1727,7 @@ namespace Werewolf
 				WaitForPlayer(playerInfo.Key);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(null, text, duration, false, Config.SkipText);
+			DisplayTitle(imageID, duration, false, Config.SkipText);
 #endif
 			float elapsedTime = .0f;
 
@@ -1770,9 +1772,9 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, string debateText, float countdownDuration, bool showConfirmButton)
+		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, int imageID, float countdownDuration, bool showConfirmButton)
 		{
-			DisplayTitle(null, debateText, countdownDuration, showConfirmButton, Config.SkipText);
+			DisplayTitle(imageID, countdownDuration, showConfirmButton, Config.SkipText);
 
 			if (!showConfirmButton)
 			{
@@ -1867,7 +1869,7 @@ namespace Werewolf
 			_voteManager.VoteCompleted -= OnVoteEnded;
 
 			int mostVoteCount = 0;
-			List<PlayerRef> mostVotedPlayers = new List<PlayerRef>();
+			List<PlayerRef> mostVotedPlayers = new();
 
 			foreach (KeyValuePair<PlayerRef, int> vote in votes)
 			{
@@ -2564,7 +2566,7 @@ namespace Werewolf
 		#endregion
 
 		#region Choose a Players
-		public bool AskClientToChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> immunePlayers, string displayText, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
+		public bool AskClientToChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayersCallbacks.ContainsKey(choosingPlayer))
 			{
@@ -2576,7 +2578,7 @@ namespace Werewolf
 			_immunePlayersForGettingChosen = immunePlayers;
 			PreClientChoosesPlayers?.Invoke(choosingPlayer, purpose);
 
-			RPC_ClientChoosePlayers(choosingPlayer, _immunePlayersForGettingChosen.ToArray(), displayText, maximumDuration, mustChoose, playerAmount);
+			RPC_ClientChoosePlayers(choosingPlayer, _immunePlayersForGettingChosen.ToArray(), imageID, maximumDuration, mustChoose, playerAmount);
 
 			return true;
 		}
@@ -2659,7 +2661,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientChoosePlayers([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, string displayText, float maximumDuration, bool mustChoose, int playerAmount)
+		private void RPC_ClientChoosePlayers([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount)
 		{
 			_playerAmountToSelect = playerAmount;
 			_selectedPlayers.Clear();
@@ -2681,7 +2683,7 @@ namespace Werewolf
 				playerCard.Value.OnCardClick += OnClientChooseCard;
 			}
 
-			DisplayTitle(null, displayText, maximumDuration, !mustChoose, Config.SkipTurnText);// TODO: Give real image
+			DisplayTitle(imageID, maximumDuration, !mustChoose, Config.SkipTurnText);
 			
 			if (mustChoose)
 			{
@@ -2712,7 +2714,7 @@ namespace Werewolf
 		#endregion
 
 		#region Make Choice
-		public bool AskClientToMakeChoice(PlayerRef choosingPlayer, int[] choiceIndexes, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose, Action<int> callback)
+		public bool AskClientToMakeChoice(PlayerRef choosingPlayer, int[] choiceImageIDs, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose, Action<int> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _makeChoiceCallbacks.ContainsKey(choosingPlayer))
 			{
@@ -2720,7 +2722,7 @@ namespace Werewolf
 			}
 
 			_makeChoiceCallbacks.Add(choosingPlayer, callback);
-			RPC_MakeChoice(choosingPlayer, choiceIndexes, maximumDuration, chooseText, choosedText, didNotChoosedText, mustChoose);
+			RPC_MakeChoice(choosingPlayer, choiceImageIDs, maximumDuration, chooseText, choosedText, didNotChoosedText, mustChoose);
 
 			return true;
 		}
@@ -2745,20 +2747,20 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_MakeChoice([RpcTarget] PlayerRef player, int[] choiceIndexes, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose)
+		public void RPC_MakeChoice([RpcTarget] PlayerRef player, int[] choiceImageIDs, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose)
 		{
 			List<Choice.ChoiceData> choices = new();
 
-			foreach (int choiceIndex in choiceIndexes)
+			foreach (int choiceImageID in choiceImageIDs)
 			{
-				if (choiceIndex < 0 || choiceIndex >= Config.ImagesData.Images.Length)
+				ImageData imageData = default;
+
+				if (!Config.ImagesData.GetImageData(choiceImageID, ref imageData))
 				{
-					Debug.LogError($"No choice exist for index {choiceIndex}");
 					continue;
 				}
 
-				ImageData chocieData = Config.ImagesData.Images[choiceIndex];
-				choices.Add(new() { Image = chocieData.Image, Name = chocieData.Text });
+				choices.Add(new() { Image = imageData.Image, Name = imageData.Text });
 			}
 
 			_UIManager.ChoiceScreen.ConfirmChoice += GiveChoice;
@@ -3144,7 +3146,20 @@ namespace Werewolf
 		#endregion
 
 		#region Prompt Player
-		public bool PromptPlayer(PlayerRef promptedPlayer, string prompt, float duration, string confirmButtonText , Action<PlayerRef> callback, bool fastFade = true)
+		public bool PromptPlayer(PlayerRef promptedPlayer, int imageID, float duration, string confirmButtonText , Action<PlayerRef> callback, bool fastFade = true)
+		{
+			if (!_networkDataManager.PlayerInfos[promptedPlayer].IsConnected || _promptPlayerCallbacks.ContainsKey(promptedPlayer))
+			{
+				return false;
+			}
+
+			_promptPlayerCallbacks.Add(promptedPlayer, callback);
+			RPC_PromptPlayer(promptedPlayer, imageID, duration, confirmButtonText, fastFade);
+
+			return true;
+		}
+
+		public bool PromptPlayer(PlayerRef promptedPlayer, string prompt, float duration, string confirmButtonText, Action<PlayerRef> callback, bool fastFade = true)
 		{
 			if (!_networkDataManager.PlayerInfos[promptedPlayer].IsConnected || _promptPlayerCallbacks.ContainsKey(promptedPlayer))
 			{
@@ -3176,11 +3191,17 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, int imageID, float duration, string confirmButtonText, bool fastFade)
+		{
+			_UIManager.TitleScreen.Confirm += OnPromptAccepted;
+			DisplayTitle(imageID, duration, true, confirmButtonText, fastFade);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, string prompt, float duration, string confirmButtonText, bool fastFade)
 		{
-			_UIManager.TitleScreen.Initialize(null, prompt, duration, true, confirmButtonText);// TODO: Give real image
 			_UIManager.TitleScreen.Confirm += OnPromptAccepted;
-			_UIManager.FadeIn(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
+			DisplayTitle(null, prompt, duration, true, confirmButtonText, fastFade);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -3250,36 +3271,35 @@ namespace Werewolf
 		#endregion
 
 		#region UI
-		public void DisplayTitle(Sprite image, string title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
+		public void DisplayTitle(int imageID, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "", bool fastFade = false)
 		{
-			_UIManager.TitleScreen.Initialize(image, title, countdownDuration, showConfirmButton, confirmButtonText);
-			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionNormalDuration);
-		}
+			ImageData titleData = default;
 
-		public void DisplayTitle(int imageIndex, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
-		{
-			if (imageIndex < 0 || imageIndex >= Config.ImagesData.Images.Length)
+			if (!Config.ImagesData.GetImageData(imageID, ref titleData))
 			{
-				Debug.LogError($"No title exist for index {imageIndex}");
 				return;
 			}
 
-			ImageData titleData = Config.ImagesData.Images[imageIndex];
-
 			_UIManager.TitleScreen.Initialize(titleData.Image, titleData.Text, countdownDuration, showConfirmButton, confirmButtonText);
-			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionNormalDuration);
+			_UIManager.FadeIn(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
 		}
 
-		private IEnumerator DisplayTitleForAllPlayers(string title, float holdDuration)
+		public void DisplayTitle(Sprite image, string title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "", bool fastFade = false)
+		{
+			_UIManager.TitleScreen.Initialize(image, title, countdownDuration, showConfirmButton, confirmButtonText);
+			_UIManager.FadeIn(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
+		}
+
+		private IEnumerator DisplayTitleForAllPlayers(int imageID, float holdDuration)
 		{
 			if (holdDuration < Config.UITransitionNormalDuration)
 			{
 				Debug.LogError("holdDuration most not be smaller than Config.UITransitionNormalDuration");
 			}
 
-			RPC_DisplayTitle(title);
+			RPC_DisplayTitle(imageID);
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(null, title);
+			DisplayTitle(imageID);
 #endif
 			yield return new WaitForSeconds(holdDuration - Config.UITransitionNormalDuration);
 			RPC_HideUI();
@@ -3302,9 +3322,9 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayTitle(int imageIndex)
+		public void RPC_DisplayTitle(int imageID)
 		{
-			DisplayTitle(imageIndex);
+			DisplayTitle(imageID);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -3314,9 +3334,9 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int imageIndex)
+		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int imageID)
 		{
-			DisplayTitle(imageIndex);
+			DisplayTitle(imageID);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]

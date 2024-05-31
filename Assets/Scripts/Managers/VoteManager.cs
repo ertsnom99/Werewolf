@@ -433,7 +433,7 @@ namespace Werewolf
 				RPC_VoteEnded(spectator);
 			}
 
-			Dictionary<PlayerRef, int> totalVotes = new Dictionary<PlayerRef, int>();
+			Dictionary<PlayerRef, int> totalVotes = new();
 
 			foreach (KeyValuePair<PlayerRef, Vote> vote in _votes)
 			{
