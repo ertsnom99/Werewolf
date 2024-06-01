@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroupIndexes>k__BackingField: 
+  <PlayerGroupGameplayTags>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _lostPowerImage: {fileID: -3897550941697366323, guid: 0e7014af8e28a88409bdb3f0abb80632,
@@ -54,7 +54,9 @@ MonoBehaviour:
   _choosePlayerImage: {fileID: 1290680065302481199, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _choosePlayerMaximumDuration: 10
-  _werewolfPlayerGroupIndexes: 0200000003000000
+  _werewolfPlayerGroups:
+  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: -8573035580249646065, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   _foundWerewolfImage: {fileID: 3146112165964210076, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _foundNoWerewolfImage: {fileID: 4838366214633630053, guid: 0e7014af8e28a88409bdb3f0abb80632,

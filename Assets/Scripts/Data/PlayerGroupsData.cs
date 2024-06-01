@@ -1,3 +1,4 @@
+using Assets.Scripts.Data.Tags;
 using System;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace Werewolf.Data
 	[Serializable]
 	public struct PlayerGroupData
 	{
-		public int Index;
+		public GameplayTag GameplayTag;
 		public string Name;
 		[field: PreviewSprite]
 		public Sprite Image;
@@ -20,17 +21,30 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public PlayerGroupData[] Datas { get; private set; }
 
-		public PlayerGroupData GetPlayerGroupData(int index)
+		public PlayerGroupData GetPlayerGroup(int ID)
 		{
 			foreach(PlayerGroupData data in Datas)
 			{
-				if (data.Index == index)
+				if (data.GameplayTag.CompactTagId == ID)
 				{
 					return data;
 				}
 			}
 
 			return new();
+		}
+
+		public int GetPlayerGroupPriority(GameplayTag gameplayTag)
+		{
+			for (int i = 0; i < Datas.Length; i++)
+			{
+				if (Datas[i].GameplayTag == gameplayTag)
+				{
+					return (i + 1);
+				}
+			}
+
+			return -1;
 		}
 	}
 }

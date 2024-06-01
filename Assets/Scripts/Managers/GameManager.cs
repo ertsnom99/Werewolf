@@ -73,7 +73,8 @@ namespace Werewolf
 
 		private struct PlayerGroup
 		{
-			public int Index;
+			public GameplayTag GameplayTag;
+			public int Priority;
 			public List<PlayerRef> Players;
 		}
 
@@ -352,9 +353,9 @@ namespace Werewolf
 			roleBehavior.SetRoleGameplayTag(role.GameplayTag);
 			roleBehavior.SetPrimaryRoleType(role.PrimaryType);
 
-			foreach (int playerGroupIndex in role.PlayerGroupIndexes)
+			foreach (GameplayTag playerGroup in role.PlayerGroups)
 			{
-				roleBehavior.AddPlayerGroupIndex(playerGroupIndex);
+				roleBehavior.AddPlayerGroup(playerGroup);
 			}
 
 			foreach (Priority nightPriority in role.NightPriorities)
@@ -415,17 +416,17 @@ namespace Werewolf
 			{
 				if (playerInfo.Value.Behaviors.Count <= 0)
 				{
-					foreach (int playerGroupIndex in playerInfo.Value.Role.PlayerGroupIndexes)
+					foreach (GameplayTag playerGroup in playerInfo.Value.Role.PlayerGroups)
 					{
-						AddPlayerToPlayerGroup(playerInfo.Key, playerGroupIndex);
+						AddPlayerToPlayerGroup(playerInfo.Key, playerGroup);
 					}
 
 					continue;
 				}
 
-				foreach (int playerGroupIndex in playerInfo.Value.Behaviors[0].GetCurrentPlayerGroups())
+				foreach (GameplayTag playerGroup in playerInfo.Value.Behaviors[0].GetCurrentPlayerGroups())
 				{
-					AddPlayerToPlayerGroup(playerInfo.Key, playerGroupIndex);
+					AddPlayerToPlayerGroup(playerInfo.Key, playerGroup);
 				}
 			}
 		}
@@ -1326,7 +1327,7 @@ namespace Werewolf
 		{
 			if (_playerGroups.Count <= 0)
 			{
-				PrepareEndGameSequence(new() { Index = -1, Players = new() });
+				PrepareEndGameSequence(new() { GameplayTag = null, Priority = -1, Players = new() });
 				return true;
 			}
 
@@ -1360,7 +1361,7 @@ namespace Werewolf
 				endGamePlayerInfos.Add(new() { Player = playerInfo.Key,
 												Role = role,
 												IsAlive = playerInfo.Value.IsAlive,
-												Won = winningPlayerGroup.Index > -1 ? winningPlayerGroup.Players.Contains(playerInfo.Key) : false });
+												Won = winningPlayerGroup.GameplayTag != null ? winningPlayerGroup.Players.Contains(playerInfo.Key) : false });
 #if UNITY_SERVER && UNITY_EDITOR
 				if (endGamePlayerInfos[endGamePlayerInfos.Count - 1].Won)
 				{
@@ -1369,16 +1370,16 @@ namespace Werewolf
 #endif
 			}
 
-			int winningPlayerGroupIndex = winningPlayerGroup.Index > -1 ? winningPlayerGroup.Index : -1;
+			int winningPlayerGroupID = winningPlayerGroup.GameplayTag != null ? winningPlayerGroup.GameplayTag.CompactTagId : -1;
 
-			RPC_StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupIndex);
+			RPC_StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupID);
 #if UNITY_SERVER && UNITY_EDITOR
-			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupIndex));
+			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupID));
 #endif
 			StartCoroutine(ReturnToLobby());
 		}
 
-		private IEnumerator StartEndGameSequence(PlayerEndGameInfo[] endGamePlayerInfos, int winningPlayerGroupIndex)
+		private IEnumerator StartEndGameSequence(PlayerEndGameInfo[] endGamePlayerInfos, int winningPlayerGroupID)
 		{
 			foreach (PlayerEndGameInfo endGamePlayerInfo in endGamePlayerInfos)
 			{
@@ -1400,10 +1401,10 @@ namespace Werewolf
 				SetPlayerCardHighlightVisible(endGamePlayerInfo.Player, true);
 			}
 
-			if (winningPlayerGroupIndex > -1)
+			if (winningPlayerGroupID > -1)
 			{
-				PlayerGroupData playerGroupData = Config.PlayerGroups.GetPlayerGroupData(winningPlayerGroupIndex);
-				DisplayTitle(playerGroupData.Image, string.Format(Config.WinningPlayerGroupText, playerGroupData.Name));
+				PlayerGroupData playerGroup = Config.PlayerGroups.GetPlayerGroup(winningPlayerGroupID);
+				DisplayTitle(playerGroup.Image, string.Format(Config.WinningPlayerGroupText, playerGroup.Name));
 			}
 			else
 			{
@@ -1434,9 +1435,9 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_StartEndGameSequence(PlayerEndGameInfo[] endGamePlayerInfos, int winningPlayerGroupIndex)
+		public void RPC_StartEndGameSequence(PlayerEndGameInfo[] endGamePlayerInfos, int winningPlayerGroupID)
 		{
-			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupIndex));
+			StartCoroutine(StartEndGameSequence(endGamePlayerInfos.ToArray(), winningPlayerGroupID));
 		}
 		#endregion
 		#endregion
@@ -1968,9 +1969,9 @@ namespace Werewolf
 
 			if (!roleBehavior)
 			{
-				foreach (int playerGroupIndex in roleData.PlayerGroupIndexes)
+				foreach (GameplayTag playerGroup in roleData.PlayerGroups)
 				{
-					AddPlayerToPlayerGroup(player, playerGroupIndex);
+					AddPlayerToPlayerGroup(player, playerGroup);
 				}
 			}
 			else
@@ -1996,7 +1997,7 @@ namespace Werewolf
 
 			if (PlayerGameInfos[from].Behaviors.Count <= 0)
 			{
-				foreach (int villageGroup in PlayerGameInfos[from].Role.PlayerGroupIndexes)
+				foreach (GameplayTag villageGroup in PlayerGameInfos[from].Role.PlayerGroups)
 				{
 					AddPlayerToPlayerGroup(to, villageGroup);
 				}
@@ -2060,9 +2061,9 @@ namespace Werewolf
 
 			if (addPlayerToPlayerGroup)
 			{
-				foreach (int playerGroupIndex in behavior.GetCurrentPlayerGroups())
+				foreach (GameplayTag playerGroup in behavior.GetCurrentPlayerGroups())
 				{
-					AddPlayerToPlayerGroup(player, playerGroupIndex);
+					AddPlayerToPlayerGroup(player, playerGroup);
 				}
 			}
 
@@ -2077,9 +2078,9 @@ namespace Werewolf
 		{
 			if (PlayerGameInfos[player].Behaviors.Count <= 0)
 			{
-				foreach (int playerGroupIndex in PlayerGameInfos[player].Role.PlayerGroupIndexes)
+				foreach (GameplayTag playerGroup in PlayerGameInfos[player].Role.PlayerGroups)
 				{
-					RemovePlayerFromGroup(player, playerGroupIndex);
+					RemovePlayerFromGroup(player, playerGroup);
 				}
 			}
 			else
@@ -2117,9 +2118,9 @@ namespace Werewolf
 
 			if (removePlayerFromGroup)
 			{
-				foreach (int group in behavior.GetCurrentPlayerGroups())
+				foreach (GameplayTag playerGroup in behavior.GetCurrentPlayerGroups())
 				{
-					RemovePlayerFromGroup(player, group);
+					RemovePlayerFromGroup(player, playerGroup);
 				}
 			}
 
@@ -2172,13 +2173,13 @@ namespace Werewolf
 		#endregion
 
 		#region Player Group Change
-		public void AddPlayerToPlayerGroup(PlayerRef player, int playerGroupIndex)
+		public void AddPlayerToPlayerGroup(PlayerRef player, GameplayTag playerGroup)
 		{
-			PlayerGroup playerGroup;
+			int priority = Config.PlayerGroups.GetPlayerGroupPriority(playerGroup);
 
 			for (int i = 0; i < _playerGroups.Count; i++)
 			{
-				if (_playerGroups[i].Index == playerGroupIndex)
+				if (_playerGroups[i].GameplayTag == playerGroup)
 				{
 					if (_playerGroups[i].Players.Contains(player))
 					{
@@ -2189,29 +2190,21 @@ namespace Werewolf
 					_playerGroups[i].Players.Add(player);
 					return;
 				}
-				else if (_playerGroups[i].Index < playerGroupIndex)
+				else if (_playerGroups[i].Priority < priority)
 				{
-					playerGroup = new();
-					playerGroup.Index = playerGroupIndex;
-					playerGroup.Players = new() { player };
-
-					_playerGroups.Insert(i, playerGroup);
+					_playerGroups.Insert(i, new() { GameplayTag = playerGroup, Priority = priority, Players = new() { player } });
 					return;
 				}
 			}
 
-			playerGroup = new();
-			playerGroup.Index = playerGroupIndex;
-			playerGroup.Players = new() { player };
-
-			_playerGroups.Add(playerGroup);
+			_playerGroups.Add(new() { GameplayTag = playerGroup, Priority = priority, Players = new() { player } });
 		}
 
-		public void RemovePlayerFromGroup(PlayerRef player, int playerGroupIndex)
+		public void RemovePlayerFromGroup(PlayerRef player, GameplayTag playerGroup)
 		{
 			for (int i = 0; i < _playerGroups.Count; i++)
 			{
-				if (_playerGroups[i].Index != playerGroupIndex)
+				if (_playerGroups[i].GameplayTag != playerGroup)
 				{
 					continue;
 				}
@@ -2240,13 +2233,13 @@ namespace Werewolf
 			}
 		}
 
-		public bool IsPlayerInPlayerGroups(PlayerRef player, int[] playerGroupIndexes)
+		public bool IsPlayerInPlayerGroups(PlayerRef player, GameplayTag[] inPlayerGroups)
 		{
 			bool inPlayerGroup = false;
 
 			foreach(PlayerGroup playerGroup in _playerGroups)
 			{
-				if(playerGroupIndexes.Contains(playerGroup.Index) && playerGroup.Players.Contains(player))
+				if(inPlayerGroups.Contains(playerGroup.GameplayTag) && playerGroup.Players.Contains(player))
 				{
 					inPlayerGroup = true;
 					break;

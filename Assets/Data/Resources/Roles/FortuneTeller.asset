@@ -23,7 +23,8 @@ MonoBehaviour:
   <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
-  <PlayerGroupIndexes>k__BackingField: 01000000
+  <PlayerGroups>k__BackingField:
+  - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <NightPriorities>k__BackingField:
   - index: 4
     alias: {fileID: 0}

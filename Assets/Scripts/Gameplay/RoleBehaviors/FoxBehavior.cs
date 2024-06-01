@@ -19,7 +19,7 @@ public class FoxBehavior : RoleBehavior
 	private float _choosePlayerMaximumDuration = 10.0f;
 
 	[SerializeField]
-	private int[] _werewolfPlayerGroupIndexes;
+	private GameplayTag[] _werewolfPlayerGroups;
 
 	[SerializeField]
 	private GameplayTag _foundWerewolfImage;
@@ -106,7 +106,7 @@ public class FoxBehavior : RoleBehavior
 
 		foreach(PlayerRef player in playersToCheck)
 		{
-			if (_gameManager.IsPlayerInPlayerGroups(player, _werewolfPlayerGroupIndexes))
+			if (_gameManager.IsPlayerInPlayerGroups(player, _werewolfPlayerGroups))
 			{
 				werewolfFound = true;
 			}

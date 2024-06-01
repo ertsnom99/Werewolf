@@ -18,7 +18,7 @@ namespace Werewolf
 
 		[field: SerializeField]
 		[field: ReadOnly]
-		public List<int> PlayerGroupIndexes { get; private set; }
+		public List<GameplayTag> PlayerGroups { get; private set; }
 
 		[field: SerializeField]
 		[field: ReadOnly]
@@ -42,21 +42,21 @@ namespace Werewolf
 			PrimaryRoleType = primaryRoleType;
 		}
 
-		public void AddPlayerGroupIndex(int playerGroupIndex)
+		public void AddPlayerGroup(GameplayTag playerGroup)
 		{
-			if (PlayerGroupIndexes == null)
+			if (PlayerGroups == null)
 			{
-				PlayerGroupIndexes = new() { playerGroupIndex };
+				PlayerGroups = new() { playerGroup };
 			}
 			else
 			{
-				PlayerGroupIndexes.Add(playerGroupIndex);
+				PlayerGroups.Add(playerGroup);
 			}
 		}
 
-		public virtual int[] GetCurrentPlayerGroups()
+		public virtual GameplayTag[] GetCurrentPlayerGroups()
 		{
-			return PlayerGroupIndexes.ToArray();
+			return PlayerGroups.ToArray();
 		}
 
 		public void AddNightPriority(Priority nightPriority)
