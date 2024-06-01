@@ -65,7 +65,7 @@ namespace Werewolf
 			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
 			_voteManager.VoteStarting += OnVoteStarting;
 
-			if (PlayerGroupIndexes.Count < 2)
+			if (PlayerGroups.Count < 2)
 			{
 				Debug.LogError("Cupid must have two player groups: the first one for cupid and the second one for the couple");
 			}
@@ -78,9 +78,9 @@ namespace Werewolf
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-		public override int[] GetCurrentPlayerGroups()
+		public override GameplayTag[] GetCurrentPlayerGroups()
 		{
-			return new int[1] { PlayerGroupIndexes[0] };
+			return new GameplayTag[1] { PlayerGroups[0] };
 		}
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex)
@@ -214,7 +214,7 @@ namespace Werewolf
 		{
 			foreach (PlayerRef player in _couple)
 			{
-				_gameManager.AddPlayerToPlayerGroup(player, PlayerGroupIndexes[1]);
+				_gameManager.AddPlayerToPlayerGroup(player, PlayerGroups[1]);
 			}
 		}
 
