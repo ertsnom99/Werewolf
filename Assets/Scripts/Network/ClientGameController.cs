@@ -31,7 +31,7 @@ namespace Werewolf.Network
 					_UIManager = UIManager.Instance;
 					_UIManager.SetFade(_UIManager.LoadingScreen, 1.0f);
 
-					QuitScreen.OnQuit += QuitGame;
+					QuitScreen.QuitClicked += QuitGame;
 
 					if (!GameManager.HasSpawned)
 					{
@@ -58,7 +58,7 @@ namespace Werewolf.Network
 			_gameManager = GameManager.Instance;
 			_UIManager.LoadingScreen.Initialize(_gameManager.Config.LoadingScreenText);
 
-			_gameManager.OnRoleReceived += StartLoadingFade;
+			_gameManager.RoleReceived += StartLoadingFade;
 			StartCoroutine(ConfirmReadyToReceiveRole());
 		}
 
@@ -74,16 +74,16 @@ namespace Werewolf.Network
 
 		private void StartLoadingFade()
 		{
-			_gameManager.OnRoleReceived -= StartLoadingFade;
+			_gameManager.RoleReceived -= StartLoadingFade;
 
-			_UIManager.LoadingScreen.OnFadeOver += ConfirmReadyToPlay;
+			_UIManager.LoadingScreen.FadeFinished += ConfirmReadyToPlay;
 			_UIManager.LoadingScreen.Initialize("");
 			_UIManager.FadeOut(_UIManager.LoadingScreen, _gameManager.Config.LoadingScreenTransitionDuration);
 		}
 
 		private void ConfirmReadyToPlay()
 		{
-			_UIManager.LoadingScreen.OnFadeOver -= ConfirmReadyToPlay;
+			_UIManager.LoadingScreen.FadeFinished -= ConfirmReadyToPlay;
 
 			_gameManager.RPC_ConfirmPlayerReadyToPlay();
 		}

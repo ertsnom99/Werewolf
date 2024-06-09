@@ -15,12 +15,15 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -8001139337927534559, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <Name>k__BackingField: Fortune Teller
-  <Description>k__BackingField: 
+  <Description>k__BackingField: 'With her crystal ball, she can see a person true
+    identity.
+
+
+    Each night, she can look at an other players card.'
   <Image>k__BackingField: {fileID: 983793743, guid: bbce9110de612ae49aa0fd57f7c093d2,
     type: 3}
   <PrimaryType>k__BackingField: 0
   <SecondaryType>k__BackingField: 0
-  <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:

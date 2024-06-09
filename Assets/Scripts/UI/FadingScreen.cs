@@ -11,7 +11,7 @@ namespace Werewolf.UI
 
 		private CanvasGroup _canvasGroup;
 
-		public event Action OnFadeOver;
+		public event Action FadeFinished;
 
 		private void Awake()
 		{
@@ -38,7 +38,7 @@ namespace Werewolf.UI
 			if (_canvasGroup.alpha == targetOpacity)
 			{
 				_coroutine = null;
-				OnFadeOver?.Invoke();
+				FadeFinished?.Invoke();
 				return;
 			}
 
@@ -77,7 +77,7 @@ namespace Werewolf.UI
 
 			_coroutine = null;
 
-			OnFadeOver?.Invoke();
+			FadeFinished?.Invoke();
 		}
 
 		public void SetFade(float opacity)

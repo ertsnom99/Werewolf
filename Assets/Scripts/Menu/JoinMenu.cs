@@ -20,8 +20,8 @@ namespace Werewolf
 		[SerializeField]
 		private TMP_Text _messageText;
 
-		public event Action JoinSession;
-		public event Action Return;
+		public event Action JoinSessionClicked;
+		public event Action ReturnClicked;
 
 		private readonly int MIN_NICKNAME_CHARACTER_COUNT = 3;
 
@@ -77,12 +77,12 @@ namespace Werewolf
 			_joinBtn.interactable = false;
 			_messageText.text = "Joining session...";
 
-			JoinSession?.Invoke();
+			JoinSessionClicked?.Invoke();
 		}
 
 		public void OnReturn()
 		{
-			Return?.Invoke();
+			ReturnClicked?.Invoke();
 		}
 	}
 }

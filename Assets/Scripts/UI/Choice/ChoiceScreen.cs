@@ -37,7 +37,7 @@ namespace Werewolf.UI
 
 		private IEnumerator _countdownCoroutine;
 
-		public event Action<int> ConfirmChoice;
+		public event Action<int> ConfirmedChoice;
 
 		public void SetConfig(GameConfig config)
 		{
@@ -54,7 +54,7 @@ namespace Werewolf.UI
 
 			foreach (Transform choice in _choicesContainer.transform)
 			{
-				choice.GetComponent<Choice>().OnSelected -= OnChoiceSelected;
+				choice.GetComponent<Choice>().Selected -= OnChoiceSelected;
 				Destroy(choice.gameObject);
 			}
 
@@ -64,7 +64,7 @@ namespace Werewolf.UI
 			{
 				Choice choice = Instantiate(_roleChoicePrefab, _choicesContainer.transform);
 				choice.SetChoice(choices[i]);
-				choice.OnSelected += OnChoiceSelected;
+				choice.Selected += OnChoiceSelected;
 
 				_choices[i] = choice;
 			}
@@ -105,7 +105,7 @@ namespace Werewolf.UI
 
 			foreach (Choice choice in _choices)
 			{
-				choice.OnSelected -= OnChoiceSelected;
+				choice.Selected -= OnChoiceSelected;
 
 				if (choice == _selectedChoice)
 				{
@@ -118,7 +118,7 @@ namespace Werewolf.UI
 
 			DisableConfirmButton();
 
-			ConfirmChoice?.Invoke(_selectedChoice != null ? Array.IndexOf(_choices, _selectedChoice) : -1);
+			ConfirmedChoice?.Invoke(_selectedChoice != null ? Array.IndexOf(_choices, _selectedChoice) : -1);
 		}
 
 		private IEnumerator Countdown(float countdownDuration)

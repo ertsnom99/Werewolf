@@ -22,7 +22,7 @@ namespace Werewolf.UI
 
 		private bool _isSelected;
 
-		public event Action<Choice> OnSelected;
+		public event Action<Choice> Selected;
 
 		public struct ChoiceData
 		{
@@ -37,7 +37,7 @@ namespace Werewolf.UI
 			_button.onClick.AddListener(() =>
 			{
 				SetSelected(!_isSelected);
-				OnSelected?.Invoke(this);
+				Selected?.Invoke(this);
 			});
 		}
 

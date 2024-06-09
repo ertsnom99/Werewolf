@@ -86,4 +86,19 @@ public class GameplayDatabaseManager : MonoSingleton<GameplayDatabaseManager>
 
 		return _IDtoGameplayData[ID] as T;
 	}
+
+	public List<T> GetGameplayData<T>() where T : GameplayData
+	{
+		List<T> gameplayDatas = new List<T>();
+
+		foreach (KeyValuePair<int, GameplayData> gameplayData in _IDtoGameplayData)
+		{
+			if (gameplayData.Value is T castedGameplayData)
+			{
+				gameplayDatas.Add(castedGameplayData);
+			}
+		}
+
+		return gameplayDatas;
+	}
 }

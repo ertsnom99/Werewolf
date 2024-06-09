@@ -32,8 +32,8 @@ namespace Werewolf
 
 		private int _minPlayer = -1;
 
-		public event Action StartGame;
-		public event Action LeaveSession;
+		public event Action StartGameClicked;
+		public event Action LeaveSessionClicked;
 
 		public void Initialize(NetworkDataManager networkDataManager, int minPlayer, PlayerRef localPlayer)
 		{
@@ -46,8 +46,8 @@ namespace Werewolf
 				return;
 			}
 
-			_networkDataManager.OnPlayerInfosChanged += UpdatePlayerList;
-			_networkDataManager.OnInvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
+			_networkDataManager.PlayerInfosChanged += UpdatePlayerList;
+			_networkDataManager.InvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
 			UpdatePlayerList();
 		}
 
@@ -107,12 +107,12 @@ namespace Werewolf
 		public void OnStartGame()
 		{
 			ClearWarning();
-			StartGame?.Invoke();
+			StartGameClicked?.Invoke();
 		}
 
 		public void OnLeaveSession()
 		{
-			LeaveSession?.Invoke();
+			LeaveSessionClicked?.Invoke();
 		}
 
 		private void OnDisable()
@@ -124,8 +124,8 @@ namespace Werewolf
 				return;
 			}
 
-			_networkDataManager.OnPlayerInfosChanged -= UpdatePlayerList;
-			_networkDataManager.OnInvalidRolesSetupReceived -= ShowInvalidRolesSetupWarning;
+			_networkDataManager.PlayerInfosChanged -= UpdatePlayerList;
+			_networkDataManager.InvalidRolesSetupReceived -= ShowInvalidRolesSetupWarning;
 		}
 	}
 }

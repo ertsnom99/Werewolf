@@ -513,7 +513,7 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
-				playerCard.Value.OnCardClick += OnCardSelectedChanged;
+				playerCard.Value.LeftClicked += OnCardSelectedChanged;
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
@@ -610,7 +610,7 @@ namespace Werewolf
 				playerCard.Value.ResetSelectionMode();
 				playerCard.Value.ClearVotes();
 
-				playerCard.Value.OnCardClick -= OnCardSelectedChanged;
+				playerCard.Value.LeftClicked -= OnCardSelectedChanged;
 			}
 
 			_UIManager.VoteScreen.SetLockedInDelayActive(false);

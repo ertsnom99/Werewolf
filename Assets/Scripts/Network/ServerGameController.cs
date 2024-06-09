@@ -28,7 +28,7 @@ namespace Werewolf.Network
 						runner.AddCallbacks(_networkDataManager);
 					}
 
-					_networkDataManager.OnRolesSetupReadyChanged += OnRolesSetupReadyChanged;
+					_networkDataManager.RolesSetupReadyChanged += OnRolesSetupReadyChanged;
 					_networkDataManager.ClearRolesSetup();
 					Runner.SessionInfo.IsOpen = true;
 
@@ -46,7 +46,7 @@ namespace Werewolf.Network
 				return;
 			}
 
-			_networkDataManager.OnRolesSetupReadyChanged -= OnRolesSetupReadyChanged;
+			_networkDataManager.RolesSetupReadyChanged -= OnRolesSetupReadyChanged;
 
 			Runner.SessionInfo.IsOpen = false;
 			Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.GAME), LoadSceneMode.Single);

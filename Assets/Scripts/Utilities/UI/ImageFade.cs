@@ -16,8 +16,8 @@ public class ImageFade : MonoBehaviour
 
 	private Image _image;
 
-	public event Action OnFadeInOver;
-	public event Action OnFadeOutOver;
+	public event Action FadeInFinished;
+	public event Action FadeOutFinished;
 
 	private void Awake()
 	{
@@ -68,12 +68,12 @@ public class ImageFade : MonoBehaviour
 
 			if (_fadeProgress >= 1.0f && _fadeTarget <= .0f)
 			{
-				OnFadeInOver?.Invoke();
+				FadeInFinished?.Invoke();
 				break;
 			}
 			else if (_fadeProgress >= 1.0f && _fadeTarget >= 1.0f)
 			{
-				OnFadeOutOver?.Invoke();
+				FadeOutFinished?.Invoke();
 				break;
 			}
 		}

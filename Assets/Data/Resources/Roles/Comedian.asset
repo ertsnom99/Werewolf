@@ -15,12 +15,17 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -4213155426070918043, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <Name>k__BackingField: Comedian
-  <Description>k__BackingField: 
+  <Description>k__BackingField: "He stopped into the village to give a couple of
+    shows before going south to spend the winter. Great at both comedy and interpreting
+    tragic plays, he is a talented actor.\r\n\r\nBefore the game, 3 roles will be
+    set aside for the comedian. They will be placed, with their role visible, in
+    the middle of all the players. Each night, the comedian can choose one of these
+    roles and use that role until the next night. Once a role is selected, it is
+    removed and won't be useable anymore.\r"
   <Image>k__BackingField: {fileID: 717172429, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
     type: 3}
   <PrimaryType>k__BackingField: 0
   <SecondaryType>k__BackingField: 1
-  <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:

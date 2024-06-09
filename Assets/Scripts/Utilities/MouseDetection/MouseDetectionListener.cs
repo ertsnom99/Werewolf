@@ -8,7 +8,11 @@ public interface MouseDetectionListener
 
 	void MouseExited();
 
-	void MousePressed(Vector3 MousePosition);
+	void LeftMouseButtonPressed(Vector3 MousePosition);
 
-	void MouseReleased(Vector3 MousePosition);
+	void LeftMouseButtonReleased(Vector3 MousePosition);
+
+	void RightMouseButtonPressed(Vector3 MousePosition);
+
+	void RightMouseButtonReleased(Vector3 MousePosition);
 }
