@@ -19,6 +19,9 @@ namespace Werewolf
 		public VoteScreen VoteScreen { get; private set; }
 
 		[field: SerializeField]
+		public RolesScreen RolesScreen { get; private set; }
+
+		[field: SerializeField]
 		public EndGameScreen EndGameScreen { get; private set; }
 
 		[field: SerializeField]

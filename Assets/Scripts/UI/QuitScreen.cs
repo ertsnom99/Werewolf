@@ -8,7 +8,7 @@ namespace Werewolf.UI
 	{
 		private CanvasGroup _canvasGroup;
 
-		public static event Action OnQuit;
+		public static event Action QuitClicked;
 
 		private void Awake()
 		{
@@ -31,7 +31,7 @@ namespace Werewolf.UI
 
 		public void Quit()
 		{
-			OnQuit?.Invoke();
+			QuitClicked?.Invoke();
 		}
 	}
 }

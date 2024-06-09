@@ -29,7 +29,7 @@ namespace Werewolf.UI
 
 		private IEnumerator _countdownCoroutine;
 
-		public event Action Confirm;
+		public event Action ConfirmClicked;
 
 		public void SetConfig(GameConfig config)
 		{
@@ -96,7 +96,7 @@ namespace Werewolf.UI
 		public void OnConfirm()
 		{
 			_confirmButton.interactable = false;
-			Confirm?.Invoke();
+			ConfirmClicked?.Invoke();
 		}
 
 		protected override void OnFadeStarts(float targetOpacity)

@@ -34,10 +34,6 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public SecondaryRoleType SecondaryType { get; private set; }
 
-		[field: SerializeField]
-		[field: TextArea(8, 20)]
-		public string Instruction { get; private set; }
-
 		// This allows to have more than once this role in a game
 		[field: SerializeField]
 		public bool CanHaveMultiples { get; private set; }

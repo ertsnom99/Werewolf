@@ -81,7 +81,8 @@ namespace Werewolf
 		private List<VoteDot> _voteDots = new();
 		private int _voteAmount;
 
-		public event Action<Card> OnCardClick;
+		public event Action<Card> LeftClicked;
+		public event Action<Card> RightClicked;
 #if UNITY_EDITOR
 		private void Awake()
 		{
@@ -232,9 +233,9 @@ namespace Werewolf
 			SetHighlightVisible(false);
 		}
 
-		public void MousePressed(Vector3 MousePosition) { }
+		public void LeftMouseButtonPressed(Vector3 MousePosition) { }
 
-		public void MouseReleased(Vector3 MousePosition)
+		public void LeftMouseButtonReleased(Vector3 MousePosition)
 		{
 			if (!_inSelectionMode || !_isClickable)
 			{
@@ -242,7 +243,14 @@ namespace Werewolf
 			}
 
 			SetSelected(!_isSelected);
-			OnCardClick?.Invoke(this);
+			LeftClicked?.Invoke(this);
+		}
+
+		public void RightMouseButtonPressed(Vector3 MousePosition) { }
+
+		public void RightMouseButtonReleased(Vector3 MousePosition)
+		{
+			RightClicked?.Invoke(this);
 		}
 		#endregion
 	}

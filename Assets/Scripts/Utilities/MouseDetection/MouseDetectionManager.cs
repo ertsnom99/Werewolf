@@ -89,11 +89,20 @@ public class MouseDetectionManager : MonoSingleton<MouseDetectionManager>
 
 		if (Input.GetMouseButtonDown(0))
 		{
-			_mouseDetectionListener.MousePressed(hit.point);
+			_mouseDetectionListener.LeftMouseButtonPressed(hit.point);
 		}
 		else if (Input.GetMouseButtonUp(0))
 		{
-			_mouseDetectionListener.MouseReleased(hit.point);
+			_mouseDetectionListener.LeftMouseButtonReleased(hit.point);
+		}
+
+		if (Input.GetMouseButtonDown(1))
+		{
+			_mouseDetectionListener.RightMouseButtonReleased(hit.point);
+		}
+		else if (Input.GetMouseButtonUp(1))
+		{
+			_mouseDetectionListener.RightMouseButtonReleased(hit.point);
 		}
 	}
 }

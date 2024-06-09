@@ -15,12 +15,22 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -6932030356482755376, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <Name>k__BackingField: Saviour
-  <Description>k__BackingField: 
+  <Description>k__BackingField: 'His power may bring salvation to a villager by protecting
+    him from the werewolves.
+
+    
+
+    Each night, he can select a player to protect.
+    That player will not get killed by any werewolves, during that night. The savior
+    can protect himself. He cannot protect the same player twice in a row. This protection
+    doesn''t work on the little girl. It also doesn''t protect from the infection
+    of the foul father wolf.
+
+'
   <Image>k__BackingField: {fileID: 357046205, guid: d27adb3f7039d1a45a0389b130f6c9c3,
     type: 3}
   <PrimaryType>k__BackingField: 0
   <SecondaryType>k__BackingField: 0
-  <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:

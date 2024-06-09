@@ -40,10 +40,10 @@ namespace Werewolf
 
 		private void Start()
 		{
-			_joinMenu.JoinSession += JoinSession;
-			_joinMenu.Return += OpenMainMenu;
-			_roomMenu.StartGame += StartGame;
-			_roomMenu.LeaveSession += LeaveSession;
+			_joinMenu.JoinSessionClicked += JoinSession;
+			_joinMenu.ReturnClicked += OpenMainMenu;
+			_roomMenu.StartGameClicked += StartGame;
+			_roomMenu.LeaveSessionClicked += LeaveSession;
 
 			if (_runner)
 			{
@@ -97,11 +97,11 @@ namespace Werewolf
 		{
 			if (!_networkDataManager)
 			{
-				NetworkDataManager.OnSpawned -= OnNetworkDataManagerSpawned;
+				NetworkDataManager.FinishedSpawning -= OnNetworkDataManagerFinishedSpawning;
 				_networkDataManager = FindObjectOfType<NetworkDataManager>();
 			}
 
-			_networkDataManager.OnRolesSetupReadyChanged += _roomMenu.UpdatePlayerList;
+			_networkDataManager.RolesSetupReadyChanged += _roomMenu.UpdatePlayerList;
 
 			// TODO : Change min player everytime the leader select a new game setup
 			_roomMenu.Initialize(_networkDataManager, _debugGameSetupData.MinPlayerCount, _runner.LocalPlayer);
@@ -125,7 +125,7 @@ namespace Werewolf
 			_networkDataManager.RPC_SetRolesSetup(NetworkDataManager.ConvertToRolesSetup(_debugGameSetupData), _debugGameSetupData.MinPlayerCount);
 		}
 
-		private void OnNetworkDataManagerSpawned()
+		private void OnNetworkDataManagerFinishedSpawning()
 		{
 			OpenRoomMenu();
 		}
@@ -134,7 +134,7 @@ namespace Werewolf
 		{
 			if (_networkDataManager)
 			{
-				_networkDataManager.OnRolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
+				_networkDataManager.RolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
 			}
 
 			_runner.Shutdown();
@@ -211,11 +211,11 @@ namespace Werewolf
 
 			if (_networkDataManager)
 			{
-				OnNetworkDataManagerSpawned();
+				OnNetworkDataManagerFinishedSpawning();
 			}
 			else
 			{
-				NetworkDataManager.OnSpawned += OnNetworkDataManagerSpawned;
+				NetworkDataManager.FinishedSpawning += OnNetworkDataManagerFinishedSpawning;
 			}
 		}
 
@@ -289,7 +289,7 @@ namespace Werewolf
 				return;
 			}
 
-			_networkDataManager.OnRolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
+			_networkDataManager.RolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
 		}
 
 		private void OnDestroy()

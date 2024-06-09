@@ -50,11 +50,11 @@ namespace Werewolf.Network
 
 		private ChangeDetector _changeDetector;
 
-		public static event Action OnSpawned;
-		public event Action OnPlayerInfosChanged;
-		public event Action OnInvalidRolesSetupReceived;
-		public event Action OnRolesSetupReadyChanged;
-		public event Action<PlayerRef> OnPlayerDisconnected;
+		public static event Action FinishedSpawning;
+		public event Action PlayerInfosChanged;
+		public event Action InvalidRolesSetupReceived;
+		public event Action RolesSetupReadyChanged;
+		public event Action<PlayerRef> PlayerDisconnected;
 
 		protected override void Awake()
 		{
@@ -66,7 +66,7 @@ namespace Werewolf.Network
 		{
 			_changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
-			OnSpawned?.Invoke();
+			FinishedSpawning?.Invoke();
 		}
 
 		public override void Render()
@@ -76,10 +76,10 @@ namespace Werewolf.Network
 				switch (change)
 				{
 					case nameof(PlayerInfos):
-						OnPlayerInfosChanged?.Invoke();
+						PlayerInfosChanged?.Invoke();
 						break;
 					case nameof(RolesSetupReady):
-						OnRolesSetupReadyChanged?.Invoke();
+						RolesSetupReadyChanged?.Invoke();
 						break;
 				}
 			}
@@ -202,7 +202,7 @@ namespace Werewolf.Network
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_WarnInvalidRolesSetup([RpcTarget] PlayerRef player)
 		{
-			OnInvalidRolesSetupReceived?.Invoke();
+			InvalidRolesSetupReceived?.Invoke();
 		}
 		#endregion
 
@@ -223,7 +223,7 @@ namespace Werewolf.Network
 					break;
 			}
 
-			OnPlayerDisconnected?.Invoke(player);
+			PlayerDisconnected?.Invoke(player);
 		}
 
 		private void RemovePlayerInfos(PlayerRef player)

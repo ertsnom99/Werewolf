@@ -180,7 +180,7 @@ namespace Werewolf
 		public event Action<PlayerRef> PostPlayerDisconnected;
 
 		// Client events
-		public event Action OnRoleReceived;
+		public event Action RoleReceived;
 
 		private readonly Vector3 STARTING_DIRECTION = Vector3.back;
 		private readonly int CAPTAIN_VOTE_MODIFIER = 2;
@@ -230,7 +230,7 @@ namespace Werewolf
 		public void PrepareGame(RolesSetup rolesSetup)
 		{
 			_networkDataManager = NetworkDataManager.Instance;
-			_networkDataManager.OnPlayerDisconnected += OnPlayerDisconnected;
+			_networkDataManager.PlayerDisconnected += OnPlayerDisconnected;
 
 			SelectRolesToDistribute(rolesSetup);
 
@@ -521,7 +521,7 @@ namespace Werewolf
 
 			_voteManager.SetPlayerCards(_playerCards);
 
-			OnRoleReceived?.Invoke();
+			RoleReceived?.Invoke();
 		}
 		#endregion
 		#endregion
@@ -1751,7 +1751,7 @@ namespace Werewolf
 
 		private void OnPlayerSkipDebate()
 		{
-			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
+			_UIManager.TitleScreen.ConfirmClicked -= OnPlayerSkipDebate;
 
 			_playerCards[Runner.LocalPlayer].SetVotingStatusVisible(true);
 			_playerCards[Runner.LocalPlayer].UpdateVotingStatus(false);
@@ -1761,7 +1761,7 @@ namespace Werewolf
 
 		private void OnDebateEnded()
 		{
-			_UIManager.TitleScreen.Confirm -= OnPlayerSkipDebate;
+			_UIManager.TitleScreen.ConfirmClicked -= OnPlayerSkipDebate;
 
 			foreach (KeyValuePair<PlayerRef, Card> card in _playerCards)
 			{
@@ -1782,7 +1782,7 @@ namespace Werewolf
 				return;
 			}
 
-			_UIManager.TitleScreen.Confirm += OnPlayerSkipDebate;
+			_UIManager.TitleScreen.ConfirmClicked += OnPlayerSkipDebate;
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -2482,7 +2482,7 @@ namespace Werewolf
 
 		private void GiveReservedRoleChoice(int choice)
 		{
-			_UIManager.ChoiceScreen.ConfirmChoice -= GiveReservedRoleChoice;
+			_UIManager.ChoiceScreen.ConfirmedChoice -= GiveReservedRoleChoice;
 			RPC_GiveReservedRoleChoice(choice);
 		}
 
@@ -2515,7 +2515,7 @@ namespace Werewolf
 				choices.Add(new() { Image = roleData.Image, Name = roleData.name });
 			}
 
-			_UIManager.ChoiceScreen.ConfirmChoice += GiveReservedRoleChoice;
+			_UIManager.ChoiceScreen.ConfirmedChoice += GiveReservedRoleChoice;
 
 			_UIManager.ChoiceScreen.Initialize(maximumDuration, mustChooseOne ? Config.ChooseRoleObligatoryText : Config.ChooseRoleText, Config.ChoosedRoleText, Config.DidNotChoosedRoleText, choices.ToArray(), mustChooseOne);
 			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionNormalDuration);
@@ -2553,7 +2553,7 @@ namespace Werewolf
 		{
 			_UIManager.ChoiceScreen.StopCountdown();
 			_UIManager.ChoiceScreen.DisableConfirmButton();
-			_UIManager.ChoiceScreen.ConfirmChoice -= GiveReservedRoleChoice;
+			_UIManager.ChoiceScreen.ConfirmedChoice -= GiveReservedRoleChoice;
 		}
 		#endregion
 		#endregion
@@ -2639,7 +2639,7 @@ namespace Werewolf
 				}
 
 				playerCard.Value.ResetSelectionMode();
-				playerCard.Value.OnCardClick -= OnClientChooseCard;
+				playerCard.Value.LeftClicked -= OnClientChooseCard;
 			}
 
 			foreach(PlayerRef selectedPlayer in _selectedPlayers)
@@ -2647,7 +2647,7 @@ namespace Werewolf
 				SetPlayerCardHighlightVisible(selectedPlayer, false);
 			}
 
-			_UIManager.TitleScreen.Confirm -= OnClientChooseNoCard;
+			_UIManager.TitleScreen.ConfirmClicked -= OnClientChooseNoCard;
 			_UIManager.TitleScreen.SetConfirmButtonInteractable(false);
 			_UIManager.TitleScreen.StopCountdown();
 		}
@@ -2673,7 +2673,7 @@ namespace Werewolf
 				}
 
 				playerCard.Value.SetSelectionMode(true, true);
-				playerCard.Value.OnCardClick += OnClientChooseCard;
+				playerCard.Value.LeftClicked += OnClientChooseCard;
 			}
 
 			DisplayTitle(imageID, maximumDuration, !mustChoose, Config.SkipTurnText);
@@ -2683,7 +2683,7 @@ namespace Werewolf
 				return;
 			}
 
-			_UIManager.TitleScreen.Confirm += OnClientChooseNoCard;
+			_UIManager.TitleScreen.ConfirmClicked += OnClientChooseNoCard;
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -2722,7 +2722,7 @@ namespace Werewolf
 
 		private void GiveChoice(int choice)
 		{
-			_UIManager.ChoiceScreen.ConfirmChoice -= GiveChoice;
+			_UIManager.ChoiceScreen.ConfirmedChoice -= GiveChoice;
 			RPC_GiveChoice(choice);
 		}
 
@@ -2756,7 +2756,7 @@ namespace Werewolf
 				choices.Add(new() { Image = imageData.Image, Name = imageData.Text });
 			}
 
-			_UIManager.ChoiceScreen.ConfirmChoice += GiveChoice;
+			_UIManager.ChoiceScreen.ConfirmedChoice += GiveChoice;
 
 			_UIManager.ChoiceScreen.Initialize(maximumDuration, chooseText, choosedText, didNotChoosedText, choices.ToArray(), mustChoose);
 			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionNormalDuration);
@@ -2779,7 +2779,7 @@ namespace Werewolf
 		{
 			_UIManager.ChoiceScreen.StopCountdown();
 			_UIManager.ChoiceScreen.DisableConfirmButton();
-			_UIManager.ChoiceScreen.ConfirmChoice -= GiveChoice;
+			_UIManager.ChoiceScreen.ConfirmedChoice -= GiveChoice;
 		}
 		#endregion
 		#endregion
@@ -3167,7 +3167,7 @@ namespace Werewolf
 
 		private void OnPromptAccepted()
 		{
-			_UIManager.TitleScreen.Confirm -= OnPromptAccepted;
+			_UIManager.TitleScreen.ConfirmClicked -= OnPromptAccepted;
 			RPC_AcceptPrompt();
 		}
 
@@ -3186,14 +3186,14 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, int imageID, float duration, string confirmButtonText, bool fastFade)
 		{
-			_UIManager.TitleScreen.Confirm += OnPromptAccepted;
+			_UIManager.TitleScreen.ConfirmClicked += OnPromptAccepted;
 			DisplayTitle(imageID, duration, true, confirmButtonText, fastFade);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, string prompt, float duration, string confirmButtonText, bool fastFade)
 		{
-			_UIManager.TitleScreen.Confirm += OnPromptAccepted;
+			_UIManager.TitleScreen.ConfirmClicked += OnPromptAccepted;
 			DisplayTitle(null, prompt, duration, true, confirmButtonText, fastFade);
 		}
 
@@ -3212,7 +3212,7 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		private void RPC_StopPromptingPlayer([RpcTarget] PlayerRef player, bool fastFade)
 		{
-			_UIManager.TitleScreen.Confirm -= OnPromptAccepted;
+			_UIManager.TitleScreen.ConfirmClicked -= OnPromptAccepted;
 			_UIManager.FadeOut(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
 		}
 		#endregion
@@ -3454,6 +3454,8 @@ namespace Werewolf
 				card.SetNickname(playerInfo.Value.Nickname);
 				card.DetachGroundCanvas();
 
+				card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role); };
+
 				if (playerInfo.Key == bottomPlayer)
 				{
 					card.SetRole(playerRole);
@@ -3503,6 +3505,8 @@ namespace Werewolf
 
 					Card card = Instantiate(Config.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
+
+					card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role); };
 
 					if (roleGameplayTagID > 0)
 					{
