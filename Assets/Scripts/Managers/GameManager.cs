@@ -3543,7 +3543,7 @@ namespace Werewolf
 #if UNITY_SERVER
 		private void OnDisable()
 		{
-			_networkDataManager.OnPlayerDisconnected -= OnPlayerDisconnected;
+			_networkDataManager.PlayerDisconnected -= OnPlayerDisconnected;
 		}
 #endif
 	}
