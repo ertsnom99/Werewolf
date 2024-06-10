@@ -2,6 +2,7 @@ using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
@@ -16,6 +17,9 @@ namespace Werewolf
 
 		[SerializeField]
 		private string _confirmTakeRoleButtonText;
+
+		[SerializeField]
+		private GameplayTag[] _notResettedRoles;
 
 		[SerializeField]
 		private string _newRoleText;
@@ -77,7 +81,7 @@ namespace Werewolf
 			RoleData servantRole = _gameManager.PlayerGameInfos[Player].Role;
 			PlayerRef previousPlayer = Player;
 
-			_gameManager.TransferRole(_playerRevealed, Player, false);
+			_gameManager.TransferRole(_playerRevealed, Player, false, !_notResettedRoles.Contains(RoleToTake.GameplayTag));
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
@@ -144,6 +148,8 @@ namespace Werewolf
 
 			_gameManager.StopPromptingPlayer(Player);
 		}
+
+		public override void ReInit() { }
 
 		public override void OnRoleCallDisconnected() { }
 

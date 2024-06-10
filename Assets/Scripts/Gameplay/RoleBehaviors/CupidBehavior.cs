@@ -381,6 +381,12 @@ namespace Werewolf
 			_gameManager.WaitForPlayer(Player);
 		}
 
+		public override void ReInit()
+		{
+			_couple = new PlayerRef[2];
+			_showedCouple = false;
+		}
+
 		public override void OnRoleCallDisconnected()
 		{
 			if (_endChooseCoupleAfterTimeCoroutine != null)

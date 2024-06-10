@@ -148,6 +148,11 @@ public class FoxBehavior : RoleBehavior
 		_gameManager.StopWaintingForPlayer(Player);
 	}
 
+	public override void ReInit()
+	{
+		_hasPower = true;
+	}
+
 	public override void OnRoleCallDisconnected()
 	{
 		StopAllCoroutines();

@@ -211,6 +211,8 @@ namespace Werewolf
 			SelectRandomPlayer();
 		}
 
+		public override void ReInit() { }
+
 		public override void OnRoleCallDisconnected()
 		{
 			StopAllCoroutines();

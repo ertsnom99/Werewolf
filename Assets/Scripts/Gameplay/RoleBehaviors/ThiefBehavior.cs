@@ -136,6 +136,8 @@ namespace Werewolf
 			}
 		}
 
+		public override void ReInit() { }
+
 		public override void OnRoleCallDisconnected()
 		{
 			if (_endRoleCallAfterTimeCoroutine == null)

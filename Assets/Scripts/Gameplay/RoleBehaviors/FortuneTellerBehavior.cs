@@ -85,6 +85,8 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
+		public override void ReInit() { }
+		
 		public override void OnRoleCallDisconnected()
 		{
 			StopAllCoroutines();
