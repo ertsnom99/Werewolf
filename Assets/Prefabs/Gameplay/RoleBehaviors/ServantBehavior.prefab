@@ -46,11 +46,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroupIndexes>k__BackingField: 
+  <PlayerGroups>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _takeRolePrompt: Take this role?
   _confirmTakeRoleButtonText: Take
+  _notResettedRoles:
+  - {fileID: 5771913067030864782, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 1136116219714361880, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   _newRoleText: 'Your new role is: {0}'
   _tookThisRoleText: The servant has decided to take this role!
   _servantRevealDuration: 3

@@ -71,6 +71,8 @@ namespace Werewolf
 			_voteManager.StartVote();
 		}
 
+		public override void ReInit() { }
+
 		public override void OnRoleCallDisconnected() { }
 
 		private void OnDestroy()

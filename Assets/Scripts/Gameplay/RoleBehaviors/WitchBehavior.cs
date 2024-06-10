@@ -325,6 +325,12 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
+		public override void ReInit()
+		{
+			_hasLifePotion = true;
+			_hasDeathPotion = true;
+		}
+
 		public override void OnRoleCallDisconnected()
 		{
 			StopAllCoroutines();

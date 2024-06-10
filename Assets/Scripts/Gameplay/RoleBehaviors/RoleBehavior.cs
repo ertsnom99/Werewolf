@@ -101,6 +101,8 @@ namespace Werewolf
 
 		public virtual void GetTitlesOverride(int priorityIndex, ref Dictionary<PlayerRef, int> titlesOverride) { }
 
+		public abstract void ReInit();
+
 		public abstract void OnRoleCallDisconnected();
 	}
 }

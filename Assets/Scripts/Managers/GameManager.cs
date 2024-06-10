@@ -1991,7 +1991,7 @@ namespace Werewolf
 #endif
 		}
 
-		public void TransferRole(PlayerRef from, PlayerRef to, bool destroyOldBehavior = true)
+		public void TransferRole(PlayerRef from, PlayerRef to, bool destroyOldBehavior = true, bool reInitNewBehavior = false)
 		{
 			RemovePrimaryBehavior(to, destroyOldBehavior);
 
@@ -2008,8 +2008,8 @@ namespace Werewolf
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
-						RemoveBehavior(from, behavior, true, false);
-						AddBehavior(to, behavior);
+						RemoveBehavior(from, behavior, destroyBehavior: false);
+						AddBehavior(to, behavior, reInitBehavior: reInitNewBehavior);
 						break;
 					}
 				}
@@ -2042,7 +2042,7 @@ namespace Werewolf
 		#endregion
 
 		#region Behavior Change
-		public void AddBehavior(PlayerRef player, RoleBehavior behavior, bool addPlayerToPlayerGroup = true)
+		public void AddBehavior(PlayerRef player, RoleBehavior behavior, bool addPlayerToPlayerGroup = true, bool reInitBehavior = false)
 		{
 			int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -2069,6 +2069,12 @@ namespace Werewolf
 
 			PlayerGameInfos[player].Behaviors.Add(behavior);
 			behavior.SetPlayer(player);
+
+			if (reInitBehavior)
+			{
+				behavior.ReInit();
+			}
+
 #if UNITY_SERVER && UNITY_EDITOR
 			behavior.transform.position = _playerCards[player].transform.position;
 #endif
@@ -2089,7 +2095,7 @@ namespace Werewolf
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
-						RemoveBehavior(player, behavior, true, destroyOldBehavior);
+						RemoveBehavior(player, behavior, destroyBehavior: destroyOldBehavior);
 						break;
 					}
 				}

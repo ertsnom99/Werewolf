@@ -128,6 +128,11 @@ namespace Werewolf
 			_gameManager.RemoveMarkForDeath(player, _markForDeathRemovedByProtection);
 		}
 
+		public override void ReInit()
+		{
+			_selectedPlayer = PlayerRef.None;
+		}
+
 		public override void OnRoleCallDisconnected()
 		{
 			StopAllCoroutines();
