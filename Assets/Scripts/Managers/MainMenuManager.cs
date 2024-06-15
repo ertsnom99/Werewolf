@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using Werewolf.Network;
 using Werewolf.Data;
+using Werewolf.UI;
 
 namespace Werewolf
 {
@@ -20,6 +21,9 @@ namespace Werewolf
 
 		[SerializeField]
 		private RoomMenu _roomMenu;
+
+		[SerializeField]
+		private RulesMenu _rulesMenu;
 
 		[Header("Network")]
 		[SerializeField]
@@ -44,6 +48,7 @@ namespace Werewolf
 			_joinMenu.ReturnClicked += OpenMainMenu;
 			_roomMenu.StartGameClicked += StartGame;
 			_roomMenu.LeaveSessionClicked += LeaveSession;
+			_rulesMenu.ReturnClicked += OpenMainMenu;
 
 			if (_runner)
 			{
@@ -140,9 +145,9 @@ namespace Werewolf
 			_runner.Shutdown();
 		}
 
-		public void OpenRulesAndRolesMenu()
+		public void OpenRulesMenu()
 		{
-
+			DisplayRulesMenu();
 		}
 
 		public void OpenMatchHistoryMenu()
@@ -166,6 +171,7 @@ namespace Werewolf
 			_mainMenu.gameObject.SetActive(true);
 			_joinMenu.gameObject.SetActive(false);
 			_roomMenu.gameObject.SetActive(false);
+			_rulesMenu.gameObject.SetActive(false);
 		}
 
 		private void DisplayJoinMenu()
@@ -173,6 +179,7 @@ namespace Werewolf
 			_mainMenu.gameObject.SetActive(false);
 			_joinMenu.gameObject.SetActive(true);
 			_roomMenu.gameObject.SetActive(false);
+			_rulesMenu.gameObject.SetActive(false);
 		}
 
 		private void DisplayRoomMenu()
@@ -180,6 +187,15 @@ namespace Werewolf
 			_mainMenu.gameObject.SetActive(false);
 			_joinMenu.gameObject.SetActive(false);
 			_roomMenu.gameObject.SetActive(true);
+			_rulesMenu.gameObject.SetActive(false);
+		}
+
+		private void DisplayRulesMenu()
+		{
+			_mainMenu.gameObject.SetActive(false);
+			_joinMenu.gameObject.SetActive(false);
+			_roomMenu.gameObject.SetActive(false);
+			_rulesMenu.gameObject.SetActive(true);
 		}
 		#endregion
 
