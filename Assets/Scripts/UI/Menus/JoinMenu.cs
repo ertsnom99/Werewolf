@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Werewolf
+namespace Werewolf.UI
 {
 	public class JoinMenu : MonoBehaviour
 	{

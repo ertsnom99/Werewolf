@@ -2,9 +2,8 @@ using Fusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Werewolf.Network;
 
-namespace Werewolf
+namespace Werewolf.UI
 {
 	public class PlayerEntry : MonoBehaviour
 	{
