@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Werewolf.Data;
 
 namespace Werewolf.UI
@@ -42,13 +41,6 @@ namespace Werewolf.UI
 			}
 		}
 
-		public void ToggleRoles()
-		{
-			_areRolesDisplayed = !_areRolesDisplayed;
-			_screen.anchoredPosition = new Vector3(_areRolesDisplayed ? 0 : _screen.rect.width, 0, 0);
-			_backgroundButton.SetActive(_areRolesDisplayed);
-		}
-
 		private void ShowRoleDescription(RoleButton roleButton)
 		{
 			if (_selectedRoleButton && _selectedRoleButton != roleButton)
@@ -73,6 +65,18 @@ namespace Werewolf.UI
 			}
 
 			_roleButtonByRoleData[role].Select();
+		}
+
+		public void ToggleRoles()
+		{
+			if (!_screen || !_backgroundButton)
+			{
+				return;
+			}
+
+			_areRolesDisplayed = !_areRolesDisplayed;
+			_screen.anchoredPosition = new Vector3(_areRolesDisplayed ? 0 : _screen.rect.width, 0, 0);
+			_backgroundButton.SetActive(_areRolesDisplayed);
 		}
 	}
 }
