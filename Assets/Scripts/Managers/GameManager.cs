@@ -722,9 +722,8 @@ namespace Werewolf
 								false,
 								false,
 								ChoicePurpose.Other,
-								null,
-								true,
-								GetPlayersExcluding(_captainCandidates.ToArray()));
+								canVoteForSelf: true,
+								ImmunePlayers: GetPlayersExcluding(_captainCandidates.ToArray()));
 		}
 
 		private void OnElectionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -1209,9 +1208,8 @@ namespace Werewolf
 									false,
 									false,
 									ChoicePurpose.Kill,
-									GetExecutionVoteModifiers(),
-									false,
-									GetPlayersExcluding(mostVotedPlayers));
+									modifiers: GetExecutionVoteModifiers(),
+									ImmunePlayers: GetPlayersExcluding(mostVotedPlayers));
 		}
 
 		private void OnSecondaryExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -1728,7 +1726,7 @@ namespace Werewolf
 				WaitForPlayer(playerInfo.Key);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(imageID, duration, false, Config.SkipText);
+			DisplayTitle(imageID, duration, confirmButtonText: Config.SkipText);
 #endif
 			float elapsedTime = .0f;
 
