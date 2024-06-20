@@ -2,6 +2,7 @@ using Fusion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
@@ -43,6 +44,8 @@ namespace Werewolf
 			Voting,
 		}
 
+		private Action<PlayerRef[]> _votesCountedCallback;
+
 		private IEnumerator _voteCoroutine;
 
 		private Card _selectedCard;
@@ -50,6 +53,7 @@ namespace Werewolf
 		private PlayerRef[] _immunePlayers;
 
 		private UIManager _UIManager;
+		private NetworkDataManager _networkDataManager;
 
 		public event Action<ChoicePurpose> VoteStarting;
 		public event Action<Dictionary<PlayerRef, int>> VoteCompleted;
@@ -70,12 +74,67 @@ namespace Werewolf
 			_config = config;
 
 			_UIManager = UIManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
+
 			_UIManager.VoteScreen.SetLockedInDelayDuration(_config.AllLockedInDelayToEndVote);
 		}
 
 		public void SetPlayers(Dictionary<PlayerRef, PlayerGameInfo> players)
 		{
 			_players = players;
+		}
+
+		public bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
+											float maxDuration,
+											bool allowedToNotVote,
+											bool failToVotePenalty,
+											ChoicePurpose purpose,
+											Dictionary<PlayerRef, int> modifiers = null,
+											bool canVoteForSelf = false,
+											PlayerRef[] ImmunePlayers = null)
+		{
+			if (_votesCountedCallback != null)
+			{
+				return false;
+			}
+
+			_votesCountedCallback = votesCountedCallback;
+
+			PrepareVote(maxDuration, allowedToNotVote, failToVotePenalty, purpose, modifiers);
+
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _players)
+			{
+				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+				{
+					continue;
+				}
+
+				if (playerInfo.Value.IsAlive)
+				{
+					AddVoter(playerInfo.Key);
+
+					if (!canVoteForSelf)
+					{
+						AddVoteImmunity(playerInfo.Key, playerInfo.Key);
+					}
+				}
+				else
+				{
+					AddSpectator(playerInfo.Key);
+				}
+
+				if (playerInfo.Value.IsAlive && (ImmunePlayers == null || !ImmunePlayers.Contains(playerInfo.Key)))
+				{
+					continue;
+				}
+
+				AddVoteImmunity(playerInfo.Key);
+			}
+
+			VoteCompleted += OnAllPlayersVoteEnded;
+			StartVote();
+
+			return true;
 		}
 
 		public bool PrepareVote(float maxDuration, bool allowedToNotVote, bool failToVotePenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
@@ -474,6 +533,33 @@ namespace Werewolf
 			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 #endif
 			_step = Step.NotVoting;
+		}
+
+		private void OnAllPlayersVoteEnded(Dictionary<PlayerRef, int> votes)
+		{
+			VoteCompleted -= OnAllPlayersVoteEnded;
+
+			int mostVoteCount = 0;
+			List<PlayerRef> mostVotedPlayers = new();
+
+			foreach (KeyValuePair<PlayerRef, int> vote in votes)
+			{
+				if (vote.Value < mostVoteCount)
+				{
+					continue;
+				}
+
+				if (vote.Value > mostVoteCount)
+				{
+					mostVoteCount = vote.Value;
+					mostVotedPlayers.Clear();
+				}
+
+				mostVotedPlayers.Add(vote.Key);
+			}
+
+			_votesCountedCallback?.Invoke(mostVotedPlayers.ToArray());
+			_votesCountedCallback = null;
 		}
 
 		public bool IsPreparingToVote()
