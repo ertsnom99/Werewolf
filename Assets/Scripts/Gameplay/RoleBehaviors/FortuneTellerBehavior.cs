@@ -29,7 +29,7 @@ namespace Werewolf
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex)
 		{
-			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDead();
+			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
 			immunePlayers.Add(Player);
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,

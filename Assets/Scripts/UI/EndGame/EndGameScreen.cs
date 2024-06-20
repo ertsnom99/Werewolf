@@ -1,3 +1,5 @@
+using Fusion;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -6,6 +8,15 @@ using Werewolf.Network;
 
 namespace Werewolf.UI
 {
+	[Serializable]
+	public struct PlayerEndGameInfo : INetworkStruct
+	{
+		public PlayerRef Player;
+		public int Role;
+		public bool IsAlive;
+		public bool Won;
+	}
+
 	public class EndGameScreen : FadingScreen
 	{
 		[Header("UI")]

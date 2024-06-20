@@ -51,7 +51,7 @@ public class FoxBehavior : RoleBehavior
 			return true;
 		}
 
-		List<PlayerRef> immunePlayers = _gameManager.GetPlayersDead();
+		List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
 
 		if (!_gameManager.AskClientToChoosePlayers(Player,
 												immunePlayers,

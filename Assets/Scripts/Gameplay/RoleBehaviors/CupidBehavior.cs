@@ -105,7 +105,7 @@ namespace Werewolf
 		#region Choose Couple
 		private bool ChooseCouple()
 		{
-			List<PlayerRef> immunePlayers = _gameManager.GetPlayersDead();
+			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
