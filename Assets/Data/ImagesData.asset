@@ -25,10 +25,22 @@ MonoBehaviour:
       type: 2}
     Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Text: Debate about who should be captain
+  - GameplayTag: {fileID: -4152609035969618942, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Here is the captain!
   - GameplayTag: {fileID: -2412456246043308623, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
     Image: {fileID: -1221642604, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Text: No one wanted to be the captain!
+  - GameplayTag: {fileID: 385745502131665813, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: Choose the next captain
+  - GameplayTag: {fileID: 6957548192255917565, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text: The old captain is choosing the new one
   - GameplayTag: {fileID: 8582886363894869589, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
     Image: {fileID: 705772914, guid: 57e5fee1eb9618343bcdb98861e6b594, type: 3}
@@ -73,18 +85,6 @@ MonoBehaviour:
       type: 2}
     Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
     Text: No one won!
-  - GameplayTag: {fileID: -4152609035969618942, guid: 0e7014af8e28a88409bdb3f0abb80632,
-      type: 2}
-    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
-    Text: Here is the captain!
-  - GameplayTag: {fileID: 385745502131665813, guid: 0e7014af8e28a88409bdb3f0abb80632,
-      type: 2}
-    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
-    Text: Choose the next captain
-  - GameplayTag: {fileID: 6957548192255917565, guid: 0e7014af8e28a88409bdb3f0abb80632,
-      type: 2}
-    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
-    Text: The old captain is choosing the new one
   - GameplayTag: {fileID: 8209229256807389745, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
     Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
