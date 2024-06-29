@@ -16,8 +16,187 @@ MonoBehaviour:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: 42fef827aafa1c84b91c2840eb784a8d, type: 2}
   m_Metadata:
-    m_Items: []
-  m_TableData: []
+    m_Items:
+    - rid: 7029503930381107200
+  m_TableData:
+  - m_Id: 1110805244723200
+    m_Localized: '{Player} was given the {RoleName} role.'
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1112754602033152
+    m_Localized: '{Player} died and had the {RoleName} role.'
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1113228340281344
+    m_Localized: '{Players:list:{}|, | and } wanted to be captain.'
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1116699403665408
+    m_Localized: No player wanted to be captain.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1117060612931584
+    m_Localized: '{Player} became the captain.'
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1119725610778624
+    m_Localized: The captain ({Player}) died.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1119927147085824
+    m_Localized: The sun set.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1119980007899136
+    m_Localized: The sun rose.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1120198329810944
+    m_Localized: Woke up {Player} ({RoleName}).
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1123097671811072
+    m_Localized: The execution vote started.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1123262101110784
+    m_Localized: The vote was a draw. A new vote started.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1123387561132032
+    m_Localized: The vote was a draw. The captain ({Player}) chose who to execute.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1124997385338880
+    m_Localized: The vote was a draw again. No one was executed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1127826892177408
+    m_Localized: The village voted to execute {Player}.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1128219831353344
+    m_Localized: '{Voter} voted for {Voted}.'
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1130489763512320
+    m_Localized: '{Player} did not vote.'
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1131051640864768
+    m_Localized: '{Player} did not vote and was penalized for it.'
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1133519254765568
+    m_Localized: The {PlayerGroupeName} won.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1135454057840640
+    m_Localized: Nobody won
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1135565391446016
+    m_Localized: The comedian ({Player}) was given the {RoleNames:list:{}|, | and
+      } roles to use.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1138930317967360
+    m_Localized: The comedian ({Player}) used the {RoleName} role.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1142184317730816
+    m_Localized: The cupid ({CupidPlayer}) selected {FirstCouplePlayer} and {SecondCouplePlayer}
+      to be in a couple together.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1143798327853056
+    m_Localized: '{FirstCouplePlayer} was in a couple with {SecondCouplePlayer} and
+      died.'
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1145710523629568
+    m_Localized: The fortune Teller ({FortuneTellerPlayer}) looked at the role of
+      {PlayerLookedAt} ({RoleName}).
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1147394884812800
+    m_Localized: The fox ({FoxPlayer}) sniffed {SniffedPlayers:list:{}|, | and },
+      and found a werewolf in that group.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1147428170809344
+    m_Localized: The fox ({FoxPlayer}) sniffed {SniffedPlayers:list:{}|, | and },
+      found no werewolves in that group and lost his power.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1147502372241408
+    m_Localized: The hunter ({HunterPlayer}) chose to kill {KilledPlayer}.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1147552502562816
+    m_Localized: The savior ({SaviorPlayer}) chose to protect {ProtectedPlayer}.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1480962706161664
+    m_Localized: The servant ({ServantPlayer}) took {PlayerTakenFrom} role ({RoleName}).
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1481631815090176
+    m_Localized: The thief ({Player}) was given the {FirstRoleName} and {SecondRoleName}
+      roles to take from.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1482753103544320
+    m_Localized: The thief ({Player}) took the {RoleName} role.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1483584792084480
+    m_Localized: The werewolves voted to kill {Player}.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1483978075193344
+    m_Localized: The werewolves failed to vote for a player to kill.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1484150020685824
+    m_Localized: The witch ({WitchPlayer}) used her life potion to save {SavedPlayer}.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
+  - m_Id: 1484152184946688
+    m_Localized: The witch ({WitchPlayer}) used her death potion to kill {KilledPlayer}.
+    m_Metadata:
+      m_Items:
+      - rid: 7029503930381107200
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7029503930381107200
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00c0068045f2030000c0c65e0bf4030000c0c6ab79f4030000c006f1f5f7030000c0466f62fa030000c0867fd0fa030000c0860cb7fd030000c046a9c001040000c046261c02040000c0c6a82c04040000c0467baf04040000c08604ee06040000c0c66bca08040000c006e1d90b040000c08682cf0e040000c0064d4710040000c0c6840412040000c086b08c13040000c086709413040000c046b7a513040000c04663b113040000c00680ed42050000c0064a8943050000c0065c8e44050000c086005045050000c0c69ad345050000c0c61bd4450500

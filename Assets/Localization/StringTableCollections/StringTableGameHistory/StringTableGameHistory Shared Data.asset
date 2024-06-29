@@ -14,7 +14,147 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_TableCollectionName: StringTableGameHistory
   m_TableCollectionNameGuidString: 42fef827aafa1c84b91c2840eb784a8d
-  m_Entries: []
+  m_Entries:
+  - m_Id: 1110805244723200
+    m_Key: Player_GivenRole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1112754602033152
+    m_Key: Player_Died
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1113228340281344
+    m_Key: Election_MultipleCandidates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1116699403665408
+    m_Key: Election_NoCandidate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1117060612931584
+    m_Key: Captain_Changed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1119725610778624
+    m_Key: Captain_Died
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1119927147085824
+    m_Key: Sun_Set
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1119980007899136
+    m_Key: Sun_Rose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1120198329810944
+    m_Key: WokeUpPlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1123097671811072
+    m_Key: Execution_VoteStarted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1123262101110784
+    m_Key: Execution_DrawNewVote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1123387561132032
+    m_Key: Execution_DrawCaptainChose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1124997385338880
+    m_Key: Execution_DrawAgain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1127826892177408
+    m_Key: Execution_VotedPlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1128219831353344
+    m_Key: Vote_VotedFor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1130489763512320
+    m_Key: Vote_DidNotVote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1131051640864768
+    m_Key: Vote_DidNotVoteWithPenality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1133519254765568
+    m_Key: EndGame_PlayerGroupWon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1135454057840640
+    m_Key: EndGame_NobodyWon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1135565391446016
+    m_Key: Comedian_WasGivenRoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1138930317967360
+    m_Key: Comedian_UsedRole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1142184317730816
+    m_Key: Cupid_CoupleSelected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1143798327853056
+    m_Key: Cupid_CoupleDied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1145710523629568
+    m_Key: FortuneTeller_LookedPlayerRole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147394884812800
+    m_Key: Fox_SniffedWerewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147428170809344
+    m_Key: Fox_LostPower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147502372241408
+    m_Key: Hunter_KilledPlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147552502562816
+    m_Key: Savior_ChosePlayerToProtect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1480962706161664
+    m_Key: Servant_TookRole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1481631815090176
+    m_Key: Thief_WasGivenRoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1482753103544320
+    m_Key: Thief_TookRole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1483584792084480
+    m_Key: Werewolf_VotedPlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1483978075193344
+    m_Key: Werewolf_FailedToVotePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1484150020685824
+    m_Key: Witch_UsedLifePotion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1484152184946688
+    m_Key: Witch_UsedDeathPotion
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
