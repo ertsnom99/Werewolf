@@ -77,7 +77,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107201
   - m_Id: 1133519254765568
-    m_Localized: "{PlayerGroupePlayerAmount:plural:Le|Les} {PlayerGroupeName} {PlayerGroupePlayerAmount:plural:gagna|gagn\xE8rent}."
+    m_Localized: "{PlayerGroupeHasMultiplePlayers:Les|Le} {PlayerGroupeName} {PlayerGroupeHasMultiplePlayers:gagn\xE8rent|gagna}."
     m_Metadata:
       m_Items:
       - rid: 7029503930381107201

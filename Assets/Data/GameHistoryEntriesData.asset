@@ -298,9 +298,9 @@ MonoBehaviour:
       - name: PlayerGroupeName
         variable:
           rid: 7029503975494516743
-      - name: PlayerGroupePlayerAmount
+      - name: PlayerGroupeHasMultiplePlayers
         variable:
-          rid: 7029503975494516756
+          rid: 7029503989393653761
   - GameplayTag: {fileID: -1594020178363860539, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
     Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
@@ -743,8 +743,8 @@ MonoBehaviour:
         asm: Unity.Localization}
       data:
         m_Value: 
-    - rid: 7029503975494516756
-      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+    - rid: 7029503989393653761
+      type: {class: BoolVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
         asm: Unity.Localization}
       data:
         m_Value: 0

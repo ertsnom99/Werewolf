@@ -1,0 +1,209 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: StringTableRole_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 25402ef7d32c3cb47a782073354eda10, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1155975790592
+    m_Localized: 'He stopped into the village to give a couple of shows before going
+      south to spend the winter. Great at both comedy and interpreting tragic plays,
+      he is a talented actor.
+
+      
+
+      Before the game, 3 roles will be set
+      aside for the comedian. They will be placed, with their role visible, in the
+      middle of all the players. Each night, the comedian can choose one of these
+      roles and use that role until the next night. Once a role is selected, it is
+      removed and won''t be useable anymore.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069766066176
+    m_Localized: Comedian
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2521448235008
+    m_Localized: Cupid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2525135028224
+    m_Localized: 'With the power of his famous arrows, he can make 2 persons fall
+      in love.
+
+      
+
+      During the first night, he chooses 2 players that
+      will become lovers. One of the lovers can be himself. If one of the lovers
+      dies, the other dies of sadness immediately. The lovers can never attempt to
+      kill or frame each other. If one of the lovers is a werewolf and the other
+      is a villager, they will need to be the last players left to win.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578041978880
+    m_Localized: Couple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3933225795584
+    m_Localized: 'With her crystal ball, she can see a person true identity.
+
+
+      Each
+      night, she can look at an other players card.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3931116060672
+    m_Localized: Fortune Teller
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4374936338432
+    m_Localized: 'In the village, everyone loves the flair of this swift and discreet
+      character, except for the werewolves.
+
+      
+
+      Each night, he can choose
+      a group of three consecutive players, by selecting the middle one (dead players
+      are skipped). He will then be told if there is at least one werewolf in this
+      group. If there is no werewolf, the fox loose his power for the rest of the
+      game and won''t be called at night anymore.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4372801437696
+    m_Localized: Fox
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4706357657600
+    m_Localized: 'He is an experimented hunter and won''t die without a fight!
+
+
+      When
+      he gets killed, he must choose an other player to kill.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4704545718272
+    m_Localized: Hunter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4889510330368
+    m_Localized: 'His power may bring salvation to a villager by protecting him from
+      the werewolves.
+
+
+      Each night, he can select a player to protect. That
+      player will not get killed by any werewolves, during that night. The savior
+      can protect himself. He cannot protect the same player twice in a row. This
+      protection doesn''t work on the little girl. It also doesn''t protect from
+      the infection of the foul father wolf.
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4887052468224
+    m_Localized: Saviour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5095198998528
+    m_Localized: Servant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5097270984704
+    m_Localized: 'Who could ask for a better servant then one who would give their
+      life for their master? Do be careful, because her ambition could bring the
+      village to its end!
+
+
+      Just before the reveal of the role of a player
+      killed by the village vote, she can reveal herself. Afterward, she will lose
+      her role and take the one of the dead player, without revealing what it is.
+      From that point on, she will play as that new role.
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5775175368704
+    m_Localized: 'What role will he truly play? Only time will tell.
+
+
+      If the
+      thief is in the game, two extra villager cards will be added to the roles distributed
+      to the players. once all the roles are distributed, the two leftover will be
+      placed, face down, in the middle of all the players. The first night, the thief
+      will be allowed to change his role for either of the two leftover roles, if
+      he wants to. If both roles are werewolves, he must choose one of them.
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5773111771136
+    m_Localized: Thief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6095993487360
+    m_Localized: Villager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6100871462912
+    m_Localized: A simple villager trying to survive the night. He has no special
+      power and must use his wits to save himself.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6103014752256
+    m_Localized: Villagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7364653006848
+    m_Localized: 'A beast from the woods. He acts like a villager during the day
+      but becomes killer at night.
+
+
+      Each night, all werewolves will be asked
+      to vote together for a none werewolf player to eliminate. The vote must be
+      unanimous or else, no player will be eliminated that night.
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7362610380800
+    m_Localized: Werewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7366301368320
+    m_Localized: Werewolves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8299815026688
+    m_Localized: Witch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8301756989440
+    m_Localized: 'Is she a master of alchemy or dark magic? Nobody knows for sure,
+      but the power of her potion is undeniable.
+
+
+      The witch has two potion
+      she can used: a life potion and a death potion. Each night, she will be told
+      who was killed by the werewolves. she can then use her potions. Each potion
+      can be only used once during the game, but she can use both potion at the same
+      time. Her life potion will save the player who was supposed to die, which could
+      be herself. The death potion will kill a player that she selects.
+
+'
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
