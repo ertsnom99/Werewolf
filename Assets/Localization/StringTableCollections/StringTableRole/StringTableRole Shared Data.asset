@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: StringTableRole Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: StringTableRole
+  m_TableCollectionNameGuidString: 25402ef7d32c3cb47a782073354eda10
+  m_Entries:
+  - m_Id: 1069766066176
+    m_Key: Comedian_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1155975790592
+    m_Key: Comedian_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2521448235008
+    m_Key: Cupid_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2525135028224
+    m_Key: Cupid_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578041978880
+    m_Key: Cupid_PlayerGroup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3931116060672
+    m_Key: FortuneTeller_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3933225795584
+    m_Key: FortuneTeller_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4372801437696
+    m_Key: Fox_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4374936338432
+    m_Key: Fox_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4704545718272
+    m_Key: Hunter_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4706357657600
+    m_Key: Hunter_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4887052468224
+    m_Key: Saviour_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4889510330368
+    m_Key: Saviour_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5095198998528
+    m_Key: Servant_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5097270984704
+    m_Key: Servant_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5773111771136
+    m_Key: Thief_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5775175368704
+    m_Key: Thief_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6095993487360
+    m_Key: Villager_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6100871462912
+    m_Key: Villager_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6103014752256
+    m_Key: Villager_PlayerGroup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7362610380800
+    m_Key: Werewolf_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7364653006848
+    m_Key: Werewolf_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7366301368320
+    m_Key: Werewolf_PlayerGroup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8299815026688
+    m_Key: Witch_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8301756989440
+    m_Key: Witch_Description
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7029503989393653760
+  references:
+    version: 2
+    RefIds:
+    - rid: 7029503989393653760
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1719774656478
