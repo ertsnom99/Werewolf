@@ -69,7 +69,7 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 
 			if (_IDtoGameplayData.ContainsKey(loadedGameplayData.GameplayTag.CompactTagId))
 			{
-				Debug.LogError("The GameplayData " + loadedGameplayData.Name + " has a duplicated ID!!!");
+				Debug.LogError("The GameplayData " + loadedGameplayData.DebugName + " has a duplicated ID!!!");
 				continue;
 			}
 

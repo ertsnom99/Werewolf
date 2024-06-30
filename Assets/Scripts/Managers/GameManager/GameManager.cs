@@ -804,7 +804,7 @@ namespace Werewolf
 			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
 			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
 
-			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.ToLower()));
+			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.GetLocalizedString().ToLower()));
 		}
 
 		#region RPC Calls

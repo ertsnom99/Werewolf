@@ -14,20 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -2420311931908136977, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <Name>k__BackingField: Witch
-  <Description>k__BackingField: 'Is she a master of alchemy or dark magic? Nobody
-    knows for sure, but the power of her potion is undeniable.
-
-    
-
-    The witch
-    has two potion she can used: a life potion and a death potion. Each night, she
-    will be told who was killed by the werewolves. she can then use her potions.
-    Each potion can be only used once during the game, but she can use both potion
-    at the same time. Her life potion will save the player who was supposed to die,
-    which could be herself. The death potion will kill a player that she selects.
-
-'
+  <DebugName>k__BackingField: Witch
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 8299815026688
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 8301756989440
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Image>k__BackingField: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2,
     type: 3}
   <PrimaryType>k__BackingField: 0
@@ -42,3 +47,6 @@ MonoBehaviour:
   <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 97189973349084495, guid: 6e17f2bcdddf24e42a6ca9ead16cb944,
     type: 3}
+  references:
+    version: 2
+    RefIds: []

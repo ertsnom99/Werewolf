@@ -72,7 +72,7 @@ namespace Werewolf.UI
 
 				if (roleData)
 				{
-					endGamePlayer.Initialize(roleData.Image, _networkDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname, roleData.Name);
+					endGamePlayer.Initialize(roleData.Image, _networkDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname, roleData.Name.GetLocalizedString());
 				}
 				else
 				{

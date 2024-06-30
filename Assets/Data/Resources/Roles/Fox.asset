@@ -14,13 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: 7649568454011052203, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <Name>k__BackingField: Fox
-  <Description>k__BackingField: "In the village, everyone loves the flair of this
-    swift and discreet character, except for the werewolves.\r\n\r\nEach night, he
-    can choose a group of three consecutive players, by selecting the middle one
-    (dead players are skipped). He will then be told if there is at least one werewolf
-    in this group. If there is no werewolf, the fox loose his power for the rest
-    of the game and won't be called at night anymore.\r"
+  <DebugName>k__BackingField: Fox
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 4372801437696
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 4374936338432
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Image>k__BackingField: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1,
     type: 3}
   <PrimaryType>k__BackingField: 0
@@ -35,3 +47,6 @@ MonoBehaviour:
   <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 6478022945204151896, guid: a2f614bbc46ff3b47af4ad80fa82ab20,
     type: 3}
+  references:
+    version: 2
+    RefIds: []

@@ -14,17 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: 2652096941984701936, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <Name>k__BackingField: Werewolf
-  <Description>k__BackingField: 'A beast from the woods. He acts like a villager
-    during the day but becomes killer at night.
-
-    
-
-    Each night, all werewolves
-    will be asked to vote together for a none werewolf player to eliminate. The vote
-    must be unanimous or else, no player will be eliminated that night.
-
-'
+  <DebugName>k__BackingField: Werewolf
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 7362610380800
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 7364653006848
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Image>k__BackingField: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2,
     type: 3}
   <PrimaryType>k__BackingField: 1
@@ -39,3 +47,6 @@ MonoBehaviour:
   <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 3074801793367905639, guid: 6694e99a28c90ac4b807cd526dec6b0b,
     type: 3}
+  references:
+    version: 2
+    RefIds: []

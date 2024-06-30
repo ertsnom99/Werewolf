@@ -14,19 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -2503317683888758085, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <Name>k__BackingField: Servant
-  <Description>k__BackingField: 'Who could ask for a better servant then one who
-    would give their life for their master? Do be careful, because her ambition could
-    bring the village to its end!
-
-    
-
-    Just before the reveal of the role
-    of a player killed by the village vote, she can reveal herself. Afterward, she
-    will lose her role and take the one of the dead player, without revealing what
-    it is. From that point on, she will play as that new role.
-
-'
+  <DebugName>k__BackingField: Servant
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 5095198998528
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 5097270984704
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Image>k__BackingField: {fileID: 1977204121, guid: 5e12bbec3b7d23045ab0fe00ff2591e1,
     type: 3}
   <PrimaryType>k__BackingField: 0
@@ -39,3 +45,6 @@ MonoBehaviour:
   <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 4830877496367092188, guid: 2344d20f29d66b24f8f6523b1cadfe59,
     type: 3}
+  references:
+    version: 2
+    RefIds: []

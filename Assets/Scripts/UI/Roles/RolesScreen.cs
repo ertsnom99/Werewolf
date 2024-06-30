@@ -49,7 +49,7 @@ namespace Werewolf.UI
 			}
 
 			_selectedRoleButton = roleButton;
-			_roleDescription.text = roleButton.RoleData.Description;
+			_roleDescription.text = roleButton.RoleData.Description.GetLocalizedString();
 		}
 
 		public void SelectRole(RoleData role)
