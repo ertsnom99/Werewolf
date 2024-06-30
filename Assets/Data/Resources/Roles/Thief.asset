@@ -14,19 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: 6665825862911437471, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <Name>k__BackingField: Thief
-  <Description>k__BackingField: 'What role will he truly play? Only time will tell.
-
-    
-
-    If
-    the thief is in the game, two extra villager cards will be added to the roles
-    distributed to the players. once all the roles are distributed, the two leftover
-    will be placed, face down, in the middle of all the players. The first night,
-    the thief will be allowed to change his role for either of the two leftover roles,
-    if he wants to. If both roles are werewolves, he must choose one of them.
-
-'
+  <DebugName>k__BackingField: Thief
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 5773111771136
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 5775175368704
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Image>k__BackingField: {fileID: -1250751461, guid: bbce9110de612ae49aa0fd57f7c093d2,
     type: 3}
   <PrimaryType>k__BackingField: 0
@@ -41,3 +47,6 @@ MonoBehaviour:
   <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 5255923145917458080, guid: da177854c9d03e34e85bcc603cd52c75,
     type: 3}
+  references:
+    version: 2
+    RefIds: []

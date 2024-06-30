@@ -14,19 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -6932030356482755376, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <Name>k__BackingField: Saviour
-  <Description>k__BackingField: 'His power may bring salvation to a villager by protecting
-    him from the werewolves.
-
-    
-
-    Each night, he can select a player to protect.
-    That player will not get killed by any werewolves, during that night. The savior
-    can protect himself. He cannot protect the same player twice in a row. This protection
-    doesn''t work on the little girl. It also doesn''t protect from the infection
-    of the foul father wolf.
-
-'
+  <DebugName>k__BackingField: Saviour
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 4887052468224
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 4889510330368
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Image>k__BackingField: {fileID: 357046205, guid: d27adb3f7039d1a45a0389b130f6c9c3,
     type: 3}
   <PrimaryType>k__BackingField: 0
@@ -41,3 +47,6 @@ MonoBehaviour:
   <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 609364413086920833, guid: f1270d0c27fcb2b4abc9e9c429da9813,
     type: 3}
+  references:
+    version: 2
+    RefIds: []

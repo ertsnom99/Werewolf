@@ -2,6 +2,7 @@ using Assets.Scripts.Data;
 using Assets.Scripts.Data.Tags;
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace Werewolf.Data
 {
@@ -29,6 +30,16 @@ namespace Werewolf.Data
 	public class RoleData : GameplayData
 	{
 		[field: SerializeField]
+		public LocalizedString Name { get; protected set; }
+
+		[field: SerializeField]
+		public LocalizedString Description { get; protected set; }
+
+		[field: SerializeField]
+		[field: PreviewSprite]
+		public Sprite Image { get; protected set; }
+
+		[field: SerializeField]
 		public PrimaryRoleType PrimaryType { get; private set; }
 
 		[field: SerializeField]
@@ -47,9 +58,6 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public Priority[] NightPriorities { get; private set; }
-
-		[field: SerializeField]
-		public Priority[] DayPriorities { get; private set; }
 
 		[field: SerializeField]
 		public RoleBehavior Behavior { get; private set; }
