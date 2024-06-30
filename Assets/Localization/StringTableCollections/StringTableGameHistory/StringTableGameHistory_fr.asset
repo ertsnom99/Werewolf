@@ -20,7 +20,7 @@ MonoBehaviour:
     - rid: 7029503930381107201
   m_TableData:
   - m_Id: 1110805244723200
-    m_Localized: "{Player} re\xE7ut le role de {RoleName}."
+    m_Localized: "{Player} a re\xE7u le role de {RoleName}."
     m_Metadata:
       m_Items:
       - rid: 7029503930381107201
@@ -36,7 +36,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107201
   - m_Id: 1117060612931584
-    m_Localized: '{Player} devint le capitaine.'
+    m_Localized: '{Player} est devenu le capitaine.'
     m_Metadata:
       m_Items:
       - rid: 7029503930381107201
@@ -46,7 +46,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107201
   - m_Id: 1120198329810944
-    m_Localized: "{Player} ({RoleName}) se r\xE9vella."
+    m_Localized: "{Player} ({RoleName}) s'est r\xE9veill\xE9."
     m_Metadata:
       m_Items:
       - rid: 7029503930381107201
@@ -191,12 +191,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1135454057840640
-    m_Localized: Personne gagna.
+    m_Localized: Personne ne gagna.
     m_Metadata:
       m_Items: []
   - m_Id: 1483978075193344
-    m_Localized: "Les loups-garous \xE9chou\xE8rent \xE0 voter pour un joueur \xE0
-      tuer."
+    m_Localized: "Les loups-garous ne r\xE9ussirent pas \xE0 voter pour un joueur
+      \xE0 tuer."
     m_Metadata:
       m_Items: []
   references:
