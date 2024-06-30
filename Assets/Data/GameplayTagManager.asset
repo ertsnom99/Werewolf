@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9191084100418705152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Thief.TookRole
+  m_EditorClassIdentifier: 
+  _compactTagId: 69121
 --- !u!114 &-9112512702752326507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,7 +25,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Lonely.Sectarian
   m_EditorClassIdentifier: 
-  _compactTagId: 50462980
+  _compactTagId: 50462981
+--- !u!114 &-9005755218631088943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Cupid.CoupleDied
+  m_EditorClassIdentifier: 
+  _compactTagId: 66305
 --- !u!114 &-8990609715730411089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Crow
   m_EditorClassIdentifier: 
-  _compactTagId: 50528516
+  _compactTagId: 50528517
 --- !u!114 &-8974482386819651042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38,7 +64,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.Save
   m_EditorClassIdentifier: 
-  _compactTagId: 331265
+  _compactTagId: 331266
+--- !u!114 &-8923106137533346033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Witch
+  m_EditorClassIdentifier: 
+  _compactTagId: 4353
+--- !u!114 &-8735980565207345998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Cupid.CoupleSelected
+  m_EditorClassIdentifier: 
+  _compactTagId: 131841
 --- !u!114 &-8715855821755236391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.NoPotionToUse
   m_EditorClassIdentifier: 
-  _compactTagId: 200193
+  _compactTagId: 200194
 --- !u!114 &-8573035580249646065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: PlayerGroup.WhiteWerewolfs
   m_EditorClassIdentifier: 
-  _compactTagId: 1539
+  _compactTagId: 1540
 --- !u!114 &-8197723905688610027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Execution.DrawYouChoose
   m_EditorClassIdentifier: 
-  _compactTagId: 329473
+  _compactTagId: 329474
 --- !u!114 &-8150743428218529166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Hunter
   m_EditorClassIdentifier: 
-  _compactTagId: 2561
+  _compactTagId: 2562
 --- !u!114 &-8103979790404170196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +155,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image
   m_EditorClassIdentifier: 
-  _compactTagId: 1
+  _compactTagId: 2
+--- !u!114 &-8014378721874672004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Fox
+  m_EditorClassIdentifier: 
+  _compactTagId: 2049
 --- !u!114 &-8001139337927534559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,7 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.FortuneTeller
   m_EditorClassIdentifier: 
-  _compactTagId: 84082948
+  _compactTagId: 84082949
 --- !u!114 &-7832350459006402490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: PlayerGroup.FlutePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 515
+  _compactTagId: 516
 --- !u!114 &-7706619751368653676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.BearRider
   m_EditorClassIdentifier: 
-  _compactTagId: 33751300
+  _compactTagId: 33751301
 --- !u!114 &-7684983644832771135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,7 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Captain
   m_EditorClassIdentifier: 
-  _compactTagId: 257
+  _compactTagId: 258
 --- !u!114 &-7602664661658529974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,7 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.VillagerVillager
   m_EditorClassIdentifier: 
-  _compactTagId: 318963972
+  _compactTagId: 318963973
 --- !u!114 &-7474750659307109584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,7 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.NightCall.PlurialRolePlaying
   m_EditorClassIdentifier: 
-  _compactTagId: 68609
+  _compactTagId: 68610
 --- !u!114 &-7417608976458301737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,7 +259,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Execution.DrawAgain
   m_EditorClassIdentifier: 
-  _compactTagId: 132865
+  _compactTagId: 132866
+--- !u!114 &-7311221229780604641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Captain.Changed
+  m_EditorClassIdentifier: 
+  _compactTagId: 65793
+--- !u!114 &-7307408572042871932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.WokeUpPlayer
+  m_EditorClassIdentifier: 
+  _compactTagId: 4609
 --- !u!114 &-7226050190254201797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,7 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Villager
   m_EditorClassIdentifier: 
-  _compactTagId: 302186756
+  _compactTagId: 302186757
 --- !u!114 &-6932030356482755376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Saviour
   m_EditorClassIdentifier: 
-  _compactTagId: 218300676
+  _compactTagId: 218300677
 --- !u!114 &-6924916128729707147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,7 +324,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Night.Transition
   m_EditorClassIdentifier: 
-  _compactTagId: 68353
+  _compactTagId: 68354
+--- !u!114 &-6835157766599638736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Thief
+  m_EditorClassIdentifier: 
+  _compactTagId: 3585
+--- !u!114 &-6783649889304436894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Witch.UsedDeathPotion
+  m_EditorClassIdentifier: 
+  _compactTagId: 69889
 --- !u!114 &-6713003632940608740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,7 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch
   m_EditorClassIdentifier: 
-  _compactTagId: 3585
+  _compactTagId: 3586
 --- !u!114 &-6653758457213997753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,7 +376,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Ambiguous.WildChild
   m_EditorClassIdentifier: 
-  _compactTagId: 83951876
+  _compactTagId: 83951877
+--- !u!114 &-6577402854337269720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Election.MultipleCandidates
+  m_EditorClassIdentifier: 
+  _compactTagId: 66561
+--- !u!114 &-6512652506433678517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Captain
+  m_EditorClassIdentifier: 
+  _compactTagId: 257
 --- !u!114 &-6473885156194452207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,7 +415,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Execution.DrawNewVote
   m_EditorClassIdentifier: 
-  _compactTagId: 263937
+  _compactTagId: 263938
+--- !u!114 &-6404904665649978227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Witch.UsedLifePotion
+  m_EditorClassIdentifier: 
+  _compactTagId: 135425
+--- !u!114 &-6371537381687074625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Vote.VotedFor
+  m_EditorClassIdentifier: 
+  _compactTagId: 200449
+--- !u!114 &-6353037308325946689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Captain.Died
+  m_EditorClassIdentifier: 
+  _compactTagId: 131329
 --- !u!114 &-6186687672928004612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,7 +467,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: MarkForDeath.LoveSickness
   m_EditorClassIdentifier: 
-  _compactTagId: 770
+  _compactTagId: 771
+--- !u!114 &-6119401244737583649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Election.NoCandidate
+  m_EditorClassIdentifier: 
+  _compactTagId: 132097
+--- !u!114 &-5955894957171042128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Servant
+  m_EditorClassIdentifier: 
+  _compactTagId: 3073
+--- !u!114 &-5852892113263125513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Vote.DidNotVoteWithPenality
+  m_EditorClassIdentifier: 
+  _compactTagId: 134913
 --- !u!114 &-5616936199980762825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,7 +519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Werewolf.None.BigBadWolf
   m_EditorClassIdentifier: 
-  _compactTagId: 16908804
+  _compactTagId: 16908805
 --- !u!114 &-5547471449306829802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -311,7 +532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.LittleGirl
   m_EditorClassIdentifier: 
-  _compactTagId: 184746244
+  _compactTagId: 184746245
 --- !u!114 &-5375341707992204064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,7 +545,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Election.Prompt
   m_EditorClassIdentifier: 
-  _compactTagId: 263425
+  _compactTagId: 263426
+--- !u!114 &-5309287748526777260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Comedian.UsedRole
+  m_EditorClassIdentifier: 
+  _compactTagId: 66049
+--- !u!114 &-5222993735485238172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Sun.Set
+  m_EditorClassIdentifier: 
+  _compactTagId: 134401
 --- !u!114 &-4830026793023973320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,7 +584,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.Kill
   m_EditorClassIdentifier: 
-  _compactTagId: 134657
+  _compactTagId: 134658
+--- !u!114 &-4676981004224442684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Werewolf.VotedPlayer
+  m_EditorClassIdentifier: 
+  _compactTagId: 135169
+--- !u!114 &-4670852522361627645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Execution
+  m_EditorClassIdentifier: 
+  _compactTagId: 1537
 --- !u!114 &-4642260714550647464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,7 +623,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Fox
   m_EditorClassIdentifier: 
-  _compactTagId: 2305
+  _compactTagId: 2306
+--- !u!114 &-4287951944148663951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Execution.DrawAgain
+  m_EditorClassIdentifier: 
+  _compactTagId: 67073
 --- !u!114 &-4213155426070918043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,7 +649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Ambiguous.Comedian
   m_EditorClassIdentifier: 
-  _compactTagId: 16843012
+  _compactTagId: 16843013
 --- !u!114 &-4152609035969618942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,7 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Captain.Reveal
   m_EditorClassIdentifier: 
-  _compactTagId: 196865
+  _compactTagId: 196866
 --- !u!114 &-4112786113899519634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,7 +675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.NightCall
   m_EditorClassIdentifier: 
-  _compactTagId: 3073
+  _compactTagId: 3074
 --- !u!114 &-3897550941697366323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,7 +688,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Fox.LostPower
   m_EditorClassIdentifier: 
-  _compactTagId: 264449
+  _compactTagId: 264450
+--- !u!114 &-3474605209452353923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Execution.VotedPlayer
+  m_EditorClassIdentifier: 
+  _compactTagId: 263681
+--- !u!114 &-3411198247075154456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Fox.SniffedWerewolf
+  m_EditorClassIdentifier: 
+  _compactTagId: 133121
 --- !u!114 &-3234978832333433636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,7 +727,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Execution.DrawCaptainChoose
   m_EditorClassIdentifier: 
-  _compactTagId: 198401
+  _compactTagId: 198402
+--- !u!114 &-3204591652628853092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Savior
+  m_EditorClassIdentifier: 
+  _compactTagId: 2817
 --- !u!114 &-2834002916931835057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,7 +753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.DeathReveal.NoOneDied
   m_EditorClassIdentifier: 
-  _compactTagId: 66561
+  _compactTagId: 66562
 --- !u!114 &-2716571049120636985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,7 +766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Saviour
   m_EditorClassIdentifier: 
-  _compactTagId: 3329
+  _compactTagId: 3330
 --- !u!114 &-2521136356514112087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -454,7 +779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Hunter.ChoosingPlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 133633
+  _compactTagId: 133634
 --- !u!114 &-2503317683888758085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,7 +792,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Ambiguous.Servant
   m_EditorClassIdentifier: 
-  _compactTagId: 50397444
+  _compactTagId: 50397445
 --- !u!114 &-2420311931908136977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,7 +805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Witch
   m_EditorClassIdentifier: 
-  _compactTagId: 335741188
+  _compactTagId: 335741189
 --- !u!114 &-2412456246043308623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,7 +818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Election.NoCandidate
   m_EditorClassIdentifier: 
-  _compactTagId: 197889
+  _compactTagId: 197890
 --- !u!114 &-2222359258656955773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,7 +831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Election.Debate
   m_EditorClassIdentifier: 
-  _compactTagId: 66817
+  _compactTagId: 66818
 --- !u!114 &-2183545869754039743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,7 +844,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None
   m_EditorClassIdentifier: 
-  _compactTagId: 196868
+  _compactTagId: 196869
+--- !u!114 &-2076889716259092636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Vote.DidNotVote
+  m_EditorClassIdentifier: 
+  _compactTagId: 69377
+--- !u!114 &-1905914086747963203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Fox.LostPower
+  m_EditorClassIdentifier: 
+  _compactTagId: 67585
 --- !u!114 &-1884873266834036162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,7 +883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Lonely
   m_EditorClassIdentifier: 
-  _compactTagId: 131332
+  _compactTagId: 131333
 --- !u!114 &-1852563882059163371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,7 +896,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Werewolf.None.FoulFatherWolf
   m_EditorClassIdentifier: 
-  _compactTagId: 33686020
+  _compactTagId: 33686021
+--- !u!114 &-1594020178363860539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.EndGame.NobodyWon
+  m_EditorClassIdentifier: 
+  _compactTagId: 66817
+--- !u!114 &-1363357280739271870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry
+  m_EditorClassIdentifier: 
+  _compactTagId: 1
+--- !u!114 &-1350852320458332129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Werewolf
+  m_EditorClassIdentifier: 
+  _compactTagId: 4097
+--- !u!114 &-951212456345614295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Execution.DrawNewVote
+  m_EditorClassIdentifier: 
+  _compactTagId: 198145
 --- !u!114 &-738164676928455692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -558,7 +961,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Scapegoat
   m_EditorClassIdentifier: 
-  _compactTagId: 235077892
+  _compactTagId: 235077893
 --- !u!114 &-535318216189129561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,7 +974,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Ambiguous.DogWolf
   m_EditorClassIdentifier: 
-  _compactTagId: 33620228
+  _compactTagId: 33620229
 --- !u!114 &-526955281746026370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -584,7 +987,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.KnightRustySword
   m_EditorClassIdentifier: 
-  _compactTagId: 167969028
+  _compactTagId: 167969029
+--- !u!114 &-471421179214536152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.EndGame
+  m_EditorClassIdentifier: 
+  _compactTagId: 1281
 --- !u!114 &-467428146297135536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -596,6 +1012,32 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Execution.Debate
+  m_EditorClassIdentifier: 
+  _compactTagId: 67330
+--- !u!114 &-330970494665732209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Sun.Rose
+  m_EditorClassIdentifier: 
+  _compactTagId: 68865
+--- !u!114 &-66247362111012362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.FortuneTeller.LookedPlayerRole
   m_EditorClassIdentifier: 
   _compactTagId: 67329
 --- !u!114 &-46525750058059440
@@ -610,7 +1052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.EndGame.NoWinner
   m_EditorClassIdentifier: 
-  _compactTagId: 67073
+  _compactTagId: 67074
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -624,6 +1066,59 @@ MonoBehaviour:
   m_Name: GameplayTagManager
   m_EditorClassIdentifier: 
   _gameplayTags:
+  - {fileID: -1363357280739271870}
+  - {fileID: -6512652506433678517}
+  - {fileID: -7311221229780604641}
+  - {fileID: -6353037308325946689}
+  - {fileID: 3769271673351739608}
+  - {fileID: -5309287748526777260}
+  - {fileID: 7785847060838763036}
+  - {fileID: 3580210804852513379}
+  - {fileID: -9005755218631088943}
+  - {fileID: -8735980565207345998}
+  - {fileID: 602595925389400680}
+  - {fileID: -6577402854337269720}
+  - {fileID: -6119401244737583649}
+  - {fileID: -471421179214536152}
+  - {fileID: -1594020178363860539}
+  - {fileID: 7490826577571526794}
+  - {fileID: -4670852522361627645}
+  - {fileID: -4287951944148663951}
+  - {fileID: 7857262219002472655}
+  - {fileID: -951212456345614295}
+  - {fileID: -3474605209452353923}
+  - {fileID: 400890721188642999}
+  - {fileID: 8479573376514652695}
+  - {fileID: -66247362111012362}
+  - {fileID: -8014378721874672004}
+  - {fileID: -1905914086747963203}
+  - {fileID: -3411198247075154456}
+  - {fileID: 1239282344240734910}
+  - {fileID: 5372081958531811781}
+  - {fileID: 9004836224527247862}
+  - {fileID: 2349646183929925099}
+  - {fileID: 7225922598962193451}
+  - {fileID: -3204591652628853092}
+  - {fileID: 7584545385755327515}
+  - {fileID: -5955894957171042128}
+  - {fileID: 7828025626779433002}
+  - {fileID: 1917516275190892551}
+  - {fileID: -330970494665732209}
+  - {fileID: -5222993735485238172}
+  - {fileID: -6835157766599638736}
+  - {fileID: -9191084100418705152}
+  - {fileID: 1282424815053823321}
+  - {fileID: 7727478061434332113}
+  - {fileID: -2076889716259092636}
+  - {fileID: -5852892113263125513}
+  - {fileID: -6371537381687074625}
+  - {fileID: -1350852320458332129}
+  - {fileID: 4954223030057824743}
+  - {fileID: -4676981004224442684}
+  - {fileID: -8923106137533346033}
+  - {fileID: -6783649889304436894}
+  - {fileID: -6404904665649978227}
+  - {fileID: -7307408572042871932}
   - {fileID: -8103979790404170196}
   - {fileID: -7684983644832771135}
   - {fileID: 385745502131665813}
@@ -742,7 +1237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.FortuneTeller
   m_EditorClassIdentifier: 
-  _compactTagId: 2049
+  _compactTagId: 2050
 --- !u!114 &385745502131665813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,7 +1250,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Captain.ChooseNextCaptain
   m_EditorClassIdentifier: 
-  _compactTagId: 65793
+  _compactTagId: 65794
+--- !u!114 &400890721188642999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Execution.VoteStarted
+  m_EditorClassIdentifier: 
+  _compactTagId: 329217
+--- !u!114 &602595925389400680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Election
+  m_EditorClassIdentifier: 
+  _compactTagId: 1025
 --- !u!114 &957768035278547275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -768,7 +1289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Werewolf.Lonely
   m_EditorClassIdentifier: 
-  _compactTagId: 66052
+  _compactTagId: 66053
 --- !u!114 &1012340808859986049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -781,7 +1302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: MarkForDeath.Mauled
   m_EditorClassIdentifier: 
-  _compactTagId: 1026
+  _compactTagId: 1027
 --- !u!114 &1136116219714361880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -794,7 +1315,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Lonely.Angel
   m_EditorClassIdentifier: 
-  _compactTagId: 16908548
+  _compactTagId: 16908549
+--- !u!114 &1239282344240734910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Hunter
+  m_EditorClassIdentifier: 
+  _compactTagId: 2305
+--- !u!114 &1282424815053823321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Thief.WasGivenRoles
+  m_EditorClassIdentifier: 
+  _compactTagId: 134657
 --- !u!114 &1290680065302481199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -807,7 +1354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Fox.ChoosePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 67841
+  _compactTagId: 67842
 --- !u!114 &1354626261844418320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -820,7 +1367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Election
   m_EditorClassIdentifier: 
-  _compactTagId: 1281
+  _compactTagId: 1282
 --- !u!114 &1363378225548369814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -833,7 +1380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: PlayerGroup.Sectarian
   m_EditorClassIdentifier: 
-  _compactTagId: 771
+  _compactTagId: 772
 --- !u!114 &1397265775897771022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -846,7 +1393,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.NightCall.SingularRolePlaying
   m_EditorClassIdentifier: 
-  _compactTagId: 134145
+  _compactTagId: 134146
 --- !u!114 &1534591760579037349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -859,7 +1406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.DeathReveal.PlayerDied
   m_EditorClassIdentifier: 
-  _compactTagId: 132097
+  _compactTagId: 132098
 --- !u!114 &1557777365195631459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -872,7 +1419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Werewolf.None
   m_EditorClassIdentifier: 
-  _compactTagId: 131588
+  _compactTagId: 131589
 --- !u!114 &1600569824371550567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -885,7 +1432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.EndGame
   m_EditorClassIdentifier: 
-  _compactTagId: 1537
+  _compactTagId: 1538
 --- !u!114 &1901381684086208853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -898,7 +1445,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Lonely.FlutePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 33685764
+  _compactTagId: 33685765
+--- !u!114 &1917516275190892551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Sun
+  m_EditorClassIdentifier: 
+  _compactTagId: 3329
 --- !u!114 &1988124086213005264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -911,7 +1471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: PlayerGroup.Villagers
   m_EditorClassIdentifier: 
-  _compactTagId: 1027
+  _compactTagId: 1028
 --- !u!114 &2110367405586373980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -924,7 +1484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.DeathReveal
   m_EditorClassIdentifier: 
-  _compactTagId: 1025
+  _compactTagId: 1026
 --- !u!114 &2130812115359760485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -937,7 +1497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: PlayerGroup
   m_EditorClassIdentifier: 
-  _compactTagId: 3
+  _compactTagId: 4
 --- !u!114 &2149216291160904628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -950,7 +1510,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Day
   m_EditorClassIdentifier: 
-  _compactTagId: 769
+  _compactTagId: 770
+--- !u!114 &2349646183929925099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Player.Died
+  m_EditorClassIdentifier: 
+  _compactTagId: 68097
 --- !u!114 &2561787173178258685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -963,7 +1536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Ambiguous
   m_EditorClassIdentifier: 
-  _compactTagId: 65796
+  _compactTagId: 65797
 --- !u!114 &2652096941984701936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -976,7 +1549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Werewolf.None.Werewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 50463236
+  _compactTagId: 50463237
 --- !u!114 &2754782463931255244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -989,7 +1562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Gypsy
   m_EditorClassIdentifier: 
-  _compactTagId: 117637380
+  _compactTagId: 117637381
 --- !u!114 &3146112165964210076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1002,7 +1575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Fox.FoundWerewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 198913
+  _compactTagId: 198914
 --- !u!114 &3414206372492271902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1015,7 +1588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.DeathReveal.SomeoneDied
   m_EditorClassIdentifier: 
-  _compactTagId: 197633
+  _compactTagId: 197634
 --- !u!114 &3472346779470064033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1028,7 +1601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role
   m_EditorClassIdentifier: 
-  _compactTagId: 4
+  _compactTagId: 5
 --- !u!114 &3558111247057105200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1041,7 +1614,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Werewolf.Lonely.WhiteWerewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 16843268
+  _compactTagId: 16843269
+--- !u!114 &3580210804852513379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Cupid
+  m_EditorClassIdentifier: 
+  _compactTagId: 769
 --- !u!114 &3670115825574939499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1054,7 +1640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager
   m_EditorClassIdentifier: 
-  _compactTagId: 260
+  _compactTagId: 261
 --- !u!114 &3751353400061193602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1067,7 +1653,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: PlayerGroup.Werewolfs
   m_EditorClassIdentifier: 
-  _compactTagId: 1283
+  _compactTagId: 1284
+--- !u!114 &3769271673351739608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Comedian
+  m_EditorClassIdentifier: 
+  _compactTagId: 513
 --- !u!114 &3817651400509371634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1080,7 +1679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Hunter.ChoosePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 68097
+  _compactTagId: 68098
 --- !u!114 &3935916943633048771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1093,7 +1692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Election.MultipleCandidate
   m_EditorClassIdentifier: 
-  _compactTagId: 132353
+  _compactTagId: 132354
 --- !u!114 &4216874847919846777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1106,7 +1705,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.VillageIdiot
   m_EditorClassIdentifier: 
-  _compactTagId: 285409540
+  _compactTagId: 285409541
 --- !u!114 &4321192850381634439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1119,7 +1718,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Night
   m_EditorClassIdentifier: 
-  _compactTagId: 2817
+  _compactTagId: 2818
 --- !u!114 &4377652059447732450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1132,7 +1731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: MarkForDeath.Shot
   m_EditorClassIdentifier: 
-  _compactTagId: 1538
+  _compactTagId: 1539
 --- !u!114 &4534347614920964079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1145,7 +1744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: MarkForDeath
   m_EditorClassIdentifier: 
-  _compactTagId: 2
+  _compactTagId: 3
 --- !u!114 &4838366214633630053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1158,7 +1757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Fox.FoundNoWerewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 133377
+  _compactTagId: 133378
 --- !u!114 &4907134351945679693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1171,7 +1770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Judge
   m_EditorClassIdentifier: 
-  _compactTagId: 151191812
+  _compactTagId: 151191813
 --- !u!114 &4944564988679888176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1184,7 +1783,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: MarkForDeath.Poisoned
   m_EditorClassIdentifier: 
-  _compactTagId: 1282
+  _compactTagId: 1283
+--- !u!114 &4954223030057824743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Werewolf.FailedToVotePlayer
+  m_EditorClassIdentifier: 
+  _compactTagId: 69633
 --- !u!114 &5075221199770472978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1197,7 +1809,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Cupid.InCouple
   m_EditorClassIdentifier: 
-  _compactTagId: 262657
+  _compactTagId: 262658
+--- !u!114 &5372081958531811781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Hunter.KilledPlayer
+  m_EditorClassIdentifier: 
+  _compactTagId: 67841
 --- !u!114 &5771913067030864782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1210,7 +1835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Cupid
   m_EditorClassIdentifier: 
-  _compactTagId: 67305732
+  _compactTagId: 67305733
 --- !u!114 &6221425419385585584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1223,7 +1848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.TripletBrothers
   m_EditorClassIdentifier: 
-  _compactTagId: 251855108
+  _compactTagId: 251855109
 --- !u!114 &6369716799392596581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1236,7 +1861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Ancient
   m_EditorClassIdentifier: 
-  _compactTagId: 16974084
+  _compactTagId: 16974085
 --- !u!114 &6540031303376373709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1249,7 +1874,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.TwinSisters
   m_EditorClassIdentifier: 
-  _compactTagId: 268632324
+  _compactTagId: 268632325
 --- !u!114 &6665825862911437471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1262,7 +1887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.Ambiguous.Thief
   m_EditorClassIdentifier: 
-  _compactTagId: 67174660
+  _compactTagId: 67174661
 --- !u!114 &6957548192255917565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1275,7 +1900,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Captain.OldCaptainChoosing
   m_EditorClassIdentifier: 
-  _compactTagId: 131329
+  _compactTagId: 131330
+--- !u!114 &7225922598962193451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Player.GivenRole
+  m_EditorClassIdentifier: 
+  _compactTagId: 133633
 --- !u!114 &7333759835446194136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1288,7 +1926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: PlayerGroup.Couple
   m_EditorClassIdentifier: 
-  _compactTagId: 259
+  _compactTagId: 260
 --- !u!114 &7456238396284510153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1301,7 +1939,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Cupid.CoupleDeath
   m_EditorClassIdentifier: 
-  _compactTagId: 131585
+  _compactTagId: 131586
+--- !u!114 &7490826577571526794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.EndGame.PlayerGroupWon
+  m_EditorClassIdentifier: 
+  _compactTagId: 132353
 --- !u!114 &7494298166840074912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1314,7 +1965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Saviour.ChoosePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 68865
+  _compactTagId: 68866
 --- !u!114 &7564377360445445541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1327,7 +1978,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.ChoosePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 69121
+  _compactTagId: 69122
 --- !u!114 &7583335992150841462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1340,7 +1991,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Cupid
   m_EditorClassIdentifier: 
-  _compactTagId: 513
+  _compactTagId: 514
+--- !u!114 &7584545385755327515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Savior.ChosePlayerToProtect
+  m_EditorClassIdentifier: 
+  _compactTagId: 68353
 --- !u!114 &7649568454011052203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1353,7 +2017,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Fox
   m_EditorClassIdentifier: 
-  _compactTagId: 100860164
+  _compactTagId: 100860165
 --- !u!114 &7700595151910905832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1366,7 +2030,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Cupid.CoupleRecognizingEachOther
   m_EditorClassIdentifier: 
-  _compactTagId: 197121
+  _compactTagId: 197122
+--- !u!114 &7727478061434332113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Vote
+  m_EditorClassIdentifier: 
+  _compactTagId: 3841
+--- !u!114 &7785847060838763036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Comedian.WasGivenRoles
+  m_EditorClassIdentifier: 
+  _compactTagId: 131585
+--- !u!114 &7828025626779433002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Servant.TookRole
+  m_EditorClassIdentifier: 
+  _compactTagId: 68609
 --- !u!114 &7828248529302745967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1379,7 +2082,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.PlayerDeadTonight
   m_EditorClassIdentifier: 
-  _compactTagId: 265729
+  _compactTagId: 265730
+--- !u!114 &7857262219002472655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Execution.DrawCaptainChose
+  m_EditorClassIdentifier: 
+  _compactTagId: 132609
 --- !u!114 &8184940356768289636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1392,7 +2108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: MarkForDeath.Hanged
   m_EditorClassIdentifier: 
-  _compactTagId: 514
+  _compactTagId: 515
 --- !u!114 &8189838678897902939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1405,7 +2121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Werewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 516
+  _compactTagId: 517
 --- !u!114 &8209229256807389745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1418,7 +2134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Cupid.ChooseCouple
   m_EditorClassIdentifier: 
-  _compactTagId: 66049
+  _compactTagId: 66050
 --- !u!114 &8467833512799127069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1431,7 +2147,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Pyromaniac
   m_EditorClassIdentifier: 
-  _compactTagId: 201523460
+  _compactTagId: 201523461
+--- !u!114 &8479573376514652695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.FortuneTeller
+  m_EditorClassIdentifier: 
+  _compactTagId: 1793
 --- !u!114 &8582886363894869589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1444,7 +2173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Day.Transition
   m_EditorClassIdentifier: 
-  _compactTagId: 66305
+  _compactTagId: 66306
 --- !u!114 &8739123847444604939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1457,7 +2186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.FortuneTeller.ChoosePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 67585
+  _compactTagId: 67586
 --- !u!114 &8922901822269052349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1470,7 +2199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Execution
   m_EditorClassIdentifier: 
-  _compactTagId: 1793
+  _compactTagId: 1794
 --- !u!114 &8950718465599024891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1483,7 +2212,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Role.Villager.None.Hunter
   m_EditorClassIdentifier: 
-  _compactTagId: 134414596
+  _compactTagId: 134414597
+--- !u!114 &9004836224527247862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Player
+  m_EditorClassIdentifier: 
+  _compactTagId: 2561
 --- !u!114 &9216349172710836488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1496,4 +2238,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: MarkForDeath.Disconnected
   m_EditorClassIdentifier: 
-  _compactTagId: 258
+  _compactTagId: 259
