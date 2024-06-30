@@ -15,31 +15,94 @@ MonoBehaviour:
   <Datas>k__BackingField:
   - GameplayTag: {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Name: Villagers
+    OLDName: 
+    Name:
+      m_TableReference:
+        m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+      m_TableEntryReference:
+        m_KeyId: 6103014752256
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    HasMultiplePlayers: 1
     Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Leader: {fileID: 0}
   - GameplayTag: {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Name: Werewolves
+    OLDName: 
+    Name:
+      m_TableReference:
+        m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+      m_TableEntryReference:
+        m_KeyId: 7366301368320
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    HasMultiplePlayers: 1
     Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Leader: {fileID: 0}
   - GameplayTag: {fileID: -8573035580249646065, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Name: White Werewolf
+    OLDName: 
+    Name:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    HasMultiplePlayers: 0
     Image: {fileID: -1846022942, guid: 57e5fee1eb9618343bcdb98861e6b594, type: 3}
     Leader: {fileID: 0}
   - GameplayTag: {fileID: 1363378225548369814, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Name: Sectarian
+    OLDName: 
+    Name:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    HasMultiplePlayers: 0
     Image: {fileID: -1321321227, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b, type: 3}
     Leader: {fileID: 0}
   - GameplayTag: {fileID: -7832350459006402490, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Name: Flute Player
+    OLDName: 
+    Name:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    HasMultiplePlayers: 0
     Image: {fileID: 1803793580, guid: d27adb3f7039d1a45a0389b130f6c9c3, type: 3}
     Leader: {fileID: 0}
   - GameplayTag: {fileID: 7333759835446194136, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Name: Couple
+    OLDName: 
+    Name:
+      m_TableReference:
+        m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+      m_TableEntryReference:
+        m_KeyId: 2578041978880
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    HasMultiplePlayers: 1
     Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
     Leader: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

@@ -1298,7 +1298,7 @@ namespace Werewolf
 			if (winningPlayerGroupID > -1)
 			{
 				PlayerGroupData playerGroup = Config.PlayerGroups.GetPlayerGroup(winningPlayerGroupID);
-				DisplayTitle(playerGroup.Image, string.Format(Config.WinningPlayerGroupText, playerGroup.Name));
+				DisplayTitle(playerGroup.Image, string.Format(Config.WinningPlayerGroupText, playerGroup.Name.GetLocalizedString()));
 			}
 			else
 			{

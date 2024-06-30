@@ -1,6 +1,7 @@
 using Assets.Scripts.Data.Tags;
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace Werewolf.Data
 {
@@ -8,7 +9,8 @@ namespace Werewolf.Data
 	public struct PlayerGroupData
 	{
 		public GameplayTag GameplayTag;
-		public string Name;
+		public LocalizedString Name;
+		public bool HasMultiplePlayers;
 		[field: PreviewSprite]
 		public Sprite Image;
 		[HideInInspector]
