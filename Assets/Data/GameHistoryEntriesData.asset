@@ -1,0 +1,750 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cefc699f15f4df49b80129c067edb71, type: 3}
+  m_Name: GameHistoryEntriesData
+  m_EditorClassIdentifier: 
+  <Datas>k__BackingField:
+  - GameplayTag: {fileID: 7225922598962193451, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 0}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1110805244723200
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516736
+      - name: RoleName
+        variable:
+          rid: 7029503975494516737
+  - GameplayTag: {fileID: 2349646183929925099, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1112754602033152
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516736
+      - name: RoleName
+        variable:
+          rid: 7029503975494516737
+  - GameplayTag: {fileID: -6577402854337269720, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1113228340281344
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Players
+        variable:
+          rid: 7029503975494516738
+  - GameplayTag: {fileID: -6119401244737583649, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1221642604, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1116699403665408
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Players
+        variable:
+          rid: 7029503975494516738
+  - GameplayTag: {fileID: -7311221229780604641, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1117060612931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516739
+  - GameplayTag: {fileID: -6353037308325946689, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1119725610778624
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516739
+  - GameplayTag: {fileID: -5222993735485238172, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1681703266, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1119927147085824
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516739
+  - GameplayTag: {fileID: -330970494665732209, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 705772914, guid: 57e5fee1eb9618343bcdb98861e6b594, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1119980007899136
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516739
+  - GameplayTag: {fileID: -7307408572042871932, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 0}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1120198329810944
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516739
+      - name: RoleName
+        variable:
+          rid: 7029503975494516740
+  - GameplayTag: {fileID: 400890721188642999, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 1002782032, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1123097671811072
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516739
+      - name: RoleName
+        variable:
+          rid: 7029503975494516740
+  - GameplayTag: {fileID: -951212456345614295, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 1002782032, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1123262101110784
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516739
+      - name: RoleName
+        variable:
+          rid: 7029503975494516740
+  - GameplayTag: {fileID: 7857262219002472655, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1123387561132032
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516739
+  - GameplayTag: {fileID: -4287951944148663951, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 1002782032, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1124997385338880
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  - GameplayTag: {fileID: -3474605209452353923, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 1002782032, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1127826892177408
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516741
+  - GameplayTag: {fileID: -6371537381687074625, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -105240362, guid: 57e5fee1eb9618343bcdb98861e6b594, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1128219831353344
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Voter
+        variable:
+          rid: 7029503975494516741
+      - name: Voted
+        variable:
+          rid: 7029503975494516742
+  - GameplayTag: {fileID: -2076889716259092636, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 334673292, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1130489763512320
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516741
+  - GameplayTag: {fileID: -5852892113263125513, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 794884614, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1131051640864768
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516741
+  - GameplayTag: {fileID: 7490826577571526794, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 0}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1133519254765568
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: PlayerGroupeName
+        variable:
+          rid: 7029503975494516743
+      - name: PlayerGroupePlayerAmount
+        variable:
+          rid: 7029503975494516756
+  - GameplayTag: {fileID: -1594020178363860539, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1135454057840640
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  - GameplayTag: {fileID: 7785847060838763036, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 717172429, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1135565391446016
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516744
+      - name: RoleNames
+        variable:
+          rid: 7029503975494516745
+  - GameplayTag: {fileID: -5309287748526777260, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 717172429, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1138930317967360
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516744
+      - name: RoleName
+        variable:
+          rid: 7029503975494516746
+  - GameplayTag: {fileID: -8735980565207345998, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1142184317730816
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: CupidPlayer
+        variable:
+          rid: 7029503975494516744
+      - name: FirstCouplePlayer
+        variable:
+          rid: 7029503975494516747
+      - name: SecondCouplePlayer
+        variable:
+          rid: 7029503975494516748
+  - GameplayTag: {fileID: -9005755218631088943, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1143798327853056
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: FirstCouplePlayer
+        variable:
+          rid: 7029503975494516747
+      - name: SecondCouplePlayer
+        variable:
+          rid: 7029503975494516748
+  - GameplayTag: {fileID: -66247362111012362, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 983793743, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1145710523629568
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: FortuneTellerPlayer
+        variable:
+          rid: 7029503975494516747
+      - name: PlayerLookedAt
+        variable:
+          rid: 7029503975494516748
+      - name: RoleName
+        variable:
+          rid: 7029503975494516749
+  - GameplayTag: {fileID: -3411198247075154456, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1147394884812800
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: FoxPlayer
+        variable:
+          rid: 7029503975494516747
+      - name: SniffedPlayers
+        variable:
+          rid: 7029503975494516750
+  - GameplayTag: {fileID: -3897550941697366323, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1147428170809344
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: FoxPlayer
+        variable:
+          rid: 7029503975494516747
+      - name: SniffedPlayers
+        variable:
+          rid: 7029503975494516750
+  - GameplayTag: {fileID: 5372081958531811781, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -330916012, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1147502372241408
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: HunterPlayer
+        variable:
+          rid: 7029503975494516747
+      - name: KilledPlayer
+        variable:
+          rid: 7029503975494516751
+  - GameplayTag: {fileID: 7584545385755327515, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 357046205, guid: d27adb3f7039d1a45a0389b130f6c9c3, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1147552502562816
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: SaviorPlayer
+        variable:
+          rid: 7029503975494516747
+      - name: ProtectedPlayer
+        variable:
+          rid: 7029503975494516751
+  - GameplayTag: {fileID: 7828025626779433002, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 1977204121, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1480962706161664
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: ServantPlayer
+        variable:
+          rid: 7029503975494516747
+      - name: PlayerTakenFrom
+        variable:
+          rid: 7029503975494516751
+      - name: RoleName
+        variable:
+          rid: 7029503975494516752
+  - GameplayTag: {fileID: 1282424815053823321, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1250751461, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1481631815090176
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516747
+      - name: FirstRoleName
+        variable:
+          rid: 7029503975494516752
+      - name: SecondRoleName
+        variable:
+          rid: 7029503975494516753
+  - GameplayTag: {fileID: -9191084100418705152, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1250751461, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1482753103544320
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516747
+      - name: RoleName
+        variable:
+          rid: 7029503975494516752
+  - GameplayTag: {fileID: -4676981004224442684, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1483584792084480
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: 7029503975494516747
+  - GameplayTag: {fileID: 4954223030057824743, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1483978075193344
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  - GameplayTag: {fileID: -6404904665649978227, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1484150020685824
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: WitchPlayer
+        variable:
+          rid: 7029503975494516754
+      - name: SavedPlayer
+        variable:
+          rid: 7029503975494516755
+  - GameplayTag: {fileID: -6783649889304436894, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 1484152184946688
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: WitchPlayer
+        variable:
+          rid: 7029503975494516754
+      - name: KilledPlayer
+        variable:
+          rid: 7029503975494516755
+  references:
+    version: 2
+    RefIds:
+    - rid: 7029503975494516736
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516737
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516738
+      type: {class: StringList, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Assembly-CSharp}
+      data:
+        Values: []
+    - rid: 7029503975494516739
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516740
+      type: {class: LocalizedString, ns: UnityEngine.Localization, asm: Unity.Localization}
+      data:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - rid: 7029503975494516741
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516742
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516743
+      type: {class: LocalizedString, ns: UnityEngine.Localization, asm: Unity.Localization}
+      data:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - rid: 7029503975494516744
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516745
+      type: {class: LocalizedStringList, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Assembly-CSharp}
+      data:
+        Values: []
+    - rid: 7029503975494516746
+      type: {class: LocalizedString, ns: UnityEngine.Localization, asm: Unity.Localization}
+      data:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - rid: 7029503975494516747
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516748
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516749
+      type: {class: LocalizedString, ns: UnityEngine.Localization, asm: Unity.Localization}
+      data:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - rid: 7029503975494516750
+      type: {class: StringList, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Assembly-CSharp}
+      data:
+        Values: []
+    - rid: 7029503975494516751
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516752
+      type: {class: LocalizedString, ns: UnityEngine.Localization, asm: Unity.Localization}
+      data:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - rid: 7029503975494516753
+      type: {class: LocalizedString, ns: UnityEngine.Localization, asm: Unity.Localization}
+      data:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+    - rid: 7029503975494516754
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516755
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 7029503975494516756
+      type: {class: IntVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 0
