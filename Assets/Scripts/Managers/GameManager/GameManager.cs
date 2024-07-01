@@ -18,6 +18,8 @@ namespace Werewolf
 		[field: SerializeField]
 		public GameConfig Config { get; private set; }
 
+		private PlayerGroupsData _playerGroupsData;
+
 		public List<RoleData> RolesToDistribute { get; private set; }
 
 		public List<PlayerRef> PlayersWaitingFor { get; private set; }
@@ -93,6 +95,8 @@ namespace Werewolf
 
 		private void Start()
 		{
+			_playerGroupsData = PlayerGroupsManager.Instance.PlayerGroupsData;
+
 			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
 			_UIManager = UIManager.Instance;
 			_voteManager = VoteManager.Instance;
@@ -1297,7 +1301,7 @@ namespace Werewolf
 
 			if (winningPlayerGroupID > -1)
 			{
-				PlayerGroupData playerGroup = Config.PlayerGroups.GetPlayerGroup(winningPlayerGroupID);
+				PlayerGroupData playerGroup = _playerGroupsData.GetPlayerGroup(winningPlayerGroupID);
 				DisplayTitle(playerGroup.Image, string.Format(Config.WinningPlayerGroupText, playerGroup.Name.GetLocalizedString()));
 			}
 			else

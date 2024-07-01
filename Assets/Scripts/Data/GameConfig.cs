@@ -130,9 +130,6 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public GameplayTag PlayerDiedImage { get; private set; }
 
-		[field: SerializeField]
-		public PlayerGroupsData PlayerGroups { get; private set; }
-
 		[field: Header("Execution")]
 		[field: SerializeField]
 		public GameplayTag ExecutionDebateImage { get; private set; }
