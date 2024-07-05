@@ -23,7 +23,7 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public PlayerGroupData[] Datas { get; private set; }
 
-		public PlayerGroupData GetPlayerGroup(int ID)
+		public PlayerGroupData GetPlayerGroupData(int ID)
 		{
 			foreach(PlayerGroupData data in Datas)
 			{

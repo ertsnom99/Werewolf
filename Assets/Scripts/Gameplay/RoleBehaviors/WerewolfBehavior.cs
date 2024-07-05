@@ -28,8 +28,10 @@ namespace Werewolf
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex)
+		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
+			isWakingUp = true;
+
 			_preparedVote = _voteManager.PrepareVote(_commonData.VoteMaxDuration, true, false, ChoicePurpose.Kill);
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)

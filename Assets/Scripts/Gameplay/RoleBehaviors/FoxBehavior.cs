@@ -43,8 +43,10 @@ public class FoxBehavior : RoleBehavior
 
 	public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-	public override bool OnRoleCall(int nightCount, int priorityIndex)
+	public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 	{
+		isWakingUp = true;
+		
 		if (!_hasPower)
 		{
 			StartCoroutine(ShowLostPower());

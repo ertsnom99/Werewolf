@@ -27,8 +27,10 @@ namespace Werewolf
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex)
+		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
+			isWakingUp = true;
+
 			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
 			immunePlayers.Add(Player);
 

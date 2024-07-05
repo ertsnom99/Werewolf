@@ -87,96 +87,103 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   <AvailableRolesMaxAttemptCount>k__BackingField: 100
+  <PlayerGivenRoleGameHistoryEntry>k__BackingField: {fileID: 7225922598962193451,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <GameplayLoopStepDelay>k__BackingField: 0.5
-  <ElectionPromptTitleText>k__BackingField: Do you want to be the captain?
   <ElectionPromptTitleImage>k__BackingField: {fileID: -5375341707992204064, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <ElectionPromptButtonText>k__BackingField: Yes!
   <ElectionPromptDuration>k__BackingField: 5
-  <ElectionMultipleCandidateText>k__BackingField: Multiple players want to be captain.
-    The village will debate, then vote!
-  <ElectionMultipleCandidateImage>k__BackingField: {fileID: 3935916943633048771, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
-  <ElectionMultipleCandidateDuration>k__BackingField: 3
-  <ElectionDebateText>k__BackingField: Debate about who should be captain
+  <ElectionMultipleCandidatesGameHistoryEntry>k__BackingField: {fileID: -6577402854337269720,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <ElectionMultipleCandidatesImage>k__BackingField: {fileID: 3935916943633048771,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <ElectionMultipleCandidatesDuration>k__BackingField: 3
   <ElectionDebateImage>k__BackingField: {fileID: -2222359258656955773, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <ElectionDebateDuration>k__BackingField: 60
-  <ElectionNoCandidateText>k__BackingField: No one wanted to be the captain!
+  <ElectionNoCandidateGameHistoryEntry>k__BackingField: {fileID: -6119401244737583649,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ElectionNoCandidateImage>k__BackingField: {fileID: -2412456246043308623, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <ElectionNoCandidateDuration>k__BackingField: 5
   <ElectionVoteDuration>k__BackingField: 15
+  <SunSetGameHistoryEntry>k__BackingField: {fileID: -5222993735485238172, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  <SunRoseGameHistoryEntry>k__BackingField: {fileID: -330970494665732209, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   <DaytimeTransitionDuration>k__BackingField: 3
   <DaytimeTextFadeInDelay>k__BackingField: 0.25
   <DaytimeLightTransitionDuration>k__BackingField: 1
   <DayColor>k__BackingField: {r: 1, g: 1, b: 1, a: 0}
   <DayTemperature>k__BackingField: 5000
-  <DayTransitionText>k__BackingField: The sun is rising, the village wakes up...
   <DayTransitionImage>k__BackingField: {fileID: 8582886363894869589, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <NightColor>k__BackingField: {r: 0.2, g: 0.23529412, b: 0.36862746, a: 1}
   <NightTemperature>k__BackingField: 19354
-  <NightTransitionText>k__BackingField: The sun is setting, the village goes to sleep...
   <NightTransitionImage>k__BackingField: {fileID: -6924916128729707147, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  <WokeUpPlayerGameHistoryEntry>k__BackingField: {fileID: -7307408572042871932, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <RolePlayingTextSingular>k__BackingField: The {0} is playing...
   <RolePlayingTextPlurial>k__BackingField: The {0}s are playing...
   <NightCallMinimumDuration>k__BackingField: 5
   <NightCallChangeDelay>k__BackingField: 2
-  <DeathRevealSomeoneDiedText>k__BackingField: Some people died...
   <DeathRevealSomeoneDiedImage>k__BackingField: {fileID: 3414206372492271902, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <DeathRevealNooneDiedText>k__BackingField: No one died tonight!
   <DeathRevealNoOneDiedImage>k__BackingField: {fileID: -2834002916931835057, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DeathRevealTitleHoldDuration>k__BackingField: 2
   <DelayBeforeRevealingDeadPlayer>k__BackingField: 1
-  <PlayerDiedText>k__BackingField: You died!
   <PlayerDiedImage>k__BackingField: {fileID: 1534591760579037349, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <PlayerGroups>k__BackingField: {fileID: 11400000, guid: 33cd032a2771b8043a99ab33bc92c771,
+  <PlayerDiedGameHistoryEntry>k__BackingField: {fileID: 2349646183929925099, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <ExecutionDebateText>k__BackingField: Debate about who will be executed!
   <ExecutionDebateImage>k__BackingField: {fileID: -467428146297135536, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <ExecutionDebateDuration>k__BackingField: 60
   <ExecutionVoteDuration>k__BackingField: 15
-  <ExecutionDrawNewVoteText>k__BackingField: The vote was a draw! A new vote will
-    start to break the draw
+  <ExecutionVoteStartedGameHistoryEntry>k__BackingField: {fileID: 400890721188642999,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionDrawNewVoteImage>k__BackingField: {fileID: -6473885156194452207, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <ExecutionTitleHoldDuration>k__BackingField: 3
-  <ExecutionDrawAgainText>k__BackingField: The vote was a draw again! No one will
-    be executed
+  <ExecutionDrawNewVoteGameHistoryEntry>k__BackingField: {fileID: -951212456345614295,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <ExecutionDrawAgainGameHistoryEntry>k__BackingField: {fileID: -4287951944148663951,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionDrawAgainImage>k__BackingField: {fileID: -7417608976458301737, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <ExecutionDrawYouChooseText>k__BackingField: The vote was a draw! Choose who to
-    execute.
   <ExecutionDrawYouChooseImage>k__BackingField: {fileID: -8197723905688610027, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <ExecutionDrawCaptainChooseText>k__BackingField: The vote was a draw! The captain
-    will choose who to execute.
   <ExecutionDrawCaptainChooseImage>k__BackingField: {fileID: -3234978832333433636,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionCaptainChoiceDuration>k__BackingField: 10
+  <ExecutionDrawCaptainChoseGameHistoryEntry>k__BackingField: {fileID: 7857262219002472655,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <ExecutionVotedPlayerGameHistoryEntry>k__BackingField: {fileID: -3474605209452353923,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionMarkForDeath>k__BackingField: {fileID: 8184940356768289636, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <EndGamePlayerGroupWonGameHistoryEntry>k__BackingField: {fileID: 7490826577571526794,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <WinningPlayerGroupText>k__BackingField: The {0} won!
-  <NoWinnerText>k__BackingField: No one won!
+  <EndGameNobodyWonGameHistoryEntry>k__BackingField: {fileID: -1594020178363860539,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <NoWinnerImage>k__BackingField: {fileID: -46525750058059440, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <EndGameTitleHoldDuration>k__BackingField: 3
   <ReturnToLobbyCountdownText>k__BackingField: Returning to Lobby in {0}...
   <ReturnToLobbyCountdownDuration>k__BackingField: 5
-  <CaptainRevealText>k__BackingField: Here is the captain!
+  <CaptainChangedGameHistoryEntry>k__BackingField: {fileID: -7311221229780604641,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <CaptainRevealImage>k__BackingField: {fileID: -4152609035969618942, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <ChooseNextCaptainText>k__BackingField: Choose the next captain
+  <CaptainDiedGameHistoryEntry>k__BackingField: {fileID: -6353037308325946689, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   <ChooseNextCaptainImage>k__BackingField: {fileID: 385745502131665813, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <CaptainChoiceDuration>k__BackingField: 10
-  <OldCaptainChoosingText>k__BackingField: The old captain is choosing the new one
   <OldCaptainChoosingImage>k__BackingField: {fileID: 6957548192255917565, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <CaptainCardMovementDuration>k__BackingField: 0.5
@@ -233,6 +240,12 @@ MonoBehaviour:
   <LockedOutButtonText>k__BackingField: Lock Out Vote
   <AllLockedInDelayToEndVote>k__BackingField: 3
   <NoVoteDuration>k__BackingField: 10
+  <VoteVotedForGameHistoryEntry>k__BackingField: {fileID: -6371537381687074625, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  <VoteDidNotVoteGameHistoryEntry>k__BackingField: {fileID: -2076889716259092636,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <VoteDidNotVoteWithPenalityGameHistoryEntry>k__BackingField: {fileID: -5852892113263125513,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <HighlightDuration>k__BackingField: 3
   <ChooseRoleText>k__BackingField: You MAY choose one
   <ChooseRoleObligatoryText>k__BackingField: You MUST choose one
