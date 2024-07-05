@@ -47,9 +47,9 @@ namespace Werewolf
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex)
+		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			return false;
+			return isWakingUp = false;
 		}
 
 		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<GameplayTag> marks, float revealDuration)

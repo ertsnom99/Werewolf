@@ -516,7 +516,7 @@ namespace Werewolf
 				AddMarkForDeath(player, Config.PlayerLeftMarkForDeath);
 			}
 
-			if (_currentGameplayLoopStep == GameplayLoopStep.RoleCall && PlayersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
+			if (_currentGameplayLoopStep == GameplayLoopStep.NightCall && PlayersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
 			{
 				for (int i = 0; i < PlayerGameInfos[player].Behaviors.Count; i++)
 				{

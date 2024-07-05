@@ -38,6 +38,9 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public int AvailableRolesMaxAttemptCount { get; private set; }
 
+		[field: SerializeField]
+		public GameplayTag PlayerGivenRoleGameHistoryEntry { get; private set; }
+
 		[field: Header("Gameplay Loop")]
 		[field: SerializeField]
 		public float GameplayLoopStepDelay { get; private set; }
@@ -53,16 +56,22 @@ namespace Werewolf.Data
 		public float ElectionPromptDuration { get; private set; }
 
 		[field: SerializeField]
-		public GameplayTag ElectionMultipleCandidateImage { get; private set; }
+		public GameplayTag ElectionMultipleCandidatesGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
-		public float ElectionMultipleCandidateDuration { get; private set; }
+		public GameplayTag ElectionMultipleCandidatesImage { get; private set; }
+
+		[field: SerializeField]
+		public float ElectionMultipleCandidatesDuration { get; private set; }
 
 		[field: SerializeField]
 		public GameplayTag ElectionDebateImage { get; private set; }
 
 		[field: SerializeField]
 		public float ElectionDebateDuration { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag ElectionNoCandidateGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
 		public GameplayTag ElectionNoCandidateImage { get; private set; }
@@ -74,6 +83,12 @@ namespace Werewolf.Data
 		public float ElectionVoteDuration { get; private set; }
 
 		[field: Header("Daytime")]
+		[field: SerializeField]
+		public GameplayTag SunSetGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag SunRoseGameHistoryEntry { get; private set; }
+
 		[field: SerializeField]
 		public float DaytimeTransitionDuration { get; private set; }
 
@@ -103,6 +118,9 @@ namespace Werewolf.Data
 
 		[field: Header("NightCall")]
 		[field: SerializeField]
+		public GameplayTag WokeUpPlayerGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
 		public string RolePlayingTextSingular { get; private set; }
 
 		[field: SerializeField]
@@ -130,6 +148,9 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public GameplayTag PlayerDiedImage { get; private set; }
 
+		[field: SerializeField]
+		public GameplayTag PlayerDiedGameHistoryEntry { get; private set; }
+
 		[field: Header("Execution")]
 		[field: SerializeField]
 		public GameplayTag ExecutionDebateImage { get; private set; }
@@ -141,10 +162,19 @@ namespace Werewolf.Data
 		public float ExecutionVoteDuration { get; private set; }
 
 		[field: SerializeField]
+		public GameplayTag ExecutionVoteStartedGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
 		public GameplayTag ExecutionDrawNewVoteImage { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionTitleHoldDuration { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag ExecutionDrawNewVoteGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag ExecutionDrawAgainGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
 		public GameplayTag ExecutionDrawAgainImage { get; private set; }
@@ -159,11 +189,23 @@ namespace Werewolf.Data
 		public float ExecutionCaptainChoiceDuration { get; private set; }
 
 		[field: SerializeField]
+		public GameplayTag ExecutionDrawCaptainChoseGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag ExecutionVotedPlayerGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
 		public GameplayTag ExecutionMarkForDeath { get; private set; }
 
 		[field: Header("End Game")]
 		[field: SerializeField]
+		public GameplayTag EndGamePlayerGroupWonGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
 		public string WinningPlayerGroupText { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag EndGameNobodyWonGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
 		public GameplayTag NoWinnerImage { get; private set; }
@@ -179,7 +221,13 @@ namespace Werewolf.Data
 
 		[field: Header("Captain")]
 		[field: SerializeField]
+		public GameplayTag CaptainChangedGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
 		public GameplayTag CaptainRevealImage { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag CaptainDiedGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
 		public GameplayTag ChooseNextCaptainImage { get; private set; }
@@ -215,6 +263,15 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public float NoVoteDuration { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag VoteVotedForGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag VoteDidNotVoteGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
+		public GameplayTag VoteDidNotVoteWithPenalityGameHistoryEntry { get; private set; }
 
 		[field: Header("Highlight Players")]
 		[field: SerializeField]

@@ -17,7 +17,22 @@ namespace Werewolf
 
 		private readonly int CAPTAIN_VOTE_MODIFIER = 2;
 
-		#region Captain
+		private void SetCaptain(PlayerRef captain)
+		{
+			_captain = captain;
+
+			_gameHistoryManager.AddEntry(Config.CaptainChangedGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "Player",
+												Data = _networkDataManager.PlayerInfos[_captain].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											}
+										});
+		}
+
+		#region Choose Captain
 		private IEnumerator ChooseNextCaptain()
 		{
 			List<PlayerRef> captainChoices = new();
@@ -102,7 +117,7 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
-			_captain = nextCaptain;
+			SetCaptain(nextCaptain);
 			yield return ShowCaptain();
 
 			_isNextCaptainChoiceCompleted = true;

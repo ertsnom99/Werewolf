@@ -39,7 +39,7 @@ namespace Werewolf
 			ElectionDebate = 0,
 			Election,
 			NightTransition,
-			RoleCall,
+			NightCall,
 			DayTransition,
 			DayDeathReveal,
 			ExecutionDebate,
@@ -53,10 +53,11 @@ namespace Werewolf
 
 		private bool _isPlayerDeathRevealCompleted;
 		private IEnumerator _revealPlayerDeathCoroutine;
-		
+
 		private IEnumerator _startCaptainExecutionCoroutine;
 
 		private GameplayDatabaseManager _gameplayDatabaseManager;
+		private GameHistoryManager _gameHistoryManager;
 		private UIManager _UIManager;
 		private VoteManager _voteManager;
 		private DaytimeManager _daytimeManager;
@@ -98,6 +99,7 @@ namespace Werewolf
 			_playerGroupsData = PlayerGroupsManager.Instance.PlayerGroupsData;
 
 			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
 			_UIManager = UIManager.Instance;
 			_voteManager = VoteManager.Instance;
 			_daytimeManager = DaytimeManager.Instance;
@@ -125,6 +127,8 @@ namespace Werewolf
 		{
 			_networkDataManager = NetworkDataManager.Instance;
 			_networkDataManager.PlayerDisconnected += OnPlayerDisconnected;
+
+			_gameHistoryManager.ClearEntries();
 
 			SelectRolesToDistribute(rolesSetup);
 
@@ -289,6 +293,23 @@ namespace Werewolf
 				}
 
 				PlayerGameInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
+
+				_gameHistoryManager.AddEntry(Config.PlayerGivenRoleGameHistoryEntry,
+											new GameHistorySaveEntryVariable[] {
+												new()
+												{
+													Name = "Player",
+													Data = playerInfo.Value.Nickname,
+													Type = GameHistorySaveEntryVariableType.Player
+												},
+												new()
+												{
+													Name = "RoleName",
+													Data = selectedRole.GameplayTag.name,
+													Type = GameHistorySaveEntryVariableType.RoleName
+												}
+											},
+											selectedRole.GameplayTag);
 			}
 
 			_rolesDistributionDone = true;
@@ -536,7 +557,7 @@ namespace Werewolf
 					_nightCount++;
 					StartCoroutine(ChangeDaytime(Daytime.Night));
 					break;
-				case GameplayLoopStep.RoleCall:
+				case GameplayLoopStep.NightCall:
 					StartCoroutine(CallRoles());
 					break;
 				case GameplayLoopStep.DayTransition:
@@ -586,18 +607,29 @@ namespace Werewolf
 
 			if (_captainCandidates.Count > 1)
 			{
+				_gameHistoryManager.AddEntry(Config.ElectionMultipleCandidatesGameHistoryEntry,
+											new GameHistorySaveEntryVariable[] {
+												new()
+												{
+													Name = "Players",
+													Data = GameHistoryManager.ConcatenatePlayersNickname(_captainCandidates, _networkDataManager),
+													Type = GameHistorySaveEntryVariableType.Players
+												}
+											});
+
 				StartCoroutine(HighlightPlayersToggle(_captainCandidates.ToArray()));
-				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidateImage.CompactTagId, Config.ElectionMultipleCandidateDuration);
+				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidatesImage.CompactTagId, Config.ElectionMultipleCandidatesDuration);
 				StartCoroutine(StartDebate(Config.ElectionDebateImage.CompactTagId, Config.ElectionDebateDuration));
 				yield break;
 			}
 			else if (_captainCandidates.Count == 1)
 			{
-				_captain = _captainCandidates[0];
+				SetCaptain(_captainCandidates[0]);
 				yield return ShowCaptain();
 			}
 			else
 			{
+				_gameHistoryManager.AddEntry(Config.ElectionNoCandidateGameHistoryEntry, null);
 				yield return DisplayTitleForAllPlayers(Config.ElectionNoCandidateImage.CompactTagId, Config.ElectionNoCandidateDuration);
 			}
 
@@ -643,7 +675,7 @@ namespace Werewolf
 				votedPlayer = _captainCandidates[UnityEngine.Random.Range(0, _captainCandidates.Count)];
 			}
 
-			_captain = votedPlayer;
+			SetCaptain(votedPlayer);
 			StartCoroutine(ShowElectionResult());
 		}
 
@@ -661,6 +693,16 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			_daytimeManager.ChangeDaytime(daytime);
 #endif
+			switch (daytime)
+			{
+				case Daytime.Day:
+					_gameHistoryManager.AddEntry(Config.SunRoseGameHistoryEntry, null);
+					break;
+				case Daytime.Night:
+					_gameHistoryManager.AddEntry(Config.SunSetGameHistoryEntry, null);
+					break;
+			}
+
 			yield return new WaitForSeconds(Config.DaytimeTransitionDuration);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
@@ -699,16 +741,36 @@ namespace Werewolf
 
 						if (nightPrioritiesIndexes.Contains(nightCall.PriorityIndex))
 						{
-							skipPlayer = !behavior.OnRoleCall(_nightCount, nightCall.PriorityIndex);
+							skipPlayer = !behavior.OnRoleCall(_nightCount, nightCall.PriorityIndex, out bool isWakingUp);
 
-							if (!skipPlayer)
+							if (skipPlayer)
 							{
-								PlayersWaitingFor.Add(player);
-								actifBehaviors.Add(player, behavior);
-								behavior.GetTitlesOverride(nightCall.PriorityIndex, ref titlesOverride);
+								break;
 							}
 
-							break;
+							if (isWakingUp)
+							{
+								_gameHistoryManager.AddEntry(Config.WokeUpPlayerGameHistoryEntry,
+															new GameHistorySaveEntryVariable[] {
+															new()
+															{
+																Name = "Player",
+																Data = _networkDataManager.PlayerInfos[player].Nickname,
+																Type = GameHistorySaveEntryVariableType.Player
+															},
+															new()
+															{
+																Name = "RoleName",
+																Data = PlayerGameInfos[player].Role.GameplayTag.name,
+																Type = GameHistorySaveEntryVariableType.RoleName
+															}
+															},
+															PlayerGameInfos[player].Role.GameplayTag);
+							}
+
+							PlayersWaitingFor.Add(player);
+							actifBehaviors.Add(player, behavior);
+							behavior.GetTitlesOverride(nightCall.PriorityIndex, ref titlesOverride);
 						}
 					}
 
@@ -893,6 +955,16 @@ namespace Werewolf
 
 					if (deadPlayer == _captain)
 					{
+						_gameHistoryManager.AddEntry(Config.CaptainDiedGameHistoryEntry,
+													new GameHistorySaveEntryVariable[] {
+														new()
+														{
+															Name = "Player",
+															Data = _networkDataManager.PlayerInfos[_captain].Nickname,
+															Type = GameHistorySaveEntryVariableType.Player
+														}
+													});
+
 						_isNextCaptainChoiceCompleted = false;
 
 						_chooseNextCaptainCoroutine = ChooseNextCaptain();
@@ -1039,6 +1111,22 @@ namespace Werewolf
 				}
 			}
 
+			_gameHistoryManager.AddEntry(Config.PlayerDiedGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "Player",
+												Data = _networkDataManager.PlayerInfos[deadPlayer].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "RoleName",
+												Data = PlayerGameInfos[deadPlayer].Role.GameplayTag.name,
+												Type = GameHistorySaveEntryVariableType.RoleName
+											}
+										});
+
 			if (!_playerCards[deadPlayer])
 			{
 				return;
@@ -1074,12 +1162,18 @@ namespace Werewolf
 		#region Execution
 		private void StartExecution()
 		{
-			_voteManager.StartVoteForAllPlayers(OnExecutionVotesCounted,
+			if (!_voteManager.StartVoteForAllPlayers(OnExecutionVotesCounted,
 												Config.ExecutionVoteDuration,
 												false,
 												true,
 												ChoicePurpose.Kill,
-												GetExecutionVoteModifiers());
+												GetExecutionVoteModifiers()))
+			{
+				Debug.LogError("Couldn't start the execution vote");
+				return;
+			}
+
+			_gameHistoryManager.AddEntry(Config.ExecutionVoteStartedGameHistoryEntry, null);
 		}
 
 		private void OnExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -1103,13 +1197,19 @@ namespace Werewolf
 		{
 			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteImage.CompactTagId, Config.ExecutionTitleHoldDuration);
 
-			_voteManager.StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
+			if (!_voteManager.StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
 												Config.ExecutionVoteDuration,
 												false,
 												false,
 												ChoicePurpose.Kill,
 												modifiers: GetExecutionVoteModifiers(),
-												ImmunePlayers: GetPlayersExcluding(mostVotedPlayers));
+												ImmunePlayers: GetPlayersExcluding(mostVotedPlayers)))
+			{
+				Debug.LogError("Couldn't start the secondary execution vote");
+				yield break;
+			}
+
+			_gameHistoryManager.AddEntry(Config.ExecutionDrawNewVoteGameHistoryEntry, null);
 		}
 
 		private void OnSecondaryExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -1120,6 +1220,7 @@ namespace Werewolf
 			}
 			else
 			{
+				_gameHistoryManager.AddEntry(Config.ExecutionDrawAgainGameHistoryEntry, null);
 				StartCoroutine(DisplayFailedExecution());
 			}
 		}
@@ -1144,7 +1245,9 @@ namespace Werewolf
 										ChoicePurpose.Other,
 										OnCaptainChooseExecutedPlayer))
 			{
+				AddExecutionDrawCaptainChoseGameHistoryEntry();
 				StartCoroutine(ExecutePlayer(mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)]));
+
 				yield break;
 			}
 
@@ -1172,6 +1275,7 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
+			AddExecutionDrawCaptainChoseGameHistoryEntry();
 			StartCoroutine(ExecutePlayer(mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)]));
 		}
 
@@ -1196,11 +1300,35 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
+			AddExecutionDrawCaptainChoseGameHistoryEntry();
 			StartCoroutine(ExecutePlayer(executedPlayer));
+		}
+
+		private void AddExecutionDrawCaptainChoseGameHistoryEntry()
+		{
+			_gameHistoryManager.AddEntry(Config.ExecutionDrawCaptainChoseGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "Player",
+												Data = _networkDataManager.PlayerInfos[_captain].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											}
+										});
 		}
 
 		private IEnumerator ExecutePlayer(PlayerRef executedPlayer)
 		{
+			_gameHistoryManager.AddEntry(Config.ExecutionVotedPlayerGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "Player",
+												Data = _networkDataManager.PlayerInfos[executedPlayer].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											}
+										});
+
 			AddMarkForDeath(executedPlayer, Config.ExecutionMarkForDeath);
 			yield return HighlightPlayerToggle(executedPlayer);
 
@@ -1225,6 +1353,8 @@ namespace Werewolf
 		{
 			if (_playerGroups.Count <= 0)
 			{
+				_gameHistoryManager.AddEntry(Config.EndGameNobodyWonGameHistoryEntry, null);
+
 				PrepareEndGameSequence(new() { GameplayTag = null, Priority = -1, Players = new() });
 				return true;
 			}
@@ -1235,6 +1365,25 @@ namespace Werewolf
 				{
 					continue;
 				}
+
+				PlayerGroupData playerGroupData = _playerGroupsData.GetPlayerGroupData(playerGroup.GameplayTag.CompactTagId);
+
+				_gameHistoryManager.AddEntry(Config.EndGamePlayerGroupWonGameHistoryEntry,
+														new GameHistorySaveEntryVariable[] {
+															new()
+															{
+																Name = "PlayerGroupeName",
+																Data = playerGroup.GameplayTag.name,
+																Type = GameHistorySaveEntryVariableType.PlayerGroupeName
+															},
+															new()
+															{
+																Name = "PlayerGroupeHasMultiplePlayers",
+																Data = playerGroupData.HasMultiplePlayers.ToString(),
+																Type = GameHistorySaveEntryVariableType.Bool
+															}
+														},
+														playerGroupData.GameplayTag);
 
 				PrepareEndGameSequence(playerGroup);
 				return true;
@@ -1256,10 +1405,13 @@ namespace Werewolf
 					role = playerInfo.Value.Role.GameplayTag.CompactTagId;
 				}
 
-				endGamePlayerInfos.Add(new() { Player = playerInfo.Key,
-												Role = role,
-												IsAlive = playerInfo.Value.IsAlive,
-												Won = winningPlayerGroup.GameplayTag != null ? winningPlayerGroup.Players.Contains(playerInfo.Key) : false });
+				endGamePlayerInfos.Add(new()
+				{
+					Player = playerInfo.Key,
+					Role = role,
+					IsAlive = playerInfo.Value.IsAlive,
+					Won = winningPlayerGroup.GameplayTag != null ? winningPlayerGroup.Players.Contains(playerInfo.Key) : false
+				});
 #if UNITY_SERVER && UNITY_EDITOR
 				if (endGamePlayerInfos[endGamePlayerInfos.Count - 1].Won)
 				{
@@ -1301,7 +1453,7 @@ namespace Werewolf
 
 			if (winningPlayerGroupID > -1)
 			{
-				PlayerGroupData playerGroup = _playerGroupsData.GetPlayerGroup(winningPlayerGroupID);
+				PlayerGroupData playerGroup = _playerGroupsData.GetPlayerGroupData(winningPlayerGroupID);
 				DisplayTitle(playerGroup.Image, string.Format(Config.WinningPlayerGroupText, playerGroup.Name.GetLocalizedString()));
 			}
 			else

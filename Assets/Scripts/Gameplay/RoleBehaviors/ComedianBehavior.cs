@@ -157,12 +157,15 @@ namespace Werewolf
 			_currentRoleBehavior = null;
 		}
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex)
+		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
+			isWakingUp = true;
+			
 			_reservedRoles = _gameManager.GetReservedRoles(this);
 
 			if (_reservedRoles.Roles == null || _reservedRoles.Roles.Length < 0)
 			{
+				isWakingUp = false;
 				return false;
 			}
 

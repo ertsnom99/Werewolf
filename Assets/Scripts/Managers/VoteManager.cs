@@ -29,7 +29,7 @@ namespace Werewolf
 
 		private float _maxDuration;
 		private bool _allowedToNotVote;
-		private bool _failToVotePenalty;
+		private bool _failingToVoteGivesPenalty;
 		private Dictionary<PlayerRef, int> _modifiers;
 		private int _lockedInVoteCount;
 
@@ -54,6 +54,7 @@ namespace Werewolf
 
 		private UIManager _UIManager;
 		private NetworkDataManager _networkDataManager;
+		private GameHistoryManager _gameHistoryManager;
 
 		public event Action<ChoicePurpose> VoteStarting;
 		public event Action<Dictionary<PlayerRef, int>> VoteCompleted;
@@ -75,6 +76,7 @@ namespace Werewolf
 
 			_UIManager = UIManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
 
 			_UIManager.VoteScreen.SetLockedInDelayDuration(_config.AllLockedInDelayToEndVote);
 		}
@@ -87,7 +89,7 @@ namespace Werewolf
 		public bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
 											float maxDuration,
 											bool allowedToNotVote,
-											bool failToVotePenalty,
+											bool failingToVoteGivesPenalty,
 											ChoicePurpose purpose,
 											Dictionary<PlayerRef, int> modifiers = null,
 											bool canVoteForSelf = false,
@@ -100,7 +102,7 @@ namespace Werewolf
 
 			_votesCountedCallback = votesCountedCallback;
 
-			PrepareVote(maxDuration, allowedToNotVote, failToVotePenalty, purpose, modifiers);
+			PrepareVote(maxDuration, allowedToNotVote, failingToVoteGivesPenalty, purpose, modifiers);
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _players)
 			{
@@ -137,7 +139,7 @@ namespace Werewolf
 			return true;
 		}
 
-		public bool PrepareVote(float maxDuration, bool allowedToNotVote, bool failToVotePenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
+		public bool PrepareVote(float maxDuration, bool allowedToNotVote, bool failingToVoteGivesPenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
 		{
 			if (_step != Step.NotVoting)
 			{
@@ -152,7 +154,7 @@ namespace Werewolf
 
 			_maxDuration = maxDuration;
 			_allowedToNotVote = allowedToNotVote;
-			_failToVotePenalty = failToVotePenalty;
+			_failingToVoteGivesPenalty = failingToVoteGivesPenalty;
 			_modifiers = modifiers;
 			_lockedInVoteCount = 0;
 
@@ -469,17 +471,43 @@ namespace Werewolf
 				return;
 			}
 
-			if (_failToVotePenalty)
+			foreach (PlayerRef voter in Voters)
 			{
-				foreach (PlayerRef voter in Voters)
+				if (!_votes[voter].VotedFor.IsNone)
 				{
-					if (!_votes[voter].VotedFor.IsNone)
-					{
-						continue;
-					}
+					_gameHistoryManager.AddEntry(_config.VoteVotedForGameHistoryEntry,
+												new GameHistorySaveEntryVariable[] {
+													new()
+													{
+														Name = "Voter",
+														Data = _networkDataManager.PlayerInfos[voter].Nickname,
+														Type = GameHistorySaveEntryVariableType.Player
+													},
+													new()
+													{
+														Name = "Voted",
+														Data = _networkDataManager.PlayerInfos[_votes[voter].VotedFor].Nickname,
+														Type = GameHistorySaveEntryVariableType.Player
+													}
+												});
 
+					continue;
+				}
+
+				if (_failingToVoteGivesPenalty)
+				{
 					_votes[voter] = new() { VotedFor = voter, LockedIn = true };
 				}
+
+				_gameHistoryManager.AddEntry(_failingToVoteGivesPenalty ? _config.VoteDidNotVoteWithPenalityGameHistoryEntry : _config.VoteDidNotVoteGameHistoryEntry,
+											new GameHistorySaveEntryVariable[] {
+													new()
+													{
+														Name = "Player",
+														Data = _networkDataManager.PlayerInfos[voter].Nickname,
+														Type = GameHistorySaveEntryVariableType.Player
+													}
+											});
 			}
 
 			foreach (PlayerRef voter in Voters)

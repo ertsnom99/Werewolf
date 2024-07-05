@@ -83,10 +83,13 @@ namespace Werewolf
 			return new GameplayTag[1] { PlayerGroups[0] };
 		}
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex)
+		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
+			isWakingUp = false;
+
 			if (!IsCoupleSelected() && priorityIndex == NightPriorities[0].index)
 			{
+				isWakingUp = true;
 				return ChooseCouple();
 			}
 			else if (!_showedCouple && priorityIndex == NightPriorities[1].index)
