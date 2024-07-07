@@ -235,24 +235,24 @@ namespace Werewolf
 		private void AddCoupleSelectedGameHistoryEntry()
 		{
 			_gameHistoryManager.AddEntry(_coupleSelectedGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "CupidPlayer",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "FirstCouplePlayer",
 												Data = _networkDataManager.PlayerInfos[_couple[0]].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "SecondCouplePlayer",
 												Data = _networkDataManager.PlayerInfos[_couple[1]].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											}
 										});
 		}
@@ -384,18 +384,18 @@ namespace Werewolf
 			_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 1);
 
 			_gameHistoryManager.AddEntry(_coupleDiedGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "FirstCouplePlayer",
 												Data = _networkDataManager.PlayerInfos[deadCouplePlayer].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "SecondCouplePlayer",
 												Data = _networkDataManager.PlayerInfos[otherCouplePlayer].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											}
 										});
 

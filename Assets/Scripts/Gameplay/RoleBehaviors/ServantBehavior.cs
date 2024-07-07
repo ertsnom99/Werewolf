@@ -89,24 +89,24 @@ namespace Werewolf
 			_gameManager.TransferRole(_playerRevealed, Player, false, !_notResettedRoles.Contains(RoleToTake.GameplayTag));
 
 			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "ServantPlayer",
 												Data = _networkDataManager.PlayerInfos[previousPlayer].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "PlayerTakenFrom",
 												Data = _networkDataManager.PlayerInfos[_playerRevealed].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "RoleName",
 												Data = RoleToTake.GameplayTag.name,
-												Type = GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 

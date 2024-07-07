@@ -22,12 +22,12 @@ namespace Werewolf
 			_captain = captain;
 
 			_gameHistoryManager.AddEntry(Config.CaptainChangedGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "Player",
 												Data = _networkDataManager.PlayerInfos[_captain].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											}
 										});
 		}

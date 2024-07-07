@@ -128,18 +128,18 @@ public class FoxBehavior : RoleBehavior
 		}
 
 		_gameHistoryManager.AddEntry(werewolfFound ? _sniffedWerewolfGameHistoryEntry : _lostPowerGameHistoryEntry,
-									new GameHistorySaveEntryVariable[] {
+									new GameHistoryManager.GameHistorySaveEntryVariable[] {
 										new()
 										{
 											Name = "FoxPlayer",
 											Data = _networkDataManager.PlayerInfos[Player].Nickname,
-											Type = GameHistorySaveEntryVariableType.Player
+											Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 										},
 										new()
 										{
 											Name = "SniffedPlayers",
 											Data = GameHistoryManager.ConcatenatePlayersNickname(playersToCheck, _networkDataManager),
-											Type = GameHistorySaveEntryVariableType.Players
+											Type = GameHistoryManager.GameHistorySaveEntryVariableType.Players
 										}
 									});
 

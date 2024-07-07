@@ -217,18 +217,18 @@ namespace Werewolf
 				_hasLifePotion = false;
 
 				_gameHistoryManager.AddEntry(_usedLifePotionGameHistoryEntry,
-											new GameHistorySaveEntryVariable[] {
+											new GameHistoryManager.GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "WitchPlayer",
 													Data = _networkDataManager.PlayerInfos[Player].Nickname,
-													Type = GameHistorySaveEntryVariableType.Player
+													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 												},
 												new()
 												{
 													Name = "SavedPlayer",
 													Data = _networkDataManager.PlayerInfos[_markedForDeathPlayer].Nickname,
-													Type = GameHistorySaveEntryVariableType.Player
+													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 												}
 											});
 
@@ -297,18 +297,18 @@ namespace Werewolf
 				_gameManager.AddMarkForDeath(player, _markForDeathAddedByDeathPotion);
 
 				_gameHistoryManager.AddEntry(_usedDeathPotionGameHistoryEntry,
-											new GameHistorySaveEntryVariable[] {
+											new GameHistoryManager.GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "WitchPlayer",
 													Data = _networkDataManager.PlayerInfos[Player].Nickname,
-													Type = GameHistorySaveEntryVariableType.Player
+													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 												},
 												new()
 												{
 													Name = "KilledPlayer",
 													Data = _networkDataManager.PlayerInfos[player].Nickname,
-													Type = GameHistorySaveEntryVariableType.Player
+													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 												}
 											});
 

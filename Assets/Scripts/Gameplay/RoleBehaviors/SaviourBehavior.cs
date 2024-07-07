@@ -104,18 +104,18 @@ namespace Werewolf
 			_selectedPlayer = player[0];
 
 			_gameHistoryManager.AddEntry(_chosePlayerToProtectGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "SaviorPlayer",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "ProtectedPlayer",
 												Data = _networkDataManager.PlayerInfos[_selectedPlayer].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											}
 										});
 

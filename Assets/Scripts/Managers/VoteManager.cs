@@ -476,18 +476,18 @@ namespace Werewolf
 				if (!_votes[voter].VotedFor.IsNone)
 				{
 					_gameHistoryManager.AddEntry(_config.VoteVotedForGameHistoryEntry,
-												new GameHistorySaveEntryVariable[] {
+												new GameHistoryManager.GameHistorySaveEntryVariable[] {
 													new()
 													{
 														Name = "Voter",
 														Data = _networkDataManager.PlayerInfos[voter].Nickname,
-														Type = GameHistorySaveEntryVariableType.Player
+														Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 													},
 													new()
 													{
 														Name = "Voted",
 														Data = _networkDataManager.PlayerInfos[_votes[voter].VotedFor].Nickname,
-														Type = GameHistorySaveEntryVariableType.Player
+														Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 													}
 												});
 
@@ -500,12 +500,12 @@ namespace Werewolf
 				}
 
 				_gameHistoryManager.AddEntry(_failingToVoteGivesPenalty ? _config.VoteDidNotVoteWithPenalityGameHistoryEntry : _config.VoteDidNotVoteGameHistoryEntry,
-											new GameHistorySaveEntryVariable[] {
+											new GameHistoryManager.GameHistorySaveEntryVariable[] {
 													new()
 													{
 														Name = "Player",
 														Data = _networkDataManager.PlayerInfos[voter].Nickname,
-														Type = GameHistorySaveEntryVariableType.Player
+														Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 													}
 											});
 			}
