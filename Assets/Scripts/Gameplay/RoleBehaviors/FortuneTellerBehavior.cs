@@ -78,24 +78,24 @@ namespace Werewolf
 			PlayerRef playerLookedAt = player[0];
 
 			_gameHistoryManager.AddEntry(_lookedPlayerRoleGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "FortuneTellerPlayer",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "PlayerLookedAt",
 												Data = _networkDataManager.PlayerInfos[playerLookedAt].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "RoleName",
 												Data = _gameManager.PlayerGameInfos[playerLookedAt].Role.GameplayTag.name,
-												Type = GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 		}

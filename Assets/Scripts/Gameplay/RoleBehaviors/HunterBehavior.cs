@@ -170,18 +170,18 @@ namespace Werewolf
 			if (!selectedPlayer.IsNone)
 			{
 				_gameHistoryManager.AddEntry(_killedPlayerGameHistoryEntry,
-											new GameHistorySaveEntryVariable[] {
+											new GameHistoryManager.GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "HunterPlayer",
 													Data = _networkDataManager.PlayerInfos[Player].Nickname,
-													Type = GameHistorySaveEntryVariableType.Player
+													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 												},
 												new()
 												{
 													Name = "KilledPlayer",
 													Data = _networkDataManager.PlayerInfos[selectedPlayer].Nickname,
-													Type = GameHistorySaveEntryVariableType.Player
+													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 												}
 											});
 

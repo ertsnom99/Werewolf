@@ -10,38 +10,6 @@ using Werewolf.Network;
 
 namespace Werewolf
 {
-	[Serializable]
-	public class GameHistorySave
-	{
-		public List<GameHistorySaveEntry> Entries = new();
-	}
-
-	[Serializable]
-	public struct GameHistorySaveEntry
-	{
-		public string EntryGameplayTagName;
-		public string ImageOverrideGameplayTagName;
-		public GameHistorySaveEntryVariable[] Variables;
-	}
-
-	[Serializable]
-	public struct GameHistorySaveEntryVariable
-	{
-		public string Name;
-		public string Data;
-		public GameHistorySaveEntryVariableType Type;
-	}
-
-	public enum GameHistorySaveEntryVariableType
-	{
-		Player,
-		Players,
-		RoleName,
-		RoleNames,
-		PlayerGroupeName,
-		Bool
-	}
-
 	public class GameHistoryManager : NetworkBehaviourSingleton<GameHistoryManager>
 	{
 		[SerializeField]
@@ -56,6 +24,38 @@ namespace Werewolf
 		private string _saveDirectoryPath;
 
 		private GameHistorySave _gameHistorySave = new();
+
+		[Serializable]
+		public class GameHistorySave
+		{
+			public List<GameHistorySaveEntry> Entries = new();
+		}
+
+		[Serializable]
+		public struct GameHistorySaveEntry
+		{
+			public string EntryGameplayTagName;
+			public string ImageOverrideGameplayTagName;
+			public GameHistorySaveEntryVariable[] Variables;
+		}
+
+		[Serializable]
+		public struct GameHistorySaveEntryVariable
+		{
+			public string Name;
+			public string Data;
+			public GameHistorySaveEntryVariableType Type;
+		}
+
+		public enum GameHistorySaveEntryVariableType
+		{
+			Player,
+			Players,
+			RoleName,
+			RoleNames,
+			PlayerGroupeName,
+			Bool
+		}
 
 		private const char VARIABLE_DATA_SEPARATOR = '|';
 

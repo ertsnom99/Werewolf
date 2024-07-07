@@ -77,12 +77,12 @@ namespace Werewolf
 			if (!firstPlayerVotedFor.IsNone && votes[firstPlayerVotedFor] == _voteManager.Voters.Count)
 			{
 				_gameHistoryManager.AddEntry(_votedPlayerGameHistoryEntry,
-											new GameHistorySaveEntryVariable[] {
+											new GameHistoryManager.GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "Player",
 													Data = _networkDataManager.PlayerInfos[firstPlayerVotedFor].Nickname,
-													Type = GameHistorySaveEntryVariableType.Player
+													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 												}
 											});
 

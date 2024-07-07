@@ -102,12 +102,12 @@ namespace Werewolf
 			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), true, false);
 
 			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "RoleNames",
 												Data = GameHistoryManager.ConcatenateRolesName(selectedRoles),
-												Type = GameHistorySaveEntryVariableType.RoleNames
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleNames
 											}
 										});
 		}
@@ -259,18 +259,18 @@ namespace Werewolf
 			_gameManager.RemoveReservedRoles(this, new int[1] { selectedReservedRoleIndex });
 
 			_gameHistoryManager.AddEntry(_usedRoleGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "Player",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "RoleName",
 												Data = _currentRoleBehavior.RoleGameplayTag.name,
-												Type = GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 

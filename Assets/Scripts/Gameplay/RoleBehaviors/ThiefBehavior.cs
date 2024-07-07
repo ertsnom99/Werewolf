@@ -71,18 +71,18 @@ namespace Werewolf
 			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), false, true);
 
 			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "FirstRoleName",
 												Data = selectedRoles[0].GameplayTag.name,
-												Type = GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
 											},
 											new()
 											{
 												Name = "SecondRoleName",
 												Data = selectedRoles[1].GameplayTag.name,
-												Type = GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 		}
@@ -173,18 +173,18 @@ namespace Werewolf
 		private void AddTookRoleGameHistoryEntry(RoleData role)
 		{
 			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+										new GameHistoryManager.GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "Player",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "RoleName",
 												Data = role.GameplayTag.name,
-												Type = GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 		}
