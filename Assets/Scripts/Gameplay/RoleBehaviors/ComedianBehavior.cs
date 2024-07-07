@@ -1,16 +1,25 @@
+using Assets.Scripts.Data.Tags;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf
 {
 	public class ComedianBehavior : RoleBehavior
 	{
-		[Header("Choose Role")]
+		[Header("Reserve Roles")]
 		[SerializeField]
 		private RoleData[] _prohibitedRoles;
+
+		[SerializeField]
+		private GameplayTag _wasGivenRolesGameHistoryEntry;
+
+		[Header("Use Role")]
+		[SerializeField]
+		private GameplayTag _usedRoleGameHistoryEntry;
 
 		[SerializeField]
 		private float _chooseReservedRoleMaximumDuration = 10.0f;
@@ -21,12 +30,16 @@ namespace Werewolf
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		private GameManager _gameManager;
+		private GameHistoryManager _gameHistoryManager;
+		private NetworkDataManager _networkDataManager;
 
 		private readonly int NEEDED_ROLE_COUNT = 3;
 
 		public override void Init()
 		{
 			_gameManager = GameManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 
 			_gameManager.RollCallBegin += OnRollCallBegin;
 		}
@@ -87,6 +100,16 @@ namespace Werewolf
 			}
 
 			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), true, false);
+
+			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "RoleNames",
+												Data = GameHistoryManager.ConcatenateRolesName(selectedRoles),
+												Type = GameHistorySaveEntryVariableType.RoleNames
+											}
+										});
 		}
 
 		private bool CanTakeRolesFromSetup(RoleSetupData roleSetup, List<RoleData> selectedRoles)
@@ -234,6 +257,23 @@ namespace Werewolf
 
 			_gameManager.AddBehavior(Player, _currentRoleBehavior, false);
 			_gameManager.RemoveReservedRoles(this, new int[1] { selectedReservedRoleIndex });
+
+			_gameHistoryManager.AddEntry(_usedRoleGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "Player",
+												Data = _networkDataManager.PlayerInfos[Player].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "RoleName",
+												Data = _currentRoleBehavior.RoleGameplayTag.name,
+												Type = GameHistorySaveEntryVariableType.RoleName
+											}
+										});
+
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 

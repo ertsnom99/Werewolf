@@ -1,19 +1,28 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf
 {
 	public class ThiefBehavior : RoleBehavior
 	{
-		[Header("Choose Role")]
+		[Header("Reserve Roles")]
 		[SerializeField]
 		private RoleData[] _rolesToAdd;
 
 		[SerializeField]
+		private GameplayTag _wasGivenRolesGameHistoryEntry;
+
+		[Header("Choose Role")]
+		[SerializeField]
 		private float _chooseReservedRoleMaximumDuration = 10.0f;
+
+		[SerializeField]
+		private GameplayTag _tookRoleGameHistoryEntry;
 
 		private GameManager.IndexedReservedRoles _reservedRoles;
 		private bool _reservedOnlyWerewolfs;
@@ -21,10 +30,14 @@ namespace Werewolf
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		private GameManager _gameManager;
+		private GameHistoryManager _gameHistoryManager;
+		private NetworkDataManager _networkDataManager;
 
 		public override void Init()
 		{
 			_gameManager = GameManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 
 			_gameManager.PreRoleDistribution += OnPreRoleDistribution;
 			_gameManager.PostRoleDistribution += OnPostRoleDistribution;
@@ -39,23 +52,39 @@ namespace Werewolf
 
 		private void OnPostRoleDistribution()
 		{
-			List<RoleData> roles = new();
+			List<RoleData> selectedRoles = new();
 
 			for (int i = 0; i < _rolesToAdd.Length; i++)
 			{
 				if (_gameManager.RolesToDistribute.Count <= 0)
 				{
 					Debug.LogError("The thief couldn't find enough roles to set aside!!!");
-					break;
+					return;
 				}
 
 				int randomIndex = Random.Range(0, _gameManager.RolesToDistribute.Count);
-				roles.Add(_gameManager.RolesToDistribute[randomIndex]);
+				selectedRoles.Add(_gameManager.RolesToDistribute[randomIndex]);
 
 				_gameManager.RemoveRoleToDistribute(_gameManager.RolesToDistribute[randomIndex]);
 			}
 
-			_gameManager.ReserveRoles(this, roles.ToArray(), false, true);
+			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), false, true);
+
+			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "FirstRoleName",
+												Data = selectedRoles[0].GameplayTag.name,
+												Type = GameHistorySaveEntryVariableType.RoleName
+											},
+											new()
+											{
+												Name = "SecondRoleName",
+												Data = selectedRoles[1].GameplayTag.name,
+												Type = GameHistorySaveEntryVariableType.RoleName
+											}
+										});
 		}
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
@@ -119,11 +148,13 @@ namespace Werewolf
 				_endRoleCallAfterTimeCoroutine = null;
 			}
 
+			RoleData selectedRole = _reservedRoles.Roles[choiceIndex];
 			PlayerRef previousPlayer = Player;
 
 			if (choiceIndex > -1)
 			{
-				_gameManager.ChangeRole(Player, _reservedRoles.Roles[choiceIndex], _reservedRoles.Behaviors[choiceIndex]);
+				AddTookRoleGameHistoryEntry(selectedRole);
+				_gameManager.ChangeRole(Player, selectedRole, _reservedRoles.Behaviors[choiceIndex]);
 			}
 			else if (_reservedOnlyWerewolfs)
 			{
@@ -137,6 +168,25 @@ namespace Werewolf
 			{
 				Destroy(gameObject);
 			}
+		}
+
+		private void AddTookRoleGameHistoryEntry(RoleData role)
+		{
+			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "Player",
+												Data = _networkDataManager.PlayerInfos[Player].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "RoleName",
+												Data = role.GameplayTag.name,
+												Type = GameHistorySaveEntryVariableType.RoleName
+											}
+										});
 		}
 
 		public override void ReInit() { }
@@ -169,7 +219,10 @@ namespace Werewolf
 		private void ChangeForRandomRole()
 		{
 			int randomIndex = Random.Range(0, _reservedRoles.Roles.Length);
-			_gameManager.ChangeRole(Player, _reservedRoles.Roles[randomIndex], _reservedRoles.Behaviors[randomIndex]);
+			RoleData selectedRole = _reservedRoles.Roles[randomIndex];
+
+			AddTookRoleGameHistoryEntry(selectedRole);
+			_gameManager.ChangeRole(Player, selectedRole, _reservedRoles.Behaviors[randomIndex]);
 		}
 
 		private void OnDestroy()

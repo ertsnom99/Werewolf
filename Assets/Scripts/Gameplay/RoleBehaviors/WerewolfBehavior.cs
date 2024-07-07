@@ -1,3 +1,4 @@
+using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,26 @@ namespace Werewolf
 		[SerializeField]
 		private CommonWerewolfsData _commonData;
 
+		[Header("Vote")]
+		[SerializeField]
+		private GameplayTag _votedPlayerGameHistoryEntry;
+
+		[SerializeField]
+		private GameplayTag _failedToVotePlayerGameHistoryEntry;
+
 		private bool _preparedVote;
 
-		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
 		private VoteManager _voteManager;
+		private GameHistoryManager _gameHistoryManager;
+		private NetworkDataManager _networkDataManager;
 
 		public override void Init()
 		{
-			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
 			_voteManager = VoteManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
@@ -59,12 +69,29 @@ namespace Werewolf
 
 			PlayerRef firstPlayerVotedFor = votes.Count == 1 ? votes.Keys.ToArray()[0] : PlayerRef.None;
 
-			if (!_preparedVote || firstPlayerVotedFor.IsNone || votes[firstPlayerVotedFor] < _voteManager.Voters.Count)
+			if (!_preparedVote)
 			{
 				return;
 			}
 
-			_gameManager.AddMarkForDeath(votes.Keys.ToArray()[0], _commonData.MarkForDeath);
+			if (!firstPlayerVotedFor.IsNone && votes[firstPlayerVotedFor] == _voteManager.Voters.Count)
+			{
+				_gameHistoryManager.AddEntry(_votedPlayerGameHistoryEntry,
+											new GameHistorySaveEntryVariable[] {
+												new()
+												{
+													Name = "Player",
+													Data = _networkDataManager.PlayerInfos[firstPlayerVotedFor].Nickname,
+													Type = GameHistorySaveEntryVariableType.Player
+												}
+											});
+
+				_gameManager.AddMarkForDeath(votes.Keys.ToArray()[0], _commonData.MarkForDeath);
+			}
+			else
+			{
+				_gameHistoryManager.AddEntry(_failedToVotePlayerGameHistoryEntry, null);
+			}
 		}
 
 		private void OnStartWaitingForPlayersRollCall()

@@ -21,6 +21,9 @@ namespace Werewolf
 		private float _chooseCoupleMaximumDuration = 10.0f;
 
 		[SerializeField]
+		private GameplayTag _coupleSelectedGameHistoryEntry;
+
+		[SerializeField]
 		private float _choseCoupleHighlightHoldDuration = 3.0f;
 
 		[Header("Show Couple")]
@@ -38,6 +41,9 @@ namespace Werewolf
 		private GameplayTag _markForDeathAddedByCoupleDeath;
 
 		[SerializeField]
+		private GameplayTag _coupleDiedGameHistoryEntry;
+
+		[SerializeField]
 		private GameplayTag _coupleDeathImage;
 
 		[SerializeField]
@@ -50,14 +56,16 @@ namespace Werewolf
 		private IEnumerator _waitToRemoveDeadCoupleHighlightCoroutine;
 		private bool _showedCouple;
 
-		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
+		private GameHistoryManager _gameHistoryManager;
+		private NetworkDataManager _networkDataManager;
 		private VoteManager _voteManager;
 
 		public override void Init()
 		{
-			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 			_voteManager = VoteManager.Instance;
 
 			_gameManager.PreClientChoosesPlayers += OnPreClientChoosesPlayers;
@@ -121,6 +129,7 @@ namespace Werewolf
 			{
 				ChooseRandomCouple();
 				AddCouplePlayerGroup();
+				AddCoupleSelectedGameHistoryEntry();
 
 				StartCoroutine(WaitToStopWaitingForPlayer());
 
@@ -164,6 +173,7 @@ namespace Werewolf
 			}
 
 			AddCouplePlayerGroup();
+			AddCoupleSelectedGameHistoryEntry();
 
 			_highlightCoupleCoroutine = HighlightCouple(Player, _choseCoupleHighlightHoldDuration);
 			yield return StartCoroutine(_highlightCoupleCoroutine);
@@ -186,6 +196,7 @@ namespace Werewolf
 
 			ChooseRandomCouple();
 			AddCouplePlayerGroup();
+			AddCoupleSelectedGameHistoryEntry();
 
 			_highlightCoupleCoroutine = HighlightCouple(Player, _choseCoupleHighlightHoldDuration);
 			yield return StartCoroutine(_highlightCoupleCoroutine);
@@ -221,6 +232,30 @@ namespace Werewolf
 			}
 		}
 
+		private void AddCoupleSelectedGameHistoryEntry()
+		{
+			_gameHistoryManager.AddEntry(_coupleSelectedGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "CupidPlayer",
+												Data = _networkDataManager.PlayerInfos[Player].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "FirstCouplePlayer",
+												Data = _networkDataManager.PlayerInfos[_couple[0]].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "SecondCouplePlayer",
+												Data = _networkDataManager.PlayerInfos[_couple[1]].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											}
+										});
+		}
 		#endregion
 
 		#region Show Couple
@@ -334,10 +369,10 @@ namespace Werewolf
 
 			_gameManager.WaitForPlayer(Player);
 
-			StartCoroutine(WaitToHighlightDeadCouple(otherCouplePlayer));
+			StartCoroutine(WaitToMarkOtherCouplePlayerForDeath(deadPlayer, otherCouplePlayer));
 		}
 
-		private IEnumerator WaitToHighlightDeadCouple(PlayerRef otherCouplePlayer)
+		private IEnumerator WaitToMarkOtherCouplePlayerForDeath(PlayerRef deadCouplePlayer, PlayerRef otherCouplePlayer)
 		{
 			yield return 0;
 
@@ -348,6 +383,27 @@ namespace Werewolf
 
 			_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 1);
 
+			_gameHistoryManager.AddEntry(_coupleDiedGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "FirstCouplePlayer",
+												Data = _networkDataManager.PlayerInfos[deadCouplePlayer].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "SecondCouplePlayer",
+												Data = _networkDataManager.PlayerInfos[otherCouplePlayer].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											}
+										});
+
+			HighlightDeadCouple();
+		}
+
+		private void HighlightDeadCouple()
+		{
 			_gameManager.RPC_DisplayTitle(_coupleDeathImage.CompactTagId);
 			_gameManager.RPC_SetPlayersCardHighlightVisible(_couple, true);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -414,6 +470,7 @@ namespace Werewolf
 
 			ChooseRandomCouple();
 			AddCouplePlayerGroup();
+			AddCoupleSelectedGameHistoryEntry();
 		}
 
 		private void OnDestroy()

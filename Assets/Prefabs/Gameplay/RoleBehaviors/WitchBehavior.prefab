@@ -46,11 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroupIndexes>k__BackingField: 
+  <PlayerGroups>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _playerDieTonightImage: {fileID: 7828248529302745967, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   _playerDeadTonightImage: {fileID: 7828248529302745967, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _playerHighlightHoldDuration: 3
@@ -65,10 +63,14 @@ MonoBehaviour:
     type: 2}
   _markForDeathRemovedByLifePotion: {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  _usedLifePotionGameHistoryEntry: {fileID: -6404904665649978227, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _killImage: {fileID: -4830026793023973320, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _choosePlayerImage: {fileID: 7564377360445445541, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _choosePlayerDuration: 5
   _markForDeathAddedByDeathPotion: {fileID: 4944564988679888176, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _usedDeathPotionGameHistoryEntry: {fileID: -6783649889304436894, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}

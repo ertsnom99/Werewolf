@@ -22,6 +22,9 @@ namespace Werewolf
 		private GameplayTag _choosingPlayerImage;
 
 		[SerializeField]
+		private GameplayTag _killedPlayerGameHistoryEntry;
+
+		[SerializeField]
 		private GameplayTag _markForDeathAddedByShot;
 
 		[SerializeField]
@@ -29,13 +32,15 @@ namespace Werewolf
 
 		private IEnumerator _startChoiceTimerCoroutine;
 
-		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
+		private GameHistoryManager _gameHistoryManager;
+		private NetworkDataManager _networkDataManager;
 
 		public override void Init()
 		{
-			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
@@ -164,6 +169,22 @@ namespace Werewolf
 
 			if (!selectedPlayer.IsNone)
 			{
+				_gameHistoryManager.AddEntry(_killedPlayerGameHistoryEntry,
+											new GameHistorySaveEntryVariable[] {
+												new()
+												{
+													Name = "HunterPlayer",
+													Data = _networkDataManager.PlayerInfos[Player].Nickname,
+													Type = GameHistorySaveEntryVariableType.Player
+												},
+												new()
+												{
+													Name = "KilledPlayer",
+													Data = _networkDataManager.PlayerInfos[selectedPlayer].Nickname,
+													Type = GameHistorySaveEntryVariableType.Player
+												}
+											});
+
 				_gameManager.AddMarkForDeath(selectedPlayer, _markForDeathAddedByShot, 1);
 				_gameManager.RPC_SetPlayerCardHighlightVisible(selectedPlayer, true);
 				_gameManager.RPC_HideUI();

@@ -44,7 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f890e4d4e85ee704eb5a3e719d3f928f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
-  <NightPriorities>k__BackingField: 
+  <PlayerGroups>k__BackingField: []
+  <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _commonData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32, type: 2}
+  _votedPlayerGameHistoryEntry: {fileID: -4676981004224442684, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _failedToVotePlayerGameHistoryEntry: {fileID: 4954223030057824743, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}

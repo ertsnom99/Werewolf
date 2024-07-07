@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -16,13 +17,20 @@ namespace Werewolf
 		[SerializeField]
 		private float _choosePlayerMaximumDuration = 10.0f;
 
+		[SerializeField]
+		private GameplayTag _lookedPlayerRoleGameHistoryEntry;
+
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		private GameManager _gameManager;
+		private GameHistoryManager _gameHistoryManager;
+		private NetworkDataManager _networkDataManager;
 
 		public override void Init()
 		{
 			_gameManager = GameManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
@@ -66,6 +74,30 @@ namespace Werewolf
 			{
 				_gameManager.StopWaintingForPlayer(Player);
 			}
+
+			PlayerRef playerLookedAt = player[0];
+
+			_gameHistoryManager.AddEntry(_lookedPlayerRoleGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "FortuneTellerPlayer",
+												Data = _networkDataManager.PlayerInfos[Player].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "PlayerLookedAt",
+												Data = _networkDataManager.PlayerInfos[playerLookedAt].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "RoleName",
+												Data = _gameManager.PlayerGameInfos[playerLookedAt].Role.GameplayTag.name,
+												Type = GameHistorySaveEntryVariableType.RoleName
+											}
+										});
 		}
 
 		private void OnRoleRevealed(PlayerRef revealTo)

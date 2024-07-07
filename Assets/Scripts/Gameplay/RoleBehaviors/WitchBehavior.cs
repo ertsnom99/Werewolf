@@ -43,6 +43,9 @@ namespace Werewolf
 		[SerializeField]
 		private GameplayTag _markForDeathRemovedByLifePotion;
 
+		[SerializeField]
+		private GameplayTag _usedLifePotionGameHistoryEntry;
+
 		[Header("Death Potion")]
 		[SerializeField]
 		private GameplayTag _killImage;
@@ -56,6 +59,9 @@ namespace Werewolf
 		[SerializeField]
 		private GameplayTag _markForDeathAddedByDeathPotion;
 
+		[SerializeField]
+		private GameplayTag _usedDeathPotionGameHistoryEntry;
+
 		private bool _hasLifePotion = true;
 		private bool _hasDeathPotion = true;
 
@@ -67,13 +73,15 @@ namespace Werewolf
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 		private float _choosePotionTimeLeft;
 
-		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
+		private GameHistoryManager _gameHistoryManager;
+		private NetworkDataManager _networkDataManager;
 
 		public override void Init()
 		{
-			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 		}
 
 		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
@@ -208,6 +216,22 @@ namespace Werewolf
 				_gameManager.RemoveMarkForDeath(_markedForDeathPlayer, _markForDeathRemovedByLifePotion);
 				_hasLifePotion = false;
 
+				_gameHistoryManager.AddEntry(_usedLifePotionGameHistoryEntry,
+											new GameHistorySaveEntryVariable[] {
+												new()
+												{
+													Name = "WitchPlayer",
+													Data = _networkDataManager.PlayerInfos[Player].Nickname,
+													Type = GameHistorySaveEntryVariableType.Player
+												},
+												new()
+												{
+													Name = "SavedPlayer",
+													Data = _networkDataManager.PlayerInfos[_markedForDeathPlayer].Nickname,
+													Type = GameHistorySaveEntryVariableType.Player
+												}
+											});
+
 				StartCoroutine(RefreshPotions(_choiceSelectedHoldDuration, true));
 				return;
 			}
@@ -271,6 +295,23 @@ namespace Werewolf
 			if (!player.IsNone)
 			{
 				_gameManager.AddMarkForDeath(player, _markForDeathAddedByDeathPotion);
+
+				_gameHistoryManager.AddEntry(_usedDeathPotionGameHistoryEntry,
+											new GameHistorySaveEntryVariable[] {
+												new()
+												{
+													Name = "WitchPlayer",
+													Data = _networkDataManager.PlayerInfos[Player].Nickname,
+													Type = GameHistorySaveEntryVariableType.Player
+												},
+												new()
+												{
+													Name = "KilledPlayer",
+													Data = _networkDataManager.PlayerInfos[player].Nickname,
+													Type = GameHistorySaveEntryVariableType.Player
+												}
+											});
+
 				StartCoroutine(HighlightPlayerMarkedForDeath(player));
 				return;
 			}

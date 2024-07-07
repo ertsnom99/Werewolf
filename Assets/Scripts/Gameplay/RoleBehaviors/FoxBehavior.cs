@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Werewolf;
 using Werewolf.Data;
+using Werewolf.Network;
 
 public class FoxBehavior : RoleBehavior
 {
@@ -22,7 +23,13 @@ public class FoxBehavior : RoleBehavior
 	private GameplayTag[] _werewolfPlayerGroups;
 
 	[SerializeField]
+	private GameplayTag _sniffedWerewolfGameHistoryEntry;
+
+	[SerializeField]
 	private GameplayTag _foundWerewolfImage;
+
+	[SerializeField]
+	private GameplayTag _lostPowerGameHistoryEntry;
 
 	[SerializeField]
 	private GameplayTag _foundNoWerewolfImage;
@@ -35,10 +42,14 @@ public class FoxBehavior : RoleBehavior
 	private bool _hasPower = true;
 
 	private GameManager _gameManager;
+	private GameHistoryManager _gameHistoryManager;
+	private NetworkDataManager _networkDataManager;
 
 	public override void Init()
 	{
 		_gameManager = GameManager.Instance;
+		_gameHistoryManager = GameHistoryManager.Instance;
+		_networkDataManager = NetworkDataManager.Instance;
 	}
 
 	public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
@@ -115,6 +126,22 @@ public class FoxBehavior : RoleBehavior
 
 			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, player, true);
 		}
+
+		_gameHistoryManager.AddEntry(werewolfFound ? _sniffedWerewolfGameHistoryEntry : _lostPowerGameHistoryEntry,
+									new GameHistorySaveEntryVariable[] {
+										new()
+										{
+											Name = "FoxPlayer",
+											Data = _networkDataManager.PlayerInfos[Player].Nickname,
+											Type = GameHistorySaveEntryVariableType.Player
+										},
+										new()
+										{
+											Name = "SniffedPlayers",
+											Data = GameHistoryManager.ConcatenatePlayersNickname(playersToCheck, _networkDataManager),
+											Type = GameHistorySaveEntryVariableType.Players
+										}
+									});
 
 		if (werewolfFound)
 		{

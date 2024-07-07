@@ -46,13 +46,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroupIndexes>k__BackingField: 
+  <PlayerGroups>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _chooseCoupleImage: {fileID: 8209229256807389745, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _chooseCoupleMaximumDuration: 10
   _choseCoupleHighlightHoldDuration: 3
+  _coupleSelectedGameHistoryEntry: {fileID: -8735980565207345998, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _coupleDiedGameHistoryEntry: {fileID: -9005755218631088943, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _showCoupleHighlightHoldDuration: 5
   _inCoupleImage: {fileID: 5075221199770472978, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}

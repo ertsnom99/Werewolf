@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf
 {
@@ -17,6 +18,9 @@ namespace Werewolf
 		private float _choosePlayerMaximumDuration = 10.0f;
 
 		[SerializeField]
+		private GameplayTag _chosePlayerToProtectGameHistoryEntry;
+
+		[SerializeField]
 		private float _playerHighlightHoldDuration = 3.0f;
 
 		[SerializeField]
@@ -28,10 +32,14 @@ namespace Werewolf
 		private PlayerRef _selectedPlayer;
 
 		private GameManager _gameManager;
+		private GameHistoryManager _gameHistoryManager;
+		private NetworkDataManager _networkDataManager;
 
 		public override void Init()
 		{
 			_gameManager = GameManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 
 			_gameManager.MarkForDeathAdded += OnMarkForDeathAdded;
 		}
@@ -59,7 +67,7 @@ namespace Werewolf
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
-													_choosePlayerImage.CompactTagId,//"Choose a player to protect",
+													_choosePlayerImage.CompactTagId,
 													_choosePlayerMaximumDuration,
 													false,
 													1,
@@ -94,6 +102,23 @@ namespace Werewolf
 			}
 
 			_selectedPlayer = player[0];
+
+			_gameHistoryManager.AddEntry(_chosePlayerToProtectGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "SaviorPlayer",
+												Data = _networkDataManager.PlayerInfos[Player].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "ProtectedPlayer",
+												Data = _networkDataManager.PlayerInfos[_selectedPlayer].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											}
+										});
+
 			StartCoroutine(HighlightSelectedPlayer());
 		}
 

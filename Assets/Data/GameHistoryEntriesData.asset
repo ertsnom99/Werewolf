@@ -325,9 +325,6 @@ MonoBehaviour:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables:
-      - name: Player
-        variable:
-          rid: 7029503975494516744
       - name: RoleNames
         variable:
           rid: 7029503975494516745
@@ -514,9 +511,6 @@ MonoBehaviour:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables:
-      - name: Player
-        variable:
-          rid: 7029503975494516747
       - name: FirstRoleName
         variable:
           rid: 7029503975494516752
