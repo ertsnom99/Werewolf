@@ -108,8 +108,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1135565391446016
-    m_Localized: The comedian ({Player}) was given the {RoleNames:list:{}|, | and
-      } roles to use.
+    m_Localized: The comedian was given the {RoleNames:list:{}|, | and } roles to
+      use.
     m_Metadata:
       m_Items:
       - rid: 7029503930381107200
@@ -164,8 +164,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107200
   - m_Id: 1481631815090176
-    m_Localized: The thief ({Player}) was given the {FirstRoleName} and {SecondRoleName}
-      roles to take from.
+    m_Localized: The thief was given the {FirstRoleName} and {SecondRoleName} roles
+      to take from.
     m_Metadata:
       m_Items:
       - rid: 7029503930381107200

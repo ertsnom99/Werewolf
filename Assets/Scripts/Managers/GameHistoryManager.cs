@@ -92,6 +92,23 @@ namespace Werewolf
 			return stringBuilder.ToString();
 		}
 
+		public static string ConcatenateRolesName(List<RoleData> roles)
+		{
+			if (roles.Count <= 0)
+			{
+				return "";
+			}
+
+			StringBuilder stringBuilder = new(roles[0].GameplayTag.name);
+
+			for (int i = 1; i < roles.Count; i++)
+			{
+				stringBuilder.Append(VARIABLE_DATA_SEPARATOR + roles[i].GameplayTag.name);
+			}
+
+			return stringBuilder.ToString();
+		}
+
 		public void AddEntry(GameplayTag entryGameplayTag, GameHistorySaveEntryVariable[] variables, GameplayTag imageOverrideGameplayTag = null)
 		{
 			if (!entryGameplayTag)

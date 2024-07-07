@@ -46,9 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroupIndexes>k__BackingField: 
+  <PlayerGroups>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _choosePlayerImage: {fileID: 8739123847444604939, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _choosePlayerMaximumDuration: 10
+  _lookedPlayerRoleGameHistoryEntry: {fileID: -66247362111012362, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}

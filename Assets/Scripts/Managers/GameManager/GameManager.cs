@@ -917,6 +917,22 @@ namespace Werewolf
 
 					yield return new WaitForSeconds(Config.DelayBeforeRevealingDeadPlayer);
 
+					_gameHistoryManager.AddEntry(Config.PlayerDiedGameHistoryEntry,
+												new GameHistorySaveEntryVariable[] {
+													new()
+													{
+														Name = "Player",
+														Data = _networkDataManager.PlayerInfos[deadPlayer].Nickname,
+														Type = GameHistorySaveEntryVariableType.Player
+													},
+													new()
+													{
+														Name = "RoleName",
+														Data = PlayerGameInfos[deadPlayer].Role.GameplayTag.name,
+														Type = GameHistorySaveEntryVariableType.RoleName
+													}
+												});
+
 					if (_networkDataManager.PlayerInfos[deadPlayer].IsConnected)
 					{
 						RPC_DisplayPlayerDiedTitle(deadPlayer);
@@ -1110,22 +1126,6 @@ namespace Werewolf
 					RemovePlayerFromNightCall(priority.index, deadPlayer);
 				}
 			}
-
-			_gameHistoryManager.AddEntry(Config.PlayerDiedGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
-											new()
-											{
-												Name = "Player",
-												Data = _networkDataManager.PlayerInfos[deadPlayer].Nickname,
-												Type = GameHistorySaveEntryVariableType.Player
-											},
-											new()
-											{
-												Name = "RoleName",
-												Data = PlayerGameInfos[deadPlayer].Role.GameplayTag.name,
-												Type = GameHistorySaveEntryVariableType.RoleName
-											}
-										});
 
 			if (!_playerCards[deadPlayer])
 			{

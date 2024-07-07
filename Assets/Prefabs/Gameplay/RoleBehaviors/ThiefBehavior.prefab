@@ -44,10 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f8c050ee340830428ad42a17135ac0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <RoleGameplayTag>k__BackingField: {fileID: 0}
   <PrimaryRoleType>k__BackingField: 0
-  <NightPriorities>k__BackingField: 
+  <PlayerGroups>k__BackingField: []
+  <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  data: {fileID: 11400000, guid: 69a009ba0cf65fc4aabfab7e31fd80ce, type: 2}
   _rolesToAdd:
   - {fileID: 11400000, guid: 9225c604e9fe4664eb919866d085078f, type: 2}
   - {fileID: 11400000, guid: 9225c604e9fe4664eb919866d085078f, type: 2}
+  _wasGivenRolesGameHistoryEntry: {fileID: 1282424815053823321, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _chooseReservedRoleMaximumDuration: 10
+  _tookRoleGameHistoryEntry: {fileID: -9191084100418705152, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}

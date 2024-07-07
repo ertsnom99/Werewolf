@@ -82,8 +82,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107201
   - m_Id: 1135565391446016
-    m_Localized: "Le com\xE9dien ({Player}) fut donn\xE9 les roles {RoleNames:list:{}|,
-      | et } \xE0 utiliser."
+    m_Localized: "Le com\xE9dien fut donn\xE9 les roles {RoleNames:list:{}|, | et
+      } \xE0 utiliser."
     m_Metadata:
       m_Items:
       - rid: 7029503930381107201
@@ -139,8 +139,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107201
   - m_Id: 1481631815090176
-    m_Localized: "Le voleur ({Player}) fut donn\xE9 les roles {FirstRoleName} and
-      {SecondRoleName} \xE0 utiliser."
+    m_Localized: "Le voleur fut donn\xE9 les roles {FirstRoleName} and {SecondRoleName}
+      \xE0 utiliser."
     m_Metadata:
       m_Items:
       - rid: 7029503930381107201

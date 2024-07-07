@@ -22,6 +22,9 @@ namespace Werewolf
 		private GameplayTag[] _notResettedRoles;
 
 		[SerializeField]
+		private GameplayTag _tookRoleGameHistoryEntry;
+
+		[SerializeField]
 		private string _newRoleText;
 
 		[SerializeField]
@@ -33,13 +36,15 @@ namespace Werewolf
 		private bool _isWaitingForPromptAnswer;
 		private PlayerRef _playerRevealed;
 
-		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
+		private GameHistoryManager _gameHistoryManager;
+		private NetworkDataManager _networkDataManager;
 
 		public override void Init()
 		{
-			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_networkDataManager = NetworkDataManager.Instance;
 
 			_gameManager.WaitBeforeDeathRevealStarted += OnWaitBeforeDeathRevealStarted;
 			_gameManager.WaitBeforeDeathRevealEnded += OnWaitBeforeDeathRevealEnded;
@@ -83,6 +88,28 @@ namespace Werewolf
 
 			_gameManager.TransferRole(_playerRevealed, Player, false, !_notResettedRoles.Contains(RoleToTake.GameplayTag));
 
+			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "ServantPlayer",
+												Data = _networkDataManager.PlayerInfos[previousPlayer].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "PlayerTakenFrom",
+												Data = _networkDataManager.PlayerInfos[_playerRevealed].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											},
+											new()
+											{
+												Name = "RoleName",
+												Data = RoleToTake.GameplayTag.name,
+												Type = GameHistorySaveEntryVariableType.RoleName
+											}
+										});
+
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
 				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
@@ -93,7 +120,7 @@ namespace Werewolf
 				if (playerInfo.Key == previousPlayer)
 				{
 					_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
-					_gameManager.RPC_DisplayTitle(playerInfo.Key, string.Format(_newRoleText, RoleToTake.Name));
+					_gameManager.RPC_DisplayTitle(playerInfo.Key, string.Format(_newRoleText, RoleToTake.Name.GetLocalizedString().ToLower()));
 					continue;
 				}
 
