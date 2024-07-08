@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Werewolf.Network
 {
 	/// <summary>
-	/// MonoSingleton
+	/// NetworkBehaviourSingleton
 	/// </summary>
 	/// <remarks> 
 	/// Any class extending this class becomes a Singleton and a NetworkBehaviour.

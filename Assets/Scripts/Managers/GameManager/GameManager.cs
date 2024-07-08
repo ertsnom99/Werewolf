@@ -1,9 +1,11 @@
 using Assets.Scripts.Data.Tags;
 using Fusion;
+using Fusion.Sockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Werewolf.Data;
@@ -13,7 +15,7 @@ using Werewolf.UI;
 
 namespace Werewolf
 {
-	public partial class GameManager : NetworkBehaviourSingleton<GameManager>
+	public partial class GameManager : NetworkBehaviourSingleton<GameManager>, INetworkRunnerCallbacks
 	{
 		[field: SerializeField]
 		public GameConfig Config { get; private set; }
@@ -118,7 +120,9 @@ namespace Werewolf
 
 		public override void Spawned()
 		{
+			Runner.AddCallbacks(this);
 			HasSpawned = true;
+
 			ManagerSpawned?.Invoke();
 		}
 
@@ -1395,9 +1399,15 @@ namespace Werewolf
 		private void PrepareEndGameSequence(PlayerGroup winningPlayerGroup)
 		{
 			List<PlayerEndGameInfo> endGamePlayerInfos = new();
+			byte[] gameHistoryData = Encoding.ASCII.GetBytes(_gameHistoryManager.GetGameHistoryJson());
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
+				if (_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+				{
+					Runner.SendReliableDataToPlayer(playerInfo.Key, new ReliableKey(), gameHistoryData);
+				}
+
 				int role = -1;
 
 				if (playerInfo.Value.Role)
