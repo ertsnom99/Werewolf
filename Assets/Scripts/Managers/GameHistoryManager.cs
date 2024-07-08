@@ -10,7 +10,7 @@ using Werewolf.Network;
 
 namespace Werewolf
 {
-	public class GameHistoryManager : NetworkBehaviourSingleton<GameHistoryManager>
+	public class GameHistoryManager : MonoSingleton<GameHistoryManager>
 	{
 		[SerializeField]
 		private GameplayTag[] _acceptedGameplayTagsForEntry;
@@ -147,12 +147,12 @@ namespace Werewolf
 			return false;
 		}
 
-		public void SendGameHistoryToPlayers()
+		public string GetGameHistoryJson()
 		{
-			RPC_SendGameHistoryToPlayers(JsonUtility.ToJson(_gameHistorySave, true));
+			return JsonUtility.ToJson(_gameHistorySave);
 		}
 
-		private void SaveGameHistoryToFile(string gameHistoryJson)
+		public void SaveGameHistoryToFile(string gameHistoryJson)
 		{
 			if (!Directory.Exists($"{_saveDirectoryPath}"))
 			{
@@ -161,13 +161,5 @@ namespace Werewolf
 
 			File.WriteAllText($"{_saveDirectoryPath}/{DateTime.Now:yyyy'_'MM'_'dd'_'HH'_'mm}{SAVE_FILE_EXTENSION}", gameHistoryJson);
 		}
-
-		#region RPC calls
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_SendGameHistoryToPlayers(string jsonGameHistory)
-		{
-			SaveGameHistoryToFile(jsonGameHistory);
-		}
-		#endregion
 	}
 }

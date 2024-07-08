@@ -148,11 +148,12 @@ namespace Werewolf
 				_endRoleCallAfterTimeCoroutine = null;
 			}
 
-			RoleData selectedRole = _reservedRoles.Roles[choiceIndex];
 			PlayerRef previousPlayer = Player;
 
 			if (choiceIndex > -1)
 			{
+				RoleData selectedRole = _reservedRoles.Roles[choiceIndex];
+
 				AddTookRoleGameHistoryEntry(selectedRole);
 				_gameManager.ChangeRole(Player, selectedRole, _reservedRoles.Behaviors[choiceIndex]);
 			}
