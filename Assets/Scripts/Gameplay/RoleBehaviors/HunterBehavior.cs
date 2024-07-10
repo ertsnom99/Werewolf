@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -170,18 +171,18 @@ namespace Werewolf
 			if (!selectedPlayer.IsNone)
 			{
 				_gameHistoryManager.AddEntry(_killedPlayerGameHistoryEntry,
-											new GameHistoryManager.GameHistorySaveEntryVariable[] {
+											new GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "HunterPlayer",
 													Data = _networkDataManager.PlayerInfos[Player].Nickname,
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+													Type = GameHistorySaveEntryVariableType.Player
 												},
 												new()
 												{
 													Name = "KilledPlayer",
 													Data = _networkDataManager.PlayerInfos[selectedPlayer].Nickname,
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+													Type = GameHistorySaveEntryVariableType.Player
 												}
 											});
 

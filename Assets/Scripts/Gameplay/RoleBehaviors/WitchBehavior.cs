@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -217,18 +218,18 @@ namespace Werewolf
 				_hasLifePotion = false;
 
 				_gameHistoryManager.AddEntry(_usedLifePotionGameHistoryEntry,
-											new GameHistoryManager.GameHistorySaveEntryVariable[] {
+											new GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "WitchPlayer",
 													Data = _networkDataManager.PlayerInfos[Player].Nickname,
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+													Type = GameHistorySaveEntryVariableType.Player
 												},
 												new()
 												{
 													Name = "SavedPlayer",
 													Data = _networkDataManager.PlayerInfos[_markedForDeathPlayer].Nickname,
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+													Type = GameHistorySaveEntryVariableType.Player
 												}
 											});
 
@@ -297,18 +298,18 @@ namespace Werewolf
 				_gameManager.AddMarkForDeath(player, _markForDeathAddedByDeathPotion);
 
 				_gameHistoryManager.AddEntry(_usedDeathPotionGameHistoryEntry,
-											new GameHistoryManager.GameHistorySaveEntryVariable[] {
+											new GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "WitchPlayer",
 													Data = _networkDataManager.PlayerInfos[Player].Nickname,
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+													Type = GameHistorySaveEntryVariableType.Player
 												},
 												new()
 												{
 													Name = "KilledPlayer",
 													Data = _networkDataManager.PlayerInfos[player].Nickname,
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+													Type = GameHistorySaveEntryVariableType.Player
 												}
 											});
 

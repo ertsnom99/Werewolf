@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -476,18 +477,18 @@ namespace Werewolf
 				if (!_votes[voter].VotedFor.IsNone)
 				{
 					_gameHistoryManager.AddEntry(_config.VoteVotedForGameHistoryEntry,
-												new GameHistoryManager.GameHistorySaveEntryVariable[] {
+												new GameHistorySaveEntryVariable[] {
 													new()
 													{
 														Name = "Voter",
 														Data = _networkDataManager.PlayerInfos[voter].Nickname,
-														Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+														Type = GameHistorySaveEntryVariableType.Player
 													},
 													new()
 													{
 														Name = "Voted",
 														Data = _networkDataManager.PlayerInfos[_votes[voter].VotedFor].Nickname,
-														Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+														Type = GameHistorySaveEntryVariableType.Player
 													}
 												});
 
@@ -500,12 +501,12 @@ namespace Werewolf
 				}
 
 				_gameHistoryManager.AddEntry(_failingToVoteGivesPenalty ? _config.VoteDidNotVoteWithPenalityGameHistoryEntry : _config.VoteDidNotVoteGameHistoryEntry,
-											new GameHistoryManager.GameHistorySaveEntryVariable[] {
+											new GameHistorySaveEntryVariable[] {
 													new()
 													{
 														Name = "Player",
 														Data = _networkDataManager.PlayerInfos[voter].Nickname,
-														Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+														Type = GameHistorySaveEntryVariableType.Player
 													}
 											});
 			}

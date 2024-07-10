@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -71,18 +72,18 @@ namespace Werewolf
 			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), false, true);
 
 			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "FirstRoleName",
 												Data = selectedRoles[0].GameplayTag.name,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistorySaveEntryVariableType.RoleName
 											},
 											new()
 											{
 												Name = "SecondRoleName",
 												Data = selectedRoles[1].GameplayTag.name,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 		}
@@ -174,18 +175,18 @@ namespace Werewolf
 		private void AddTookRoleGameHistoryEntry(RoleData role)
 		{
 			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "Player",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "RoleName",
 												Data = role.GameplayTag.name,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 		}

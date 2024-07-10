@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -104,18 +105,18 @@ namespace Werewolf
 			_selectedPlayer = player[0];
 
 			_gameHistoryManager.AddEntry(_chosePlayerToProtectGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "SaviorPlayer",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "ProtectedPlayer",
 												Data = _networkDataManager.PlayerInfos[_selectedPlayer].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											}
 										});
 

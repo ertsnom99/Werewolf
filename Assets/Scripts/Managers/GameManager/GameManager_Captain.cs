@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -22,12 +23,12 @@ namespace Werewolf
 			_captain = captain;
 
 			_gameHistoryManager.AddEntry(Config.CaptainChangedGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "Player",
 												Data = _networkDataManager.PlayerInfos[_captain].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											}
 										});
 		}

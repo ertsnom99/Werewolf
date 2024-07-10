@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -77,12 +78,12 @@ namespace Werewolf
 			if (!firstPlayerVotedFor.IsNone && votes[firstPlayerVotedFor] == _voteManager.Voters.Count)
 			{
 				_gameHistoryManager.AddEntry(_votedPlayerGameHistoryEntry,
-											new GameHistoryManager.GameHistorySaveEntryVariable[] {
+											new GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "Player",
 													Data = _networkDataManager.PlayerInfos[firstPlayerVotedFor].Nickname,
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+													Type = GameHistorySaveEntryVariableType.Player
 												}
 											});
 
