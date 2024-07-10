@@ -12,6 +12,7 @@ using Werewolf.Data;
 using Werewolf.Network;
 using Werewolf.Network.Configs;
 using Werewolf.UI;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -299,18 +300,18 @@ namespace Werewolf
 				PlayerGameInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
 
 				_gameHistoryManager.AddEntry(Config.PlayerGivenRoleGameHistoryEntry,
-											new GameHistoryManager.GameHistorySaveEntryVariable[] {
+											new GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "Player",
 													Data = playerInfo.Value.Nickname,
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+													Type = GameHistorySaveEntryVariableType.Player
 												},
 												new()
 												{
 													Name = "RoleName",
 													Data = selectedRole.GameplayTag.name,
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
+													Type = GameHistorySaveEntryVariableType.RoleName
 												}
 											},
 											selectedRole.GameplayTag);
@@ -612,12 +613,12 @@ namespace Werewolf
 			if (_captainCandidates.Count > 1)
 			{
 				_gameHistoryManager.AddEntry(Config.ElectionMultipleCandidatesGameHistoryEntry,
-											new GameHistoryManager.GameHistorySaveEntryVariable[] {
+											new GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "Players",
-													Data = GameHistoryManager.ConcatenatePlayersNickname(_captainCandidates, _networkDataManager),
-													Type = GameHistoryManager.GameHistorySaveEntryVariableType.Players
+													Data = ConcatenatePlayersNickname(_captainCandidates, _networkDataManager),
+													Type = GameHistorySaveEntryVariableType.Players
 												}
 											});
 
@@ -755,18 +756,18 @@ namespace Werewolf
 							if (isWakingUp)
 							{
 								_gameHistoryManager.AddEntry(Config.WokeUpPlayerGameHistoryEntry,
-															new GameHistoryManager.GameHistorySaveEntryVariable[] {
+															new GameHistorySaveEntryVariable[] {
 															new()
 															{
 																Name = "Player",
 																Data = _networkDataManager.PlayerInfos[player].Nickname,
-																Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+																Type = GameHistorySaveEntryVariableType.Player
 															},
 															new()
 															{
 																Name = "RoleName",
 																Data = PlayerGameInfos[player].Role.GameplayTag.name,
-																Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
+																Type = GameHistorySaveEntryVariableType.RoleName
 															}
 															},
 															PlayerGameInfos[player].Role.GameplayTag);
@@ -922,18 +923,18 @@ namespace Werewolf
 					yield return new WaitForSeconds(Config.DelayBeforeRevealingDeadPlayer);
 
 					_gameHistoryManager.AddEntry(Config.PlayerDiedGameHistoryEntry,
-												new GameHistoryManager.GameHistorySaveEntryVariable[] {
+												new GameHistorySaveEntryVariable[] {
 													new()
 													{
 														Name = "Player",
 														Data = _networkDataManager.PlayerInfos[deadPlayer].Nickname,
-														Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+														Type = GameHistorySaveEntryVariableType.Player
 													},
 													new()
 													{
 														Name = "RoleName",
 														Data = PlayerGameInfos[deadPlayer].Role.GameplayTag.name,
-														Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
+														Type = GameHistorySaveEntryVariableType.RoleName
 													}
 												});
 
@@ -976,12 +977,12 @@ namespace Werewolf
 					if (deadPlayer == _captain)
 					{
 						_gameHistoryManager.AddEntry(Config.CaptainDiedGameHistoryEntry,
-													new GameHistoryManager.GameHistorySaveEntryVariable[] {
+													new GameHistorySaveEntryVariable[] {
 														new()
 														{
 															Name = "Player",
 															Data = _networkDataManager.PlayerInfos[_captain].Nickname,
-															Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+															Type = GameHistorySaveEntryVariableType.Player
 														}
 													});
 
@@ -1311,12 +1312,12 @@ namespace Werewolf
 		private void AddExecutionDrawCaptainChoseGameHistoryEntry()
 		{
 			_gameHistoryManager.AddEntry(Config.ExecutionDrawCaptainChoseGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "Player",
 												Data = _networkDataManager.PlayerInfos[_captain].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											}
 										});
 		}
@@ -1324,12 +1325,12 @@ namespace Werewolf
 		private IEnumerator ExecutePlayer(PlayerRef executedPlayer)
 		{
 			_gameHistoryManager.AddEntry(Config.ExecutionVotedPlayerGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "Player",
 												Data = _networkDataManager.PlayerInfos[executedPlayer].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											}
 										});
 
@@ -1373,18 +1374,18 @@ namespace Werewolf
 				PlayerGroupData playerGroupData = _playerGroupsData.GetPlayerGroupData(playerGroup.GameplayTag.CompactTagId);
 
 				_gameHistoryManager.AddEntry(Config.EndGamePlayerGroupWonGameHistoryEntry,
-														new GameHistoryManager.GameHistorySaveEntryVariable[] {
+														new GameHistorySaveEntryVariable[] {
 															new()
 															{
 																Name = "PlayerGroupeName",
 																Data = playerGroup.GameplayTag.name,
-																Type = GameHistoryManager.GameHistorySaveEntryVariableType.PlayerGroupeName
+																Type = GameHistorySaveEntryVariableType.PlayerGroupeName
 															},
 															new()
 															{
 																Name = "PlayerGroupeHasMultiplePlayers",
 																Data = playerGroupData.HasMultiplePlayers.ToString(),
-																Type = GameHistoryManager.GameHistorySaveEntryVariableType.Bool
+																Type = GameHistorySaveEntryVariableType.Bool
 															}
 														},
 														playerGroupData.GameplayTag);

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -78,24 +79,24 @@ namespace Werewolf
 			PlayerRef playerLookedAt = player[0];
 
 			_gameHistoryManager.AddEntry(_lookedPlayerRoleGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "FortuneTellerPlayer",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "PlayerLookedAt",
 												Data = _networkDataManager.PlayerInfos[playerLookedAt].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "RoleName",
 												Data = _gameManager.PlayerGameInfos[playerLookedAt].Role.GameplayTag.name,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 		}

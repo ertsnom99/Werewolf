@@ -6,6 +6,7 @@ using UnityEngine;
 using Werewolf;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 public class FoxBehavior : RoleBehavior
 {
@@ -128,18 +129,18 @@ public class FoxBehavior : RoleBehavior
 		}
 
 		_gameHistoryManager.AddEntry(werewolfFound ? _sniffedWerewolfGameHistoryEntry : _lostPowerGameHistoryEntry,
-									new GameHistoryManager.GameHistorySaveEntryVariable[] {
+									new GameHistorySaveEntryVariable[] {
 										new()
 										{
 											Name = "FoxPlayer",
 											Data = _networkDataManager.PlayerInfos[Player].Nickname,
-											Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+											Type = GameHistorySaveEntryVariableType.Player
 										},
 										new()
 										{
 											Name = "SniffedPlayers",
-											Data = GameHistoryManager.ConcatenatePlayersNickname(playersToCheck, _networkDataManager),
-											Type = GameHistoryManager.GameHistorySaveEntryVariableType.Players
+											Data = ConcatenatePlayersNickname(playersToCheck, _networkDataManager),
+											Type = GameHistorySaveEntryVariableType.Players
 										}
 									});
 

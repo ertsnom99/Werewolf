@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -89,24 +90,24 @@ namespace Werewolf
 			_gameManager.TransferRole(_playerRevealed, Player, false, !_notResettedRoles.Contains(RoleToTake.GameplayTag));
 
 			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "ServantPlayer",
 												Data = _networkDataManager.PlayerInfos[previousPlayer].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "PlayerTakenFrom",
 												Data = _networkDataManager.PlayerInfos[_playerRevealed].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "RoleName",
 												Data = RoleToTake.GameplayTag.name,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 

@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -102,12 +103,12 @@ namespace Werewolf
 			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), true, false);
 
 			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "RoleNames",
-												Data = GameHistoryManager.ConcatenateRolesName(selectedRoles),
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleNames
+												Data = ConcatenateRolesName(selectedRoles),
+												Type = GameHistorySaveEntryVariableType.RoleNames
 											}
 										});
 		}
@@ -259,18 +260,18 @@ namespace Werewolf
 			_gameManager.RemoveReservedRoles(this, new int[1] { selectedReservedRoleIndex });
 
 			_gameHistoryManager.AddEntry(_usedRoleGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "Player",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "RoleName",
 												Data = _currentRoleBehavior.RoleGameplayTag.name,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.RoleName
+												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});
 

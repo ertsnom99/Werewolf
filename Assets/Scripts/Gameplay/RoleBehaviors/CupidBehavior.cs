@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -235,24 +236,24 @@ namespace Werewolf
 		private void AddCoupleSelectedGameHistoryEntry()
 		{
 			_gameHistoryManager.AddEntry(_coupleSelectedGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "CupidPlayer",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "FirstCouplePlayer",
 												Data = _networkDataManager.PlayerInfos[_couple[0]].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "SecondCouplePlayer",
 												Data = _networkDataManager.PlayerInfos[_couple[1]].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											}
 										});
 		}
@@ -384,18 +385,18 @@ namespace Werewolf
 			_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 1);
 
 			_gameHistoryManager.AddEntry(_coupleDiedGameHistoryEntry,
-										new GameHistoryManager.GameHistorySaveEntryVariable[] {
+										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "FirstCouplePlayer",
 												Data = _networkDataManager.PlayerInfos[deadCouplePlayer].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "SecondCouplePlayer",
 												Data = _networkDataManager.PlayerInfos[otherCouplePlayer].Nickname,
-												Type = GameHistoryManager.GameHistorySaveEntryVariableType.Player
+												Type = GameHistorySaveEntryVariableType.Player
 											}
 										});
 
