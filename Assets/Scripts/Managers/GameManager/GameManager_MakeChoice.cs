@@ -49,9 +49,7 @@ namespace Werewolf
 
 			foreach (int choiceImageID in choiceImageIDs)
 			{
-				ImageData imageData = default;
-
-				if (!Config.ImagesData.GetImageData(choiceImageID, ref imageData))
+				if (!Config.ImagesData.GetImageData(choiceImageID, out ImageData imageData))
 				{
 					continue;
 				}

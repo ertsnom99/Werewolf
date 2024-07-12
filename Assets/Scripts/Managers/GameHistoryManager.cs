@@ -3,6 +3,7 @@ using Fusion;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using Werewolf.Data;
@@ -18,8 +19,8 @@ namespace Werewolf
 		[SerializeField]
 		private GameplayTag[] _acceptedGameplayTagsForImageOverride;
 
-		[SerializeField]
-		private GameHistoryEntriesData _gameHistoryEntriesData;
+		[field: SerializeField]
+		public GameHistoryEntriesData GameHistoryEntriesData { get; private set; }
 
 		private string _saveDirectoryPath;
 
@@ -66,7 +67,14 @@ namespace Werewolf
 		{
 			base.Awake();
 
+			if (!GameHistoryEntriesData)
+			{
+				Debug.LogError($"The GameHistoryEntriesData of the GameHistoryManager is not set");
+				return;
+			}
+
 			DontDestroyOnLoad(gameObject);
+			GameHistoryEntriesData.Init();
 			_saveDirectoryPath = $"{Application.persistentDataPath}/{SAVE_FOLDER}";
 		}
 
@@ -107,6 +115,11 @@ namespace Werewolf
 			}
 
 			return stringBuilder.ToString();
+		}
+
+		public static string[] SplitData(string data)
+		{
+			return data.Split(VARIABLE_DATA_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		public void AddEntry(GameplayTag entryGameplayTag, GameHistorySaveEntryVariable[] variables, GameplayTag imageOverrideGameplayTag = null)
@@ -160,6 +173,47 @@ namespace Werewolf
 			}
 
 			File.WriteAllText($"{_saveDirectoryPath}/{DateTime.Now:yyyy'_'MM'_'dd'_'HH'_'mm}{SAVE_FILE_EXTENSION}", gameHistoryJson);
+		}
+
+		public string[] GetSavedGameHistoryFilePaths()
+		{
+			if (!Directory.Exists($"{_saveDirectoryPath}"))
+			{
+				return new string[0];
+			}
+
+			return Directory.GetFiles(_saveDirectoryPath);
+		}
+
+		public bool LoadGameHistorySaveFromFile(string filePath, out GameHistorySave gameHistorySave)
+		{
+			if (!File.Exists(filePath))
+			{
+				Debug.LogError($"There is no file {filePath}");
+
+				gameHistorySave = null;
+				return false;
+			}
+
+			string gameHistoryJson = File.ReadAllText(filePath);
+			return LoadGameHistorySaveFromJson(gameHistoryJson, out gameHistorySave);
+		}
+
+		public bool LoadGameHistorySaveFromJson(string gameHistoryJson, out GameHistorySave gameHistorySave)
+		{
+			try
+			{
+				gameHistorySave = JsonUtility.FromJson<GameHistorySave>(gameHistoryJson);
+			}
+			catch (Exception)
+			{
+				Debug.LogError($"Couldn't convert the gameHistoryJson to GameHistorySave");
+
+				gameHistorySave = null;
+				return false;
+			}
+
+			return gameHistorySave != null;
 		}
 	}
 }

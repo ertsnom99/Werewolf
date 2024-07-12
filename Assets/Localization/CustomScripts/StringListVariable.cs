@@ -5,7 +5,7 @@ using UnityEngine.Localization.SmartFormat.Core.Extensions;
 namespace UnityEngine.Localization.SmartFormat.PersistentVariables
 {
 	[Serializable]
-	public class StringList : IVariable
+	public class StringListVariable : IVariable
 	{
 		public List<string> Values = new();
 
