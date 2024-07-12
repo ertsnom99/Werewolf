@@ -37,11 +37,12 @@ namespace Werewolf.Data
 			}
 		}
 
-		public bool GetImageData(int ID, ref ImageData imageData)
+		public bool GetImageData(int ID, out ImageData imageData)
 		{
 			if (!_IDToImage.TryGetValue(ID, out int index))
 			{
 				Debug.LogError($"No ImageData has the gameplayTag ID {ID}");
+				imageData = default;
 				return false;
 			}
 

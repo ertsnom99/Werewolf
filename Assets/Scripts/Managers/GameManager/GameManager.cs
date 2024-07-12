@@ -1371,24 +1371,24 @@ namespace Werewolf
 					continue;
 				}
 
-				PlayerGroupData playerGroupData = _playerGroupsData.GetPlayerGroupData(playerGroup.GameplayTag.CompactTagId);
+				_playerGroupsData.GetPlayerGroupData(playerGroup.GameplayTag.CompactTagId, out PlayerGroupData playerGroupData);
 
 				_gameHistoryManager.AddEntry(Config.EndGamePlayerGroupWonGameHistoryEntry,
-														new GameHistorySaveEntryVariable[] {
-															new()
-															{
-																Name = "PlayerGroupeName",
-																Data = playerGroup.GameplayTag.name,
-																Type = GameHistorySaveEntryVariableType.PlayerGroupeName
-															},
-															new()
-															{
-																Name = "PlayerGroupeHasMultiplePlayers",
-																Data = playerGroupData.HasMultiplePlayers.ToString(),
-																Type = GameHistorySaveEntryVariableType.Bool
-															}
-														},
-														playerGroupData.GameplayTag);
+											new GameHistorySaveEntryVariable[] {
+												new()
+												{
+													Name = "PlayerGroupeName",
+													Data = playerGroup.GameplayTag.name,
+													Type = GameHistorySaveEntryVariableType.PlayerGroupeName
+												},
+												new()
+												{
+													Name = "PlayerGroupeHasMultiplePlayers",
+													Data = playerGroupData.HasMultiplePlayers.ToString(),
+													Type = GameHistorySaveEntryVariableType.Bool
+												}
+											},
+											playerGroupData.GameplayTag);
 
 				PrepareEndGameSequence(playerGroup);
 				return true;
@@ -1464,7 +1464,7 @@ namespace Werewolf
 
 			if (winningPlayerGroupID > -1)
 			{
-				PlayerGroupData playerGroup = _playerGroupsData.GetPlayerGroupData(winningPlayerGroupID);
+				_playerGroupsData.GetPlayerGroupData(winningPlayerGroupID, out PlayerGroupData playerGroup);
 				DisplayTitle(playerGroup.Image, string.Format(Config.WinningPlayerGroupText, playerGroup.Name.GetLocalizedString()));
 			}
 			else

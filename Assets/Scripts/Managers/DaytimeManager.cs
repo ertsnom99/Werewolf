@@ -90,9 +90,7 @@ namespace Werewolf
 
 		private IEnumerator TransitionTitle(int imageID)
 		{
-			ImageData titleData = default;
-
-			if (!_config.ImagesData.GetImageData(imageID, ref titleData))
+			if (!_config.ImagesData.GetImageData(imageID, out ImageData titleData))
 			{
 				yield break;
 			}

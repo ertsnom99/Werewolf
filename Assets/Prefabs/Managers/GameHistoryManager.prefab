@@ -67,5 +67,5 @@ MonoBehaviour:
   _acceptedGameplayTagsForImageOverride:
   - {fileID: 3472346779470064033, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   - {fileID: 2130812115359760485, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  _gameHistoryEntriesData: {fileID: 11400000, guid: 902125d0310aac74092fc8b186653dd7,
+  <GameHistoryEntriesData>k__BackingField: {fileID: 11400000, guid: 902125d0310aac74092fc8b186653dd7,
     type: 2}

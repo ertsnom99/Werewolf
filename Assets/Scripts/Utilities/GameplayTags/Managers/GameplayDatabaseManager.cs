@@ -9,6 +9,7 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 	private string[] _foldersToLoad;
 
 	private Dictionary<int, GameplayData> _IDtoGameplayData = new();
+	private Dictionary<string, GameplayData> _gameplayTagNametoGameplayData = new();
 
 	[field: SerializeField]
 	[field: ReadOnly]
@@ -25,6 +26,7 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 		base.Awake();
 
 		_IDtoGameplayData.Clear();
+		_gameplayTagNametoGameplayData.Clear();
 
 		foreach (string folder in _foldersToLoad)
 		{
@@ -74,6 +76,14 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 			}
 
 			_IDtoGameplayData.Add(loadedGameplayData.GameplayTag.CompactTagId, loadedGameplayData);
+
+			if (_gameplayTagNametoGameplayData.ContainsKey(loadedGameplayData.GameplayTag.name))
+			{
+				Debug.LogError("The GameplayData " + loadedGameplayData.DebugName + " has a duplicated GameplayTag name!!!");
+				continue;
+			}
+
+			_gameplayTagNametoGameplayData.Add(loadedGameplayData.GameplayTag.name, loadedGameplayData);
 		}
 	}
 
@@ -85,6 +95,16 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 		}
 
 		return _IDtoGameplayData[ID] as T;
+	}
+
+	public T GetGameplayData<T>(string gameplayTagName) where T : GameplayData
+	{
+		if (!_gameplayTagNametoGameplayData.ContainsKey(gameplayTagName))
+		{
+			return null;
+		}
+
+		return _gameplayTagNametoGameplayData[gameplayTagName] as T;
 	}
 
 	public List<T> GetGameplayData<T>() where T : GameplayData

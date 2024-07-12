@@ -9,9 +9,7 @@ namespace Werewolf
 	{
 		public void DisplayTitle(int imageID, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "", bool fastFade = false)
 		{
-			ImageData titleData = default;
-
-			if (!Config.ImagesData.GetImageData(imageID, ref titleData))
+			if (!Config.ImagesData.GetImageData(imageID, out ImageData titleData))
 			{
 				return;
 			}

@@ -162,7 +162,7 @@ MonoBehaviour:
       - rid: 7029503930381107201
   - m_Id: 1484152184946688
     m_Localized: "La sorci\xE8re ({WitchPlayer}) utilisa sa potion de mort pour tuer
-      {SavedPlayer}."
+      {KilledPlayer}."
     m_Metadata:
       m_Items:
       - rid: 7029503930381107201

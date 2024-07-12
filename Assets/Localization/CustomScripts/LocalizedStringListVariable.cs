@@ -7,7 +7,7 @@ namespace UnityEngine.Localization.SmartFormat.PersistentVariables
 {
 	// From: https://forum.unity.com/threads/using-list-formatter-for-an-array-of-localizedstring.1394401/
 	[Serializable]
-	public class LocalizedStringList : IVariable
+	public class LocalizedStringListVariable : IVariable
 	{
 		public List<LocalizedString> Values = new();
 

@@ -1,5 +1,6 @@
 using Assets.Scripts.Data.Tags;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
 
@@ -21,31 +22,71 @@ namespace Werewolf.Data
 	public class PlayerGroupsData : ScriptableObject
 	{
 		[field: SerializeField]
-		public PlayerGroupData[] Datas { get; private set; }
+		public PlayerGroupData[] PlayerGroups { get; private set; }
 
-		public PlayerGroupData GetPlayerGroupData(int ID)
+		private Dictionary<int, int> _IDToPlayerGroup = new();
+		private Dictionary<string, int> _gameplayTagNameToPlayerGroup = new();
+
+		public void Init()
 		{
-			foreach(PlayerGroupData data in Datas)
+			if (_IDToPlayerGroup.Count > 0)
 			{
-				if (data.GameplayTag.CompactTagId == ID)
-				{
-					return data;
-				}
+				return;
 			}
 
-			return new();
+			for (int i = 0; i < PlayerGroups.Length; i++)
+			{
+				_IDToPlayerGroup.Add(PlayerGroups[i].GameplayTag.CompactTagId, i);
+			}
+
+			if (_gameplayTagNameToPlayerGroup.Count > 0)
+			{
+				return;
+			}
+
+			for (int i = 0; i < PlayerGroups.Length; i++)
+			{
+				_gameplayTagNameToPlayerGroup.Add(PlayerGroups[i].GameplayTag.name, i);
+			}
+		}
+
+		public bool GetPlayerGroupData(int ID, out PlayerGroupData playerGroupData)
+		{
+			if (!_IDToPlayerGroup.TryGetValue(ID, out int index))
+			{
+				Debug.LogError($"No PlayerGroupData has a gameplayTag with the ID {ID}");
+				playerGroupData = default;
+				return false;
+			}
+
+			playerGroupData = PlayerGroups[index];
+			return true;
+		}
+
+		public bool GetPlayerGroupData(string gameplayTagName, out PlayerGroupData playerGroupData)
+		{
+			if (!_gameplayTagNameToPlayerGroup.TryGetValue(gameplayTagName, out int index))
+			{
+				Debug.LogError($"No PlayerGroupData has the gameplayTag {gameplayTagName}");
+				playerGroupData = default;
+				return false;
+			}
+
+			playerGroupData = PlayerGroups[index];
+			return true;
 		}
 
 		public int GetPlayerGroupPriority(GameplayTag gameplayTag)
 		{
-			for (int i = 0; i < Datas.Length; i++)
+			for (int i = 0; i < PlayerGroups.Length; i++)
 			{
-				if (Datas[i].GameplayTag == gameplayTag)
+				if (PlayerGroups[i].GameplayTag == gameplayTag)
 				{
 					return (i + 1);
 				}
 			}
 
+			Debug.LogError($"No PlayerGroupData has the gameplayTag {gameplayTag.name}");
 			return -1;
 		}
 	}
