@@ -22,6 +22,7 @@ namespace Werewolf.UI
 		private GameHistory _gameHistory;
 
 		private List<GameHistoryButton> _gameHistoryButtons = new();
+		private GameHistoryButton _selectedGameHistoryButton;
 
 		private GameHistoryManager _gameHistoryManager;
 
@@ -36,24 +37,38 @@ namespace Werewolf.UI
 		{
 			string[] filePaths = _gameHistoryManager.GetSavedGameHistoryFilePaths();
 			GameHistoryButton gameHistoryButton;
+			bool isOdd = true;
 
 			foreach (string filePath in filePaths)
 			{
 				gameHistoryButton = Instantiate(_gameHistoryButtonPrefab, _gameHistoryButtonsContainer);
-				gameHistoryButton.Initialize(filePath);
+				gameHistoryButton.Initialize(filePath, isOdd);
 				gameHistoryButton.Clicked += OnClickedGameHistoryButton;
 				_gameHistoryButtons.Add(gameHistoryButton);
+
+				isOdd = !isOdd;
 			}
 
 			_noHistories.SetActive(filePaths.Length <= 0);
 			_selectToSee.SetActive(filePaths.Length > 0);
 		}
 
-		private void OnClickedGameHistoryButton(string filePath)
+		private void OnClickedGameHistoryButton(GameHistoryButton gameHistoryButton)
 		{
-			if (!_gameHistoryManager.LoadGameHistorySaveFromFile(filePath, out GameHistorySave gameHistorySave))
+			if (_selectedGameHistoryButton == gameHistoryButton)
 			{
-				Debug.LogError($"Couldn't load the GameHistory at {filePath}");
+				return;
+			}
+			else if (_selectedGameHistoryButton)
+			{
+				_selectedGameHistoryButton.SetSelected(false);
+			}
+
+			_selectedGameHistoryButton = gameHistoryButton;
+			
+			if (!_gameHistoryManager.LoadGameHistorySaveFromFile(_selectedGameHistoryButton.FilePath, out GameHistorySave gameHistorySave))
+			{
+				Debug.LogError($"Couldn't load the GameHistory at {_selectedGameHistoryButton.FilePath}");
 				return;
 			}
 
