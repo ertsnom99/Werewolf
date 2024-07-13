@@ -31,6 +31,24 @@ MonoBehaviour:
       - name: RoleName
         variable:
           rid: -2
+  - GameplayTag: {fileID: 9004836224527247862, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 6814071425196032
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: WitchPlayer
+        variable:
+          rid: -2
+      - name: KilledPlayer
+        variable:
+          rid: -2
   - GameplayTag: {fileID: 2349646183929925099, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
     Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}

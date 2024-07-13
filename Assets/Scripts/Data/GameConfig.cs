@@ -327,6 +327,9 @@ namespace Werewolf.Data
 		public GameplayTag PlayerLeftMarkForDeath { get; private set; }
 
 		[field: SerializeField]
+		public GameplayTag PlayerDisconnectedGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
 		public float DisconnectedTextDuration { get; private set; }
 	}
 }

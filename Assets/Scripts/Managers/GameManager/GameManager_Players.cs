@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
@@ -537,6 +538,16 @@ namespace Werewolf
 			_putCardBackDownCallbacks.Remove(player);
 
 			PostPlayerDisconnected?.Invoke(player);
+
+			_gameHistoryManager.AddEntry(Config.PlayerDisconnectedGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "Player",
+												Data = _networkDataManager.PlayerInfos[player].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											}
+										});
 
 			RPC_DisplayPlayerDisconnected(player);
 #if UNITY_SERVER && UNITY_EDITOR
