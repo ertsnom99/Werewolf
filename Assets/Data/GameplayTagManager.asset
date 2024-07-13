@@ -1095,8 +1095,9 @@ MonoBehaviour:
   - {fileID: -3411198247075154456}
   - {fileID: 1239282344240734910}
   - {fileID: 5372081958531811781}
-  - {fileID: 9004836224527247862}
+  - {fileID: 7110797918807519671}
   - {fileID: 2349646183929925099}
+  - {fileID: 9004836224527247862}
   - {fileID: 7225922598962193451}
   - {fileID: -3204591652628853092}
   - {fileID: 7584545385755327515}
@@ -1901,6 +1902,19 @@ MonoBehaviour:
   m_Name: Image.Captain.OldCaptainChoosing
   m_EditorClassIdentifier: 
   _compactTagId: 131330
+--- !u!114 &7110797918807519671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Player
+  m_EditorClassIdentifier: 
+  _compactTagId: 2561
 --- !u!114 &7225922598962193451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1913,7 +1927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: GameHistoryEntry.Player.GivenRole
   m_EditorClassIdentifier: 
-  _compactTagId: 133633
+  _compactTagId: 199169
 --- !u!114 &7333759835446194136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2223,9 +2237,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: GameHistoryEntry.Player
+  m_Name: GameHistoryEntry.Player.Disconnected
   m_EditorClassIdentifier: 
-  _compactTagId: 2561
+  _compactTagId: 133633
 --- !u!114 &9216349172710836488
 MonoBehaviour:
   m_ObjectHideFlags: 0

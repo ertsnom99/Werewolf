@@ -264,4 +264,6 @@ MonoBehaviour:
   <SkipTurnText>k__BackingField: Skip turn
   <PlayerLeftMarkForDeath>k__BackingField: {fileID: 9216349172710836488, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <PlayerDisconnectedGameHistoryEntry>k__BackingField: {fileID: 9004836224527247862,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <DisconnectedTextDuration>k__BackingField: 5
