@@ -424,7 +424,7 @@ MonoBehaviour:
       - name: SniffedPlayers
         variable:
           rid: -2
-  - GameplayTag: {fileID: -3897550941697366323, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  - GameplayTag: {fileID: -1905914086747963203, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
     Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
     Text:
