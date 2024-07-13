@@ -33,6 +33,24 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 1236408819289948160
+      type: {class: LiteralTextSource, ns: UnityEngine.Localization.SmartFormat.Source,
+        asm: Assembly-CSharp}
+      data: 
+    - rid: 1236408819289948161
+      type: {class: TemplateFormatter, ns: UnityEngine.Localization.SmartFormat.Extensions,
+        asm: Unity.Localization}
+      data:
+        m_Names:
+        - template
+        - t
+        m_Templates:
+        - name: PlayerName
+          text: <color=#006CBF><b>{}</b></color>
+        - name: RoleName
+          text: <color=#FF56D2><b>{}</b></color>
+        - name: PlayerGroupeName
+          text: <color=#BF9100><b>{}</b></color>
     - rid: 7029503860835352576
       type: {class: CommandLineLocaleSelector, ns: UnityEngine.Localization.Settings,
         asm: Unity.Localization}
@@ -91,6 +109,7 @@ MonoBehaviour:
         - rid: 7029503860835352589
         - rid: 7029503860835352590
         - rid: 7029503860835352591
+        - rid: 1236408819289948160
         m_Formatters:
         - rid: 7029503860835352585
         - rid: 7029503860835352592
@@ -101,6 +120,7 @@ MonoBehaviour:
         - rid: 7029503860835352597
         - rid: 7029503860835352598
         - rid: 7029503860835352599
+        - rid: 1236408819289948161
     - rid: 7029503860835352583
       type: {class: SmartSettings, ns: UnityEngine.Localization.SmartFormat.Core.Settings,
         asm: Unity.Localization}
@@ -118,7 +138,7 @@ MonoBehaviour:
         m_Settings:
           rid: 7029503860835352583
         m_AlphanumericSelectors: 1
-        m_AllowedSelectorChars: _-
+        m_AllowedSelectorChars: "_-\" \xE9\xE8"
         m_Operators: '[]().,'
         m_AlternativeEscaping: 0
         m_AlternativeEscapeChar: 92
