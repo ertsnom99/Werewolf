@@ -74,7 +74,10 @@ namespace Werewolf
 			if (player.Length <= 0 || player[0].IsNone || !_gameManager.RevealPlayerRole(player[0], Player, false, true, OnRoleRevealed))
 			{
 				_gameManager.StopWaintingForPlayer(Player);
+				return;
 			}
+
+			_gameManager.RPC_HideUI(Player);
 
 			PlayerRef playerLookedAt = player[0];
 
