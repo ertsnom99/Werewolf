@@ -544,6 +544,7 @@ GameObject:
   - component: {fileID: 124428141}
   - component: {fileID: 124428143}
   - component: {fileID: 124428142}
+  - component: {fileID: 124428144}
   m_Layer: 5
   m_Name: NicknameText
   m_TagString: Untagged
@@ -567,8 +568,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 768.6998, y: -37.314102}
-  m_SizeDelta: {x: 677.6381, y: 74.628204}
+  m_AnchoredPosition: {x: 768.76917, y: -39.247726}
+  m_SizeDelta: {x: 1277.5383, y: 78.49545}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &124428142
 MonoBehaviour:
@@ -617,8 +618,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -667,6 +668,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 124428140}
   m_CullTransparentMesh: 1
+--- !u!114 &124428144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124428140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: 1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &247214351
 GameObject:
   m_ObjectHideFlags: 0
@@ -2050,8 +2071,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 671.26917, y: -269.50153}
-  m_SizeDelta: {x: 1342.5383, y: 539.00305}
+  m_AnchoredPosition: {x: 703.76917, y: -283.46713}
+  m_SizeDelta: {x: 1407.5383, y: 566.93427}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &445235647
 MonoBehaviour:
@@ -2917,8 +2938,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 588.0376, y: -94.342575}
-  m_SizeDelta: {x: 1096.0752, y: 108.68515}
+  m_AnchoredPosition: {x: 669.0376, y: -105.717575}
+  m_SizeDelta: {x: 1258.0752, y: 131.43515}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &593593588
 CanvasRenderer:
@@ -3267,6 +3288,7 @@ GameObject:
   - component: {fileID: 892669692}
   - component: {fileID: 892669694}
   - component: {fileID: 892669693}
+  - component: {fileID: 892669695}
   m_Layer: 5
   m_Name: LeaderText
   m_TagString: Untagged
@@ -3290,8 +3312,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.43065, y: -37.314102}
-  m_SizeDelta: {x: 194.8613, y: 74.628204}
+  m_AnchoredPosition: {x: 60, y: -39.247726}
+  m_SizeDelta: {x: 120, y: 78.49545}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &892669693
 MonoBehaviour:
@@ -3340,8 +3362,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3390,6 +3412,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892669691}
   m_CullTransparentMesh: 1
+--- !u!114 &892669695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892669691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 120
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &893276166
 GameObject:
   m_ObjectHideFlags: 0
@@ -4330,8 +4372,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 588.0376, y: -346.7129}
-  m_SizeDelta: {x: 1096.0752, y: 118.68515}
+  m_AnchoredPosition: {x: 669.0376, y: -403.5879}
+  m_SizeDelta: {x: 1258.0752, y: 141.43515}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1107256113
 MonoBehaviour:
@@ -4649,8 +4691,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 588.0376, y: -218.02773}
-  m_SizeDelta: {x: 1096.0752, y: 108.68515}
+  m_AnchoredPosition: {x: 669.0376, y: -252.15273}
+  m_SizeDelta: {x: 1258.0752, y: 131.43515}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1159110558
 CanvasRenderer:
@@ -5176,8 +5218,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 588.0376, y: -480.398}
-  m_SizeDelta: {x: 1096.0752, y: 118.68515}
+  m_AnchoredPosition: {x: 669.0376, y: -560.023}
+  m_SizeDelta: {x: 1258.0752, y: 141.43515}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1214546939
 MonoBehaviour:
@@ -6896,10 +6938,10 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
+  m_Spacing: 10
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -7983,8 +8025,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 984.3403, y: -269.50153}
-  m_SizeDelta: {x: 716.3961, y: 539.00305}
+  m_AnchoredPosition: {x: 1031.4653, y: -283.46713}
+  m_SizeDelta: {x: 752.1461, y: 566.93427}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1875250842
 MonoBehaviour:
@@ -8657,17 +8699,17 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 4
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 1
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 4
   m_RegexValue: 
   m_GlobalPointSize: 60
-  m_CharacterLimit: 24
+  m_CharacterLimit: 12
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
