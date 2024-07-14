@@ -10,7 +10,9 @@ namespace Werewolf
 	{
 		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
 		{
-			_gameHistoryManager.SaveGameHistoryToFile(Encoding.ASCII.GetString(data));
+			string gameHistoryJson = Encoding.ASCII.GetString(data);
+			_gameHistoryManager.SaveGameHistoryToFile(gameHistoryJson);
+			MainMenuManager.GAME_HISTORY = gameHistoryJson;
 		}
 
 		#region Unused Callbacks
