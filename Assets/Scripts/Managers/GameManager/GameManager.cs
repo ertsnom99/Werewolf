@@ -1132,7 +1132,7 @@ namespace Werewolf
 				}
 			}
 
-			if (!_playerCards[deadPlayer])
+			if (!_playerCards.ContainsKey(deadPlayer) || !_playerCards[deadPlayer])
 			{
 				return;
 			}

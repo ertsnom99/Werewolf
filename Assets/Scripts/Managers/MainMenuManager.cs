@@ -44,6 +44,7 @@ namespace Werewolf
 		public static bool JUST_OPEN = true;
 		public static string START_MESSAGE = string.Empty;
 		public static bool GAME_STARTED = false;
+		public static string GAME_HISTORY;
 
 		private void Start()
 		{
@@ -88,6 +89,7 @@ namespace Werewolf
 			JUST_OPEN = false;
 			START_MESSAGE = string.Empty;
 			GAME_STARTED = false;
+			GAME_HISTORY = default;
 		}
 
 		public void OpenJoinMenu(string message)
@@ -113,7 +115,7 @@ namespace Werewolf
 			_networkDataManager.RolesSetupReadyChanged += _roomMenu.UpdatePlayerList;
 
 			// TODO : Change min player everytime the leader select a new game setup
-			_roomMenu.Initialize(_networkDataManager, _debugGameSetupData.MinPlayerCount, _runner.LocalPlayer);
+			_roomMenu.Initialize(_networkDataManager, _debugGameSetupData.MinPlayerCount, _runner.LocalPlayer, GAME_HISTORY);
 
 			if (setNickname)
 			{

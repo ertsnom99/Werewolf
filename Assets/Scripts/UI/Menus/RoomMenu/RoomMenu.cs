@@ -5,18 +5,27 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Werewolf.Network;
+using static Werewolf.GameHistoryManager;
 
 namespace Werewolf.UI
 {
 	public class RoomMenu : MonoBehaviour
 	{
-		[Header("UI")]
+		[Header("Players")]
 		[SerializeField]
 		private Transform _playerEntries;
 
 		[SerializeField]
 		private PlayerEntry _playerEntryPrefab;
 
+		[Header("Game History")]
+		[SerializeField]
+		private GameObject _gameHistoryUI;
+
+		[SerializeField]
+		private GameHistory _gameHistory;
+
+		[Header("UI")]
 		[SerializeField]
 		private TMP_Text _warningText;
 
@@ -35,7 +44,7 @@ namespace Werewolf.UI
 		public event Action StartGameClicked;
 		public event Action LeaveSessionClicked;
 
-		public void Initialize(NetworkDataManager networkDataManager, int minPlayer, PlayerRef localPlayer)
+		public void Initialize(NetworkDataManager networkDataManager, int minPlayer, PlayerRef localPlayer, string gameHistory)
 		{
 			_networkDataManager = networkDataManager;
 			_minPlayer = minPlayer;
@@ -49,6 +58,18 @@ namespace Werewolf.UI
 			_networkDataManager.PlayerInfosChanged += UpdatePlayerList;
 			_networkDataManager.InvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
 			UpdatePlayerList();
+
+			GameHistorySave gameHistorySave = null;
+
+			if (!string.IsNullOrEmpty(gameHistory) && GameHistoryManager.Instance.LoadGameHistorySaveFromJson(gameHistory, out gameHistorySave))
+			{
+				_gameHistory.DisplayGameHistory(gameHistorySave);
+				_gameHistoryUI.SetActive(true);
+			}
+			else
+			{
+				_gameHistoryUI.SetActive(false);
+			}
 		}
 
 		public void SetMinPlayer(int minPlayer)

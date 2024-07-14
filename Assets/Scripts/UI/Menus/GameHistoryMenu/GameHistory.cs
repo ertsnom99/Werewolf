@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.UI;
-using WebSocketSharp;
 using Werewolf.Data;
 using static Werewolf.GameHistoryManager;
 
@@ -30,6 +29,14 @@ namespace Werewolf.UI
 
 		private void Start()
 		{
+			if (!_gameHistoryEntriesData)
+			{
+				Initialize();
+			}
+		}
+
+		private void Initialize()
+		{
 			_gameHistoryEntriesData = GameHistoryManager.Instance.GameHistoryEntriesData;
 			_playerGroupsData = PlayerGroupsManager.Instance.PlayerGroupsData;
 			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
@@ -39,6 +46,11 @@ namespace Werewolf.UI
 
 		public void DisplayGameHistory(GameHistorySave gameHistorySave)
 		{
+			if(!_gameHistoryEntriesData)
+			{
+				Initialize();
+			}
+			
 			ClearGameHistoryEntries();
 
 			GameHistoryEntry gameHistoryEntry;
@@ -50,7 +62,7 @@ namespace Werewolf.UI
 			{
 				_gameHistoryEntriesData.GetGameHistoryEntryData(entry.EntryGameplayTagName, out GameHistoryEntryData gameHistoryEntryData);
 
-				if (entry.ImageOverrideGameplayTagName.IsNullOrEmpty())
+				if (string.IsNullOrEmpty(entry.ImageOverrideGameplayTagName))
 				{
 					image = gameHistoryEntryData.Image;
 				}

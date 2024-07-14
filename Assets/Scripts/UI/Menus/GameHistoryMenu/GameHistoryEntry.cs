@@ -25,13 +25,13 @@ namespace Werewolf.UI
 
 		private Image _background;
 
-		private void Awake()
-		{
-			_background = GetComponent<Image>();
-		}
-
 		public void Initialize(Sprite image, LocalizedString text, bool isOdd)
 		{
+			if (!_background)
+			{
+				_background = GetComponent<Image>();
+			}
+
 			_image.sprite = image;
 			_text.StringReference = text;
 			_background.color = isOdd ? _oddColor : _evenColor;
