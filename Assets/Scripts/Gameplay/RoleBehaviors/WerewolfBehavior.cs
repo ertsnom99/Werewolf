@@ -29,7 +29,7 @@ namespace Werewolf
 		private GameHistoryManager _gameHistoryManager;
 		private NetworkDataManager _networkDataManager;
 
-		public override void Init()
+		public override void Initialize()
 		{
 			_gameManager = GameManager.Instance;
 			_voteManager = VoteManager.Instance;
@@ -101,7 +101,7 @@ namespace Werewolf
 			_voteManager.StartVote();
 		}
 
-		public override void ReInit() { }
+		public override void ReInitialize() { }
 
 		public override void OnRoleCallDisconnected() { }
 

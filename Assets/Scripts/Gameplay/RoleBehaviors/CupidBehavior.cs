@@ -62,7 +62,7 @@ namespace Werewolf
 		private NetworkDataManager _networkDataManager;
 		private VoteManager _voteManager;
 
-		public override void Init()
+		public override void Initialize()
 		{
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
@@ -441,7 +441,7 @@ namespace Werewolf
 			_gameManager.WaitForPlayer(Player);
 		}
 
-		public override void ReInit()
+		public override void ReInitialize()
 		{
 			_couple = new PlayerRef[2];
 			_showedCouple = false;

@@ -46,7 +46,7 @@ public class FoxBehavior : RoleBehavior
 	private GameHistoryManager _gameHistoryManager;
 	private NetworkDataManager _networkDataManager;
 
-	public override void Init()
+	public override void Initialize()
 	{
 		_gameManager = GameManager.Instance;
 		_gameHistoryManager = GameHistoryManager.Instance;
@@ -178,7 +178,7 @@ public class FoxBehavior : RoleBehavior
 		_gameManager.StopWaintingForPlayer(Player);
 	}
 
-	public override void ReInit()
+	public override void ReInitialize()
 	{
 		_hasPower = true;
 	}

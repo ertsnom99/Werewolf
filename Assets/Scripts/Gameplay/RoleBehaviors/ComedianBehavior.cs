@@ -36,7 +36,7 @@ namespace Werewolf
 
 		private readonly int NEEDED_ROLE_COUNT = 3;
 
-		public override void Init()
+		public override void Initialize()
 		{
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
@@ -278,7 +278,7 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		public override void ReInit() { }
+		public override void ReInitialize() { }
 
 		public override void OnRoleCallDisconnected()
 		{

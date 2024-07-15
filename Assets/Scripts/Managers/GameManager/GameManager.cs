@@ -107,11 +107,11 @@ namespace Werewolf
 			_voteManager = VoteManager.Instance;
 			_daytimeManager = DaytimeManager.Instance;
 
-			Config.ImagesData.Init();
+			Config.ImagesData.Initialize();
 
-			_voteManager.SetConfig(Config);
+			_voteManager.Initialize(Config);
 			_voteManager.SetPlayers(PlayerGameInfos);
-			_daytimeManager.SetConfig(Config);
+			_daytimeManager.Initialize(Config);
 			_UIManager.TitleScreen.SetConfig(Config);
 			_UIManager.ChoiceScreen.SetConfig(Config);
 			_UIManager.VoteScreen.SetConfig(Config);
@@ -270,7 +270,7 @@ namespace Werewolf
 
 			_unassignedRoleBehaviors.Add(roleBehavior, role);
 
-			roleBehavior.Init();
+			roleBehavior.Initialize();
 			roleBehavior.OnSelectedToDistribute(ref rolesToDistribute, ref availableRoles);
 		}
 		#endregion

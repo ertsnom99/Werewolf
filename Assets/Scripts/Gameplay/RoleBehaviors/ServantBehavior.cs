@@ -41,7 +41,7 @@ namespace Werewolf
 		private GameHistoryManager _gameHistoryManager;
 		private NetworkDataManager _networkDataManager;
 
-		public override void Init()
+		public override void Initialize()
 		{
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
@@ -177,7 +177,7 @@ namespace Werewolf
 			_gameManager.StopPromptingPlayer(Player);
 		}
 
-		public override void ReInit() { }
+		public override void ReInitialize() { }
 
 		public override void OnRoleCallDisconnected() { }
 

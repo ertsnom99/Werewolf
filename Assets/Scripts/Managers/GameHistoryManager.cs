@@ -74,7 +74,7 @@ namespace Werewolf
 			}
 
 			DontDestroyOnLoad(gameObject);
-			GameHistoryEntriesData.Init();
+			GameHistoryEntriesData.Initialize();
 			_saveDirectoryPath = $"{Application.persistentDataPath}/{SAVE_FOLDER}";
 		}
 

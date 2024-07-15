@@ -23,7 +23,7 @@ namespace Werewolf
 
 		private UIManager _UIManager;
 
-		public void SetConfig(GameConfig config)
+		public void Initialize(GameConfig config)
 		{
 			_config = config;
 			_UIManager = UIManager.Instance;
