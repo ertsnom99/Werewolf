@@ -23,7 +23,7 @@ namespace Werewolf.Data
 
 		private Dictionary<string, int> _gameplayTagNameToGameHistoryEntry = new();
 
-		public void Init()
+		public void Initialize()
 		{
 			if (_gameplayTagNameToGameHistoryEntry.Count > 0)
 			{

@@ -24,7 +24,7 @@ namespace Werewolf.Data
 
 		private Dictionary<int, int> _IDToImage = new();
 
-		public void Init()
+		public void Initialize()
 		{
 			if (_IDToImage.Count > 0)
 			{

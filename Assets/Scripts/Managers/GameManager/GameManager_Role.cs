@@ -152,7 +152,7 @@ namespace Werewolf
 
 			if (reInitBehavior)
 			{
-				behavior.ReInit();
+				behavior.ReInitialize();
 			}
 
 #if UNITY_SERVER && UNITY_EDITOR

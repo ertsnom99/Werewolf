@@ -27,7 +27,7 @@ namespace Werewolf.Data
 		private Dictionary<int, int> _IDToPlayerGroup = new();
 		private Dictionary<string, int> _gameplayTagNameToPlayerGroup = new();
 
-		public void Init()
+		public void Initialize()
 		{
 			if (_IDToPlayerGroup.Count > 0)
 			{

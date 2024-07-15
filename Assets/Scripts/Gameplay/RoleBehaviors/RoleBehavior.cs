@@ -93,7 +93,7 @@ namespace Werewolf
 			Player = player;
 		}
 
-		public abstract void Init();
+		public abstract void Initialize();
 
 		public abstract void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles);
 
@@ -101,7 +101,7 @@ namespace Werewolf
 
 		public virtual void GetTitlesOverride(int priorityIndex, ref Dictionary<PlayerRef, int> titlesOverride) { }
 
-		public abstract void ReInit();
+		public abstract void ReInitialize();
 
 		public abstract void OnRoleCallDisconnected();
 	}

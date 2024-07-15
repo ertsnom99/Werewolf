@@ -16,6 +16,6 @@ public class PlayerGroupsManager : WeakKeptMonoSingleton<PlayerGroupsManager>
 			return;
 		}
 
-		PlayerGroupsData.Init();
+		PlayerGroupsData.Initialize();
 	}
 }

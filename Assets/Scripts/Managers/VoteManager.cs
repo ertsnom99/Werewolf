@@ -71,7 +71,7 @@ namespace Werewolf
 			_playerCards = playerCards;
 		}
 
-		public void SetConfig(GameConfig config)
+		public void Initialize(GameConfig config)
 		{
 			_config = config;
 
