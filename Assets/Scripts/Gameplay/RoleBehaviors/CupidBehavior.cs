@@ -274,7 +274,7 @@ namespace Werewolf
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _coupleRecognizingEachOtherImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _couple.Contains(Player) ? _inCoupleImage.CompactTagId : _coupleRecognizingEachOtherImage.CompactTagId);
 			}
 
 			_showedCouple = true;
