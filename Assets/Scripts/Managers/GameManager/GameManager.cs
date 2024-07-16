@@ -1230,12 +1230,6 @@ namespace Werewolf
 			}
 		}
 
-		private IEnumerator DisplayFailedExecution()
-		{
-			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainImage.CompactTagId, Config.ExecutionTitleHoldDuration);
-			StartCoroutine(MoveToNextGameplayLoopStep());
-		}
-
 		private IEnumerator StartCaptainExecution(PlayerRef[] mostVotedPlayers)
 		{
 			List<PlayerRef> executionChoices = mostVotedPlayers.ToList();
@@ -1245,13 +1239,13 @@ namespace Werewolf
 										GetPlayersExcluding(executionChoices.ToArray()).ToList(),
 										Config.ExecutionDrawYouChooseImage.CompactTagId,
 										Config.ExecutionCaptainChoiceDuration,
-										true,
+										false,
 										1,
 										ChoicePurpose.Other,
 										OnCaptainChooseExecutedPlayer))
 			{
-				AddExecutionDrawCaptainChoseGameHistoryEntry();
-				StartCoroutine(ExecutePlayer(mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)]));
+				AddExecutionDrawCaptainDidNotChoseGameHistoryEntry();
+				StartCoroutine(DisplayFailedExecution());
 
 				yield break;
 			}
@@ -1280,8 +1274,8 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
-			AddExecutionDrawCaptainChoseGameHistoryEntry();
-			StartCoroutine(ExecutePlayer(mostVotedPlayers[UnityEngine.Random.Range(0, mostVotedPlayers.Length)]));
+			AddExecutionDrawCaptainDidNotChoseGameHistoryEntry();
+			StartCoroutine(DisplayFailedExecution());
 		}
 
 		private void OnCaptainChooseExecutedPlayer(PlayerRef[] executedPlayer)
@@ -1291,7 +1285,7 @@ namespace Werewolf
 				return;
 			}
 
-			StartCoroutine(EndCaptainExecution(executedPlayer[0]));
+			StartCoroutine(EndCaptainExecution(executedPlayer.Length > 0 ? executedPlayer[0] : PlayerRef.None));
 		}
 
 		private IEnumerator EndCaptainExecution(PlayerRef executedPlayer)
@@ -1305,13 +1299,30 @@ namespace Werewolf
 #endif
 			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
-			AddExecutionDrawCaptainChoseGameHistoryEntry();
-			StartCoroutine(ExecutePlayer(executedPlayer));
+			if (executedPlayer.IsNone)
+			{
+				AddExecutionDrawCaptainDidNotChoseGameHistoryEntry();
+				StartCoroutine(DisplayFailedExecution());
+			}
+			else
+			{
+				_gameHistoryManager.AddEntry(Config.ExecutionDrawCaptainChoseGameHistoryEntry,
+											new GameHistorySaveEntryVariable[] {
+											new()
+											{
+												Name = "Player",
+												Data = _networkDataManager.PlayerInfos[_captain].Nickname,
+												Type = GameHistorySaveEntryVariableType.Player
+											}
+											});
+
+				StartCoroutine(ExecutePlayer(executedPlayer));
+			}
 		}
 
-		private void AddExecutionDrawCaptainChoseGameHistoryEntry()
+		private void AddExecutionDrawCaptainDidNotChoseGameHistoryEntry()
 		{
-			_gameHistoryManager.AddEntry(Config.ExecutionDrawCaptainChoseGameHistoryEntry,
+			_gameHistoryManager.AddEntry(Config.ExecutionDrawCaptainDidnotChoseGameHistoryEntry,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -1337,6 +1348,12 @@ namespace Werewolf
 			AddMarkForDeath(executedPlayer, Config.ExecutionMarkForDeath);
 			yield return HighlightPlayerToggle(executedPlayer);
 
+			StartCoroutine(MoveToNextGameplayLoopStep());
+		}
+
+		private IEnumerator DisplayFailedExecution()
+		{
+			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainImage.CompactTagId, Config.ExecutionTitleHoldDuration);
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 

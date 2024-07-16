@@ -226,6 +226,21 @@ MonoBehaviour:
       - name: Player
         variable:
           rid: -2
+  - GameplayTag: {fileID: -4670852522361627645, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: -1221642604, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Text:
+      m_TableReference:
+        m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+      m_TableEntryReference:
+        m_KeyId: 7623024505643008
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables:
+      - name: Player
+        variable:
+          rid: -2
   - GameplayTag: {fileID: -4287951944148663951, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
     Image: {fileID: 1002782032, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}

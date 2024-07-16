@@ -63,6 +63,10 @@ MonoBehaviour:
     m_Key: Execution_DrawCaptainChose
     m_Metadata:
       m_Items: []
+  - m_Id: 7623024505643008
+    m_Key: Execution_DrawCaptainDidNotChose
+    m_Metadata:
+      m_Items: []
   - m_Id: 1124997385338880
     m_Key: Execution_DrawAgain
     m_Metadata:

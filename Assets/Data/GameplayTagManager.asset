@@ -608,9 +608,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: GameHistoryEntry.Execution
+  m_Name: GameHistoryEntry.Execution.DrawCaptainDidNotChose
   m_EditorClassIdentifier: 
-  _compactTagId: 1537
+  _compactTagId: 198145
 --- !u!114 &-4642260714550647464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,7 +701,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: GameHistoryEntry.Execution.VotedPlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 263681
+  _compactTagId: 329217
 --- !u!114 &-3411198247075154456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -948,7 +948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: GameHistoryEntry.Execution.DrawNewVote
   m_EditorClassIdentifier: 
-  _compactTagId: 198145
+  _compactTagId: 263681
 --- !u!114 &-738164676928455692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1082,9 +1082,10 @@ MonoBehaviour:
   - {fileID: -471421179214536152}
   - {fileID: -1594020178363860539}
   - {fileID: 7490826577571526794}
-  - {fileID: -4670852522361627645}
+  - {fileID: 7608032753998979677}
   - {fileID: -4287951944148663951}
   - {fileID: 7857262219002472655}
+  - {fileID: -4670852522361627645}
   - {fileID: -951212456345614295}
   - {fileID: -3474605209452353923}
   - {fileID: 400890721188642999}
@@ -1264,7 +1265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: GameHistoryEntry.Execution.VoteStarted
   m_EditorClassIdentifier: 
-  _compactTagId: 329217
+  _compactTagId: 394753
 --- !u!114 &602595925389400680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2019,6 +2020,19 @@ MonoBehaviour:
   m_Name: GameHistoryEntry.Savior.ChosePlayerToProtect
   m_EditorClassIdentifier: 
   _compactTagId: 68353
+--- !u!114 &7608032753998979677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.Execution
+  m_EditorClassIdentifier: 
+  _compactTagId: 1537
 --- !u!114 &7649568454011052203
 MonoBehaviour:
   m_ObjectHideFlags: 0
