@@ -119,14 +119,15 @@ namespace Werewolf
 			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
 			SetCaptain(nextCaptain);
-			yield return ShowCaptain();
+
+			yield return ShowCaptain(false);
 
 			_isNextCaptainChoiceCompleted = true;
 		}
 
-		private IEnumerator ShowCaptain()
+		private IEnumerator ShowCaptain(bool createCard)
 		{
-			if (!_captainCard)
+			if (createCard)
 			{
 				RPC_InstantiateCaptainCard(_captain);
 #if UNITY_SERVER && UNITY_EDITOR
