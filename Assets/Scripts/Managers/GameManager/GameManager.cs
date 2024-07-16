@@ -630,7 +630,7 @@ namespace Werewolf
 			else if (_captainCandidates.Count == 1)
 			{
 				SetCaptain(_captainCandidates[0]);
-				yield return ShowCaptain();
+				yield return ShowCaptain(true);
 			}
 			else
 			{
@@ -686,7 +686,7 @@ namespace Werewolf
 
 		private IEnumerator ShowElectionResult()
 		{
-			yield return ShowCaptain();
+			yield return ShowCaptain(true);
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 		#endregion
