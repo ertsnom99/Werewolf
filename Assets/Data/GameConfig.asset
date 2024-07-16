@@ -161,6 +161,8 @@ MonoBehaviour:
   <ExecutionCaptainChoiceDuration>k__BackingField: 10
   <ExecutionDrawCaptainChoseGameHistoryEntry>k__BackingField: {fileID: 7857262219002472655,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <ExecutionDrawCaptainDidnotChoseGameHistoryEntry>k__BackingField: {fileID: -4670852522361627645,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionVotedPlayerGameHistoryEntry>k__BackingField: {fileID: -3474605209452353923,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionMarkForDeath>k__BackingField: {fileID: 8184940356768289636, guid: 0e7014af8e28a88409bdb3f0abb80632,
@@ -261,7 +263,7 @@ MonoBehaviour:
   <UITransitionNormalDuration>k__BackingField: 0.75
   <UITransitionFastDuration>k__BackingField: 0.1
   <CountdownText>k__BackingField: 'Time left: {0}'
-  <SkipTurnText>k__BackingField: Skip turn
+  <ConfirmChoiceText>k__BackingField: Confirm Choice
   <PlayerLeftMarkForDeath>k__BackingField: {fileID: 9216349172710836488, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <PlayerDisconnectedGameHistoryEntry>k__BackingField: {fileID: 9004836224527247862,

@@ -190,6 +190,9 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public GameplayTag ExecutionDrawCaptainChoseGameHistoryEntry { get; private set; }
+		
+		[field: SerializeField]
+		public GameplayTag ExecutionDrawCaptainDidnotChoseGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
 		public GameplayTag ExecutionVotedPlayerGameHistoryEntry { get; private set; }
@@ -320,7 +323,7 @@ namespace Werewolf.Data
 		public string CountdownText { get; private set; }
 
 		[field: SerializeField]
-		public string SkipTurnText { get; private set; }
+		public string ConfirmChoiceText { get; private set; }
 
 		[field: Header("Network")]
 		[field: SerializeField]

@@ -399,7 +399,7 @@ namespace Werewolf
 				playerCard.Value.LeftClicked += OnClientChooseCard;
 			}
 
-			DisplayTitle(imageID, maximumDuration, !mustChoose, Config.SkipTurnText);
+			DisplayTitle(imageID, maximumDuration, !mustChoose, Config.ConfirmChoiceText);
 
 			if (mustChoose)
 			{
