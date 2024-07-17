@@ -45,9 +45,13 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float GameplayLoopStepDelay { get; private set; }
 
+		[field: Header("Given Role Reveal")]
+		[field: SerializeField]
+		public string RoleGivenRevealText { get; private set; }
+
 		[field: Header("Election")]
 		[field: SerializeField]
-		public GameplayTag ElectionPromptTitleImage { get; private set; }
+		public GameplayTag ElectionPromptImage { get; private set; }
 
 		[field: SerializeField]
 		public string ElectionPromptButtonText { get; private set; }
