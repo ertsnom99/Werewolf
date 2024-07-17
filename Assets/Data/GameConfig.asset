@@ -90,7 +90,8 @@ MonoBehaviour:
   <PlayerGivenRoleGameHistoryEntry>k__BackingField: {fileID: 7225922598962193451,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <GameplayLoopStepDelay>k__BackingField: 0.5
-  <ElectionPromptTitleImage>k__BackingField: {fileID: -5375341707992204064, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  <RoleGivenRevealText>k__BackingField: Your were given the role of {0}
+  <ElectionPromptImage>k__BackingField: {fileID: -5375341707992204064, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <ElectionPromptButtonText>k__BackingField: Yes!
   <ElectionPromptDuration>k__BackingField: 5
@@ -257,7 +258,7 @@ MonoBehaviour:
   <RoleRevealDistanceToCamera>k__BackingField: 2
   <RoleRevealWaitDuration>k__BackingField: 2
   <RoleRevealFlipDuration>k__BackingField: 0.25
-  <RoleRevealHoldDuration>k__BackingField: 1.5
+  <RoleRevealHoldDuration>k__BackingField: 2.5
   <ImagesData>k__BackingField: {fileID: 11400000, guid: fe40d48f080d39f4b8e2adbf60edb59b,
     type: 2}
   <UITransitionNormalDuration>k__BackingField: 0.75

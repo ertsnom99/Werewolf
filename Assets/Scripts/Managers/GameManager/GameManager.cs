@@ -39,7 +39,8 @@ namespace Werewolf
 
 		private enum GameplayLoopStep
 		{
-			ElectionDebate = 0,
+			RoleGivenReveal = 0,
+			ElectionDebate,
 			Election,
 			NightTransition,
 			NightCall,
@@ -529,7 +530,7 @@ namespace Werewolf
 		#region Gameplay Loop
 		private void StartGame()
 		{
-			_currentGameplayLoopStep = GameplayLoopStep.ElectionDebate;
+			_currentGameplayLoopStep = GameplayLoopStep.RoleGivenReveal;
 			ExecuteGameplayLoopStep();
 		}
 
@@ -538,10 +539,12 @@ namespace Werewolf
 		{
 			if (_currentGameplayLoopStep == GameplayLoopStep.ExecutionDeathReveal)
 			{
-				_currentGameplayLoopStep = GameplayLoopStep.Election;
+				_currentGameplayLoopStep = GameplayLoopStep.NightTransition;
 			}
-
-			_currentGameplayLoopStep++;
+			else
+			{
+				_currentGameplayLoopStep++;
+			}
 
 			yield return new WaitForSeconds(Config.GameplayLoopStepDelay);
 
@@ -552,6 +555,9 @@ namespace Werewolf
 		{
 			switch (_currentGameplayLoopStep)
 			{
+				case GameplayLoopStep.RoleGivenReveal:
+					StartCoroutine(RevealGivenRole());
+					break;
 				case GameplayLoopStep.ElectionDebate:
 					StartCoroutine(StartElectionDebate());
 					break;
@@ -584,20 +590,49 @@ namespace Werewolf
 		}
 		#endregion
 
+		#region RoleGivenReveal
+		private IEnumerator RevealGivenRole()
+		{
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
+			{
+				if (RevealPlayerRole(playerInfo.Key, playerInfo.Key, false, false, (PlayerRef revealTo) => { StopWaintingForPlayer(revealTo); }))
+				{
+					RPC_DisplayTitle(playerInfo.Key, string.Format(Config.RoleGivenRevealText, playerInfo.Value.Role.Name.GetLocalizedString().ToLower()));
+					WaitForPlayer(playerInfo.Key);
+				}
+			}
+
+			while (PlayersWaitingFor.Count > 0)
+			{
+				yield return 0;
+			}
+
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
+			{
+				RPC_HideUI(playerInfo.Key);
+			}
+
+			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+
+			StartCoroutine(MoveToNextGameplayLoopStep());
+		}
+
+		#endregion
+
 		#region Election
 		private IEnumerator StartElectionDebate()
 		{
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				PromptPlayer(playerInfo.Key,
-							Config.ElectionPromptTitleImage.CompactTagId,
+							Config.ElectionPromptImage.CompactTagId,
 							Config.ElectionPromptDuration,
 							Config.ElectionPromptButtonText,
 							OnPlayerWantsToBeCaptain,
 							false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(Config.ElectionPromptTitleImage.CompactTagId, Config.ElectionPromptDuration);
+			DisplayTitle(Config.ElectionPromptImage.CompactTagId, Config.ElectionPromptDuration);
 #endif
 			yield return new WaitForSeconds(Config.ElectionPromptDuration);
 
