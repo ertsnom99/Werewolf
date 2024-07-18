@@ -167,10 +167,12 @@ namespace Werewolf
 			List<RoleData> rolesToDistribute = new();
 
 			// Add all mandatory roles first
-			foreach (RoleSetupData roleSetup in mandatoryRoles)
+			while (mandatoryRoles.Count > 0)
 			{
-				RoleData[] addedRoles = SelectRolesFromRoleSetup(roleSetup, ref rolesToDistribute);
-				PrepareRoleBehaviors(addedRoles, ref rolesToDistribute, ref availableRoles);
+				RoleData[] addedRoles = SelectRolesFromRoleSetup(mandatoryRoles[0], rolesToDistribute);
+				mandatoryRoles.Remove(mandatoryRoles[0]);
+
+				PrepareRoleBehaviors(addedRoles, rolesToDistribute, mandatoryRoles, availableRoles);
 			}
 
 			List<RoleSetupData> excludedRuleSetups = new();
@@ -184,7 +186,7 @@ namespace Werewolf
 				if (availableRoles.Count <= 0 || attempts >= Config.AvailableRolesMaxAttemptCount)
 				{
 					rolesToDistribute.Add(defaultRole);
-					PrepareRoleBehavior(defaultRole, ref rolesToDistribute, ref availableRoles);
+					PrepareRoleBehavior(defaultRole, rolesToDistribute, mandatoryRoles, availableRoles);
 
 					continue;
 				}
@@ -204,10 +206,10 @@ namespace Werewolf
 					continue;
 				}
 
-				RoleData[] addedRoles = SelectRolesFromRoleSetup(roleSetup, ref rolesToDistribute);
+				RoleData[] addedRoles = SelectRolesFromRoleSetup(roleSetup, rolesToDistribute);
 				availableRoles.RemoveAt(randomIndex);
 
-				PrepareRoleBehaviors(addedRoles, ref rolesToDistribute, ref availableRoles);
+				PrepareRoleBehaviors(addedRoles, rolesToDistribute, mandatoryRoles, availableRoles);
 
 				// Some roles were removed from the list of roles to distribute
 				if (startingRoleCount > rolesToDistribute.Count)
@@ -220,7 +222,7 @@ namespace Werewolf
 			RolesToDistribute = rolesToDistribute;
 		}
 
-		private RoleData[] SelectRolesFromRoleSetup(RoleSetupData roleSetup, ref List<RoleData> rolesToDistribute)
+		private RoleData[] SelectRolesFromRoleSetup(RoleSetupData roleSetup, List<RoleData> rolesToDistribute)
 		{
 			List<RoleData> rolePool = new(roleSetup.Pool);
 			RoleData[] addedRoles = new RoleData[roleSetup.UseCount];
@@ -236,15 +238,15 @@ namespace Werewolf
 			return addedRoles;
 		}
 
-		public void PrepareRoleBehaviors(RoleData[] roles, ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles)
+		public void PrepareRoleBehaviors(RoleData[] roles, List<RoleData> rolesToDistribute, List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles)
 		{
 			foreach (RoleData role in roles)
 			{
-				PrepareRoleBehavior(role, ref rolesToDistribute, ref availableRoles);
+				PrepareRoleBehavior(role, rolesToDistribute, mandatoryRoles, availableRoles);
 			}
 		}
 
-		public void PrepareRoleBehavior(RoleData role, ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles)
+		public void PrepareRoleBehavior(RoleData role, List<RoleData> rolesToDistribute, List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles)
 		{
 			if (!role.Behavior)
 			{
@@ -272,7 +274,7 @@ namespace Werewolf
 			_unassignedRoleBehaviors.Add(roleBehavior, role);
 
 			roleBehavior.Initialize();
-			roleBehavior.OnSelectedToDistribute(ref rolesToDistribute, ref availableRoles);
+			roleBehavior.OnSelectedToDistribute(mandatoryRoles, availableRoles, rolesToDistribute);
 		}
 		#endregion
 
