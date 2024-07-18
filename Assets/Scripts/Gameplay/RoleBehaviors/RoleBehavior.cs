@@ -95,7 +95,7 @@ namespace Werewolf
 
 		public abstract void Initialize();
 
-		public abstract void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles);
+		public abstract void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute);
 
 		public abstract bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp);
 

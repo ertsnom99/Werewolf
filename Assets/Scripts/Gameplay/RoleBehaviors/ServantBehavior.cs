@@ -51,7 +51,7 @@ namespace Werewolf
 			_gameManager.WaitBeforeDeathRevealEnded += OnWaitBeforeDeathRevealEnded;
 		}
 
-		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
+		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{

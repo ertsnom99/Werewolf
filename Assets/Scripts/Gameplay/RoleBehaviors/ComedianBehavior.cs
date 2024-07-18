@@ -45,49 +45,49 @@ namespace Werewolf
 			_gameManager.RollCallBegin += OnRollCallBegin;
 		}
 
-		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles)
+		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute)
 		{
-			List<RoleData> selectedRoles = new();
-
-			// Try to take the roles from the available roles first
+			List<RoleSetupData> mandatoryRolesCopy = new(mandatoryRoles);
 			List<RoleSetupData> availableRolesCopy = new(availableRoles);
-
-			while (availableRolesCopy.Count > 0 && selectedRoles.Count < NEEDED_ROLE_COUNT)
-			{
-				int roleSetupIndex = Random.Range(0, availableRolesCopy.Count);
-
-				if (!CanTakeRolesFromSetup(availableRolesCopy[roleSetupIndex], selectedRoles))
-				{
-					availableRolesCopy.RemoveAt(roleSetupIndex);
-					continue;
-				}
-
-				SelectRolesFromRoleSetup(availableRolesCopy[roleSetupIndex], ref selectedRoles);
-
-				availableRoles.Remove(availableRolesCopy[roleSetupIndex]);
-				availableRolesCopy.RemoveAt(roleSetupIndex);
-			}
-
-			// Roles taken from the available roles need to have their behavior instanciated
-			_gameManager.PrepareRoleBehaviors(selectedRoles.ToArray(), ref rolesToDistribute, ref availableRoles);
-
-			// Take the rest from the roles to distribute
 			List<RoleData> rolesToDistributeCopy = new(rolesToDistribute);
 
-			while (rolesToDistributeCopy.Count > 0 && selectedRoles.Count < NEEDED_ROLE_COUNT)
+			List<RoleData> selectedRoles = new();
+			List<RoleData> rolesRequiringBehaviorPreparation = new();
+
+			while (selectedRoles.Count < NEEDED_ROLE_COUNT && (mandatoryRolesCopy.Count > 0 || availableRolesCopy.Count > 0 || rolesToDistributeCopy.Count > 0))
 			{
-				int roleIndex = Random.Range(0, rolesToDistributeCopy.Count);
+				int roleListIndex = Random.Range(0, 3);
+				bool choosingList = true;
 
-				if (!IsRoleValid(rolesToDistributeCopy[roleIndex], selectedRoles))
+				while(choosingList)
 				{
-					rolesToDistributeCopy.RemoveAt(roleIndex);
-					continue;
+					switch (roleListIndex)
+					{
+						case 0:
+							if (rolesToDistributeCopy.Count > 0)
+							{
+								SelectRoleFromRoleDataList(rolesToDistribute, rolesToDistributeCopy, selectedRoles);
+								choosingList = false;
+							}
+							break;
+						case 1:
+							if (mandatoryRolesCopy.Count > 0)
+							{
+								SelectRolesFromRoleSetupList(mandatoryRoles, mandatoryRolesCopy, selectedRoles, rolesRequiringBehaviorPreparation);
+								choosingList = false;
+							}
+							break;
+						case 2:
+							if (availableRolesCopy.Count > 0)
+							{
+								SelectRolesFromRoleSetupList(availableRoles, availableRolesCopy, selectedRoles, rolesRequiringBehaviorPreparation);
+								choosingList = false;
+							}
+							break;
+					}
+
+					roleListIndex = (roleListIndex + 1) % 3;
 				}
-
-				selectedRoles.Add(rolesToDistributeCopy[roleIndex]);
-
-				rolesToDistribute.Remove(rolesToDistributeCopy[roleIndex]);
-				rolesToDistributeCopy.RemoveAt(roleIndex);
 			}
 
 			if (selectedRoles.Count < NEEDED_ROLE_COUNT)
@@ -100,6 +100,7 @@ namespace Werewolf
 				return;
 			}
 
+			_gameManager.PrepareRoleBehaviors(rolesRequiringBehaviorPreparation.ToArray(), rolesToDistribute, mandatoryRoles, availableRoles);
 			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), true, false);
 
 			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry,
@@ -111,6 +112,42 @@ namespace Werewolf
 												Type = GameHistorySaveEntryVariableType.RoleNames
 											}
 										});
+		}
+
+		private void SelectRoleFromRoleDataList(List<RoleData> originalList, List<RoleData> listCopy, List<RoleData> selectedRoles)
+		{
+			int roleIndex = Random.Range(0, listCopy.Count);
+
+			if (!IsRoleValid(listCopy[roleIndex], selectedRoles))
+			{
+				listCopy.RemoveAt(roleIndex);
+			}
+			else
+			{
+				selectedRoles.Add(listCopy[roleIndex]);
+
+				originalList.Remove(listCopy[roleIndex]);
+				listCopy.RemoveAt(roleIndex);
+			}
+		}
+
+		private void SelectRolesFromRoleSetupList(List<RoleSetupData> originalList, List<RoleSetupData> listCopy, List<RoleData> selectedRoles, List<RoleData> rolesNeededToPrepare)
+		{
+			int roleSetupIndex = Random.Range(0, listCopy.Count);
+
+			if (!CanTakeRolesFromSetup(listCopy[roleSetupIndex], selectedRoles))
+			{
+				listCopy.RemoveAt(roleSetupIndex);
+			}
+			else
+			{
+				List<RoleData> newSelectedRoles = SelectRolesFromRoleSetup(listCopy[roleSetupIndex], selectedRoles);
+				selectedRoles.AddRange(newSelectedRoles);
+				rolesNeededToPrepare.AddRange(newSelectedRoles);
+
+				originalList.Remove(listCopy[roleSetupIndex]);
+				listCopy.RemoveAt(roleSetupIndex);
+			}
 		}
 
 		private bool CanTakeRolesFromSetup(RoleSetupData roleSetup, List<RoleData> selectedRoles)
@@ -148,26 +185,27 @@ namespace Werewolf
 					&& !role.Behavior.GetType().Equals(GetType());
 		}
 
-		private void SelectRolesFromRoleSetup(RoleSetupData roleSetup, ref List<RoleData> selectedRoles)
+		private List<RoleData> SelectRolesFromRoleSetup(RoleSetupData roleSetup, List<RoleData> currentSelectedRoles)
 		{
-			int rolesSelectedCount = 0;
+			List<RoleData> selectedRoles = new();
 			int indexOffset = Random.Range(0, roleSetup.UseCount);
 
 			for (int i = 0; i < roleSetup.Pool.Length; i++)
 			{
 				int adjustedIndex = (i + indexOffset) % roleSetup.Pool.Length;
 
-				if (IsRoleValid(roleSetup.Pool[adjustedIndex], selectedRoles))
+				if (IsRoleValid(roleSetup.Pool[adjustedIndex], currentSelectedRoles))
 				{
 					selectedRoles.Add(roleSetup.Pool[adjustedIndex]);
-					rolesSelectedCount++;
 				}
 
-				if (rolesSelectedCount >= roleSetup.UseCount)
+				if (selectedRoles.Count >= roleSetup.UseCount)
 				{
-					return;
+					break;
 				}
 			}
+
+			return selectedRoles;
 		}
 
 		private void OnRollCallBegin()

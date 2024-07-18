@@ -85,7 +85,7 @@ namespace Werewolf
 			}
 		}
 
-		public override void OnSelectedToDistribute(ref List<RoleData> rolesToDistribute, ref List<RoleSetupData> availableRoles) { }
+		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
 
 		public override GameplayTag[] GetCurrentPlayerGroups()
 		{
