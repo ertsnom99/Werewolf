@@ -595,6 +595,11 @@ namespace Werewolf
 		{
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
+				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+				{
+					continue;
+				}
+
 				if (RevealPlayerRole(playerInfo.Key, playerInfo.Key, false, false, (PlayerRef revealTo) => { StopWaintingForPlayer(revealTo); }))
 				{
 					RPC_DisplayTitle(playerInfo.Key, string.Format(Config.RoleGivenRevealText, playerInfo.Value.Role.Name.GetLocalizedString().ToLower()));
@@ -609,6 +614,11 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
+				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_HideUI(playerInfo.Key);
 			}
 
