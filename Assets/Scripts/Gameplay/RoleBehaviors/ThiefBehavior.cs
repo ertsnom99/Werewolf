@@ -138,6 +138,7 @@ namespace Werewolf
 				timeLeft -= Time.deltaTime;
 			}
 
+			_gameManager.StopChoosingReservedRole(Player);
 			OnRoleSelected(-1);
 		}
 
