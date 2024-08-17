@@ -33,7 +33,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <Image>k__BackingField: {fileID: 357046205, guid: d27adb3f7039d1a45a0389b130f6c9c3,
+  <Image>k__BackingField: {fileID: 21300000, guid: 88aa469d78b9d06458a7e6e199591d6d,
     type: 3}
   <PrimaryType>k__BackingField: 0
   <SecondaryType>k__BackingField: 0
@@ -44,7 +44,6 @@ MonoBehaviour:
   <NightPriorities>k__BackingField:
   - index: 12
     alias: {fileID: 0}
-  <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 609364413086920833, guid: f1270d0c27fcb2b4abc9e9c429da9813,
     type: 3}
   references:
