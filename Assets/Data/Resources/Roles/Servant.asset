@@ -33,7 +33,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <Image>k__BackingField: {fileID: 1977204121, guid: 5e12bbec3b7d23045ab0fe00ff2591e1,
+  <Image>k__BackingField: {fileID: 21300000, guid: 1e825da3fa8423946995c34cac0365e9,
     type: 3}
   <PrimaryType>k__BackingField: 0
   <SecondaryType>k__BackingField: 1
@@ -42,7 +42,6 @@ MonoBehaviour:
   <PlayerGroups>k__BackingField:
   - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <NightPriorities>k__BackingField: []
-  <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 4830877496367092188, guid: 2344d20f29d66b24f8f6523b1cadfe59,
     type: 3}
   references:
