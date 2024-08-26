@@ -43,43 +43,43 @@ MonoBehaviour:
     Text: The old captain is choosing the new one
   - GameplayTag: {fileID: 8582886363894869589, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 705772914, guid: 57e5fee1eb9618343bcdb98861e6b594, type: 3}
+    Image: {fileID: 21300000, guid: d819dea25ad773c46984ae79969f669e, type: 3}
     Text: The sun is rising, the village wakes up...
   - GameplayTag: {fileID: -6924916128729707147, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -1681703266, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Image: {fileID: 21300000, guid: 3c53240530db195428644f9d53257d47, type: 3}
     Text: The sun is setting, the village goes to sleep...
   - GameplayTag: {fileID: 3414206372492271902, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Image: {fileID: 21300000, guid: 2ac4b29571abf9f47945292a22bf3d02, type: 3}
     Text: Some people died...
   - GameplayTag: {fileID: -2834002916931835057, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 0bfae6eba61ab2a4c9814cd2f28fa496, type: 3}
     Text: No one died tonight!
   - GameplayTag: {fileID: 1534591760579037349, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Image: {fileID: 21300000, guid: 2ac4b29571abf9f47945292a22bf3d02, type: 3}
     Text: You died!
   - GameplayTag: {fileID: -467428146297135536, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Image: {fileID: 21300000, guid: 2ecbfbb514ac3a643b7777c3a8f90bea, type: 3}
     Text: Debate about who will be executed!
   - GameplayTag: {fileID: -6473885156194452207, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 1002782032, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Image: {fileID: 21300000, guid: 2ecbfbb514ac3a643b7777c3a8f90bea, type: 3}
     Text: The vote was a draw! A new vote will start to break the draw
   - GameplayTag: {fileID: -7417608976458301737, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: d82996e0c7d48eb49bee72f799ad12f5, type: 3}
     Text: The vote was a draw again! No one will be executed
   - GameplayTag: {fileID: -8197723905688610027, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Image: {fileID: 21300000, guid: 44fda17073c176a418c51cd857d0bd9d, type: 3}
     Text: The vote was a draw! Choose who to execute.
   - GameplayTag: {fileID: -3234978832333433636, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Image: {fileID: 21300000, guid: 44fda17073c176a418c51cd857d0bd9d, type: 3}
     Text: The vote was a draw! The captain will choose who to execute.
   - GameplayTag: {fileID: -46525750058059440, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
