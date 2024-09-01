@@ -15,31 +15,31 @@ MonoBehaviour:
   _images:
   - GameplayTag: {fileID: -5375341707992204064, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 91f843d8f9f79ba40a9fea25fdb299fe, type: 3}
     Text: Do you want to be the captain?
   - GameplayTag: {fileID: 3935916943633048771, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 723867f920a3d1446b1200068f4cbfe7, type: 3}
     Text: Multiple players want to be captain. The village will debate, then vote!
   - GameplayTag: {fileID: -2222359258656955773, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: d98c8292ebc011940af1ad70c3fa6f7c, type: 3}
     Text: Debate about who should be captain
   - GameplayTag: {fileID: -4152609035969618942, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: fbb617220e2a3c0419ebb2f28b295932, type: 3}
     Text: Here is the captain!
   - GameplayTag: {fileID: -2412456246043308623, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -1221642604, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: f4df889c8b0abaa498e6c3ff151ed42c, type: 3}
     Text: No one wanted to be the captain!
   - GameplayTag: {fileID: 385745502131665813, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: a568bf95fd618914c921c5a064f47142, type: 3}
     Text: Choose the next captain
   - GameplayTag: {fileID: 6957548192255917565, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 497349216, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: a568bf95fd618914c921c5a064f47142, type: 3}
     Text: The old captain is choosing the new one
   - GameplayTag: {fileID: 8582886363894869589, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
@@ -49,14 +49,14 @@ MonoBehaviour:
       type: 2}
     Image: {fileID: 21300000, guid: 3c53240530db195428644f9d53257d47, type: 3}
     Text: The sun is setting, the village goes to sleep...
-  - GameplayTag: {fileID: 3414206372492271902, guid: 0e7014af8e28a88409bdb3f0abb80632,
-      type: 2}
-    Image: {fileID: 21300000, guid: 2ac4b29571abf9f47945292a22bf3d02, type: 3}
-    Text: Some people died...
   - GameplayTag: {fileID: -2834002916931835057, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
     Image: {fileID: 21300000, guid: 0bfae6eba61ab2a4c9814cd2f28fa496, type: 3}
     Text: No one died tonight!
+  - GameplayTag: {fileID: 3414206372492271902, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: 2ac4b29571abf9f47945292a22bf3d02, type: 3}
+    Text: Some people died...
   - GameplayTag: {fileID: 1534591760579037349, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
     Image: {fileID: 21300000, guid: 2ac4b29571abf9f47945292a22bf3d02, type: 3}
@@ -81,9 +81,13 @@ MonoBehaviour:
       type: 2}
     Image: {fileID: 21300000, guid: 44fda17073c176a418c51cd857d0bd9d, type: 3}
     Text: The vote was a draw! The captain will choose who to execute.
+  - GameplayTag: {fileID: 8661982426186048600, guid: 0e7014af8e28a88409bdb3f0abb80632,
+      type: 2}
+    Image: {fileID: 21300000, guid: 8c8734fb28ab4e640b62f16effc20d8a, type: 3}
+    Text: You were executed
   - GameplayTag: {fileID: -46525750058059440, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Image: {fileID: 21300000, guid: 47ca1304295214142bf7d4fa8f29c05d, type: 3}
     Text: No one won!
   - GameplayTag: {fileID: 8209229256807389745, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
