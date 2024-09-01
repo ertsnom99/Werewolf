@@ -153,6 +153,9 @@ namespace Werewolf.Data
 		public GameplayTag PlayerDiedImage { get; private set; }
 
 		[field: SerializeField]
+		public GameplayTag PlayerExecutedImage { get; private set; }
+
+		[field: SerializeField]
 		public GameplayTag PlayerDiedGameHistoryEntry { get; private set; }
 
 		[field: Header("Execution")]

@@ -138,6 +138,8 @@ MonoBehaviour:
   <DelayBeforeRevealingDeadPlayer>k__BackingField: 1
   <PlayerDiedImage>k__BackingField: {fileID: 1534591760579037349, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <PlayerExecutedImage>k__BackingField: {fileID: 8661982426186048600, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   <PlayerDiedGameHistoryEntry>k__BackingField: {fileID: 2349646183929925099, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <ExecutionDebateImage>k__BackingField: {fileID: -467428146297135536, guid: 0e7014af8e28a88409bdb3f0abb80632,

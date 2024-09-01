@@ -987,7 +987,7 @@ namespace Werewolf
 
 					if (_networkDataManager.PlayerInfos[deadPlayer].IsConnected)
 					{
-						RPC_DisplayPlayerDiedTitle(deadPlayer);
+						RPC_DisplayPlayerDiedTitle(deadPlayer, _marksForDeath[0].MarksForDeath.Contains(Config.ExecutionMarkForDeath));
 					}
 
 					_isPlayerDeathRevealCompleted = false;
@@ -1059,9 +1059,9 @@ namespace Werewolf
 			DisplayTitle(hasAnyPlayerDied ? Config.DeathRevealSomeoneDiedImage.CompactTagId : Config.DeathRevealNoOneDiedImage.CompactTagId);
 		}
 
-		private void DisplayPlayerDiedTitle()
+		private void DisplayPlayerDiedTitle(bool wasExecuted)
 		{
-			DisplayTitle(Config.PlayerDiedImage.CompactTagId);
+			DisplayTitle(wasExecuted ? Config.PlayerExecutedImage.CompactTagId : Config.PlayerDiedImage.CompactTagId);
 		}
 
 		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, List<GameplayTag> marks, bool returnFaceDown, Action RevealPlayerCompleted)
@@ -1198,9 +1198,9 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayPlayerDiedTitle([RpcTarget] PlayerRef player)
+		public void RPC_DisplayPlayerDiedTitle([RpcTarget] PlayerRef player, bool wasExecuted)
 		{
-			DisplayPlayerDiedTitle();
+			DisplayPlayerDiedTitle(wasExecuted);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]

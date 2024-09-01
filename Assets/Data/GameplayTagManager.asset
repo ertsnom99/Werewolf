@@ -624,6 +624,19 @@ MonoBehaviour:
   m_Name: Image.Fox
   m_EditorClassIdentifier: 
   _compactTagId: 2306
+--- !u!114 &-4336920336470272370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Image.Execution
+  m_EditorClassIdentifier: 
+  _compactTagId: 1794
 --- !u!114 &-4287951944148663951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1136,6 +1149,7 @@ MonoBehaviour:
   - {fileID: 2110367405586373980}
   - {fileID: -2834002916931835057}
   - {fileID: 1534591760579037349}
+  - {fileID: 8661982426186048600}
   - {fileID: 3414206372492271902}
   - {fileID: 1354626261844418320}
   - {fileID: -2222359258656955773}
@@ -1144,12 +1158,13 @@ MonoBehaviour:
   - {fileID: -5375341707992204064}
   - {fileID: 1600569824371550567}
   - {fileID: -46525750058059440}
-  - {fileID: 8922901822269052349}
+  - {fileID: -4336920336470272370}
   - {fileID: -467428146297135536}
   - {fileID: -7417608976458301737}
   - {fileID: -3234978832333433636}
   - {fileID: -6473885156194452207}
   - {fileID: -8197723905688610027}
+  - {fileID: 8922901822269052349}
   - {fileID: 24475330336859403}
   - {fileID: 8739123847444604939}
   - {fileID: -4642260714550647464}
@@ -1590,7 +1605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.DeathReveal.SomeoneDied
   m_EditorClassIdentifier: 
-  _compactTagId: 197634
+  _compactTagId: 263170
 --- !u!114 &3472346779470064033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2202,6 +2217,19 @@ MonoBehaviour:
   m_Name: Image.Day.Transition
   m_EditorClassIdentifier: 
   _compactTagId: 66306
+--- !u!114 &8661982426186048600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Image.DeathReveal.PlayerExecuted
+  m_EditorClassIdentifier: 
+  _compactTagId: 197634
 --- !u!114 &8739123847444604939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2225,9 +2253,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Image.Execution
+  m_Name: Image.Execution.SomeoneDied
   m_EditorClassIdentifier: 
-  _compactTagId: 1794
+  _compactTagId: 395010
 --- !u!114 &8950718465599024891
 MonoBehaviour:
   m_ObjectHideFlags: 0
