@@ -381,7 +381,7 @@ MonoBehaviour:
           rid: -2
   - GameplayTag: {fileID: -8735980565207345998, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 890201267, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: addcc361f610d704a8ca5389ae3159a1, type: 3}
     Text:
       m_TableReference:
         m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
@@ -402,7 +402,7 @@ MonoBehaviour:
           rid: -2
   - GameplayTag: {fileID: -9005755218631088943, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 21300000, guid: df54d5ff44634a04c972d134131eb240, type: 3}
+    Image: {fileID: 21300000, guid: 45d4d608c10df3b4a9fb79d76638dd1a, type: 3}
     Text:
       m_TableReference:
         m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
