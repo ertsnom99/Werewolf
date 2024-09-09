@@ -107,7 +107,7 @@ MonoBehaviour:
     Text: The couple can't live appart from each other!
   - GameplayTag: {fileID: 8739123847444604939, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 983793743, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 22e5b92d6a0a1da49af3681f5db78b7b, type: 3}
     Text: Choose a player to see his role
   - GameplayTag: {fileID: -3897550941697366323, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
