@@ -111,19 +111,19 @@ MonoBehaviour:
     Text: Choose a player to see his role
   - GameplayTag: {fileID: -3897550941697366323, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Image: {fileID: 21300000, guid: fba2183eacc79cb459662640ade5419b, type: 3}
     Text: Can't use your power, because you lost it!
   - GameplayTag: {fileID: 1290680065302481199, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Image: {fileID: 21300000, guid: 5f132090ee0f2e84d959d95cc7337f82, type: 3}
     Text: Choose the middle player to check
   - GameplayTag: {fileID: 3146112165964210076, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Image: {fileID: 21300000, guid: e02ef3bca11dcfc4c9d7f50a02df94e6, type: 3}
     Text: There is one or more werewolf in this group!
   - GameplayTag: {fileID: 4838366214633630053, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -684930893, guid: 5e12bbec3b7d23045ab0fe00ff2591e1, type: 3}
+    Image: {fileID: 21300000, guid: 5eaca46b1536e1142b05125255d75062, type: 3}
     Text: There is no werewolf in this group! You just lost your power!
   - GameplayTag: {fileID: 3817651400509371634, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
