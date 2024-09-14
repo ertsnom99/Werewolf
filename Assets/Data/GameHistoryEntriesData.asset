@@ -477,7 +477,7 @@ MonoBehaviour:
           rid: -2
   - GameplayTag: {fileID: 5372081958531811781, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -330916012, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: dbceee8527ea04645a8051d4a3418750, type: 3}
     Text:
       m_TableReference:
         m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
