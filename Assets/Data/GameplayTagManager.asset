@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.Save
   m_EditorClassIdentifier: 
-  _compactTagId: 331266
+  _compactTagId: 331522
 --- !u!114 &-8923106137533346033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.NoPotionToUse
   m_EditorClassIdentifier: 
-  _compactTagId: 200194
+  _compactTagId: 200450
 --- !u!114 &-8573035580249646065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch
   m_EditorClassIdentifier: 
-  _compactTagId: 3586
+  _compactTagId: 3842
 --- !u!114 &-6653758457213997753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,6 +416,19 @@ MonoBehaviour:
   m_Name: Image.Execution.DrawNewVote
   m_EditorClassIdentifier: 
   _compactTagId: 263938
+--- !u!114 &-6472967757712261238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Image.Savior
+  m_EditorClassIdentifier: 
+  _compactTagId: 3330
 --- !u!114 &-6404904665649978227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -584,7 +597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.Kill
   m_EditorClassIdentifier: 
-  _compactTagId: 134658
+  _compactTagId: 134914
 --- !u!114 &-4676981004224442684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -779,7 +792,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Saviour
   m_EditorClassIdentifier: 
-  _compactTagId: 3330
+  _compactTagId: 3586
 --- !u!114 &-2521136356514112087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1180,8 +1193,9 @@ MonoBehaviour:
   - {fileID: -4112786113899519634}
   - {fileID: -7474750659307109584}
   - {fileID: 1397265775897771022}
-  - {fileID: -2716571049120636985}
+  - {fileID: -6472967757712261238}
   - {fileID: 7494298166840074912}
+  - {fileID: -2716571049120636985}
   - {fileID: -6713003632940608740}
   - {fileID: 7564377360445445541}
   - {fileID: -4830026793023973320}
@@ -1993,7 +2007,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Image.Saviour.ChoosePlayer
+  m_Name: Image.Savior.ChoosePlayer
   m_EditorClassIdentifier: 
   _compactTagId: 68866
 --- !u!114 &7564377360445445541
@@ -2008,7 +2022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.ChoosePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 69122
+  _compactTagId: 69378
 --- !u!114 &7583335992150841462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2125,7 +2139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.PlayerDeadTonight
   m_EditorClassIdentifier: 
-  _compactTagId: 265730
+  _compactTagId: 265986
 --- !u!114 &7857262219002472655
 MonoBehaviour:
   m_ObjectHideFlags: 0
