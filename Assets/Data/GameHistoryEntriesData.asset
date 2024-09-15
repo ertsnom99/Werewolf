@@ -495,7 +495,7 @@ MonoBehaviour:
           rid: -2
   - GameplayTag: {fileID: 7584545385755327515, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 357046205, guid: d27adb3f7039d1a45a0389b130f6c9c3, type: 3}
+    Image: {fileID: 21300000, guid: 8c3a3308d4c6a094faa2e3ed66fd278c, type: 3}
     Text:
       m_TableReference:
         m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
