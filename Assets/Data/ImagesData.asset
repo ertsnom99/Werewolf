@@ -135,7 +135,7 @@ MonoBehaviour:
     Text: The hunter is choosing who to kill!
   - GameplayTag: {fileID: 7494298166840074912, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: 357046205, guid: d27adb3f7039d1a45a0389b130f6c9c3, type: 3}
+    Image: {fileID: 21300000, guid: 8c3a3308d4c6a094faa2e3ed66fd278c, type: 3}
     Text: Choose a player to protect
   - GameplayTag: {fileID: 7828248529302745967, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
