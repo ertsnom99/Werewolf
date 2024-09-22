@@ -139,21 +139,21 @@ MonoBehaviour:
     Text: Choose a player to protect
   - GameplayTag: {fileID: 7828248529302745967, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 2ac4b29571abf9f47945292a22bf3d02, type: 3}
     Text: This player will die tonight
   - GameplayTag: {fileID: -8715855821755236391, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 20a7b926f51a8bc4faa1591c0fbe98ef, type: 3}
     Text: No potion left to use
   - GameplayTag: {fileID: -8974482386819651042, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 74546d538a6ad0e45a1e2e081a6d7501, type: 3}
     Text: Save
   - GameplayTag: {fileID: -4830026793023973320, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 66a14cb42af091740ac50bfce7dea8a7, type: 3}
     Text: Kill
   - GameplayTag: {fileID: 7564377360445445541, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -1103952818, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: e25e9fcff2f38484bb94f8a5d8d8d4cf, type: 3}
     Text: Choose a player to kill!

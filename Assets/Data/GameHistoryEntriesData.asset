@@ -597,7 +597,7 @@ MonoBehaviour:
       m_LocalVariables: []
   - GameplayTag: {fileID: -6404904665649978227, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 74546d538a6ad0e45a1e2e081a6d7501, type: 3}
     Text:
       m_TableReference:
         m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
@@ -615,7 +615,7 @@ MonoBehaviour:
           rid: -2
   - GameplayTag: {fileID: -6783649889304436894, guid: 0e7014af8e28a88409bdb3f0abb80632,
       type: 2}
-    Image: {fileID: -37887945, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+    Image: {fileID: 21300000, guid: 66a14cb42af091740ac50bfce7dea8a7, type: 3}
     Text:
       m_TableReference:
         m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
