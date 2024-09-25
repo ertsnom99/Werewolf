@@ -29,20 +29,12 @@ namespace Werewolf
 
 		[Header("Votes")]
 		[SerializeField]
-		private GridLayoutGroup _voteDotsContainer;
+		private RectTransform _vote;
+		[SerializeField]
+		private LineRenderer _voteLine;
 
 		[SerializeField]
-		private VoteDot _voteDotPrefab;
-
-		[Header("Vote status")]
-		[SerializeField]
-		private Image _votingStatusIcon;
-
-		[SerializeField]
-		private Sprite _votingStatusImage;
-
-		[SerializeField]
-		private Sprite _doneVotingStatusImage;
+		private GameObject _skip;
 
 		[Header("Death")]
 		[SerializeField]
@@ -78,9 +70,6 @@ namespace Werewolf
 		private bool _isSelected;
 		private bool _isHighlightBlocked;
 
-		private List<VoteDot> _voteDots = new();
-		private int _voteAmount;
-
 		public event Action<Card> LeftClicked;
 		public event Action<Card> RightClicked;
 #if UNITY_EDITOR
@@ -105,7 +94,7 @@ namespace Werewolf
 		public void SetRole(RoleData role)
 		{
 			Role = role;
-			_roleImage.sprite = role?.Image;
+			_roleImage.sprite = role != null ? role.Image : null;
 		}
 
 		public void SetNickname(string nickname)
@@ -164,43 +153,29 @@ namespace Werewolf
 		#endregion
 
 		#region Vote display
-		public void SetVotingStatusVisible(bool isVisible)
+		public void DisplaySkip(bool display)
 		{
-			_votingStatusIcon.gameObject.SetActive(isVisible);
+			_skip.SetActive(display);
 		}
 
-		public void UpdateVotingStatus(bool isVoting)
+		public void DisplayVote(bool display, Vector3 pointTo = default)
 		{
-			_votingStatusIcon.sprite = isVoting ? _votingStatusImage : _doneVotingStatusImage;
-		}
+			_vote.gameObject.SetActive(display);
+			_voteLine.enabled = display;
 
-		public void AddVote(bool isLockedIn)
-		{
-			VoteDot voteDot;
-
-			if (_voteAmount >= _voteDots.Count)
+			if (!display)
 			{
-				voteDot = Instantiate(_voteDotPrefab, _voteDotsContainer.transform);
-				_voteDots.Add(voteDot);
-			}
-			else
-			{
-				voteDot = _voteDots[_voteAmount];
-				voteDot.gameObject.SetActive(true);
+				return;
 			}
 
-			voteDot.DisplayLockedIn(isLockedIn);
-			_voteAmount++;
-		}
+			Vector3 lookAt = (pointTo - transform.position).normalized;
+			lookAt.y = 0;
 
-		public void ClearVotes()
-		{
-			foreach (VoteDot vote in _voteDots)
-			{
-				vote.gameObject.SetActive(false);
-			}
-
-			_voteAmount = 0;
+			_vote.rotation = Quaternion.LookRotation(Vector3.down, lookAt);
+			
+			_voteLine.positionCount = 2;
+			_voteLine.SetPosition(0, new Vector3(transform.position.x, .05f, transform.position.z));
+			_voteLine.SetPosition(1, new Vector3(pointTo.x, .05f, pointTo.z));
 		}
 		#endregion
 

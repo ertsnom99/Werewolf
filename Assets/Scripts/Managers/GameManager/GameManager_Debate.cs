@@ -51,8 +51,7 @@ namespace Werewolf
 		{
 			_UIManager.TitleScreen.ConfirmClicked -= OnPlayerSkipDebate;
 
-			_playerCards[Runner.LocalPlayer].SetVotingStatusVisible(true);
-			_playerCards[Runner.LocalPlayer].UpdateVotingStatus(false);
+			_playerCards[Runner.LocalPlayer].DisplaySkip(true);
 
 			RPC_SkipDebate();
 		}
@@ -63,8 +62,9 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, Card> card in _playerCards)
 			{
-				card.Value.SetVotingStatusVisible(false);
+				card.Value.DisplaySkip(false);
 			}
+
 			HideUI();
 		}
 
@@ -87,8 +87,7 @@ namespace Werewolf
 		{
 			StopWaintingForPlayer(info.Source);
 #if UNITY_SERVER && UNITY_EDITOR
-			_playerCards[info.Source].SetVotingStatusVisible(true);
-			_playerCards[info.Source].UpdateVotingStatus(false);
+			_playerCards[info.Source].DisplaySkip(true);
 #endif
 			RPC_PlayerSkippedDebate(info.Source);
 		}
@@ -96,8 +95,7 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_PlayerSkippedDebate(PlayerRef player)
 		{
-			_playerCards[player].SetVotingStatusVisible(true);
-			_playerCards[player].UpdateVotingStatus(false);
+			_playerCards[player].DisplaySkip(true);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
