@@ -192,7 +192,6 @@ namespace Werewolf
 				return;
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_playerCards[voter].SetVotingStatusVisible(false);
 			UpdateVisualFeedback();
 #endif
 			foreach (PlayerRef otherVoter in Voters)
@@ -294,10 +293,6 @@ namespace Werewolf
 								_immuneFromPlayers[voter].ToArray(),
 								_immuneFromPlayers[voter].Count >= _players.Count, voteDuration,
 								_allowedToNotVote);
-#if UNITY_SERVER && UNITY_EDITOR
-				_playerCards[voter].SetVotingStatusVisible(true);
-				_playerCards[voter].UpdateVotingStatus(true);
-#endif
 			}
 
 			foreach (PlayerRef spectator in _spectators)
@@ -433,16 +428,6 @@ namespace Werewolf
 
 		private void UpdateVisualFeedback()
 		{
-			foreach (KeyValuePair<PlayerRef, Card> card in _playerCards)
-			{
-				if (!card.Value)
-				{
-					continue;
-				}
-
-				card.Value.ClearVotes();
-			}
-
 			bool allLockedIn = _votes.Count > 0;
 
 			foreach (KeyValuePair<PlayerRef, Vote> vote in _votes)
@@ -452,14 +437,14 @@ namespace Werewolf
 					allLockedIn = false;
 				}
 
-				_playerCards[vote.Key].UpdateVotingStatus(!vote.Value.LockedIn);
-
-				if (vote.Value.VotedFor.IsNone)
+				if (!vote.Value.VotedFor.IsNone && vote.Value.LockedIn)
 				{
-					continue;
+					_playerCards[vote.Key].DisplayVote(true, _playerCards[vote.Value.VotedFor].transform.position);
 				}
-
-				_playerCards[vote.Value.VotedFor].AddVote(vote.Value.LockedIn);
+				else
+				{
+					_playerCards[vote.Key].DisplayVote(false);
+				}
 			}
 
 			_UIManager.VoteScreen.SetLockedInDelayActive(allLockedIn);
@@ -553,8 +538,7 @@ namespace Werewolf
 					continue;
 				}
 
-				playerCard.Value.SetVotingStatusVisible(false);
-				playerCard.Value.ClearVotes();
+				playerCard.Value.DisplayVote(false);
 			}
 
 			_UIManager.SetFade(_UIManager.TitleScreen, .0f);
@@ -616,9 +600,6 @@ namespace Werewolf
 			foreach (PlayerRef voter in voters)
 			{
 				_votes.Add(voter, new());
-
-				_playerCards[voter].SetVotingStatusVisible(true);
-				_playerCards[voter].UpdateVotingStatus(true);
 			}
 
 			_selectedCard = null;
@@ -650,9 +631,6 @@ namespace Werewolf
 			foreach (PlayerRef voter in voters)
 			{
 				_votes.Add(voter, new());
-
-				_playerCards[voter].SetVotingStatusVisible(true);
-				_playerCards[voter].UpdateVotingStatus(true);
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
@@ -707,7 +685,6 @@ namespace Werewolf
 		private void RPC_RemoveClientVoter([RpcTarget] PlayerRef player, PlayerRef voter)
 		{
 			_votes.Remove(voter);
-			_playerCards[voter].SetVotingStatusVisible(false);
 			UpdateVisualFeedback();
 		}
 
@@ -721,9 +698,8 @@ namespace Werewolf
 					continue;
 				}
 
-				playerCard.Value.SetVotingStatusVisible(false);
 				playerCard.Value.ResetSelectionMode();
-				playerCard.Value.ClearVotes();
+				playerCard.Value.DisplayVote(false);
 
 				playerCard.Value.LeftClicked -= OnCardSelectedChanged;
 			}
