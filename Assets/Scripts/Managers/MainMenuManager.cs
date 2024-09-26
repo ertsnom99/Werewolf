@@ -174,7 +174,7 @@ namespace Werewolf
 		#region UI
 		private void DisplayMainMenu()
 		{
-			_mainMenu.gameObject.SetActive(true);
+			_mainMenu.SetActive(true);
 			_joinMenu.gameObject.SetActive(false);
 			_roomMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
@@ -183,7 +183,7 @@ namespace Werewolf
 
 		private void DisplayJoinMenu()
 		{
-			_mainMenu.gameObject.SetActive(false);
+			_mainMenu.SetActive(false);
 			_joinMenu.gameObject.SetActive(true);
 			_roomMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
@@ -192,7 +192,7 @@ namespace Werewolf
 
 		private void DisplayRoomMenu()
 		{
-			_mainMenu.gameObject.SetActive(false);
+			_mainMenu.SetActive(false);
 			_joinMenu.gameObject.SetActive(false);
 			_roomMenu.gameObject.SetActive(true);
 			_rulesMenu.gameObject.SetActive(false);
@@ -201,7 +201,7 @@ namespace Werewolf
 
 		private void DisplayRulesMenu()
 		{
-			_mainMenu.gameObject.SetActive(false);
+			_mainMenu.SetActive(false);
 			_joinMenu.gameObject.SetActive(false);
 			_roomMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(true);
@@ -210,7 +210,7 @@ namespace Werewolf
 
 		private void DisplayGameHistoryMenu()
 		{
-			_mainMenu.gameObject.SetActive(false);
+			_mainMenu.SetActive(false);
 			_joinMenu.gameObject.SetActive(false);
 			_roomMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
@@ -238,9 +238,9 @@ namespace Werewolf
 			});
 		}
 
-		public void OnConnectedToServer(NetworkRunner runner)
+		void INetworkRunnerCallbacks.OnConnectedToServer(NetworkRunner runner)
 		{
-			Log.Info($"{nameof(OnConnectedToServer)}: {nameof(runner.CurrentConnectionType)}: {runner.CurrentConnectionType}, {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
+			Log.Info($"{nameof(INetworkRunnerCallbacks.OnConnectedToServer)}: {nameof(runner.CurrentConnectionType)}: {runner.CurrentConnectionType}, {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
 
 			_networkDataManager = FindObjectOfType<NetworkDataManager>();
 
@@ -254,9 +254,9 @@ namespace Werewolf
 			}
 		}
 
-		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+		void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
 		{
-			Log.Info($"{nameof(OnShutdown)}: {nameof(shutdownReason)}: {shutdownReason}");
+			Log.Info($"{nameof(INetworkRunnerCallbacks.OnShutdown)}: {nameof(shutdownReason)}: {shutdownReason}");
 
 			switch (shutdownReason)
 			{
@@ -269,52 +269,52 @@ namespace Werewolf
 			}
 		}
 
-		public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
+		void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
 		{
-			Log.Info($"{nameof(OnDisconnectedFromServer)} - {reason}: {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
+			Log.Info($"{nameof(INetworkRunnerCallbacks.OnDisconnectedFromServer)} - {reason}: {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
 			OpenJoinMenu($"Disconnected from server: {reason}");
 		}
 
-		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
+		void INetworkRunnerCallbacks.OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
 		{
-			Log.Info($"{nameof(OnConnectFailed)}: {nameof(remoteAddress)}: {remoteAddress}, {nameof(reason)}: {reason}");
+			Log.Info($"{nameof(INetworkRunnerCallbacks.OnConnectFailed)}: {nameof(remoteAddress)}: {remoteAddress}, {nameof(reason)}: {reason}");
 			OpenJoinMenu($"Connection failed: {reason}");
 		}
 
-		public void OnSceneLoadStart(NetworkRunner runner)
+		void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner)
 		{
 			GAME_STARTED = true;
 		}
 		#endregion
 
 		#region Unused Callbacks
-		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+		void INetworkRunnerCallbacks.OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
 
-		public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+		void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
-		public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+		void INetworkRunnerCallbacks.OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
-		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+		void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
 
-		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
+		void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
 
-		public void OnInput(NetworkRunner runner, NetworkInput input) { }
+		void INetworkRunnerCallbacks.OnInput(NetworkRunner runner, NetworkInput input) { }
 
-		public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+		void INetworkRunnerCallbacks.OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
 
-		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
+		void INetworkRunnerCallbacks.OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 
-		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+		void INetworkRunnerCallbacks.OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
 
-		public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
+		void INetworkRunnerCallbacks.OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
 
-		public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+		void INetworkRunnerCallbacks.OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
 
-		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
+		void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
 
-		public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+		void INetworkRunnerCallbacks.OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
 
-		public void OnSceneLoadDone(NetworkRunner runner) { }
+		void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner) { }
 		#endregion
 
 		private void OnDisable()

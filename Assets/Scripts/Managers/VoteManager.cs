@@ -17,10 +17,10 @@ namespace Werewolf
 		private Dictionary<PlayerRef, Card> _playerCards;
 
 		public List<PlayerRef> Voters { get; private set; }
-		private List<PlayerRef> _immune = new();
-		private Dictionary<PlayerRef, List<PlayerRef>> _immuneFromPlayers = new();
-		private List<PlayerRef> _spectators = new();
-		private Dictionary<PlayerRef, Vote> _votes = new();
+		private readonly List<PlayerRef> _immune = new();
+		private readonly Dictionary<PlayerRef, List<PlayerRef>> _immuneFromPlayers = new();
+		private readonly List<PlayerRef> _spectators = new();
+		private readonly Dictionary<PlayerRef, Vote> _votes = new();
 
 		public class Vote
 		{

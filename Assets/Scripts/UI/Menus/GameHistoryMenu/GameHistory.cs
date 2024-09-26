@@ -18,7 +18,7 @@ namespace Werewolf.UI
 		[SerializeField]
 		private Transform _gameHistoryEntriesContainer;
 
-		private List<GameHistoryEntry> _gameHistoryEntries = new();
+		private readonly List<GameHistoryEntry> _gameHistoryEntries = new();
 
 		private GameHistoryEntriesData _gameHistoryEntriesData;
 		private PlayerGroupsData _playerGroupsData;

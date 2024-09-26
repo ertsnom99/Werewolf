@@ -53,7 +53,7 @@ namespace Werewolf
 
 		private int _nightCount = 0;
 
-		private List<PlayerRef> _captainCandidates = new();
+		private readonly List<PlayerRef> _captainCandidates = new();
 
 		private bool _isPlayerDeathRevealCompleted;
 		private IEnumerator _revealPlayerDeathCoroutine;
@@ -1485,10 +1485,10 @@ namespace Werewolf
 					Player = playerInfo.Key,
 					Role = role,
 					IsAlive = playerInfo.Value.IsAlive,
-					Won = winningPlayerGroup.GameplayTag != null ? winningPlayerGroup.Players.Contains(playerInfo.Key) : false
+					Won = winningPlayerGroup.GameplayTag != null && winningPlayerGroup.Players.Contains(playerInfo.Key)
 				});
 #if UNITY_SERVER && UNITY_EDITOR
-				if (endGamePlayerInfos[endGamePlayerInfos.Count - 1].Won)
+				if (endGamePlayerInfos[^1].Won)
 				{
 					SetPlayerCardHighlightVisible(playerInfo.Key, true);
 				}

@@ -8,7 +8,7 @@ namespace Werewolf
 {
 	public partial class GameManager
 	{
-		public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
+		void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
 		{
 			string gameHistoryJson = Encoding.ASCII.GetString(data);
 			_gameHistoryManager.SaveGameHistoryToFile(gameHistoryJson);
@@ -16,41 +16,41 @@ namespace Werewolf
 		}
 
 		#region Unused Callbacks
-		public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+		void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
-		public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
+		void INetworkRunnerCallbacks.OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
-		public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+		void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
 
-		public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
+		void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
 
-		public void OnInput(NetworkRunner runner, NetworkInput input) { }
+		void INetworkRunnerCallbacks.OnInput(NetworkRunner runner, NetworkInput input) { }
 
-		public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+		void INetworkRunnerCallbacks.OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
 
-		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+		void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
 
-		public void OnConnectedToServer(NetworkRunner runner) { }
+		void INetworkRunnerCallbacks.OnConnectedToServer(NetworkRunner runner) { }
 
-		public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
+		void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
 
-		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+		void INetworkRunnerCallbacks.OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
 
-		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+		void INetworkRunnerCallbacks.OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
 
-		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
+		void INetworkRunnerCallbacks.OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 
-		public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+		void INetworkRunnerCallbacks.OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
 
-		public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
+		void INetworkRunnerCallbacks.OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
 
-		public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+		void INetworkRunnerCallbacks.OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
 
-		public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+		void INetworkRunnerCallbacks.OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
 
-		public void OnSceneLoadDone(NetworkRunner runner) { }
+		void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner) { }
 
-		public void OnSceneLoadStart(NetworkRunner runner) { }
+		void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner) { }
 		#endregion
 	}
 }

@@ -8,7 +8,7 @@ namespace Werewolf
 {
 	public partial class GameManager
 	{
-		private Dictionary<PlayerRef, Action<int>> _makeChoiceCallbacks = new();
+		private readonly Dictionary<PlayerRef, Action<int>> _makeChoiceCallbacks = new();
 
 		public bool AskClientToMakeChoice(PlayerRef choosingPlayer, int[] choiceImageIDs, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose, Action<int> callback)
 		{

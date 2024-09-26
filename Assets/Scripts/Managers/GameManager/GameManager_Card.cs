@@ -7,7 +7,7 @@ namespace Werewolf
 {
 	public partial class GameManager
 	{
-		private Dictionary<PlayerRef, Card> _playerCards = new();
+		private readonly Dictionary<PlayerRef, Card> _playerCards = new();
 
 		private readonly Vector3 STARTING_DIRECTION = Vector3.back;
 
@@ -107,14 +107,14 @@ namespace Werewolf
 
 			foreach (KeyValuePair<RoleBehavior, IndexedReservedRoles> reservedRoleByBehavior in _reservedRolesByBehavior)
 			{
-				Vector3 rowPosition = (Vector3.back * rowCounter * Config.ReservedRolesSpacing) + (Vector3.forward * (_reservedRolesByBehavior.Count - 1) * Config.ReservedRolesSpacing / 2.0f);
+				Vector3 rowPosition = (Config.ReservedRolesSpacing * rowCounter * Vector3.back) + ((_reservedRolesByBehavior.Count - 1) * Config.ReservedRolesSpacing * Vector3.forward / 2.0f);
 				Card[] cards = new Card[reservedRoleByBehavior.Value.Roles.Length];
 
 				int columnCounter = 0;
 
 				foreach (RoleData role in reservedRoleByBehavior.Value.Roles)
 				{
-					Vector3 columnPosition = (Vector3.right * columnCounter * Config.ReservedRolesSpacing) + (Vector3.left * (reservedRoleByBehavior.Value.Roles.Length - 1) * Config.ReservedRolesSpacing / 2.0f);
+					Vector3 columnPosition = (columnCounter * Config.ReservedRolesSpacing * Vector3.right) + ((reservedRoleByBehavior.Value.Roles.Length - 1) * Config.ReservedRolesSpacing * Vector3.left / 2.0f);
 
 					Card card = Instantiate(Config.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
@@ -161,13 +161,13 @@ namespace Werewolf
 			{
 				_reservedRolesCards[rowCounter] = new Card[reservedRole.RoleCount];
 
-				Vector3 rowPosition = (Vector3.back * rowCounter * Config.ReservedRolesSpacing) + (Vector3.forward * (rowCount - 1) * Config.ReservedRolesSpacing / 2.0f);
+				Vector3 rowPosition = (Config.ReservedRolesSpacing * rowCounter * Vector3.back) + ((rowCount - 1) * Config.ReservedRolesSpacing * Vector3.forward / 2.0f);
 
 				int columnCounter = 0;
 
 				foreach (int roleGameplayTagID in reservedRole.Roles)
 				{
-					Vector3 columnPosition = (Vector3.right * columnCounter * Config.ReservedRolesSpacing) + (Vector3.left * (reservedRole.RoleCount - 1) * Config.ReservedRolesSpacing / 2.0f);
+					Vector3 columnPosition = (columnCounter * Config.ReservedRolesSpacing * Vector3.right) + ((reservedRole.RoleCount - 1) * Config.ReservedRolesSpacing * Vector3.left / 2.0f);
 
 					Card card = Instantiate(Config.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;

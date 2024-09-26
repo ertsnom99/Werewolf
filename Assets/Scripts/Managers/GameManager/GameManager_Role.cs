@@ -12,11 +12,11 @@ namespace Werewolf
 {
 	public partial class GameManager
 	{
-		private Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
+		private readonly Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
 
 		[Networked, Capacity(5)]
 		public NetworkArray<RolesContainer> ReservedRoles { get; }
-		private Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
+		private readonly Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
 
 		public struct RolesContainer : INetworkStruct
 		{
@@ -32,15 +32,15 @@ namespace Werewolf
 			public int networkIndex;
 		}
 #if UNITY_SERVER && UNITY_EDITOR
-		private Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new();
+		private readonly Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new();
 #endif
-		private Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new();
+		private readonly Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new();
 		private Card[][] _reservedRolesCards;
 
-		private Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
-		private Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new();
-		private Dictionary<PlayerRef, Action> _flipCardCallbacks = new();
-		private Dictionary<PlayerRef, Action> _putCardBackDownCallbacks = new();
+		private readonly Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
+		private readonly Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new();
+		private readonly Dictionary<PlayerRef, Action> _flipCardCallbacks = new();
+		private readonly Dictionary<PlayerRef, Action> _putCardBackDownCallbacks = new();
 
 		#region Role Change
 		public void ChangeRole(PlayerRef player, RoleData roleData, RoleBehavior roleBehavior)
@@ -316,8 +316,10 @@ namespace Werewolf
 #endif
 					// Update networked variable
 					// Networked data and server data should ALWAYS be aligned, therefore no need to loop to find the corresponding role
-					RolesContainer rolesContainer = new();
-					rolesContainer.RoleCount = ReservedRoles[networkIndex].RoleCount;
+					RolesContainer rolesContainer = new()
+					{
+						RoleCount = ReservedRoles[networkIndex].RoleCount
+					};
 
 					for (int i = 0; i < rolesContainer.Roles.Length; i++)
 					{
@@ -546,8 +548,7 @@ namespace Werewolf
 				elapsedTime += Time.deltaTime;
 				float progress = elapsedTime / duration;
 
-				card.transform.position = Vector3.Lerp(startingPosition, targetPosition, progress);
-				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
+				card.transform.SetPositionAndRotation(Vector3.Lerp(startingPosition, targetPosition, progress), Quaternion.Lerp(startingRotation, targetRotation, progress));
 			}
 
 			MovementCompleted?.Invoke();
@@ -643,8 +644,7 @@ namespace Werewolf
 				elapsedTime += Time.deltaTime;
 				float progress = elapsedTime / duration;
 
-				card.transform.position = Vector3.Lerp(startingPosition, card.OriginalPosition, progress);
-				card.transform.rotation = Quaternion.Lerp(startingRotation, targetRotation, progress);
+				card.transform.SetPositionAndRotation(Vector3.Lerp(startingPosition, card.OriginalPosition, progress), Quaternion.Lerp(startingRotation, targetRotation, progress));
 			}
 
 			if (returnFaceDown)

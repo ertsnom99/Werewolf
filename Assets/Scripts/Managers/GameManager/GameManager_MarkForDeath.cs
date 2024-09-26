@@ -7,7 +7,7 @@ namespace Werewolf
 {
 	public partial class GameManager
 	{
-		private List<MarkForDeath> _marksForDeath = new();
+		private readonly List<MarkForDeath> _marksForDeath = new();
 
 		public struct MarkForDeath
 		{

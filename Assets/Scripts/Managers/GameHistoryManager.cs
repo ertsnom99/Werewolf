@@ -3,7 +3,6 @@ using Fusion;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using Werewolf.Data;
@@ -24,7 +23,7 @@ namespace Werewolf
 
 		private string _saveDirectoryPath;
 
-		private GameHistorySave _gameHistorySave = new();
+		private readonly GameHistorySave _gameHistorySave = new();
 
 		[Serializable]
 		public class GameHistorySave

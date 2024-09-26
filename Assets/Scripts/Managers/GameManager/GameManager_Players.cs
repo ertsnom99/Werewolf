@@ -21,7 +21,7 @@ namespace Werewolf
 	{
 		public Dictionary<PlayerRef, PlayerGameInfo> PlayerGameInfos { get; private set; }
 
-		private List<PlayerGroup> _playerGroups = new();
+		private readonly List<PlayerGroup> _playerGroups = new();
 
 		private struct PlayerGroup
 		{
@@ -30,12 +30,12 @@ namespace Werewolf
 			public List<PlayerRef> Players;
 		}
 
-		private Dictionary<PlayerRef, Action<PlayerRef[]>> _choosePlayersCallbacks = new();
+		private readonly Dictionary<PlayerRef, Action<PlayerRef[]>> _choosePlayersCallbacks = new();
 		private List<PlayerRef> _immunePlayersForGettingChosen = new();
-		private List<PlayerRef> _selectedPlayers = new();
+		private readonly List<PlayerRef> _selectedPlayers = new();
 		private int _playerAmountToSelect;
 
-		private Dictionary<PlayerRef, Action<PlayerRef>> _promptPlayerCallbacks = new();
+		private readonly Dictionary<PlayerRef, Action<PlayerRef>> _promptPlayerCallbacks = new();
 
 		public event Action<PlayerRef, ChoicePurpose> PreClientChoosesPlayers;
 		public event Action<PlayerRef> PostPlayerDisconnected;

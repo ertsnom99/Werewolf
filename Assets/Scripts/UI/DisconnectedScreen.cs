@@ -15,7 +15,7 @@ namespace Werewolf.UI
 		[SerializeField]
 		private TMP_Text _disconnectedText;
 
-		private Dictionary<Transform, float> DisconnectedTextDisplayStartTimes = new();
+		private readonly Dictionary<Transform, float> DisconnectedTextDisplayStartTimes = new();
 
 		private GameConfig _config;
 
