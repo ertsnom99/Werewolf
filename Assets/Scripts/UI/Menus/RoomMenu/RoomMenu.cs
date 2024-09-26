@@ -59,9 +59,7 @@ namespace Werewolf.UI
 			_networkDataManager.InvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
 			UpdatePlayerList();
 
-			GameHistorySave gameHistorySave = null;
-
-			if (!string.IsNullOrEmpty(gameHistory) && GameHistoryManager.Instance.LoadGameHistorySaveFromJson(gameHistory, out gameHistorySave))
+			if (!string.IsNullOrEmpty(gameHistory) && GameHistoryManager.Instance.LoadGameHistorySaveFromJson(gameHistory, out GameHistorySave gameHistorySave))
 			{
 				_gameHistory.DisplayGameHistory(gameHistorySave);
 				_gameHistoryUI.SetActive(true);

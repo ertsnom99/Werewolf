@@ -12,7 +12,7 @@
 public class KeptMonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
 	private static T _instance;
-	private static object _lock = new();
+	private static readonly object _lock = new();
 	private static bool _applicationIsQuitting = false;
 
 	public static T Instance

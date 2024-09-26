@@ -6,7 +6,7 @@ namespace Werewolf
 {
 	public partial class GameManager
 	{
-		private List<NightCall> _nightCalls = new();
+		private readonly List<NightCall> _nightCalls = new();
 
 		private struct NightCall
 		{
@@ -35,9 +35,11 @@ namespace Werewolf
 				}
 				else if (_nightCalls[i].PriorityIndex > priorityIndex)
 				{
-					nightCall = new();
-					nightCall.PriorityIndex = priorityIndex;
-					nightCall.Players = new() { player };
+					nightCall = new()
+					{
+						PriorityIndex = priorityIndex,
+						Players = new() { player }
+					};
 
 					_nightCalls.Insert(i, nightCall);
 
@@ -50,9 +52,11 @@ namespace Werewolf
 				}
 			}
 
-			nightCall = new();
-			nightCall.PriorityIndex = priorityIndex;
-			nightCall.Players = new() { player };
+			nightCall = new()
+			{
+				PriorityIndex = priorityIndex,
+				Players = new() { player }
+			};
 
 			_nightCalls.Add(nightCall);
 		}

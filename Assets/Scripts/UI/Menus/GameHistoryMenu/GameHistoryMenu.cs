@@ -21,7 +21,7 @@ namespace Werewolf.UI
 		[SerializeField]
 		private GameHistory _gameHistory;
 
-		private List<GameHistoryButton> _gameHistoryButtons = new();
+		private readonly List<GameHistoryButton> _gameHistoryButtons = new();
 		private GameHistoryButton _selectedGameHistoryButton;
 
 		private GameHistoryManager _gameHistoryManager;

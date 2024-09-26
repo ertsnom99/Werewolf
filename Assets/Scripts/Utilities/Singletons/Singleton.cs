@@ -14,10 +14,7 @@ public abstract class Singleton<T> where T : class
 
 	public static T Instance()
 	{
-		if (_instance == null)
-		{
-			_instance = CreateInstanceOfT();
-		}
+		_instance ??= CreateInstanceOfT();
 
 		return _instance;
 	}

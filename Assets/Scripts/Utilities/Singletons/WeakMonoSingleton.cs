@@ -12,7 +12,7 @@
 public class WeakMonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
 	private static System.WeakReference _instance = null;
-	private static object _lock = new();
+	private static readonly object _lock = new();
 	private static bool _applicationIsQuitting = false;
 
 	public static T Instance

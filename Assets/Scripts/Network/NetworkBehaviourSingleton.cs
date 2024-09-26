@@ -14,7 +14,7 @@ namespace Werewolf.Network
 	public class NetworkBehaviourSingleton<T> : NetworkBehaviour where T : NetworkBehaviour
 	{
 		private static T _instance;
-		private static object _lock = new();
+		private static readonly object _lock = new();
 		private static bool _applicationIsQuitting = false;
 
 		public static T Instance

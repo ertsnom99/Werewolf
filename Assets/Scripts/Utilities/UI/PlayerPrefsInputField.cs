@@ -16,13 +16,11 @@ public class PlayerPrefsInputField : MonoBehaviour
 
 	private void Start()
 	{
-		string defaultName = string.Empty;
-
 		if (_inputField != null)
 		{
 			if (PlayerPrefs.HasKey(PrefKey))
 			{
-				defaultName = PlayerPrefs.GetString(PrefKey);
+				string defaultName = PlayerPrefs.GetString(PrefKey);
 				_inputField.text = defaultName;
 			}
 		}

@@ -23,7 +23,7 @@ namespace Werewolf.UI
 		private TextMeshProUGUI _roleDescription;
 
 		private bool _areRolesDisplayed;
-		private Dictionary<RoleData, RoleButton> _roleButtonByRoleData = new();
+		private readonly Dictionary<RoleData, RoleButton> _roleButtonByRoleData = new();
 		private RoleButton _selectedRoleButton;
 
 		private void Start()
