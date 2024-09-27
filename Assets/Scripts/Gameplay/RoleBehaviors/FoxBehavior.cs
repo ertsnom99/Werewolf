@@ -36,7 +36,7 @@ public class FoxBehavior : RoleBehavior
 	private GameplayTag _foundNoWerewolfImage;
 
 	[SerializeField]
-	private float _foundWerewolfDuration = 3.0f;
+	private float _resultTitleHoldDuration = 3.0f;
 
 	private IEnumerator _endRoleCallAfterTimeCoroutine;
 
@@ -144,6 +144,10 @@ public class FoxBehavior : RoleBehavior
 										}
 									});
 
+		_gameManager.RPC_HideUI(Player);
+
+		yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
+
 		if (werewolfFound)
 		{
 			_gameManager.RPC_DisplayTitle(Player, _foundWerewolfImage.CompactTagId);
@@ -154,7 +158,7 @@ public class FoxBehavior : RoleBehavior
 			_hasPower = false;
 		}
 
-		yield return new WaitForSeconds(_foundWerewolfDuration);
+		yield return new WaitForSeconds(_resultTitleHoldDuration);
 
 		foreach (PlayerRef player in playersToCheck)
 		{
