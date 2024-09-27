@@ -7,6 +7,7 @@ using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
 using static Werewolf.GameHistoryManager;
+using static Werewolf.GameManager;
 
 namespace Werewolf
 {
@@ -43,6 +44,7 @@ namespace Werewolf
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
 
+			_gameManager.GameplayLoopStepStarts += OnGameplayLoopStepStarts;
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
 		}
@@ -52,6 +54,16 @@ namespace Werewolf
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
 			return isWakingUp = false;
+		}
+
+		private void OnGameplayLoopStepStarts(GameplayLoopStep gameplayLoopStep)
+		{
+			if (gameplayLoopStep != GameplayLoopStep.DayDeathReveal)
+			{
+				return;
+			}
+
+			_gameManager.MoveMarksForDeathToLast(Player);
 		}
 
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer)
@@ -242,6 +254,7 @@ namespace Werewolf
 
 		private void OnDestroy()
 		{
+			_gameManager.GameplayLoopStepStarts -= OnGameplayLoopStepStarts;
 			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
 			_gameManager.PostPlayerDisconnected -= OnPostPlayerLeft;
 		}
