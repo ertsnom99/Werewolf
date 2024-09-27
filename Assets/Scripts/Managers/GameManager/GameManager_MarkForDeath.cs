@@ -2,6 +2,7 @@ using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections.Generic;
+using static Werewolf.GameManager;
 
 namespace Werewolf
 {
@@ -57,7 +58,7 @@ namespace Werewolf
 			}
 		}
 
-		public void RemoveAllMarkForDeath(PlayerRef player)
+		public void RemoveMarksForDeath(PlayerRef player)
 		{
 			for (int i = 0; i < _marksForDeath.Count; i++)
 			{
@@ -68,6 +69,25 @@ namespace Werewolf
 
 				_marksForDeath.RemoveAt(i);
 				return;
+			}
+		}
+
+		public void MoveMarksForDeathToLast(PlayerRef player)
+		{
+			int index = 0;
+
+			foreach (var marksForDeath in _marksForDeath)
+			{
+				if (marksForDeath.Player == player)
+				{
+					MarkForDeath tempMarkForDeath = _marksForDeath[index];
+					_marksForDeath.RemoveAt(index);
+					_marksForDeath.Add(tempMarkForDeath);
+					
+					return;
+				}
+
+				index++;
 			}
 		}
 

@@ -37,7 +37,7 @@ namespace Werewolf
 
 		private GameplayLoopStep _currentGameplayLoopStep;
 
-		private enum GameplayLoopStep
+		public enum GameplayLoopStep
 		{
 			RoleGivenReveal = 0,
 			ElectionDebate,
@@ -71,11 +71,12 @@ namespace Werewolf
 		public event Action PreRoleDistribution;
 		public event Action PostRoleDistribution;
 		public event Action PreStartGame;
+		public event Action<GameplayLoopStep> GameplayLoopStepStarts;
 		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
-		public event Action<PlayerRef> PlayerDeathRevealEnded;
 		public event Action<PlayerRef, List<GameplayTag>, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
+		public event Action<PlayerRef> PlayerDeathRevealEnded;
 
 		// Client events
 		public event Action RoleReceived;
@@ -555,6 +556,8 @@ namespace Werewolf
 
 		private void ExecuteGameplayLoopStep()
 		{
+			GameplayLoopStepStarts?.Invoke(_currentGameplayLoopStep);
+
 			switch (_currentGameplayLoopStep)
 			{
 				case GameplayLoopStep.RoleGivenReveal:
