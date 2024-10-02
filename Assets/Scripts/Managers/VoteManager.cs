@@ -439,7 +439,7 @@ namespace Werewolf
 
 				if (!vote.Value.VotedFor.IsNone && vote.Value.LockedIn)
 				{
-					_playerCards[vote.Key].DisplayVote(true, _playerCards[vote.Value.VotedFor].transform.position);
+					_playerCards[vote.Key].DisplayVote(true, _playerCards[vote.Value.VotedFor].transform.position, vote.Key == vote.Value.VotedFor);
 				}
 				else
 				{

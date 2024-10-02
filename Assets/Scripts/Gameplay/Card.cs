@@ -29,6 +29,8 @@ namespace Werewolf
 		private RectTransform _vote;
 		[SerializeField]
 		private LineRenderer _voteLine;
+		[SerializeField]
+		private GameObject _voteSelf;
 
 		[SerializeField]
 		private GameObject _skip;
@@ -155,12 +157,13 @@ namespace Werewolf
 			_skip.SetActive(display);
 		}
 
-		public void DisplayVote(bool display, Vector3 pointTo = default)
+		public void DisplayVote(bool display, Vector3 pointTo = default, bool voteSelf = false)
 		{
-			_vote.gameObject.SetActive(display);
-			_voteLine.enabled = display;
+			_vote.gameObject.SetActive(display && !voteSelf);
+			_voteLine.enabled = display && !voteSelf;
+			_voteSelf.SetActive(display && voteSelf);
 
-			if (!display)
+			if (!display || voteSelf)
 			{
 				return;
 			}
@@ -169,7 +172,7 @@ namespace Werewolf
 			lookAt.y = 0;
 
 			_vote.rotation = Quaternion.LookRotation(Vector3.down, lookAt);
-			
+
 			_voteLine.positionCount = 2;
 			_voteLine.SetPosition(0, new Vector3(transform.position.x, .05f, transform.position.z));
 			_voteLine.SetPosition(1, new Vector3(pointTo.x, .05f, pointTo.z));
