@@ -188,7 +188,7 @@ MonoBehaviour:
   _role: {fileID: 3448549325187779404}
   _nickname: {fileID: 9178939699573536065}
   _roleName: {fileID: 2123974279218585505}
-  _noRole: {fileID: 21300000, guid: f8b3194f397d8934697497c4c07cf47e, type: 3}
+  _lostRole: {fileID: 21300000, guid: e49a89800030d03408dd630845cce68a, type: 3}
 --- !u!1 &8278405875152724612
 GameObject:
   m_ObjectHideFlags: 0

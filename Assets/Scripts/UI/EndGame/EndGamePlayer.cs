@@ -17,7 +17,7 @@ namespace Werewolf.UI
 		private TMP_Text _roleName;
 
 		[SerializeField]
-		private Sprite _noRole;
+		private Sprite _lostRole;
 
 		public void Initialize(Sprite roleImage, string nickname, string roleName)
 		{
@@ -28,7 +28,7 @@ namespace Werewolf.UI
 
 		public void Initialize(string nickname)
 		{
-			_role.sprite = _noRole;
+			_role.sprite = _lostRole;
 			_nickname.text = nickname;
 			_roleName.text = "Lost their role";
 		}
