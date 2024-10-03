@@ -41,6 +41,7 @@ namespace Werewolf.UI
 
 		private int _minPlayer = -1;
 
+		public event Action<PlayerRef> KickPlayerClicked;
 		public event Action StartGameClicked;
 		public event Action LeaveSessionClicked;
 
@@ -82,6 +83,8 @@ namespace Werewolf.UI
 				return;
 			}
 
+			bool isLocalPlayerLeader = _networkDataManager.PlayerInfos.ContainsKey(_localPlayer) && _networkDataManager.PlayerInfos[_localPlayer].IsLeader;
+
 			// Clear list
 			for (int i = _playerEntries.childCount - 1; i >= 0; i--)
 			{
@@ -90,27 +93,26 @@ namespace Werewolf.UI
 
 			// Fill list
 			bool isOdd = true;
-			bool localPlayerIsLeader = false;
 
-			foreach (KeyValuePair<PlayerRef, Network.PlayerNetworkInfo> playerInfo in _networkDataManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> playerInfo in _networkDataManager.PlayerInfos)
 			{
 				PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
-				playerEntry.SetPlayerData(playerInfo.Value, _localPlayer, isOdd);
-
-				if (playerInfo.Value.PlayerRef == _localPlayer)
-				{
-					localPlayerIsLeader = playerInfo.Value.IsLeader;
-				}
+				playerEntry.Initialize(playerInfo.Value, _localPlayer, isOdd, isLocalPlayerLeader);
+				playerEntry.KickPlayerClicked += OnKickPlayer;
 
 				isOdd = !isOdd;
 			}
 
-			// Update buttons
-			_startGameBtn.interactable = localPlayerIsLeader
+			_startGameBtn.interactable = isLocalPlayerLeader
 										&& _minPlayer > -1
 										&& _networkDataManager.PlayerInfos.Count >= _minPlayer
 										&& !_networkDataManager.RolesSetupReady;
 			_leaveSessionBtn.interactable = !_networkDataManager.RolesSetupReady;
+		}
+
+		private void OnKickPlayer(PlayerRef kickedPlayer)
+		{
+			KickPlayerClicked?.Invoke(kickedPlayer);
 		}
 
 		private void ShowInvalidRolesSetupWarning()
