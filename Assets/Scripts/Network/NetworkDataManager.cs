@@ -182,6 +182,17 @@ namespace Werewolf.Network
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_KickPlayer(PlayerRef kickedPlayer, RpcInfo info = default)
+		{
+			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader)
+			{
+				return;
+			}
+
+			Runner.Disconnect(kickedPlayer);
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_SetRolesSetup(RolesSetup rolesSetup, int minPlayerCount, RpcInfo info = default)
 		{
 			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader

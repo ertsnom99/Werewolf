@@ -50,6 +50,7 @@ namespace Werewolf
 		{
 			_joinMenu.JoinSessionClicked += JoinSession;
 			_joinMenu.ReturnClicked += OpenMainMenu;
+			_roomMenu.KickPlayerClicked += KickPlayer;
 			_roomMenu.StartGameClicked += StartGame;
 			_roomMenu.LeaveSessionClicked += LeaveSession;
 			_rulesMenu.ReturnClicked += OpenMainMenu;
@@ -104,7 +105,7 @@ namespace Werewolf
 			ConnectToServer(_runner, _joinMenu.GetSessionName());
 		}
 
-		public void OpenRoomMenu(bool setNickname = true)
+		private void OpenRoomMenu(bool setNickname = true)
 		{
 			if (!_networkDataManager)
 			{
@@ -125,7 +126,12 @@ namespace Werewolf
 			DisplayRoomMenu();
 		}
 
-		public void StartGame()
+		private void KickPlayer(PlayerRef kickedPlayer)
+		{
+			_networkDataManager.RPC_KickPlayer(kickedPlayer);
+		}
+
+		private void StartGame()
 		{
 			if (!_networkDataManager)
 			{
@@ -143,11 +149,6 @@ namespace Werewolf
 
 		private void LeaveSession()
 		{
-			if (_networkDataManager)
-			{
-				_networkDataManager.RolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
-			}
-
 			_runner.Shutdown();
 		}
 
@@ -258,6 +259,11 @@ namespace Werewolf
 		{
 			Log.Info($"{nameof(INetworkRunnerCallbacks.OnShutdown)}: {nameof(shutdownReason)}: {shutdownReason}");
 
+			if (_joinMenu.gameObject.activeSelf)
+			{
+				return;
+			}
+
 			switch (shutdownReason)
 			{
 				case ShutdownReason.Ok:
@@ -267,18 +273,56 @@ namespace Werewolf
 					OpenJoinMenu($"Runner shutdown: {shutdownReason}");
 					break;
 			}
+
+			CleanupNetwork();
 		}
 
 		void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
 		{
 			Log.Info($"{nameof(INetworkRunnerCallbacks.OnDisconnectedFromServer)} - {reason}: {nameof(runner.LocalPlayer)}: {runner.LocalPlayer}");
-			OpenJoinMenu($"Disconnected from server: {reason}");
+
+			if (_joinMenu.gameObject.activeSelf)
+			{
+				return;
+			}
+
+			switch (reason)
+			{
+				case NetDisconnectReason.Requested:
+					OpenJoinMenu($"Disconnected from server: You were kicked");
+					break;
+				default:
+					OpenJoinMenu($"Disconnected from server: {reason}");
+					break;
+			}
+
+			CleanupNetwork();
 		}
 
 		void INetworkRunnerCallbacks.OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
 		{
 			Log.Info($"{nameof(INetworkRunnerCallbacks.OnConnectFailed)}: {nameof(remoteAddress)}: {remoteAddress}, {nameof(reason)}: {reason}");
+
+			if (_joinMenu.gameObject.activeSelf)
+			{
+				return;
+			}
+
 			OpenJoinMenu($"Connection failed: {reason}");
+			CleanupNetwork();
+		}
+
+		private void CleanupNetwork()
+		{
+			if (_networkDataManager)
+			{
+				_networkDataManager.RolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
+			}
+
+			if (_runner)
+			{
+				_runner.Shutdown();
+			}
 		}
 
 		void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner)
