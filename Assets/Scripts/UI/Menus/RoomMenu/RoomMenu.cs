@@ -27,6 +27,9 @@ namespace Werewolf.UI
 
 		[Header("UI")]
 		[SerializeField]
+		private TMP_InputField _nickname;
+
+		[SerializeField]
 		private TMP_Text _warningText;
 
 		[SerializeField]
@@ -42,6 +45,7 @@ namespace Werewolf.UI
 		private int _minPlayer = -1;
 
 		public event Action<PlayerRef> KickPlayerClicked;
+		public event Action<PlayerRef, string> ChangeNicknameClicked;
 		public event Action StartGameClicked;
 		public event Action LeaveSessionClicked;
 
@@ -58,7 +62,8 @@ namespace Werewolf.UI
 
 			_networkDataManager.PlayerInfosChanged += UpdatePlayerList;
 			_networkDataManager.InvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
-			UpdatePlayerList();
+
+			_nickname.text = string.Empty;
 
 			if (!string.IsNullOrEmpty(gameHistory) && GameHistoryManager.Instance.LoadGameHistorySaveFromJson(gameHistory, out GameHistorySave gameHistorySave))
 			{
@@ -103,6 +108,11 @@ namespace Werewolf.UI
 				isOdd = !isOdd;
 			}
 
+			if (_networkDataManager.PlayerInfos.ContainsKey(_localPlayer) && string.IsNullOrEmpty(_nickname.text))
+			{
+				_nickname.text = _networkDataManager.PlayerInfos[_localPlayer].Nickname;
+			}
+
 			_startGameBtn.interactable = isLocalPlayerLeader
 										&& _minPlayer > -1
 										&& _networkDataManager.PlayerInfos.Count >= _minPlayer
@@ -113,6 +123,11 @@ namespace Werewolf.UI
 		private void OnKickPlayer(PlayerRef kickedPlayer)
 		{
 			KickPlayerClicked?.Invoke(kickedPlayer);
+		}
+
+		public void OnChangeNickname()
+		{
+			ChangeNicknameClicked?.Invoke(_localPlayer, _nickname.text);
 		}
 
 		private void ShowInvalidRolesSetupWarning()

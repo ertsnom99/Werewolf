@@ -51,6 +51,7 @@ namespace Werewolf
 			_joinMenu.JoinSessionClicked += JoinSession;
 			_joinMenu.ReturnClicked += OpenMainMenu;
 			_roomMenu.KickPlayerClicked += KickPlayer;
+			_roomMenu.ChangeNicknameClicked += ChangeNickname;
 			_roomMenu.StartGameClicked += StartGame;
 			_roomMenu.LeaveSessionClicked += LeaveSession;
 			_rulesMenu.ReturnClicked += OpenMainMenu;
@@ -129,6 +130,11 @@ namespace Werewolf
 		private void KickPlayer(PlayerRef kickedPlayer)
 		{
 			_networkDataManager.RPC_KickPlayer(kickedPlayer);
+		}
+
+		private void ChangeNickname(PlayerRef renamedPlayer, string nickname)
+		{
+			_networkDataManager.RPC_SetPlayerNickname(renamedPlayer, nickname);
 		}
 
 		private void StartGame()
