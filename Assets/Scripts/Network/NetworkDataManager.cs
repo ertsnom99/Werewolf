@@ -174,7 +174,7 @@ namespace Werewolf.Network
 			{
 				PlayerRef = playerRef,
 				Nickname = nickname,
-				IsLeader = PlayerInfos.Count <= 0,
+				IsLeader = PlayerInfos.ContainsKey(playerRef) ? PlayerInfos[playerRef].IsLeader : PlayerInfos.Count <= 0,
 				IsConnected = true
 			};
 
