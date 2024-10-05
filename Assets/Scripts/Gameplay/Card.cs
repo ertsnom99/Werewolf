@@ -26,6 +26,10 @@ namespace Werewolf
 
 		[Header("Votes")]
 		[SerializeField]
+		private GameObject _voteCountContainer;
+		[SerializeField]
+		private TMP_Text _voteCountText;
+		[SerializeField]
 		private RectTransform _vote;
 		[SerializeField]
 		private LineRenderer _voteLine;
@@ -63,6 +67,8 @@ namespace Werewolf
 		[field: SerializeField]
 		[field: ReadOnly]
 		public RoleData Role { get; private set; }
+
+		private int _voteCount;
 
 		private bool _inSelectionMode;
 		private bool _isClickable;
@@ -155,6 +161,23 @@ namespace Werewolf
 		public void DisplaySkip(bool display)
 		{
 			_skip.SetActive(display);
+		}
+
+		public void DisplayVoteCount(bool display)
+		{
+			_voteCountContainer.SetActive(display);
+		}
+
+		public void ResetVoteCount()
+		{
+			_voteCount = 0;
+			_voteCountText.text = _voteCount.ToString();
+		}
+
+		public void IncrementVoteCount()
+		{
+			_voteCount++;
+			_voteCountText.text = _voteCount.ToString();
 		}
 
 		public void DisplayVote(bool display, Vector3 pointTo = default, bool voteSelf = false)
