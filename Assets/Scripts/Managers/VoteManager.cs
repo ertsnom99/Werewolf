@@ -480,7 +480,7 @@ namespace Werewolf
 
 			foreach (PlayerRef voter in Voters)
 			{
-				if (!_votes[voter].VotedFor.IsNone)
+				if (!_votes[voter].VotedFor.IsNone && _votes[voter].LockedIn)
 				{
 					_gameHistoryManager.AddEntry(_config.VoteVotedForGameHistoryEntry,
 												new GameHistorySaveEntryVariable[] {
@@ -531,7 +531,7 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, Vote> vote in _votes)
 			{
-				if (vote.Value.VotedFor.IsNone)
+				if (vote.Value.VotedFor.IsNone || !vote.Value.LockedIn)
 				{
 					continue;
 				}
