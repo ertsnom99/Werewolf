@@ -52,12 +52,22 @@ namespace Werewolf
 
 			_voteManager.AddVoteImmunity(Player);
 
-			_voteManager.VoteCompleted += OnVoteEnded;
-
 			if (_preparedVote)
 			{
+				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in _gameManager.PlayerGameInfos)
+				{
+					if (playerGameInfo.Value.IsAlive)
+					{
+						continue;
+					}
+
+					_voteManager.AddVoteImmunity(playerGameInfo.Key);
+				}
+			
 				_gameManager.StartWaitingForPlayersRollCall += OnStartWaitingForPlayersRollCall;
 			}
+
+			_voteManager.VoteCompleted += OnVoteEnded;
 
 			return true;
 		}

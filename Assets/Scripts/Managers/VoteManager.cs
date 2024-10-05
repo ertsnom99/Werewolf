@@ -51,7 +51,7 @@ namespace Werewolf
 
 		private Card _selectedCard;
 
-		private PlayerRef[] _immunePlayers;
+		private PlayerRef[] _playersImmuneFromLocalPlayer;
 
 		private UIManager _UIManager;
 		private NetworkDataManager _networkDataManager;
@@ -290,8 +290,10 @@ namespace Werewolf
 				_votes.Add(voter, new());
 				RPC_StartVoting(voter,
 								Voters.ToArray(),
+								_immune.ToArray(),
 								_immuneFromPlayers[voter].ToArray(),
-								_immuneFromPlayers[voter].Count >= _players.Count, voteDuration,
+								_immuneFromPlayers[voter].Count >= _players.Count,
+								voteDuration,
 								_allowedToNotVote);
 			}
 
@@ -299,12 +301,27 @@ namespace Werewolf
 			{
 				RPC_StartSpectating(spectator,
 									Voters.ToArray(),
+									_immune.ToArray(),
 									voteDuration);
 			}
 
 			_voteCoroutine = WaitForVoteEnd(voteDuration);
 			StartCoroutine(_voteCoroutine);
 #if UNITY_SERVER && UNITY_EDITOR
+			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+			{
+				if (!playerCard.Value)
+				{
+					continue;
+				}
+
+				if (!_immune.Contains(playerCard.Key))
+				{
+					playerCard.Value.DisplayVoteCount(true);
+					playerCard.Value.ResetVoteCount();
+				}
+			}
+
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 			_UIManager.VoteScreen.Initialize(false, voteDuration, false);
 #endif
@@ -327,16 +344,6 @@ namespace Werewolf
 					_immuneFromPlayers[voter].Add(player);
 				}
 
-				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _players)
-				{
-					if (playerInfo.Value.IsAlive || _immuneFromPlayers[voter].Contains(playerInfo.Key))
-					{
-						continue;
-					}
-
-					_immuneFromPlayers[voter].Add(playerInfo.Key);
-				}
-
 				if (_immuneFromPlayers[voter].Count < _players.Count)
 				{
 					canAtLeastOneVoterVote = true;
@@ -355,7 +362,7 @@ namespace Werewolf
 					continue;
 				}
 
-				if (Array.IndexOf(_immunePlayers, playerCard.Key) >= 0)
+				if (Array.IndexOf(_playersImmuneFromLocalPlayer, playerCard.Key) >= 0)
 				{
 					playerCard.Value.SetSelectionMode(true, false);
 					continue;
@@ -428,6 +435,16 @@ namespace Werewolf
 
 		private void UpdateVisualFeedback()
 		{
+			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+			{
+				if (!playerCard.Value)
+				{
+					continue;
+				}
+
+				playerCard.Value.ResetVoteCount();
+			}
+
 			bool allLockedIn = _votes.Count > 0;
 
 			foreach (KeyValuePair<PlayerRef, Vote> vote in _votes)
@@ -435,6 +452,10 @@ namespace Werewolf
 				if (!vote.Value.LockedIn)
 				{
 					allLockedIn = false;
+				}
+				else if (!vote.Value.VotedFor.IsNone)
+				{
+					_playerCards[vote.Value.VotedFor].IncrementVoteCount();
 				}
 
 				if (!vote.Value.VotedFor.IsNone && vote.Value.LockedIn)
@@ -537,7 +558,8 @@ namespace Werewolf
 				{
 					continue;
 				}
-
+				
+				playerCard.Value.DisplayVoteCount(false);
 				playerCard.Value.DisplayVote(false);
 			}
 
@@ -587,7 +609,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, bool displayWarning, float maxDuration, bool allowedToNotVote)
+		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, bool displayWarning, float maxDuration, bool allowedToNotVote)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -603,12 +625,23 @@ namespace Werewolf
 			}
 
 			_selectedCard = null;
-			_immunePlayers = immunePlayers;
+			_playersImmuneFromLocalPlayer = playersImmuneFromLocalPlayer;
 
 			SetCardsClickable(true);
 
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
+				if (!playerCard.Value)
+				{
+					continue;
+				}
+
+				if (!immunePlayers.Contains(playerCard.Key))
+				{
+					playerCard.Value.DisplayVoteCount(true);
+					playerCard.Value.ResetVoteCount();
+				}
+
 				playerCard.Value.LeftClicked += OnCardSelectedChanged;
 			}
 
@@ -618,7 +651,7 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, PlayerRef[] voters, float maxDuration)
+		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, PlayerRef[] voters, PlayerRef[] immunePlayers, float maxDuration)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -631,6 +664,20 @@ namespace Werewolf
 			foreach (PlayerRef voter in voters)
 			{
 				_votes.Add(voter, new());
+			}
+
+			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+			{
+				if (!playerCard.Value)
+				{
+					continue;
+				}
+
+				if (!immunePlayers.Contains(playerCard.Key))
+				{
+					playerCard.Value.DisplayVoteCount(true);
+					playerCard.Value.ResetVoteCount();
+				}
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
@@ -699,6 +746,7 @@ namespace Werewolf
 				}
 
 				playerCard.Value.ResetSelectionMode();
+				playerCard.Value.DisplayVoteCount(false);
 				playerCard.Value.DisplayVote(false);
 
 				playerCard.Value.LeftClicked -= OnCardSelectedChanged;
