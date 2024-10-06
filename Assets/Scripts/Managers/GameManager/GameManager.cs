@@ -583,7 +583,7 @@ namespace Werewolf
 					StartCoroutine(StartDeathReveal(true));
 					break;
 				case GameplayLoopStep.ExecutionDebate:
-					StartCoroutine(StartDebate(Config.ExecutionDebateImage.CompactTagId, Config.ExecutionDebateDuration));
+					StartCoroutine(StartDebate(GetPlayersExcluding(GetDeadPlayers().ToArray()), Config.ExecutionDebateImage.CompactTagId, Config.ExecutionDebateDuration));
 					break;
 				case GameplayLoopStep.Execution:
 					StartExecution();
@@ -674,7 +674,7 @@ namespace Werewolf
 
 				StartCoroutine(HighlightPlayersToggle(_captainCandidates.ToArray()));
 				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidatesImage.CompactTagId, Config.ElectionMultipleCandidatesDuration);
-				StartCoroutine(StartDebate(Config.ElectionDebateImage.CompactTagId, Config.ElectionDebateDuration));
+				StartCoroutine(StartDebate(_captainCandidates.ToArray(), Config.ElectionDebateImage.CompactTagId, Config.ElectionDebateDuration));
 				yield break;
 			}
 			else if (_captainCandidates.Count == 1)
@@ -709,6 +709,7 @@ namespace Werewolf
 												false,
 												false,
 												ChoicePurpose.Other,
+												GetDeadPlayers().ToArray(),
 												canVoteForSelf: true,
 												ImmunePlayers: GetPlayersExcluding(_captainCandidates.ToArray()));
 		}
@@ -1222,6 +1223,7 @@ namespace Werewolf
 												false,
 												true,
 												ChoicePurpose.Kill,
+												GetDeadPlayers().ToArray(),
 												GetExecutionVoteModifiers()))
 			{
 				Debug.LogError("Couldn't start the execution vote");
@@ -1257,6 +1259,7 @@ namespace Werewolf
 												false,
 												false,
 												ChoicePurpose.Kill,
+												GetDeadPlayers().ToArray(),
 												modifiers: GetExecutionVoteModifiers(),
 												ImmunePlayers: GetPlayersExcluding(mostVotedPlayers)))
 			{

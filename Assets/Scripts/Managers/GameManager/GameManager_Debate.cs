@@ -7,8 +7,12 @@ namespace Werewolf
 {
 	public partial class GameManager
 	{
-		private IEnumerator StartDebate(int imageID, float duration)
+		private IEnumerator StartDebate(PlayerRef[] highlightedPlayers, int imageID, float duration)
 		{
+			RPC_SetPlayersCardHighlightVisible(highlightedPlayers, true);
+#if UNITY_SERVER && UNITY_EDITOR
+			SetPlayersCardHighlightVisible(highlightedPlayers, true);
+#endif
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
@@ -35,7 +39,11 @@ namespace Werewolf
 				yield return 0;
 				elapsedTime += Time.deltaTime;
 			}
-
+			
+			RPC_SetPlayersCardHighlightVisible(highlightedPlayers, false);
+#if UNITY_SERVER && UNITY_EDITOR
+			SetPlayersCardHighlightVisible(highlightedPlayers, false);
+#endif
 			RPC_OnDebateEnded();
 			PlayersWaitingFor.Clear();
 

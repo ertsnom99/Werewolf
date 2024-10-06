@@ -92,6 +92,7 @@ namespace Werewolf
 											bool allowedToNotVote,
 											bool failingToVoteGivesPenalty,
 											ChoicePurpose purpose,
+											PlayerRef[] spectatingPlayers,
 											Dictionary<PlayerRef, int> modifiers = null,
 											bool canVoteForSelf = false,
 											PlayerRef[] ImmunePlayers = null)
@@ -112,7 +113,11 @@ namespace Werewolf
 					continue;
 				}
 
-				if (playerInfo.Value.IsAlive)
+				if (spectatingPlayers.Contains(playerInfo.Key))
+				{
+					AddSpectator(playerInfo.Key);
+				}
+				else
 				{
 					AddVoter(playerInfo.Key);
 
@@ -120,10 +125,6 @@ namespace Werewolf
 					{
 						AddVoteImmunity(playerInfo.Key, playerInfo.Key);
 					}
-				}
-				else
-				{
-					AddSpectator(playerInfo.Key);
 				}
 
 				if (playerInfo.Value.IsAlive && (ImmunePlayers == null || !ImmunePlayers.Contains(playerInfo.Key)))
