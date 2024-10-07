@@ -19,6 +19,9 @@ namespace Werewolf
 		private GameObject _notClickableCache;
 
 		[SerializeField]
+		private GameObject _selectedFrame;
+
+		[SerializeField]
 		private Color _selectedColor = Color.yellow;
 
 		[SerializeField]
@@ -73,7 +76,6 @@ namespace Werewolf
 		private bool _inSelectionMode;
 		private bool _isClickable;
 		private bool _isSelected;
-		private bool _isHighlightBlocked;
 
 		public event Action<Card> LeftClicked;
 		public event Action<Card> RightClicked;
@@ -130,7 +132,6 @@ namespace Werewolf
 			_inSelectionMode = inSelectionMode;
 			SetClickable(isClickable);
 			_notClickableCache.SetActive(inSelectionMode && !isClickable);
-			SetHighlightBlocked(false);
 		}
 
 		public void SetClickable(bool isClickable)
@@ -141,12 +142,8 @@ namespace Werewolf
 		public void SetSelected(bool isSelected)
 		{
 			_isSelected = isSelected;
+			_selectedFrame.SetActive(isSelected);
 			_nicknameText.color = _isSelected ? _selectedColor : _notSelectedColor;
-		}
-
-		public void SetHighlightBlocked(bool isHighlightBlocked)
-		{
-			_isHighlightBlocked = isHighlightBlocked;
 		}
 
 		public void ResetSelectionMode()
@@ -223,7 +220,7 @@ namespace Werewolf
 
 		public void MouseExited()
 		{
-			if (!_inSelectionMode || !_isClickable || _isHighlightBlocked)
+			if (!_inSelectionMode || !_isClickable)
 			{
 				return;
 			}
