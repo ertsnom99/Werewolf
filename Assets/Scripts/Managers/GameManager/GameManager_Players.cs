@@ -321,15 +321,10 @@ namespace Werewolf
 			{
 				_selectedPlayers.Remove(card.Player);
 
-				card.SetHighlightBlocked(false);
-				SetPlayerCardHighlightVisible(card.Player, false);
 				return;
 			}
 
 			_selectedPlayers.Add(card.Player);
-
-			card.SetHighlightBlocked(true);
-			SetPlayerCardHighlightVisible(card.Player, true);
 
 			if (_selectedPlayers.Count < _playerAmountToSelect)
 			{
