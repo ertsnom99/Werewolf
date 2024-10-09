@@ -214,5 +214,36 @@ namespace Werewolf
 
 			return gameHistorySave != null;
 		}
+
+		public bool DeleteGameHistory(string filePath)
+		{
+			if (!File.Exists(filePath))
+			{
+				Debug.LogError($"There is no file {filePath}");
+				return false;
+			}
+
+			File.Delete(filePath);
+			return true;
+		}
+
+		public bool DeleteAllGameHistory()
+		{
+			string[] filePaths = GetSavedGameHistoryFilePaths();
+			
+			bool deletedAll = true;
+
+			foreach (string filePath in filePaths)
+			{
+				if (DeleteGameHistory(filePath))
+				{
+					continue;
+				}
+
+				deletedAll = false;
+			}
+
+			return deletedAll;
+		}
 	}
 }

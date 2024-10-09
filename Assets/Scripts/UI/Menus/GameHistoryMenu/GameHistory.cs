@@ -129,7 +129,7 @@ namespace Werewolf.UI
 			_scrollRect.normalizedPosition = new Vector2(0, 1);
 		}
 
-		private void ClearGameHistoryEntries()
+		public void ClearGameHistoryEntries()
 		{
 			GameHistoryEntry gameHistoryEntry;
 

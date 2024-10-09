@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static Werewolf.GameHistoryManager;
 
 namespace Werewolf.UI
@@ -20,6 +21,10 @@ namespace Werewolf.UI
 		private GameObject _selectToSee;
 		[SerializeField]
 		private GameHistory _gameHistory;
+		[SerializeField]
+		private Button _deleteButton;
+		[SerializeField]
+		private Button _deleteAllButton;
 
 		private readonly List<GameHistoryButton> _gameHistoryButtons = new();
 		private GameHistoryButton _selectedGameHistoryButton;
@@ -35,22 +40,7 @@ namespace Werewolf.UI
 
 		private void OnEnable()
 		{
-			string[] filePaths = _gameHistoryManager.GetSavedGameHistoryFilePaths();
-			GameHistoryButton gameHistoryButton;
-			bool isOdd = true;
-
-			foreach (string filePath in filePaths)
-			{
-				gameHistoryButton = Instantiate(_gameHistoryButtonPrefab, _gameHistoryButtonsContainer);
-				gameHistoryButton.Initialize(filePath, isOdd);
-				gameHistoryButton.Clicked += OnClickedGameHistoryButton;
-				_gameHistoryButtons.Add(gameHistoryButton);
-
-				isOdd = !isOdd;
-			}
-
-			_noHistories.SetActive(filePaths.Length <= 0);
-			_selectToSee.SetActive(filePaths.Length > 0);
+			RefreshHistory();
 		}
 
 		private void OnClickedGameHistoryButton(GameHistoryButton gameHistoryButton)
@@ -74,8 +64,66 @@ namespace Werewolf.UI
 
 			_noHistories.SetActive(false);
 			_selectToSee.SetActive(false);
+			_deleteButton.interactable = true;
 
 			_gameHistory.DisplayGameHistory(gameHistorySave);
+		}
+
+		public void OnClickedDeleteHistoryButton()
+		{
+			if (!_selectedGameHistoryButton)
+			{
+				return;
+			}
+
+			if (!_gameHistoryManager.DeleteGameHistory(_selectedGameHistoryButton.FilePath))
+			{
+				return;
+			}
+
+			RefreshHistory();
+		}
+
+		public void OnClickedDeleteAllHistoryButton()
+		{
+			_gameHistoryManager.DeleteAllGameHistory();
+			RefreshHistory();
+		}
+
+		private void RefreshHistory()
+		{
+			GameHistoryButton gameHistoryButton;
+
+			while (_gameHistoryButtons.Count > 0)
+			{
+				gameHistoryButton = _gameHistoryButtons[0];
+				Destroy(gameHistoryButton.gameObject);
+				_gameHistoryButtons.RemoveAt(0);
+			}
+
+			_gameHistory.ClearGameHistoryEntries();
+
+			_selectedGameHistoryButton = null;
+
+			string[] filePaths = _gameHistoryManager.GetSavedGameHistoryFilePaths();
+			bool isOdd = true;
+
+			foreach (string filePath in filePaths)
+			{
+				gameHistoryButton = Instantiate(_gameHistoryButtonPrefab, _gameHistoryButtonsContainer);
+				gameHistoryButton.Initialize(filePath, isOdd);
+				gameHistoryButton.Clicked += OnClickedGameHistoryButton;
+				_gameHistoryButtons.Add(gameHistoryButton);
+
+				isOdd = !isOdd;
+			}
+
+			bool hasHistory = filePaths.Length > 0;
+
+			_noHistories.SetActive(!hasHistory);
+			_selectToSee.SetActive(hasHistory);
+			_deleteButton.interactable = false;
+			_deleteAllButton.interactable = hasHistory;
 		}
 
 		private void OnDisable()
