@@ -1188,9 +1188,9 @@ namespace Werewolf
 				return;
 			}
 
-			RPC_DisplayPlayerDead(deadPlayer);
+			RPC_DisplayPlayerDeadIcon(deadPlayer);
 #if UNITY_SERVER && UNITY_EDITOR
-			_playerCards[deadPlayer].DisplayDead();
+			_playerCards[deadPlayer].DisplayDeadIcon();
 #endif
 		}
 
@@ -1205,12 +1205,6 @@ namespace Werewolf
 		public void RPC_DisplayPlayerDiedTitle([RpcTarget] PlayerRef player, bool wasExecuted)
 		{
 			DisplayPlayerDiedTitle(wasExecuted);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayPlayerDead(PlayerRef playerDead)
-		{
-			_playerCards[playerDead].DisplayDead();
 		}
 		#endregion
 		#endregion

@@ -203,6 +203,25 @@ namespace Werewolf
 		#endregion
 		#endregion
 
+		#region Player Icons
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_SetPlayersCardWerewolfIconVisible([RpcTarget] PlayerRef player, PlayerRef[] werewolfPlayers, bool isVisible)
+		{
+			foreach (PlayerRef werewolfPlayer in werewolfPlayers)
+			{
+				_playerCards[werewolfPlayer].DisplayWerewolfIcon(isVisible);
+			}
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayPlayerDeadIcon(PlayerRef playerDead)
+		{
+			_playerCards[playerDead].DisplayDeadIcon();
+		}
+		#endregion
+		#endregion
+
 		#region Player Groups
 		public void AddPlayerToPlayerGroup(PlayerRef player, GameplayTag playerGroup)
 		{

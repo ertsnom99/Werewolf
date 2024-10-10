@@ -501,6 +501,81 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!1 &2994633801805145408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2886610672860478717}
+  - component: {fileID: 2409912830556850360}
+  - component: {fileID: 3335634152752355446}
+  m_Layer: 5
+  m_Name: Werewolf
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &2886610672860478717
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2994633801805145408}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6444354225545395110}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 13.999998}
+  m_SizeDelta: {x: 24.644, y: 24.644}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2409912830556850360
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2994633801805145408}
+  m_CullTransparentMesh: 1
+--- !u!114 &3335634152752355446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2994633801805145408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 1f9c3b92b8b5eff428702631d0a67d89, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 8
 --- !u!1 &3495943520067099344
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,7 +844,8 @@ MonoBehaviour:
   _voteLine: {fileID: 8971381487946976300}
   _voteSelf: {fileID: 2631099668877830215}
   _skip: {fileID: 3642744378102353291}
-  _deathImage: {fileID: 7813650399402125633}
+  _werewolfIcon: {fileID: 2994633801805145408}
+  _deathIcon: {fileID: 7813650399402125633}
   _deathTint: {r: 0.32941177, g: 0.32941177, b: 0.32941177, a: 1}
   _roleImage: {fileID: 389929942712762449}
   _groundCanvas: {fileID: 5671852482582481988}
@@ -1083,6 +1159,7 @@ RectTransform:
   m_Children:
   - {fileID: 7623965457858156282}
   - {fileID: 4652141832102435940}
+  - {fileID: 2886610672860478717}
   - {fileID: 1931421613637578325}
   - {fileID: 6422996694634552025}
   - {fileID: 4762078403855501140}
