@@ -42,9 +42,13 @@ namespace Werewolf
 		[SerializeField]
 		private GameObject _skip;
 
+		[Header("Werewolf")]
+		[SerializeField]
+		private GameObject _werewolfIcon;
+
 		[Header("Death")]
 		[SerializeField]
-		private GameObject _deathImage;
+		private GameObject _deathIcon;
 
 		[SerializeField]
 		private Color _deathTint;
@@ -199,9 +203,14 @@ namespace Werewolf
 		}
 		#endregion
 
-		public void DisplayDead()
+		public void DisplayWerewolfIcon(bool display)
 		{
-			_deathImage.SetActive(true);
+			_werewolfIcon.SetActive(display);
+		}
+
+		public void DisplayDeadIcon()
+		{
+			_deathIcon.SetActive(true);
 			_roleImage.color = _deathTint;
 		}
 

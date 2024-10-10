@@ -72,6 +72,14 @@ namespace Werewolf
 			return true;
 		}
 
+		private void OnStartWaitingForPlayersRollCall()
+		{
+			_gameManager.StartWaitingForPlayersRollCall -= OnStartWaitingForPlayersRollCall;
+
+			SetWerewolfIconsVisible(true);
+			_voteManager.StartVote();
+		}
+
 		private void OnVoteEnded(Dictionary<PlayerRef, int> votes)
 		{
 			_voteManager.VoteCompleted -= OnVoteEnded;
@@ -84,6 +92,8 @@ namespace Werewolf
 			{
 				return;
 			}
+
+			SetWerewolfIconsVisible(false);
 
 			if (!firstPlayerVotedFor.IsNone && votes[firstPlayerVotedFor] == _voteManager.Voters.Count)
 			{
@@ -105,10 +115,14 @@ namespace Werewolf
 			}
 		}
 
-		private void OnStartWaitingForPlayersRollCall()
+		private void SetWerewolfIconsVisible(bool isVisible)
 		{
-			_gameManager.StartWaitingForPlayersRollCall -= OnStartWaitingForPlayersRollCall;
-			_voteManager.StartVote();
+			var voters = _voteManager.Voters.ToArray();
+
+			foreach (PlayerRef voter in voters)
+			{
+				_gameManager.RPC_SetPlayersCardWerewolfIconVisible(voter, voters, isVisible);
+			}
 		}
 
 		public override void ReInitialize() { }
