@@ -80,6 +80,8 @@ namespace Werewolf
 			_gameHistoryManager = GameHistoryManager.Instance;
 
 			_UIManager.VoteScreen.SetLockedInDelayDuration(_config.AllLockedInDelayToEndVote);
+
+			_networkDataManager.PlayerDisconnected += OnPlayerDisconnected;
 		}
 
 		public void SetPlayers(Dictionary<PlayerRef, PlayerGameInfo> players)
@@ -184,6 +186,11 @@ namespace Werewolf
 				return;
 			}
 
+			if (_step == Step.Voting && _votes[voter].LockedIn)
+			{
+				_lockedInVoteCount--;
+			}
+
 			Voters.Remove(voter);
 			_immuneFromPlayers.Remove(voter);
 			_votes.Remove(voter);
@@ -192,18 +199,29 @@ namespace Werewolf
 			{
 				return;
 			}
-#if UNITY_SERVER && UNITY_EDITOR
-			UpdateVisualFeedback();
-#endif
+
 			foreach (PlayerRef otherVoter in Voters)
 			{
+				if (!_networkDataManager.PlayerInfos[otherVoter].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_RemoveClientVoter(otherVoter, voter);
 			}
 
 			foreach (PlayerRef spectator in _spectators)
 			{
+				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_RemoveClientVoter(spectator, voter);
 			}
+#if UNITY_SERVER && UNITY_EDITOR
+			UpdateVisualFeedback();
+#endif
 		}
 
 		public void AddVoteImmunity(PlayerRef player)
@@ -289,6 +307,12 @@ namespace Werewolf
 			foreach (PlayerRef voter in Voters)
 			{
 				_votes.Add(voter, new());
+				
+				if (!_networkDataManager.PlayerInfos[voter].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_StartVoting(voter,
 								Voters.ToArray(),
 								_immune.ToArray(),
@@ -300,6 +324,11 @@ namespace Werewolf
 
 			foreach (PlayerRef spectator in _spectators)
 			{
+				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_StartSpectating(spectator,
 									Voters.ToArray(),
 									_immune.ToArray(),
@@ -520,11 +549,21 @@ namespace Werewolf
 
 			foreach (PlayerRef voter in Voters)
 			{
+				if (!_networkDataManager.PlayerInfos[voter].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_VoteEnded(voter);
 			}
 
 			foreach (PlayerRef spectator in _spectators)
 			{
+				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_VoteEnded(spectator);
 			}
 
@@ -606,6 +645,16 @@ namespace Werewolf
 		public bool IsVoting()
 		{
 			return _step == Step.Voting;
+		}
+
+		private void OnPlayerDisconnected(PlayerRef player)
+		{
+			if (_step != Step.Voting || _voteCoroutine == null || !_votes.ContainsKey(player) || _votes[player].LockedIn)
+			{
+				return;
+			}
+
+			_votes[player].LockedIn = true;
 		}
 
 		#region RPC Calls
@@ -712,11 +761,21 @@ namespace Werewolf
 #endif
 			foreach (PlayerRef voter in Voters)
 			{
+				if (!_networkDataManager.PlayerInfos[voter].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_UpdateClientVote(voter, info.Source, votedFor, islocked);
 			}
 
 			foreach (PlayerRef spectator in _spectators)
 			{
+				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
+				{
+					continue;
+				}
+
 				RPC_UpdateClientVote(spectator, info.Source, votedFor, islocked);
 			}
 		}

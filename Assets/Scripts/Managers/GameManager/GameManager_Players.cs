@@ -524,7 +524,7 @@ namespace Werewolf
 		#endregion
 
 		#region Player Disconnection
-		public void OnPlayerDisconnected(PlayerRef player)
+		private void OnPlayerDisconnected(PlayerRef player)
 		{
 			if (PlayerGameInfos[player].IsAlive)
 			{
@@ -540,8 +540,6 @@ namespace Werewolf
 			}
 
 			StopWaintingForPlayer(player);
-
-			_voteManager.RemoveVoter(player);
 
 			_chooseReservedRoleCallbacks.Remove(player);
 			_choosePlayersCallbacks.Remove(player);
