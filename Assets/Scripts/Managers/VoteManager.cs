@@ -655,6 +655,7 @@ namespace Werewolf
 			}
 
 			_votes[player].LockedIn = true;
+			_lockedInVoteCount++;
 		}
 
 		#region RPC Calls
