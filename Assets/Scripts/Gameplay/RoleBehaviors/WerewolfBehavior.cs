@@ -121,6 +121,11 @@ namespace Werewolf
 
 			foreach (PlayerRef voter in voters)
 			{
+				if (!_networkDataManager.PlayerInfos[voter].IsConnected)
+				{
+					continue;
+				}
+
 				_gameManager.RPC_SetPlayersCardWerewolfIconVisible(voter, voters, isVisible);
 			}
 		}
