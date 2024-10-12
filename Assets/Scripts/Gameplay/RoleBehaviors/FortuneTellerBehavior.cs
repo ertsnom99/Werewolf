@@ -45,12 +45,13 @@ namespace Werewolf
 
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
-													_choosePlayerImage.CompactTagId,//"Choose a player to see his role",
+													_choosePlayerImage.CompactTagId,
 													_choosePlayerMaximumDuration,
 													false,
 													1,
 													ChoicePurpose.Other,
-													OnPlayerSelected))
+													OnPlayerSelected,
+													out PlayerRef[] choices))
 			{
 				StartCoroutine(WaitToStopWaitingForPlayer());
 			}

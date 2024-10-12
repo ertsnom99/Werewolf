@@ -32,6 +32,7 @@ namespace Werewolf
 		[SerializeField]
 		private float _selectedPlayerHighlightDuration = 3.0f;
 
+		private PlayerRef[] _choices;
 		private IEnumerator _startChoiceTimerCoroutine;
 
 		private GameManager _gameManager;
@@ -73,8 +74,6 @@ namespace Werewolf
 				return;
 			}
 
-			_gameManager.WaitForPlayer(Player);
-
 			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
 			immunePlayers.Add(Player);
 
@@ -85,11 +84,20 @@ namespace Werewolf
 													true,
 													1,
 													ChoicePurpose.Kill,
-													OnPlayersSelected))
+													OnPlayersSelected,
+													out PlayerRef[] choices))
 			{
-				SelectRandomPlayer();
+				if (choices.Length >= 1)
+				{
+					SelectRandomPlayer(choices);
+				}
+
 				return;
 			}
+
+			_choices = choices;
+
+			_gameManager.WaitForPlayer(Player);
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
@@ -103,11 +111,11 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.DisplayTitle(_choosingPlayerImage.CompactTagId);
 #endif
-			_startChoiceTimerCoroutine = StartChoiceTimer();
+			_startChoiceTimerCoroutine = StartChoiceTimer(choices);
 			StartCoroutine(_startChoiceTimerCoroutine);
 		}
 
-		private IEnumerator StartChoiceTimer()
+		private IEnumerator StartChoiceTimer(PlayerRef[] choices)
 		{
 			float elapsedTime = .0f;
 
@@ -118,53 +126,12 @@ namespace Werewolf
 			}
 
 			_gameManager.StopChoosingPlayers(Player);
-			SelectRandomPlayer();
+			SelectRandomPlayer(choices);
 		}
 
-		private void SelectRandomPlayer()
+		private void SelectRandomPlayer(PlayerRef[] choices)
 		{
-			int iterationCount = 0;
-			PlayerRef[] players = _gameManager.PlayerGameInfos.Keys.ToArray();
-			int playerIndex = Random.Range(0, _gameManager.PlayerGameInfos.Count);
-			PlayerRef selectedPlayer = PlayerRef.None;
-
-			while (iterationCount < _gameManager.PlayerGameInfos.Count)
-			{
-				if (players[playerIndex] != Player && _gameManager.PlayerGameInfos[players[playerIndex]].IsAlive)
-				{
-					selectedPlayer = players[playerIndex];
-					break;
-				}
-
-				playerIndex++;
-
-				if (playerIndex >= _gameManager.PlayerGameInfos.Count)
-				{
-					playerIndex = 0;
-				}
-
-				iterationCount++;
-			}
-
-			if (selectedPlayer.IsNone)
-			{
-				Debug.LogError("The hunter could not find a player to kill!!!");
-
-				_startChoiceTimerCoroutine = null;
-
-				if (_networkDataManager.PlayerInfos[Player].IsConnected)
-				{
-					StartCoroutine(HideUIBeforeStopWaintingForPlayer());
-				}
-				else
-				{
-					_gameManager.StopWaintingForPlayer(Player);
-				}
-			}
-			else
-			{
-				OnPlayerSelected(selectedPlayer);
-			}
+			OnPlayerSelected(choices[Random.Range(0, choices.Length)]);
 		}
 
 		private void OnPlayersSelected(PlayerRef[] selectedPlayers)
@@ -205,7 +172,7 @@ namespace Werewolf
 				_gameManager.SetPlayerCardHighlightVisible(selectedPlayer, true);
 				_gameManager.HideUI();
 #endif
-				StartCoroutine(WaitToRemeHighlight(selectedPlayer));
+				StartCoroutine(WaitToRemoveHighlight(selectedPlayer));
 				return;
 			}
 
@@ -223,7 +190,7 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private IEnumerator WaitToRemeHighlight(PlayerRef selectedPlayer)
+		private IEnumerator WaitToRemoveHighlight(PlayerRef selectedPlayer)
 		{
 			yield return new WaitForSeconds(_selectedPlayerHighlightDuration);
 
@@ -242,7 +209,7 @@ namespace Werewolf
 			}
 
 			_gameManager.WaitForPlayer(Player);
-			SelectRandomPlayer();
+			SelectRandomPlayer(_choices);
 		}
 
 		public override void ReInitialize() { }

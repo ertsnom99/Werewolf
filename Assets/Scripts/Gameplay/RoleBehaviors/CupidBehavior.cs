@@ -50,6 +50,7 @@ namespace Werewolf
 		[SerializeField]
 		private float _coupleDeathHighlightHoldDuration = 3.0f;
 
+		private PlayerRef[] _choices;
 		private PlayerRef[] _couple = new PlayerRef[2];
 		private IEnumerator _endChooseCoupleAfterTimeCoroutine;
 		private IEnumerator _setSelectedCoupleCoroutine;
@@ -101,7 +102,7 @@ namespace Werewolf
 				isWakingUp = true;
 				return ChooseCouple();
 			}
-			else if (!_showedCouple && priorityIndex == NightPriorities[1].index)
+			else if (!_showedCouple && _couple[0] != PlayerRef.None && _couple[1] != PlayerRef.None && priorityIndex == NightPriorities[1].index)
 			{
 				return ShowCouple();
 			}
@@ -126,16 +127,22 @@ namespace Werewolf
 													true,
 													2,
 													ChoicePurpose.Other,
-													OnCoupleSelected))
+													OnCoupleSelected,
+													out PlayerRef[] choices))
 			{
-				ChooseRandomCouple();
-				AddCouplePlayerGroup();
-				AddCoupleSelectedGameHistoryEntry();
+				if (choices.Length >= 2)
+				{
+					ChooseRandomCouple(choices);
+					AddCouplePlayerGroup();
+					AddCoupleSelectedGameHistoryEntry();
+				}
 
 				StartCoroutine(WaitToStopWaitingForPlayer());
 
 				return true;
 			}
+
+			_choices = choices;
 
 			_endChooseCoupleAfterTimeCoroutine = EndChooseCoupleAfterTime();
 			StartCoroutine(_endChooseCoupleAfterTimeCoroutine);
@@ -165,7 +172,7 @@ namespace Werewolf
 
 			if (players.Length < 2)
 			{
-				ChooseRandomCouple();
+				ChooseRandomCouple(_choices);
 			}
 			else
 			{
@@ -195,7 +202,7 @@ namespace Werewolf
 			_endChooseCoupleAfterTimeCoroutine = null;
 			_gameManager.StopChoosingPlayers(Player);
 
-			ChooseRandomCouple();
+			ChooseRandomCouple(_choices);
 			AddCouplePlayerGroup();
 			AddCoupleSelectedGameHistoryEntry();
 
@@ -205,23 +212,18 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void ChooseRandomCouple()
+		private void ChooseRandomCouple(PlayerRef[] choices)
 		{
 			int playerCount = 0;
 
-			List<PlayerRef> players = _gameManager.PlayerGameInfos.Keys.ToList();
+			List<PlayerRef> players = choices.ToList();
 
 			while(playerCount < 2)
 			{
 				PlayerRef player = players[UnityEngine.Random.Range(0, players.Count)];
-
-				if (_gameManager.PlayerGameInfos[player].IsAlive)
-				{
-					_couple[playerCount] = player;
-					playerCount++;
-				}
-
+				_couple[playerCount] = player;
 				players.Remove(player);
+				playerCount++;
 			}
 		}
 
@@ -469,7 +471,7 @@ namespace Werewolf
 				return;
 			}
 
-			ChooseRandomCouple();
+			ChooseRandomCouple(_choices);
 			AddCouplePlayerGroup();
 			AddCoupleSelectedGameHistoryEntry();
 		}

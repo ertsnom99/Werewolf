@@ -69,12 +69,13 @@ public class FoxBehavior : RoleBehavior
 
 		if (!_gameManager.AskClientToChoosePlayers(Player,
 												immunePlayers,
-												_choosePlayerImage.CompactTagId,//"Choose the middle player to check",
+												_choosePlayerImage.CompactTagId,
 												_choosePlayerMaximumDuration,
 												false,
 												1,
 												ChoicePurpose.Other,
-												OnPlayerSelected))
+												OnPlayerSelected,
+												out PlayerRef[] choices))
 		{
 			StartCoroutine(WaitToStopWaitingForPlayer());
 		}

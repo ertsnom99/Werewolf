@@ -66,9 +66,14 @@ namespace Werewolf
 										true,
 										1,
 										ChoicePurpose.Other,
-										OnChoosedNextCaptain))
+										OnChoosedNextCaptain,
+										out PlayerRef[] choices))
 			{
-				StartCoroutine(EndChoosingNextCaptain(captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)]));
+				if (choices.Length >= 1)
+				{
+					StartCoroutine(EndChoosingNextCaptain(choices[UnityEngine.Random.Range(0, choices.Length)]));
+				}
+
 				yield break;
 			}
 
