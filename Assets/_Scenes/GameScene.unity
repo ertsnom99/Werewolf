@@ -4013,6 +4013,9 @@ MonoBehaviour:
   _roleChoicePrefab: {fileID: 5769736496626738058, guid: 80c7fa99b75cfb240b403eb65607919f,
     type: 3}
   _confirmButton: {fileID: 1255141224}
+  _buttonText: {fileID: 626504291}
+  _skipChoiceText: Skip
+  _confirmChoiceText: Confirm choice
 --- !u!225 &951329767
 CanvasGroup:
   m_ObjectHideFlags: 0

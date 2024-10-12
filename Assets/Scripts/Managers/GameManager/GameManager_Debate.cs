@@ -30,7 +30,7 @@ namespace Werewolf
 				WaitForPlayer(playerInfo.Key);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(imageID, duration, confirmButtonText: Config.SkipText);
+			DisplayTitle(imageID, duration, confirmButtonText: Config.SkipDebateText);
 #endif
 			float elapsedTime = .0f;
 
@@ -80,7 +80,7 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, int imageID, float countdownDuration, bool showConfirmButton)
 		{
-			DisplayTitle(imageID, countdownDuration, showConfirmButton, Config.SkipText);
+			DisplayTitle(imageID, countdownDuration, showConfirmButton, Config.SkipDebateText);
 
 			if (!showConfirmButton)
 			{
