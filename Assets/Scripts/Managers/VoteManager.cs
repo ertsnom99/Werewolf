@@ -110,11 +110,6 @@ namespace Werewolf
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _players)
 			{
-				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
-				{
-					continue;
-				}
-
 				if (spectatingPlayers.Contains(playerInfo.Key))
 				{
 					AddSpectator(playerInfo.Key);
