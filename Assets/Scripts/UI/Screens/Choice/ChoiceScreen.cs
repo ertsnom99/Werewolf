@@ -25,6 +25,9 @@ namespace Werewolf.UI
 		[SerializeField]
 		private Button _confirmButton;
 
+		[SerializeField]
+		private TMP_Text _buttonText;
+
 		private GameConfig _config;
 
 		private bool _mustChooseOne;
@@ -72,6 +75,8 @@ namespace Werewolf.UI
 			_confirmButton.onClick.AddListener(OnConfirmChoice);
 			_confirmButton.interactable = true;
 
+			_buttonText.text = _config.SkipChoiceText;
+
 			_countdownCoroutine = Countdown(countdownDuration);
 			StartCoroutine(_countdownCoroutine);
 		}
@@ -83,6 +88,7 @@ namespace Werewolf.UI
 				if (_selectedChoice == choice)
 				{
 					_selectedChoice = null;
+					_buttonText.text = _config.SkipChoiceText;
 					return;
 				}
 				else
@@ -92,6 +98,7 @@ namespace Werewolf.UI
 			}
 
 			_selectedChoice = choice;
+			_buttonText.text = _config.ConfirmChoiceText;
 		}
 
 		private void OnConfirmChoice()

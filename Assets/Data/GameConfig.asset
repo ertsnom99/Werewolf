@@ -240,7 +240,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <SkipText>k__BackingField: Skip debate
   <LockedInButtonText>k__BackingField: Lock In Vote
   <LockedOutButtonText>k__BackingField: Lock Out Vote
   <AllLockedInDelayToEndVote>k__BackingField: 3
@@ -266,6 +265,8 @@ MonoBehaviour:
   <UITransitionNormalDuration>k__BackingField: 0.75
   <UITransitionFastDuration>k__BackingField: 0.1
   <CountdownText>k__BackingField: 'Time left: {0}'
+  <SkipDebateText>k__BackingField: Skip debate
+  <SkipChoiceText>k__BackingField: Skip
   <ConfirmChoiceText>k__BackingField: Confirm Choice
   <PlayerLeftMarkForDeath>k__BackingField: {fileID: 9216349172710836488, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}

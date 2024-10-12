@@ -50,7 +50,7 @@ MonoBehaviour:
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _takeRolePrompt: Take this role?
-  _confirmTakeRoleButtonText: Take
+  _confirmTakeRoleButtonText: Take role
   _notResettedRoles:
   - {fileID: 5771913067030864782, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   - {fileID: 1136116219714361880, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}

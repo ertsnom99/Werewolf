@@ -257,10 +257,6 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public AnimationCurve CaptainCardMovementYOffset { get; private set; }
 
-		[field: Header("Debate")]
-		[field: SerializeField]
-		public string SkipText { get; private set; }
-
 		[field: Header("Vote")]
 		[field: SerializeField]
 		public string LockedInButtonText { get; private set; }
@@ -328,6 +324,12 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public string CountdownText { get; private set; }
+
+		[field: SerializeField]
+		public string SkipDebateText { get; private set; }
+
+		[field: SerializeField]
+		public string SkipChoiceText { get; private set; }
 
 		[field: SerializeField]
 		public string ConfirmChoiceText { get; private set; }
