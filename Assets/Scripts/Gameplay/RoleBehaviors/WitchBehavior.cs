@@ -262,7 +262,8 @@ namespace Werewolf
 													true,
 													1,
 													ChoicePurpose.Kill,
-													OnChosePlayers))
+													OnChosePlayers,
+													out PlayerRef[] choices))
 			{
 				_endChoosePlayerCoroutine = EndChoosePlayer(_choosePlayerDuration);
 				StartCoroutine(_endChoosePlayerCoroutine);

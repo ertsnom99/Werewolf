@@ -73,7 +73,8 @@ namespace Werewolf
 													false,
 													1,
 													ChoicePurpose.Other,
-													OnPlayerSelected))
+													OnPlayerSelected,
+													out PlayerRef[] choices))
 			{
 				StartCoroutine(WaitToStopWaitingForPlayer());
 			}

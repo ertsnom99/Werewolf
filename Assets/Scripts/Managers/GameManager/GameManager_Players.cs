@@ -301,18 +301,19 @@ namespace Werewolf
 		#endregion
 
 		#region Choose Players
-		public bool AskClientToChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
+		public bool AskClientToChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback, out PlayerRef[] choices)
 		{
-			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayersCallbacks.ContainsKey(choosingPlayer))
+			_immunePlayersForGettingChosen = immunePlayers;
+			PreClientChoosesPlayers?.Invoke(choosingPlayer, purpose);
+
+			choices = PlayerGameInfos.Keys.Except(_immunePlayersForGettingChosen).ToArray();
+
+			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayersCallbacks.ContainsKey(choosingPlayer) || choices.Length < playerAmount)
 			{
 				return false;
 			}
 
 			_choosePlayersCallbacks.Add(choosingPlayer, callback);
-
-			_immunePlayersForGettingChosen = immunePlayers;
-			PreClientChoosesPlayers?.Invoke(choosingPlayer, purpose);
-
 			RPC_ClientChoosePlayers(choosingPlayer, _immunePlayersForGettingChosen.ToArray(), imageID, maximumDuration, mustChoose, playerAmount);
 
 			return true;
