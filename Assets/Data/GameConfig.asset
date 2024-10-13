@@ -108,6 +108,7 @@ MonoBehaviour:
   <ElectionNoCandidateImage>k__BackingField: {fileID: -2412456246043308623, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <ElectionNoCandidateDuration>k__BackingField: 5
+  <ElectionVoteTitle>k__BackingField: Vote for who should be the captain
   <ElectionVoteDuration>k__BackingField: 15
   <SunSetGameHistoryEntry>k__BackingField: {fileID: -5222993735485238172, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
@@ -145,6 +146,7 @@ MonoBehaviour:
   <ExecutionDebateImage>k__BackingField: {fileID: -467428146297135536, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <ExecutionDebateDuration>k__BackingField: 60
+  <ExecutionVoteTitle>k__BackingField: Vote for who should be executed
   <ExecutionVoteDuration>k__BackingField: 15
   <ExecutionVoteStartedGameHistoryEntry>k__BackingField: {fileID: 400890721188642999,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}

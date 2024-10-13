@@ -55,5 +55,8 @@ MonoBehaviour:
   _wasGivenRolesGameHistoryEntry: {fileID: 1282424815053823321, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _chooseReservedRoleMaximumDuration: 10
+  _chooseRoleText: You MAY change your role to one of these
+  _chooseRoleObligatoryText: You MUST change your role to one of these
+  _choosedRoleText: You have choosen this role
   _tookRoleGameHistoryEntry: {fileID: -9191084100418705152, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}

@@ -381,7 +381,7 @@ namespace Werewolf
 		}
 
 		// Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
-		public bool AskClientToChooseReservedRole(RoleBehavior ReservedRoleOwner, float maximumDuration, bool mustChoose, Action<int> callback)
+		public bool AskClientToChooseReservedRole(RoleBehavior ReservedRoleOwner, float maximumDuration, string chooseText, string choosedText, bool mustChoose, Action<int> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[ReservedRoleOwner.Player].IsConnected || !_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
 			{
@@ -402,7 +402,7 @@ namespace Werewolf
 			}
 
 			_chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, rolesContainer, mustChoose);
+			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, chooseText, choosedText, rolesContainer, mustChoose);
 
 			return true;
 		}
@@ -427,7 +427,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_ClientChooseReservedRole([RpcTarget] PlayerRef player, float maximumDuration, RolesContainer rolesContainer, bool mustChooseOne)
+		public void RPC_ClientChooseReservedRole([RpcTarget] PlayerRef player, float maximumDuration, string chooseText, string choosedText, RolesContainer rolesContainer, bool mustChooseOne)
 		{
 			List<Choice.ChoiceData> choices = new();
 
@@ -444,7 +444,7 @@ namespace Werewolf
 
 			_UIManager.ChoiceScreen.ConfirmedChoice += GiveReservedRoleChoice;
 
-			_UIManager.ChoiceScreen.Initialize(maximumDuration, mustChooseOne ? Config.ChooseRoleObligatoryText : Config.ChooseRoleText, Config.ChoosedRoleText, Config.DidNotChoosedRoleText, choices.ToArray(), mustChooseOne);
+			_UIManager.ChoiceScreen.Initialize(maximumDuration, chooseText, choosedText, Config.DidNotChoosedRoleText, choices.ToArray(), mustChooseOne);
 			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionNormalDuration);
 		}
 

@@ -705,6 +705,7 @@ namespace Werewolf
 		private void StartElection()
 		{
 			_voteManager.StartVoteForAllPlayers(OnElectionVotesCounted,
+												Config.ElectionVoteTitle,
 												Config.ElectionVoteDuration,
 												false,
 												false,
@@ -1213,12 +1214,13 @@ namespace Werewolf
 		private void StartExecution()
 		{
 			if (!_voteManager.StartVoteForAllPlayers(OnExecutionVotesCounted,
-												Config.ExecutionVoteDuration,
-												false,
-												true,
-												ChoicePurpose.Kill,
-												GetDeadPlayers().ToArray(),
-												GetExecutionVoteModifiers()))
+													Config.ExecutionVoteTitle,
+													Config.ExecutionVoteDuration,
+													false,
+													true,
+													ChoicePurpose.Kill,
+													GetDeadPlayers().ToArray(),
+													GetExecutionVoteModifiers()))
 			{
 				Debug.LogError("Couldn't start the execution vote");
 				return;
@@ -1249,13 +1251,14 @@ namespace Werewolf
 			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteImage.CompactTagId, Config.ExecutionTitleHoldDuration);
 
 			if (!_voteManager.StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
-												Config.ExecutionVoteDuration,
-												false,
-												false,
-												ChoicePurpose.Kill,
-												GetDeadPlayers().ToArray(),
-												modifiers: GetExecutionVoteModifiers(),
-												ImmunePlayers: GetPlayersExcluding(mostVotedPlayers)))
+													Config.ExecutionVoteTitle,
+													Config.ExecutionVoteDuration,
+													false,
+													false,
+													ChoicePurpose.Kill,
+													GetDeadPlayers().ToArray(),
+													modifiers: GetExecutionVoteModifiers(),
+													ImmunePlayers: GetPlayersExcluding(mostVotedPlayers)))
 			{
 				Debug.LogError("Couldn't start the secondary execution vote");
 				yield break;

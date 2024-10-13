@@ -28,6 +28,7 @@ namespace Werewolf
 			public bool LockedIn;
 		}
 
+		private string _titleText;
 		private float _maxDuration;
 		private bool _allowedToNotVote;
 		private bool _failingToVoteGivesPenalty;
@@ -90,6 +91,7 @@ namespace Werewolf
 		}
 
 		public bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
+											string titleText,
 											float maxDuration,
 											bool allowedToNotVote,
 											bool failingToVoteGivesPenalty,
@@ -106,7 +108,7 @@ namespace Werewolf
 
 			_votesCountedCallback = votesCountedCallback;
 
-			PrepareVote(maxDuration, allowedToNotVote, failingToVoteGivesPenalty, purpose, modifiers);
+			PrepareVote(titleText, maxDuration, allowedToNotVote, failingToVoteGivesPenalty, purpose, modifiers);
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _players)
 			{
@@ -138,7 +140,7 @@ namespace Werewolf
 			return true;
 		}
 
-		public bool PrepareVote(float maxDuration, bool allowedToNotVote, bool failingToVoteGivesPenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
+		public bool PrepareVote(string titleText, float maxDuration, bool allowedToNotVote, bool failingToVoteGivesPenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
 		{
 			if (_step != Step.NotVoting)
 			{
@@ -151,6 +153,7 @@ namespace Werewolf
 			_spectators.Clear();
 			_votes.Clear();
 
+			_titleText = titleText;
 			_maxDuration = maxDuration;
 			_allowedToNotVote = allowedToNotVote;
 			_failingToVoteGivesPenalty = failingToVoteGivesPenalty;
@@ -312,6 +315,7 @@ namespace Werewolf
 								Voters.ToArray(),
 								_immune.ToArray(),
 								_immuneFromPlayers[voter].ToArray(),
+								_titleText,
 								_immuneFromPlayers[voter].Count >= _players.Count,
 								voteDuration,
 								_allowedToNotVote);
@@ -327,6 +331,7 @@ namespace Werewolf
 				RPC_StartSpectating(spectator,
 									Voters.ToArray(),
 									_immune.ToArray(),
+									_titleText,
 									voteDuration);
 			}
 
@@ -348,7 +353,7 @@ namespace Werewolf
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
-			_UIManager.VoteScreen.Initialize(false, voteDuration, false);
+			_UIManager.VoteScreen.Initialize(_titleText, false, voteDuration, false);
 #endif
 			_step = Step.Voting;
 		}
@@ -655,7 +660,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, bool displayWarning, float maxDuration, bool allowedToNotVote)
+		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, string titleText, bool displayWarning, float maxDuration, bool allowedToNotVote)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -692,12 +697,12 @@ namespace Werewolf
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
-			_UIManager.VoteScreen.Initialize(displayWarning, maxDuration, true, allowedToNotVote ? null : () => { return _selectedCard != null; });
+			_UIManager.VoteScreen.Initialize(titleText, displayWarning, maxDuration, true, allowedToNotVote ? null : () => { return _selectedCard != null; });
 			_UIManager.VoteScreen.VoteLockChanged += OnVoteLockChanged;
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, PlayerRef[] voters, PlayerRef[] immunePlayers, float maxDuration)
+		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, PlayerRef[] voters, PlayerRef[] immunePlayers, string titleText, float maxDuration)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -727,7 +732,7 @@ namespace Werewolf
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
-			_UIManager.VoteScreen.Initialize(false, maxDuration, false);
+			_UIManager.VoteScreen.Initialize(titleText, false, maxDuration, false);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]

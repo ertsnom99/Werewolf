@@ -23,6 +23,15 @@ namespace Werewolf
 		private float _chooseReservedRoleMaximumDuration = 10.0f;
 
 		[SerializeField]
+		private string _chooseRoleText;
+
+		[SerializeField]
+		private string _chooseRoleObligatoryText;
+
+		[SerializeField]
+		private string _choosedRoleText;
+
+		[SerializeField]
 		private GameplayTag _tookRoleGameHistoryEntry;
 
 		private GameManager.IndexedReservedRoles _reservedRoles;
@@ -111,7 +120,7 @@ namespace Werewolf
 				}
 			}
 
-			if (!_gameManager.AskClientToChooseReservedRole(this, _chooseReservedRoleMaximumDuration, _reservedOnlyWerewolfs, OnRoleSelected))
+			if (!_gameManager.AskClientToChooseReservedRole(this, _chooseReservedRoleMaximumDuration, _reservedOnlyWerewolfs ? _chooseRoleObligatoryText : _chooseRoleText, _choosedRoleText, _reservedOnlyWerewolfs, OnRoleSelected))
 			{
 				StartCoroutine(WaitOnRoleSelected(-1));
 			}

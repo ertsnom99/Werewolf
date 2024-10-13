@@ -11,6 +11,9 @@ namespace Werewolf.UI
 	{
 		[Header("UI")]
 		[SerializeField]
+		private TMP_Text _titleText;
+
+		[SerializeField]
 		private TMP_Text _countdownText;
 
 		[SerializeField]
@@ -48,8 +51,10 @@ namespace Werewolf.UI
 			_lockedInDelayDuration = lockedInDelayDuration;
 		}
 
-		public void Initialize(bool displayWarning, float countdownDuration, bool displayButton, CanLockInDelegate canLockInDelegate = null)
+		public void Initialize(string titleText, bool displayWarning, float countdownDuration, bool displayButton, CanLockInDelegate canLockInDelegate = null)
 		{
+			_titleText.text = titleText;
+
 			IsLockedIn = false;
 			_canLockIn = canLockInDelegate;
 

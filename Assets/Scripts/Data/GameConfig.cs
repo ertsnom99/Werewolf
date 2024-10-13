@@ -84,6 +84,9 @@ namespace Werewolf.Data
 		public float ElectionNoCandidateDuration { get; private set; }
 
 		[field: SerializeField]
+		public string ElectionVoteTitle { get; private set; }
+
+		[field: SerializeField]
 		public float ElectionVoteDuration { get; private set; }
 
 		[field: Header("Daytime")]
@@ -164,6 +167,9 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public float ExecutionDebateDuration { get; private set; }
+
+		[field: SerializeField]
+		public string ExecutionVoteTitle { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionVoteDuration { get; private set; }
@@ -284,14 +290,14 @@ namespace Werewolf.Data
 		public float HighlightDuration { get; private set; }
 
 		[field: Header("Role Reservation")]
-		[field: SerializeField]
-		public string ChooseRoleText { get; private set; }
+[field: SerializeField]
+public string ChooseRoleText { get; private set; }
 
-		[field: SerializeField]
-		public string ChooseRoleObligatoryText { get; private set; }
+[field: SerializeField]
+public string ChooseRoleObligatoryText { get; private set; }
 
-		[field: SerializeField]
-		public string ChoosedRoleText { get; private set; }
+[field: SerializeField]
+public string ChoosedRoleText { get; private set; }
 
 		[field: SerializeField]
 		public string DidNotChoosedRoleText { get; private set; }
