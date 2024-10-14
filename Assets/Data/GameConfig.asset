@@ -242,8 +242,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <LockedInButtonText>k__BackingField: Lock In Vote
-  <LockedOutButtonText>k__BackingField: Lock Out Vote
+  <LockedInButtonText>k__BackingField: Confirm Vote
+  <LockedOutButtonText>k__BackingField: Cancel Vote
   <AllLockedInDelayToEndVote>k__BackingField: 3
   <NoVoteDuration>k__BackingField: 10
   <VoteVotedForGameHistoryEntry>k__BackingField: {fileID: -6371537381687074625, guid: 0e7014af8e28a88409bdb3f0abb80632,
