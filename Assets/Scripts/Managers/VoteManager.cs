@@ -54,6 +54,7 @@ namespace Werewolf
 
 		private PlayerRef[] _playersImmuneFromLocalPlayer;
 
+		private GameManager _gameManager;
 		private UIManager _UIManager;
 		private NetworkDataManager _networkDataManager;
 		private GameHistoryManager _gameHistoryManager;
@@ -76,11 +77,12 @@ namespace Werewolf
 		{
 			_config = config;
 
+			_gameManager = GameManager.Instance;
 			_UIManager = UIManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 
-			_UIManager.VoteScreen.SetLockedInDelayDuration(_config.AllLockedInDelayToEndVote);
+			_UIManager.VoteScreen.SetLockedInDelayDuration(_config.AllLockedInDelayToEndVote * _gameManager.GameSpeedModifier);
 
 			_networkDataManager.PlayerDisconnected += OnPlayerDisconnected;
 		}
@@ -299,7 +301,7 @@ namespace Werewolf
 			}
 			else
 			{
-				voteDuration = _config.NoVoteDuration;
+				voteDuration = _config.NoVoteDuration * _gameManager.GameSpeedModifier;
 			}
 
 			foreach (PlayerRef voter in Voters)
@@ -407,7 +409,7 @@ namespace Werewolf
 			float elapsedTime = .0f;
 			float allLockedInElapsedTime = .0f;
 
-			while (elapsedTime < duration && (_lockedInVoteCount < Voters.Count || allLockedInElapsedTime < _config.AllLockedInDelayToEndVote))
+			while (elapsedTime < duration && (_lockedInVoteCount < Voters.Count || allLockedInElapsedTime < _config.AllLockedInDelayToEndVote * _gameManager.GameSpeedModifier))
 			{
 				yield return 0;
 

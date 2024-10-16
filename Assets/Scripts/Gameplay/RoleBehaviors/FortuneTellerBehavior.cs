@@ -46,7 +46,7 @@ namespace Werewolf
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
 													_choosePlayerImage.CompactTagId,
-													_choosePlayerMaximumDuration,
+													_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 													false,
 													1,
 													ChoicePurpose.Other,
@@ -112,7 +112,7 @@ namespace Werewolf
 
 		private IEnumerator EndRoleCallAfterTime()
 		{
-			float timeLeft = _choosePlayerMaximumDuration;
+			float timeLeft = _choosePlayerMaximumDuration * _gameManager.GameSpeedModifier;
 
 			while (timeLeft > 0)
 			{

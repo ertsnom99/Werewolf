@@ -28,25 +28,25 @@ namespace Werewolf.Network
 						runner.AddCallbacks(_networkDataManager);
 					}
 
-					_networkDataManager.RolesSetupReadyChanged += OnRolesSetupReadyChanged;
+					_networkDataManager.GameSetupReadyChanged += OnGameSetupReadyChanged;
 					_networkDataManager.ClearRolesSetup();
 					Runner.SessionInfo.IsOpen = true;
 
 					break;
 				case (int)SceneDefs.GAME:
-					GameManager.Instance.PrepareGame(_networkDataManager.RolesSetup);
+					GameManager.Instance.PrepareGame(_networkDataManager.RolesSetup, _networkDataManager.GameSpeed);
 					break;
 			}
 		}
 
-		private void OnRolesSetupReadyChanged()
+		private void OnGameSetupReadyChanged()
 		{
-			if (!_networkDataManager.RolesSetupReady)
+			if (!_networkDataManager.GameSetupReady)
 			{
 				return;
 			}
 
-			_networkDataManager.RolesSetupReadyChanged -= OnRolesSetupReadyChanged;
+			_networkDataManager.GameSetupReadyChanged -= OnGameSetupReadyChanged;
 
 			Runner.SessionInfo.IsOpen = false;
 			Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.GAME), LoadSceneMode.Single);

@@ -37,6 +37,13 @@ namespace Werewolf.Network
 		public NetworkArray<RoleSetup> AvailableRoles { get; }
 	}
 
+	public enum GameSpeed
+	{
+		Slow,
+		Normal,
+		Fast
+	}
+
 	public class NetworkDataManager : NetworkBehaviourSingleton<NetworkDataManager>, INetworkRunnerCallbacks
 	{
 		[Networked, Capacity(GameConfig.MAX_PLAYER_COUNT)]
@@ -45,15 +52,18 @@ namespace Werewolf.Network
 		[field: SerializeField]
 		public RolesSetup RolesSetup { get; private set; }
 
+		[field: SerializeField]
+		public GameSpeed GameSpeed { get; private set; }
+
 		[Networked]
-		public bool RolesSetupReady { get; private set; }
+		public bool GameSetupReady { get; private set; }
 
 		private ChangeDetector _changeDetector;
 
 		public static event Action FinishedSpawning;
 		public event Action PlayerInfosChanged;
 		public event Action InvalidRolesSetupReceived;
-		public event Action RolesSetupReadyChanged;
+		public event Action GameSetupReadyChanged;
 		public event Action<PlayerRef> PlayerDisconnected;
 
 		protected override void Awake()
@@ -78,14 +88,14 @@ namespace Werewolf.Network
 					case nameof(PlayerInfos):
 						PlayerInfosChanged?.Invoke();
 						break;
-					case nameof(RolesSetupReady):
-						RolesSetupReadyChanged?.Invoke();
+					case nameof(GameSetupReady):
+						GameSetupReadyChanged?.Invoke();
 						break;
 				}
 			}
 		}
 
-		private bool IsSetupValid(RolesSetup rolesSetup, int minPlayerCount)
+		private bool IsRolesSetupValid(RolesSetup rolesSetup, int minPlayerCount)
 		{
 			//TODO: Check if setup is valid
 			return true;
@@ -94,7 +104,7 @@ namespace Werewolf.Network
 		public void ClearRolesSetup()
 		{
 			RolesSetup = new();
-			RolesSetupReady = false;
+			GameSetupReady = false;
 		}
 
 		#region Convertion Methods
@@ -193,23 +203,24 @@ namespace Werewolf.Network
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_SetRolesSetup(RolesSetup rolesSetup, int minPlayerCount, RpcInfo info = default)
+		public void RPC_SetGameSetup(RolesSetup rolesSetup, GameSpeed gameSpeed, int minPlayerCount, RpcInfo info = default)
 		{
 			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader
-				|| RolesSetupReady
+				|| GameSetupReady
 				|| PlayerInfos.Count < minPlayerCount)
 			{
 				return;
 			}
 
-			if (!IsSetupValid(rolesSetup, minPlayerCount))
+			if (!IsRolesSetupValid(rolesSetup, minPlayerCount))
 			{
 				RPC_WarnInvalidRolesSetup(info.Source);
 				return;
 			}
 
 			RolesSetup = rolesSetup;
-			RolesSetupReady = true;
+			GameSpeed = gameSpeed;
+			GameSetupReady = true;
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]

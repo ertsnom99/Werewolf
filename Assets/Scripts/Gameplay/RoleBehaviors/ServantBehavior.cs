@@ -140,7 +140,7 @@ namespace Werewolf
 			_gameManager.DestroyPlayerCard(_playerRevealed);
 			_gameManager.DisplayTitle(null, _tookThisRoleText);
 #endif
-			yield return new WaitForSeconds(_servantRevealDuration);
+			yield return new WaitForSeconds(_servantRevealDuration * _gameManager.GameSpeedModifier);
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{

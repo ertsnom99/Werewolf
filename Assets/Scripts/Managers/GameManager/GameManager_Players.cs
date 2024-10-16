@@ -141,7 +141,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			SetPlayerCardHighlightVisible(player, true);
 #endif
-			yield return new WaitForSeconds(Config.HighlightDuration);
+			yield return new WaitForSeconds(Config.HighlightDuration * GameSpeedModifier);
 
 			RPC_SetPlayerCardHighlightVisible(player, false);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -155,7 +155,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			SetPlayersCardHighlightVisible(players, true);
 #endif
-			yield return new WaitForSeconds(Config.HighlightDuration);
+			yield return new WaitForSeconds(Config.HighlightDuration * GameSpeedModifier);
 
 			RPC_SetPlayersCardHighlightVisible(players, false);
 #if UNITY_SERVER && UNITY_EDITOR

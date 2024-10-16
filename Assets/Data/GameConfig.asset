@@ -89,6 +89,10 @@ MonoBehaviour:
   <AvailableRolesMaxAttemptCount>k__BackingField: 100
   <PlayerGivenRoleGameHistoryEntry>k__BackingField: {fileID: 7225922598962193451,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <GameSpeedModifier>k__BackingField:
+  - 2
+  - 1
+  - 0.5
   <GameplayLoopStepDelay>k__BackingField: 0.5
   <RoleGivenRevealText>k__BackingField: Your were given the role of {0}
   <ElectionPromptImage>k__BackingField: {fileID: -5375341707992204064, guid: 0e7014af8e28a88409bdb3f0abb80632,

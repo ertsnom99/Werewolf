@@ -505,11 +505,11 @@ namespace Werewolf
 
 			if (waitBeforeReveal)
 			{
-				yield return new WaitForSeconds(Config.RoleRevealWaitDuration);
+				yield return new WaitForSeconds(Config.RoleRevealWaitDuration * GameSpeedModifier);
 				yield return FlipCard(card.transform, Config.RoleRevealFlipDuration);
 			}
 
-			yield return new WaitForSeconds(Config.RoleRevealHoldDuration);
+			yield return new WaitForSeconds(Config.RoleRevealHoldDuration * GameSpeedModifier);
 			yield return PutCardBackDown(card, returnFaceDown, Config.MoveToCameraDuration);
 
 			RPC_RevealPlayerRoleFinished();

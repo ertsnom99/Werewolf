@@ -69,7 +69,7 @@ namespace Werewolf
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
 													_choosePlayerImage.CompactTagId,
-													_choosePlayerMaximumDuration,
+													_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 													false,
 													1,
 													ChoicePurpose.Other,
@@ -128,14 +128,14 @@ namespace Werewolf
 		{
 			_gameManager.RPC_HideUI(Player);
 			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _selectedPlayer, true);
-			yield return new WaitForSeconds(_playerHighlightHoldDuration);
+			yield return new WaitForSeconds(_playerHighlightHoldDuration * _gameManager.GameSpeedModifier);
 			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _selectedPlayer, false);
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
 		private IEnumerator EndRoleCallAfterTime()
 		{
-			float timeLeft = _choosePlayerMaximumDuration;
+			float timeLeft = _choosePlayerMaximumDuration * _gameManager.GameSpeedModifier;
 
 			while (timeLeft > 0)
 			{
