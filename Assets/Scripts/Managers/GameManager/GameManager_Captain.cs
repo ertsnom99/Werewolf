@@ -62,7 +62,7 @@ namespace Werewolf
 			if (!AskClientToChoosePlayers(_captain,
 										GetPlayersExcluding(captainChoices.ToArray()).ToList(),
 										Config.ChooseNextCaptainImage.CompactTagId,
-										Config.CaptainChoiceDuration,
+										Config.CaptainChoiceDuration * GameSpeedModifier,
 										true,
 										1,
 										ChoicePurpose.Other,
@@ -91,7 +91,7 @@ namespace Werewolf
 #endif
 			float elapsedTime = .0f;
 
-			while (_networkDataManager.PlayerInfos[_captain].IsConnected && elapsedTime < Config.CaptainChoiceDuration)
+			while (_networkDataManager.PlayerInfos[_captain].IsConnected && elapsedTime < Config.CaptainChoiceDuration * GameSpeedModifier)
 			{
 				yield return 0;
 				elapsedTime += Time.deltaTime;
@@ -148,7 +148,7 @@ namespace Werewolf
 			}
 
 			StartCoroutine(HighlightPlayerToggle(_captain));
-			yield return DisplayTitleForAllPlayers(Config.CaptainRevealImage.CompactTagId, Config.HighlightDuration);
+			yield return DisplayTitleForAllPlayers(Config.CaptainRevealImage.CompactTagId, Config.HighlightDuration * GameSpeedModifier);
 		}
 
 		private IEnumerator MoveCaptainCard(Vector3 newPosition)

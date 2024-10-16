@@ -117,7 +117,7 @@ namespace Werewolf
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _markedForDeathPlayer, true);
 
 				_gameManager.RPC_DisplayTitle(Player, _playerDeadTonightImage.CompactTagId);
-				yield return new WaitForSeconds(_playerHighlightHoldDuration);
+				yield return new WaitForSeconds(_playerHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
 				_gameManager.RPC_HideUI(Player);
 				yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
@@ -130,7 +130,7 @@ namespace Werewolf
 
 		private void OnReveilMarkedForDeathPlayerFinished()
 		{
-			_choosePotionTimeLeft = _choosePotionMaximumDuration;
+			_choosePotionTimeLeft = _choosePotionMaximumDuration * _gameManager.GameSpeedModifier;
 
 			if (DisplayPotionChoices())
 			{
@@ -233,7 +233,7 @@ namespace Werewolf
 												}
 											});
 
-				StartCoroutine(RefreshPotions(_choiceSelectedHoldDuration, true));
+				StartCoroutine(RefreshPotions(_choiceSelectedHoldDuration * _gameManager.GameSpeedModifier, true));
 				return;
 			}
 			else if (choice == _killImage.CompactTagId)
@@ -247,7 +247,7 @@ namespace Werewolf
 
 		private IEnumerator ChoosePlayerToKill()
 		{
-			yield return new WaitForSeconds(_choiceSelectedHoldDuration);
+			yield return new WaitForSeconds(_choiceSelectedHoldDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.RPC_HideUI(Player);
 			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
@@ -258,14 +258,14 @@ namespace Werewolf
 			if (_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
 													_choosePlayerImage.CompactTagId,
-													_choosePlayerDuration,
+													_choosePlayerDuration * _gameManager.GameSpeedModifier,
 													true,
 													1,
 													ChoicePurpose.Kill,
 													OnChosePlayers,
 													out PlayerRef[] choices))
 			{
-				_endChoosePlayerCoroutine = EndChoosePlayer(_choosePlayerDuration);
+				_endChoosePlayerCoroutine = EndChoosePlayer(_choosePlayerDuration * _gameManager.GameSpeedModifier);
 				StartCoroutine(_endChoosePlayerCoroutine);
 			}
 			else
@@ -325,7 +325,7 @@ namespace Werewolf
 		{
 			_gameManager.RPC_HideUI(Player);
 			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, player, true);
-			yield return new WaitForSeconds(_playerHighlightHoldDuration);
+			yield return new WaitForSeconds(_playerHighlightHoldDuration * _gameManager.GameSpeedModifier);
 			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, player, false);
 
 			StartCoroutine(RefreshPotions(.0f, false));

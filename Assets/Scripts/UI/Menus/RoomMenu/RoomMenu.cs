@@ -30,6 +30,9 @@ namespace Werewolf.UI
 		private TMP_InputField _nickname;
 
 		[SerializeField]
+		private TMP_Dropdown _gameSpeed;
+
+		[SerializeField]
 		private TMP_Text _warningText;
 
 		[SerializeField]
@@ -46,7 +49,7 @@ namespace Werewolf.UI
 
 		public event Action<PlayerRef> KickPlayerClicked;
 		public event Action<PlayerRef, string> ChangeNicknameClicked;
-		public event Action StartGameClicked;
+		public event Action<GameSpeed> StartGameClicked;
 		public event Action LeaveSessionClicked;
 
 		public void Initialize(NetworkDataManager networkDataManager, int minPlayer, PlayerRef localPlayer, string gameHistory)
@@ -113,11 +116,13 @@ namespace Werewolf.UI
 				_nickname.text = _networkDataManager.PlayerInfos[_localPlayer].Nickname;
 			}
 
+			_gameSpeed.gameObject.SetActive(isLocalPlayerLeader);
+
 			_startGameBtn.interactable = isLocalPlayerLeader
 										&& _minPlayer > -1
 										&& _networkDataManager.PlayerInfos.Count >= _minPlayer
-										&& !_networkDataManager.RolesSetupReady;
-			_leaveSessionBtn.interactable = !_networkDataManager.RolesSetupReady;
+										&& !_networkDataManager.GameSetupReady;
+			_leaveSessionBtn.interactable = !_networkDataManager.GameSetupReady;
 		}
 
 		private void OnKickPlayer(PlayerRef kickedPlayer)
@@ -143,7 +148,7 @@ namespace Werewolf.UI
 		public void OnStartGame()
 		{
 			ClearWarning();
-			StartGameClicked?.Invoke();
+			StartGameClicked?.Invoke((GameSpeed)_gameSpeed.value);
 		}
 
 		public void OnLeaveSession()

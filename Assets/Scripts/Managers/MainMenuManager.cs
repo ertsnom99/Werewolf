@@ -114,7 +114,7 @@ namespace Werewolf
 				_networkDataManager = FindObjectOfType<NetworkDataManager>();
 			}
 
-			_networkDataManager.RolesSetupReadyChanged += _roomMenu.UpdatePlayerList;
+			_networkDataManager.GameSetupReadyChanged += _roomMenu.UpdatePlayerList;
 
 			// TODO : Change min player everytime the leader select a new game setup
 			_roomMenu.Initialize(_networkDataManager, _debugGameSetupData.MinPlayerCount, _runner.LocalPlayer, GAME_HISTORY);
@@ -137,7 +137,7 @@ namespace Werewolf
 			_networkDataManager.RPC_SetPlayerNickname(renamedPlayer, nickname);
 		}
 
-		private void StartGame()
+		private void StartGame(GameSpeed gameSpeed)
 		{
 			if (!_networkDataManager)
 			{
@@ -145,7 +145,7 @@ namespace Werewolf
 			}
 
 			// TODO : send the selected game setup
-			_networkDataManager.RPC_SetRolesSetup(NetworkDataManager.ConvertToRolesSetup(_debugGameSetupData), _debugGameSetupData.MinPlayerCount);
+			_networkDataManager.RPC_SetGameSetup(NetworkDataManager.ConvertToRolesSetup(_debugGameSetupData), gameSpeed, _debugGameSetupData.MinPlayerCount);
 		}
 
 		private void OnNetworkDataManagerFinishedSpawning()
@@ -322,7 +322,7 @@ namespace Werewolf
 		{
 			if (_networkDataManager)
 			{
-				_networkDataManager.RolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
+				_networkDataManager.GameSetupReadyChanged -= _roomMenu.UpdatePlayerList;
 			}
 
 			if (_runner)
@@ -374,7 +374,7 @@ namespace Werewolf
 				return;
 			}
 
-			_networkDataManager.RolesSetupReadyChanged -= _roomMenu.UpdatePlayerList;
+			_networkDataManager.GameSetupReadyChanged -= _roomMenu.UpdatePlayerList;
 		}
 
 		private void OnDestroy()

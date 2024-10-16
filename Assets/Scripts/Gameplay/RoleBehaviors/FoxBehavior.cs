@@ -70,7 +70,7 @@ public class FoxBehavior : RoleBehavior
 		if (!_gameManager.AskClientToChoosePlayers(Player,
 												immunePlayers,
 												_choosePlayerImage.CompactTagId,
-												_choosePlayerMaximumDuration,
+												_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 												false,
 												1,
 												ChoicePurpose.Other,
@@ -159,7 +159,7 @@ public class FoxBehavior : RoleBehavior
 			_hasPower = false;
 		}
 
-		yield return new WaitForSeconds(_resultTitleHoldDuration);
+		yield return new WaitForSeconds(_resultTitleHoldDuration * _gameManager.GameSpeedModifier);
 
 		foreach (PlayerRef player in playersToCheck)
 		{
@@ -171,7 +171,7 @@ public class FoxBehavior : RoleBehavior
 
 	private IEnumerator EndRoleCallAfterTime()
 	{
-		float timeLeft = _choosePlayerMaximumDuration;
+		float timeLeft = _choosePlayerMaximumDuration * _gameManager.GameSpeedModifier;
 
 		while (timeLeft > 0)
 		{

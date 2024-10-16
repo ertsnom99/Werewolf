@@ -123,7 +123,7 @@ namespace Werewolf
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
 													_chooseCoupleImage.CompactTagId,
-													_chooseCoupleMaximumDuration,
+													_chooseCoupleMaximumDuration * _gameManager.GameSpeedModifier,
 													true,
 													2,
 													ChoicePurpose.Other,
@@ -183,7 +183,7 @@ namespace Werewolf
 			AddCouplePlayerGroup();
 			AddCoupleSelectedGameHistoryEntry();
 
-			_highlightCoupleCoroutine = HighlightCouple(Player, _choseCoupleHighlightHoldDuration);
+			_highlightCoupleCoroutine = HighlightCouple(Player, _choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
 			yield return StartCoroutine(_highlightCoupleCoroutine);
 
 			_gameManager.StopWaintingForPlayer(Player);
@@ -191,7 +191,7 @@ namespace Werewolf
 
 		private IEnumerator EndChooseCoupleAfterTime()
 		{
-			float timeLeft = _chooseCoupleMaximumDuration;
+			float timeLeft = _chooseCoupleMaximumDuration * _gameManager.GameSpeedModifier;
 
 			while (timeLeft > 0)
 			{
@@ -206,7 +206,7 @@ namespace Werewolf
 			AddCouplePlayerGroup();
 			AddCoupleSelectedGameHistoryEntry();
 
-			_highlightCoupleCoroutine = HighlightCouple(Player, _choseCoupleHighlightHoldDuration);
+			_highlightCoupleCoroutine = HighlightCouple(Player, _choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
 			yield return StartCoroutine(_highlightCoupleCoroutine);
 
 			_gameManager.StopWaintingForPlayer(Player);
@@ -271,7 +271,7 @@ namespace Werewolf
 					continue;
 				}
 
-				StartCoroutine(HighlightCouple(_couple[i], _showCoupleHighlightHoldDuration));
+				StartCoroutine(HighlightCouple(_couple[i], _showCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier));
 			}
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
@@ -288,7 +288,7 @@ namespace Werewolf
 
 		private IEnumerator EndShowCouple()
 		{
-			yield return new WaitForSeconds(_showCoupleHighlightHoldDuration);
+			yield return new WaitForSeconds(_showCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 		#endregion
@@ -418,7 +418,7 @@ namespace Werewolf
 
 		private IEnumerator WaitToRemoveDeadCoupleHighlight()
 		{
-			yield return new WaitForSeconds(_coupleDeathHighlightHoldDuration);
+			yield return new WaitForSeconds(_coupleDeathHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.RPC_SetPlayersCardHighlightVisible(_couple, false);
 			_gameManager.RPC_HideUI();

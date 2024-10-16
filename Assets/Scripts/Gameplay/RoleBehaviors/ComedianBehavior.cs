@@ -237,7 +237,7 @@ namespace Werewolf
 				return false;
 			}
 
-			if (!_gameManager.AskClientToChooseReservedRole(this, _chooseReservedRoleMaximumDuration, _chooseRoleText, _choosedRoleText, false, OnRoleSelected))
+			if (!_gameManager.AskClientToChooseReservedRole(this, _chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier, _chooseRoleText, _choosedRoleText, false, OnRoleSelected))
 			{
 				StartCoroutine(WaitOnRoleSelected(-1));
 			}
@@ -256,7 +256,7 @@ namespace Werewolf
 
 		private IEnumerator EndRoleCallAfterTime()
 		{
-			float timeLeft = _chooseReservedRoleMaximumDuration;
+			float timeLeft = _chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier;
 
 			while (timeLeft > 0)
 			{

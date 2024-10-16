@@ -79,7 +79,7 @@ namespace Werewolf
 			if (!_gameManager.AskClientToChoosePlayers(Player,
 													immunePlayers,
 													_choosePlayerImage.CompactTagId,
-													_choosePlayerMaximumDuration,
+													_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 													true,
 													1,
 													ChoicePurpose.Kill,
@@ -118,7 +118,7 @@ namespace Werewolf
 		{
 			float elapsedTime = .0f;
 
-			while (elapsedTime < _choosePlayerMaximumDuration)
+			while (elapsedTime < _choosePlayerMaximumDuration * _gameManager.GameSpeedModifier)
 			{
 				yield return 0;
 				elapsedTime += Time.deltaTime;
@@ -191,7 +191,7 @@ namespace Werewolf
 
 		private IEnumerator WaitToRemoveHighlight(PlayerRef selectedPlayer)
 		{
-			yield return new WaitForSeconds(_selectedPlayerHighlightDuration);
+			yield return new WaitForSeconds(_selectedPlayerHighlightDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.RPC_SetPlayerCardHighlightVisible(selectedPlayer, false);
 #if UNITY_SERVER && UNITY_EDITOR

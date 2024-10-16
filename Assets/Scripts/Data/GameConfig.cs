@@ -40,6 +40,10 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public GameplayTag PlayerGivenRoleGameHistoryEntry { get; private set; }
+		
+		[field: Header("Game Speed")]
+		[field: SerializeField]
+		public float[] GameSpeedModifier { get; private set; }
 
 		[field: Header("Gameplay Loop")]
 		[field: SerializeField]
@@ -290,14 +294,14 @@ namespace Werewolf.Data
 		public float HighlightDuration { get; private set; }
 
 		[field: Header("Role Reservation")]
-[field: SerializeField]
-public string ChooseRoleText { get; private set; }
+		[field: SerializeField]
+		public string ChooseRoleText { get; private set; }
 
-[field: SerializeField]
-public string ChooseRoleObligatoryText { get; private set; }
+		[field: SerializeField]
+		public string ChooseRoleObligatoryText { get; private set; }
 
-[field: SerializeField]
-public string ChoosedRoleText { get; private set; }
+		[field: SerializeField]
+		public string ChoosedRoleText { get; private set; }
 
 		[field: SerializeField]
 		public string DidNotChoosedRoleText { get; private set; }
