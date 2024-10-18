@@ -145,9 +145,8 @@ namespace Werewolf
 			LogNightCalls();
 			_voteManager.SetPlayerCards(_playerCards);
 #endif
-			SetGameSpeedModifier(gameSpeed);
-
-			CheckPreGameplayLoopProgress();
+			GameSpeedModifier = Config.GameSpeedModifier[(int)gameSpeed];
+			InitializeAllConfigsAndManagers();
 		}
 
 		#region Roles Selection
@@ -444,20 +443,39 @@ namespace Werewolf
 		#endregion
 
 		#region GameSpeedModifier
-		private void SetGameSpeedModifier(GameSpeed gameSpeed)
+		private void InitializeAllConfigsAndManagers()
 		{
-			GameSpeedModifier = Config.GameSpeedModifier[(int)gameSpeed];
-			RPC_SetGameSpeedModifier(GameSpeedModifier);
-
 			InitializeConfigAndManagers();
+
+			foreach (PlayerRef player in PlayerGameInfos.Keys)
+			{
+				WaitForPlayer(player);
+			}
+
+			RPC_InitializeConfigAndManagers(GameSpeedModifier);
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_SetGameSpeedModifier(float gameSpeedModifier)
+		private void RPC_InitializeConfigAndManagers(float gameSpeedModifier)
 		{
 			GameSpeedModifier = gameSpeedModifier;
 			InitializeConfigAndManagers();
+
+			RPC_ConfirmPlayerIsInitialized();
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_ConfirmPlayerIsInitialized(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+
+			if (PlayersWaitingFor.Count > 0)
+			{
+				return;
+			}
+
+			CheckPreGameplayLoopProgress();
 		}
 		#endregion
 		#endregion
