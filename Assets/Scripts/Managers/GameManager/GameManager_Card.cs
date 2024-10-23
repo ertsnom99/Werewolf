@@ -134,12 +134,12 @@ namespace Werewolf
 #endif
 		private void CreateReservedRoleCards()
 		{
-			// Must figure out how many actual row are in the networked data
+			// Must figure out how many row are necessary
 			int rowCount = 0;
 
-			foreach (RolesContainer rolesContainer in ReservedRoles)
+			foreach (KeyValuePair<int, int[]> roles in ReservedRoles)
 			{
-				if (rolesContainer.RoleCount <= 0)
+				if (roles.Value.Length <= 0)
 				{
 					break;
 				}
@@ -157,17 +157,17 @@ namespace Werewolf
 			int rowCounter = 0;
 
 			// Create the reserved cards
-			foreach (RolesContainer reservedRole in ReservedRoles)
+			foreach (KeyValuePair<int, int[]> roles in ReservedRoles)
 			{
-				_reservedRolesCards[rowCounter] = new Card[reservedRole.RoleCount];
+				_reservedRolesCards[rowCounter] = new Card[roles.Value.Length];
 
 				Vector3 rowPosition = (Config.ReservedRolesSpacing * rowCounter * Vector3.back) + ((rowCount - 1) * Config.ReservedRolesSpacing * Vector3.forward / 2.0f);
 
 				int columnCounter = 0;
 
-				foreach (int roleGameplayTagID in reservedRole.Roles)
+				foreach (int roleGameplayTagID in roles.Value)
 				{
-					Vector3 columnPosition = (columnCounter * Config.ReservedRolesSpacing * Vector3.right) + ((reservedRole.RoleCount - 1) * Config.ReservedRolesSpacing * Vector3.left / 2.0f);
+					Vector3 columnPosition = (columnCounter * Config.ReservedRolesSpacing * Vector3.right) + ((roles.Value.Length - 1) * Config.ReservedRolesSpacing * Vector3.left / 2.0f);
 
 					Card card = Instantiate(Config.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
@@ -185,7 +185,7 @@ namespace Werewolf
 
 					columnCounter++;
 
-					if (columnCounter >= reservedRole.RoleCount)
+					if (columnCounter >= roles.Value.Length)
 					{
 						break;
 					}

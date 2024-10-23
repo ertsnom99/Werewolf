@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.UI;
+using static Werewolf.GameManager;
 
 namespace Werewolf
 {
@@ -14,22 +15,14 @@ namespace Werewolf
 	{
 		private readonly Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
 
-		[Networked, Capacity(5)]
-		public NetworkArray<RolesContainer> ReservedRoles { get; }
+		private readonly Dictionary<int, int[]> ReservedRoles = new();
 		private readonly Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
-
-		public struct RolesContainer : INetworkStruct
-		{
-			public int RoleCount;
-			[Networked, Capacity(5)]
-			public NetworkArray<int> Roles { get; }
-		}
 
 		public struct IndexedReservedRoles
 		{
 			public RoleData[] Roles;
 			public RoleBehavior[] Behaviors;
-			public int networkIndex;
+			public int reservedRolesIndex;
 		}
 #if UNITY_SERVER && UNITY_EDITOR
 		private readonly Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new();
@@ -244,20 +237,18 @@ namespace Werewolf
 		#endregion
 
 		#region Role Reservation
-		public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] roles, bool areFaceUp, bool arePrimaryBehavior)
+		public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] rolesData, bool areFaceUp, bool arePrimaryBehavior)
 		{
-			RolesContainer rolesContainer = new();
-			RoleBehavior[] behaviors = new RoleBehavior[roles.Length];
+			int[] roles = new int[rolesData.Length];
+			RoleBehavior[] behaviors = new RoleBehavior[rolesData.Length];
 
-			rolesContainer.RoleCount = roles.Length;
-
-			for (int i = 0; i < roles.Length; i++)
+			for (int i = 0; i < rolesData.Length; i++)
 			{
-				rolesContainer.Roles.Set(i, areFaceUp ? roles[i].GameplayTag.CompactTagId : -1);
+				roles[i] = areFaceUp ? rolesData[i].GameplayTag.CompactTagId : -1;
 
 				foreach (KeyValuePair<RoleBehavior, RoleData> unassignedRoleBehavior in _unassignedRoleBehaviors)
 				{
-					if (unassignedRoleBehavior.Value == roles[i])
+					if (unassignedRoleBehavior.Value == rolesData[i])
 					{
 						behaviors[i] = unassignedRoleBehavior.Key;
 						behaviors[i].SetIsPrimaryBehavior(arePrimaryBehavior);
@@ -267,8 +258,12 @@ namespace Werewolf
 				}
 			}
 
-			ReservedRoles.Set(_reservedRolesByBehavior.Count, rolesContainer);
-			_reservedRolesByBehavior.Add(roleBehavior, new() { Roles = roles, Behaviors = behaviors, networkIndex = _reservedRolesByBehavior.Count });
+			int index = _reservedRolesByBehavior.Count;
+
+			ReservedRoles.Add(index, roles);
+			_reservedRolesByBehavior.Add(roleBehavior, new() { Roles = rolesData, Behaviors = behaviors, reservedRolesIndex = index });
+
+			RPC_SetReservedRoles(index, roles);
 		}
 
 		public IndexedReservedRoles GetReservedRoles(RoleBehavior roleBehavior)
@@ -290,7 +285,7 @@ namespace Werewolf
 				return;
 			}
 
-			int networkIndex = _reservedRolesByBehavior[ReservedRoleOwner].networkIndex;
+			int reservedRolesIndex = _reservedRolesByBehavior[ReservedRoleOwner].reservedRolesIndex;
 			bool mustRemoveEntry = true;
 
 			if (specificIndexes.Length > 0)
@@ -314,38 +309,35 @@ namespace Werewolf
 
 					_reservedCardsByBehavior[ReservedRoleOwner][specificIndex] = null;
 #endif
-					// Update networked variable
-					// Networked data and server data should ALWAYS be aligned, therefore no need to loop to find the corresponding role
-					RolesContainer rolesContainer = new()
+					for (int i = 0; i < ReservedRoles[reservedRolesIndex].Length; i++)
 					{
-						RoleCount = ReservedRoles[networkIndex].RoleCount
-					};
-
-					for (int i = 0; i < rolesContainer.Roles.Length; i++)
-					{
-						if (i == specificIndex)
+						if (i != specificIndex)
 						{
 							continue;
 						}
 
-						rolesContainer.Roles.Set(i, ReservedRoles[networkIndex].Roles.Get(i));
+						ReservedRoles[reservedRolesIndex][i] = 0;
+						break;
 					}
 
-					ReservedRoles.Set(networkIndex, rolesContainer);
-
 					// Check if the entry is now empty and can be removed
+					if (!mustRemoveEntry)
+					{
+						continue;
+					}
+
 					for (int i = 0; i < _reservedRolesByBehavior[ReservedRoleOwner].Roles.Length; i++)
 					{
 						if (_reservedRolesByBehavior[ReservedRoleOwner].Roles[i])
 						{
 							mustRemoveEntry = false;
+							break;
 						}
 					}
 				}
 			}
 			else
 			{
-				// Update server variables
 				for (int i = 0; i < _reservedRolesByBehavior[ReservedRoleOwner].Roles.Length; i++)
 				{
 					RoleBehavior behavior = _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i];
@@ -361,10 +353,6 @@ namespace Werewolf
 					}
 #endif
 				}
-
-				// Update networked variable
-				RolesContainer rolesContainer = new();
-				ReservedRoles.Set(networkIndex, rolesContainer);
 			}
 
 			// Update server variable entry
@@ -374,10 +362,10 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 				_reservedCardsByBehavior.Remove(ReservedRoleOwner);
 #endif
+				ReservedRoles[reservedRolesIndex] = new int[ReservedRoles[reservedRolesIndex].Length];
 			}
 
-			// Tell clients to update visual on there side
-			RPC_UpdateDisplayedReservedRole(networkIndex);
+			RPC_SetReservedRoles(reservedRolesIndex, ReservedRoles[reservedRolesIndex], true);
 		}
 
 		// Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
@@ -389,7 +377,7 @@ namespace Werewolf
 			}
 
 			RoleData[] roleDatas = _reservedRolesByBehavior[ReservedRoleOwner].Roles;
-			RolesContainer rolesContainer = new() { RoleCount = roleDatas.Length };
+			int[] roles = ReservedRoles[_reservedRolesByBehavior[ReservedRoleOwner].reservedRolesIndex];
 
 			for (int i = 0; i < roleDatas.Length; i++)
 			{
@@ -397,12 +385,11 @@ namespace Werewolf
 				{
 					continue;
 				}
-
-				rolesContainer.Roles.Set(i, roleDatas[i].GameplayTag.CompactTagId);
+				roles[i] = roleDatas[i].GameplayTag.CompactTagId;
 			}
 
 			_chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, chooseText, choosedText, rolesContainer, mustChoose);
+			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, chooseText, choosedText, roles, mustChoose);
 
 			return true;
 		}
@@ -427,11 +414,39 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_ClientChooseReservedRole([RpcTarget] PlayerRef player, float maximumDuration, string chooseText, string choosedText, RolesContainer rolesContainer, bool mustChooseOne)
+		public void RPC_SetReservedRoles(int index, int[] reservedRoles, bool updateDisplayedReservedRole = false)
+		{
+			if (ReservedRoles.ContainsKey(index))
+			{
+				ReservedRoles[index] = reservedRoles;
+			}
+			else
+			{
+				ReservedRoles.Add(index, reservedRoles);
+			}
+
+			if (!updateDisplayedReservedRole)
+			{
+				return;
+			}
+
+			for (int i = 0; i < reservedRoles.Length; i++)
+			{
+				if (reservedRoles[i] != 0 || _reservedRolesCards[index].Length <= i || !_reservedRolesCards[index][i])
+				{
+					continue;
+				}
+
+				Destroy(_reservedRolesCards[index][i].gameObject);
+			}
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_ClientChooseReservedRole([RpcTarget] PlayerRef player, float maximumDuration, string chooseText, string choosedText, int[] roles, bool mustChooseOne)
 		{
 			List<Choice.ChoiceData> choices = new();
 
-			foreach (int roleGameplayTag in rolesContainer.Roles)
+			foreach (int roleGameplayTag in roles)
 			{
 				if (roleGameplayTag <= 0)
 				{
@@ -458,21 +473,6 @@ namespace Werewolf
 
 			_chooseReservedRoleCallbacks[info.Source](roleGameplayTagID);
 			_chooseReservedRoleCallbacks.Remove(info.Source);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_UpdateDisplayedReservedRole(int networkIndex)
-		{
-			RolesContainer rolesContainer = ReservedRoles[networkIndex];
-			for (int i = 0; i < rolesContainer.Roles.Count(); i++)
-			{
-				if (rolesContainer.Roles[i] != 0 || _reservedRolesCards[networkIndex].Length <= i || !_reservedRolesCards[networkIndex][i])
-				{
-					continue;
-				}
-
-				Destroy(_reservedRolesCards[networkIndex][i].gameObject);
-			}
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
