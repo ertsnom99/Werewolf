@@ -156,7 +156,7 @@ MonoBehaviour:
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionDrawNewVoteImage>k__BackingField: {fileID: -6473885156194452207, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <ExecutionTitleHoldDuration>k__BackingField: 3
+  <ExecutionTitleHoldDuration>k__BackingField: 5
   <ExecutionDrawNewVoteGameHistoryEntry>k__BackingField: {fileID: -951212456345614295,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionDrawAgainGameHistoryEntry>k__BackingField: {fileID: -4287951944148663951,
@@ -183,7 +183,7 @@ MonoBehaviour:
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <NoWinnerImage>k__BackingField: {fileID: -46525750058059440, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <EndGameTitleHoldDuration>k__BackingField: 3
+  <EndGameTitleHoldDuration>k__BackingField: 5
   <ReturnToLobbyCountdownText>k__BackingField: Returning to Lobby in {0}...
   <ReturnToLobbyCountdownDuration>k__BackingField: 5
   <CaptainChangedGameHistoryEntry>k__BackingField: {fileID: -7311221229780604641,
