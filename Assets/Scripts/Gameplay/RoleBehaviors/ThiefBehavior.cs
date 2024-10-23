@@ -120,7 +120,7 @@ namespace Werewolf
 				}
 			}
 
-			if (!_gameManager.AskClientToChooseReservedRole(this, _chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier, _reservedOnlyWerewolfs ? _chooseRoleObligatoryText : _chooseRoleText, _choosedRoleText, _reservedOnlyWerewolfs, OnRoleSelected))
+			if (!_gameManager.ChooseReservedRole(this, _chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier, _reservedOnlyWerewolfs ? _chooseRoleObligatoryText : _chooseRoleText, _choosedRoleText, _reservedOnlyWerewolfs, OnRoleSelected))
 			{
 				StartCoroutine(WaitOnRoleSelected(-1));
 			}

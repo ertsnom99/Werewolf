@@ -207,7 +207,7 @@ namespace Werewolf
 					continue;
 				}
 
-				RPC_RemoveClientVoter(otherVoter, voter);
+				RPC_RemoveVoter(otherVoter, voter);
 			}
 
 			foreach (PlayerRef spectator in _spectators)
@@ -217,7 +217,7 @@ namespace Werewolf
 					continue;
 				}
 
-				RPC_RemoveClientVoter(spectator, voter);
+				RPC_RemoveVoter(spectator, voter);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			UpdateVisualFeedback();
@@ -792,7 +792,7 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_RemoveClientVoter([RpcTarget] PlayerRef player, PlayerRef voter)
+		private void RPC_RemoveVoter([RpcTarget] PlayerRef player, PlayerRef voter)
 		{
 			_votes.Remove(voter);
 			UpdateVisualFeedback();

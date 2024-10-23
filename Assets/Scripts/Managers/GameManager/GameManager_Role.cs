@@ -369,7 +369,7 @@ namespace Werewolf
 		}
 
 		// Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
-		public bool AskClientToChooseReservedRole(RoleBehavior ReservedRoleOwner, float maximumDuration, string chooseText, string choosedText, bool mustChoose, Action<int> callback)
+		public bool ChooseReservedRole(RoleBehavior ReservedRoleOwner, float maximumDuration, string chooseText, string choosedText, bool mustChoose, Action<int> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[ReservedRoleOwner.Player].IsConnected || !_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
 			{
@@ -389,7 +389,7 @@ namespace Werewolf
 			}
 
 			_chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-			RPC_ClientChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, chooseText, choosedText, roles, mustChoose);
+			RPC_ChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, chooseText, choosedText, roles, mustChoose);
 
 			return true;
 		}
@@ -409,7 +409,7 @@ namespace Werewolf
 				return;
 			}
 
-			RPC_ClientStopChoosingReservedRole(reservedRoleOwner);
+			RPC_StopChoosingReservedRole(reservedRoleOwner);
 		}
 
 		#region RPC Calls
@@ -442,7 +442,7 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_ClientChooseReservedRole([RpcTarget] PlayerRef player, float maximumDuration, string chooseText, string choosedText, int[] roles, bool mustChooseOne)
+		public void RPC_ChooseReservedRole([RpcTarget] PlayerRef player, float maximumDuration, string chooseText, string choosedText, int[] roles, bool mustChooseOne)
 		{
 			List<Choice.ChoiceData> choices = new();
 
@@ -476,7 +476,7 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientStopChoosingReservedRole([RpcTarget] PlayerRef player)
+		private void RPC_StopChoosingReservedRole([RpcTarget] PlayerRef player)
 		{
 			_UIManager.ChoiceScreen.StopCountdown();
 			_UIManager.ChoiceScreen.DisableConfirmButton();

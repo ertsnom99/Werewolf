@@ -10,7 +10,7 @@ namespace Werewolf
 	{
 		private readonly Dictionary<PlayerRef, Action<int>> _makeChoiceCallbacks = new();
 
-		public bool AskClientToMakeChoice(PlayerRef choosingPlayer, int[] choiceImageIDs, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose, Action<int> callback)
+		public bool MakeChoice(PlayerRef choosingPlayer, int[] choiceImageIDs, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose, Action<int> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _makeChoiceCallbacks.ContainsKey(choosingPlayer))
 			{
@@ -38,7 +38,7 @@ namespace Werewolf
 				return;
 			}
 
-			RPC_ClientStopChoosing(player);
+			RPC_StopChoosing(player);
 		}
 
 		#region RPC Calls
@@ -76,7 +76,7 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientStopChoosing([RpcTarget] PlayerRef player)
+		private void RPC_StopChoosing([RpcTarget] PlayerRef player)
 		{
 			_UIManager.ChoiceScreen.StopCountdown();
 			_UIManager.ChoiceScreen.DisableConfirmButton();

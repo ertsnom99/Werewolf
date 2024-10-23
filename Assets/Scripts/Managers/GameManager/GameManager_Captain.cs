@@ -59,15 +59,15 @@ namespace Werewolf
 				yield break;
 			}
 
-			if (!AskClientToChoosePlayers(_captain,
-										GetPlayersExcluding(captainChoices.ToArray()).ToList(),
-										Config.ChooseNextCaptainImage.CompactTagId,
-										Config.CaptainChoiceDuration * GameSpeedModifier,
-										true,
-										1,
-										ChoicePurpose.Other,
-										OnChoosedNextCaptain,
-										out PlayerRef[] choices))
+			if (!ChoosePlayers(_captain,
+								GetPlayersExcluding(captainChoices.ToArray()).ToList(),
+								Config.ChooseNextCaptainImage.CompactTagId,
+								Config.CaptainChoiceDuration * GameSpeedModifier,
+								true,
+								1,
+								ChoicePurpose.Other,
+								OnChoosedNextCaptain,
+								out PlayerRef[] choices))
 			{
 				if (choices.Length >= 1)
 				{

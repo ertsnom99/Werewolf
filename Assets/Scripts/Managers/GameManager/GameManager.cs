@@ -1329,15 +1329,15 @@ namespace Werewolf
 			List<PlayerRef> executionChoices = mostVotedPlayers.ToList();
 			executionChoices.Remove(_captain);
 
-			if (!AskClientToChoosePlayers(_captain,
-										GetPlayersExcluding(executionChoices.ToArray()).ToList(),
-										Config.ExecutionDrawYouChooseImage.CompactTagId,
-										Config.ExecutionCaptainChoiceDuration * GameSpeedModifier,
-										false,
-										1,
-										ChoicePurpose.Other,
-										OnCaptainChooseExecutedPlayer,
-										out PlayerRef[] choices))
+			if (!ChoosePlayers(_captain,
+								GetPlayersExcluding(executionChoices.ToArray()).ToList(),
+								Config.ExecutionDrawYouChooseImage.CompactTagId,
+								Config.ExecutionCaptainChoiceDuration * GameSpeedModifier,
+								false,
+								1,
+								ChoicePurpose.Other,
+								OnCaptainChooseExecutedPlayer,
+								out PlayerRef[] choices))
 			{
 				AddExecutionDrawCaptainDidNotChoseGameHistoryEntry();
 				StartCoroutine(DisplayFailedExecution());
