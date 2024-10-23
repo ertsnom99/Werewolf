@@ -37,7 +37,7 @@ namespace Werewolf
 
 		private readonly Dictionary<PlayerRef, Action<PlayerRef>> _promptPlayerCallbacks = new();
 
-		public event Action<PlayerRef, ChoicePurpose> PreClientChoosesPlayers;
+		public event Action<PlayerRef, ChoicePurpose> PreChoosePlayers;
 		public event Action<PlayerRef> PostPlayerDisconnected;
 
 		#region Get Players
@@ -301,10 +301,10 @@ namespace Werewolf
 		#endregion
 
 		#region Choose Players
-		public bool AskClientToChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback, out PlayerRef[] choices)
+		public bool ChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback, out PlayerRef[] choices)
 		{
 			_immunePlayersForGettingChosen = immunePlayers;
-			PreClientChoosesPlayers?.Invoke(choosingPlayer, purpose);
+			PreChoosePlayers?.Invoke(choosingPlayer, purpose);
 
 			choices = PlayerGameInfos.Keys.Except(_immunePlayersForGettingChosen).ToArray();
 
@@ -314,7 +314,7 @@ namespace Werewolf
 			}
 
 			_choosePlayersCallbacks.Add(choosingPlayer, callback);
-			RPC_ClientChoosePlayers(choosingPlayer, _immunePlayersForGettingChosen.ToArray(), imageID, maximumDuration, mustChoose, playerAmount);
+			RPC_ChoosePlayers(choosingPlayer, _immunePlayersForGettingChosen.ToArray(), imageID, maximumDuration, mustChoose, playerAmount);
 
 			return true;
 		}
@@ -329,13 +329,13 @@ namespace Werewolf
 			_immunePlayersForGettingChosen.Add(player);
 		}
 
-		private void OnClientChooseNoCard()
+		private void ChooseNoCard()
 		{
 			StopChoosingPlayers();
 			RPC_GivePlayerChoices(new PlayerRef[0]);
 		}
 
-		private void OnClientChooseCard(Card card)
+		private void ChooseCard(Card card)
 		{
 			if (_selectedPlayers.Contains(card.Player))
 			{
@@ -364,7 +364,7 @@ namespace Werewolf
 				return;
 			}
 
-			RPC_ClientStopChoosingPlayers(player);
+			RPC_StopChoosingPlayers(player);
 		}
 
 		private void StopChoosingPlayers()
@@ -377,7 +377,7 @@ namespace Werewolf
 				}
 
 				playerCard.Value.ResetSelectionMode();
-				playerCard.Value.LeftClicked -= OnClientChooseCard;
+				playerCard.Value.LeftClicked -= ChooseCard;
 			}
 
 			foreach (PlayerRef selectedPlayer in _selectedPlayers)
@@ -385,14 +385,14 @@ namespace Werewolf
 				SetPlayerCardHighlightVisible(selectedPlayer, false);
 			}
 
-			_UIManager.TitleScreen.ConfirmClicked -= OnClientChooseNoCard;
+			_UIManager.TitleScreen.ConfirmClicked -= ChooseNoCard;
 			_UIManager.TitleScreen.SetConfirmButtonInteractable(false);
 			_UIManager.TitleScreen.StopCountdown();
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientChoosePlayers([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount)
+		private void RPC_ChoosePlayers([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount)
 		{
 			_playerAmountToSelect = playerAmount;
 			_selectedPlayers.Clear();
@@ -411,7 +411,7 @@ namespace Werewolf
 				}
 
 				playerCard.Value.SetSelectionMode(true, true);
-				playerCard.Value.LeftClicked += OnClientChooseCard;
+				playerCard.Value.LeftClicked += ChooseCard;
 			}
 
 			DisplayTitle(imageID, maximumDuration, !mustChoose, Config.SkipChoiceText);
@@ -421,7 +421,7 @@ namespace Werewolf
 				return;
 			}
 
-			_UIManager.TitleScreen.ConfirmClicked += OnClientChooseNoCard;
+			_UIManager.TitleScreen.ConfirmClicked += ChooseNoCard;
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -437,7 +437,7 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ClientStopChoosingPlayers([RpcTarget] PlayerRef player)
+		private void RPC_StopChoosingPlayers([RpcTarget] PlayerRef player)
 		{
 			StopChoosingPlayers();
 		}

@@ -70,7 +70,7 @@ namespace Werewolf
 			_networkDataManager = NetworkDataManager.Instance;
 			_voteManager = VoteManager.Instance;
 
-			_gameManager.PreClientChoosesPlayers += OnPreClientChoosesPlayers;
+			_gameManager.PreChoosePlayers += OnChoosePlayers;
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
 			_voteManager.VoteStarting += OnVoteStarting;
@@ -120,15 +120,15 @@ namespace Werewolf
 		{
 			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
 
-			if (!_gameManager.AskClientToChoosePlayers(Player,
-													immunePlayers,
-													_chooseCoupleImage.CompactTagId,
-													_chooseCoupleMaximumDuration * _gameManager.GameSpeedModifier,
-													true,
-													2,
-													ChoicePurpose.Other,
-													OnCoupleSelected,
-													out PlayerRef[] choices))
+			if (!_gameManager.ChoosePlayers(Player,
+											immunePlayers,
+											_chooseCoupleImage.CompactTagId,
+											_chooseCoupleMaximumDuration * _gameManager.GameSpeedModifier,
+											true,
+											2,
+											ChoicePurpose.Other,
+											OnCoupleSelected,
+											out PlayerRef[] choices))
 			{
 				if (choices.Length >= 2)
 				{
@@ -332,7 +332,7 @@ namespace Werewolf
 			}
 		}
 
-		private void OnPreClientChoosesPlayers(PlayerRef player, ChoicePurpose purpose)
+		private void OnChoosePlayers(PlayerRef player, ChoicePurpose purpose)
 		{
 			if (purpose != ChoicePurpose.Kill || !IsCoupleSelected() || !_couple.Contains(player))
 			{

@@ -76,15 +76,15 @@ namespace Werewolf
 			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
 			immunePlayers.Add(Player);
 
-			if (!_gameManager.AskClientToChoosePlayers(Player,
-													immunePlayers,
-													_choosePlayerImage.CompactTagId,
-													_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
-													true,
-													1,
-													ChoicePurpose.Kill,
-													OnPlayersSelected,
-													out PlayerRef[] choices))
+			if (!_gameManager.ChoosePlayers(Player,
+											immunePlayers,
+											_choosePlayerImage.CompactTagId,
+											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
+											true,
+											1,
+											ChoicePurpose.Kill,
+											OnPlayersSelected,
+											out PlayerRef[] choices))
 			{
 				if (choices.Length >= 1)
 				{

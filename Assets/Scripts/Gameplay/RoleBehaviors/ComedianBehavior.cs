@@ -237,7 +237,7 @@ namespace Werewolf
 				return false;
 			}
 
-			if (!_gameManager.AskClientToChooseReservedRole(this, _chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier, _chooseRoleText, _choosedRoleText, false, OnRoleSelected))
+			if (!_gameManager.ChooseReservedRole(this, _chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier, _chooseRoleText, _choosedRoleText, false, OnRoleSelected))
 			{
 				StartCoroutine(WaitOnRoleSelected(-1));
 			}

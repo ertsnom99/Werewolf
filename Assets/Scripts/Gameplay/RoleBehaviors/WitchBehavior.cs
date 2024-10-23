@@ -189,14 +189,14 @@ namespace Werewolf
 				_choices = new int[] { _saveImage.CompactTagId, _killImage.CompactTagId };
 			}
 
-			return _gameManager.AskClientToMakeChoice(Player,
-													_choices,
-													_choosePotionTimeLeft,
-													_choosePotionText,
-													_choosedPotionText,
-													_choosedNoPotionText,
-													false,
-													OnPotionSelected);
+			return _gameManager.MakeChoice(Player,
+											_choices,
+											_choosePotionTimeLeft,
+											_choosePotionText,
+											_choosedPotionText,
+											_choosedNoPotionText,
+											false,
+											OnPotionSelected);
 		}
 
 		private IEnumerator DelayStopWaintingForPlayer()
@@ -255,15 +255,15 @@ namespace Werewolf
 			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
 			immunePlayers.Add(Player);
 
-			if (_gameManager.AskClientToChoosePlayers(Player,
-													immunePlayers,
-													_choosePlayerImage.CompactTagId,
-													_choosePlayerDuration * _gameManager.GameSpeedModifier,
-													true,
-													1,
-													ChoicePurpose.Kill,
-													OnChosePlayers,
-													out PlayerRef[] choices))
+			if (_gameManager.ChoosePlayers(Player,
+											immunePlayers,
+											_choosePlayerImage.CompactTagId,
+											_choosePlayerDuration * _gameManager.GameSpeedModifier,
+											true,
+											1,
+											ChoicePurpose.Kill,
+											OnChosePlayers,
+											out PlayerRef[] choices))
 			{
 				_endChoosePlayerCoroutine = EndChoosePlayer(_choosePlayerDuration * _gameManager.GameSpeedModifier);
 				StartCoroutine(_endChoosePlayerCoroutine);
