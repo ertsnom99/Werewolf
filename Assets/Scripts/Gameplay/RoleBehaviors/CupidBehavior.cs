@@ -332,7 +332,7 @@ namespace Werewolf
 			}
 		}
 
-		private void OnChoosePlayers(PlayerRef player, ChoicePurpose purpose)
+		private void OnChoosePlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> immunePlayersForGettingChosen)
 		{
 			if (purpose != ChoicePurpose.Kill || !IsCoupleSelected() || !_couple.Contains(player))
 			{
@@ -341,7 +341,12 @@ namespace Werewolf
 
 			PlayerRef otherCouplePlayer = _couple[1 - Array.IndexOf(_couple, player)];
 
-			_gameManager.AddImmunePlayerForGettingChosen(otherCouplePlayer);
+			if (immunePlayersForGettingChosen.Contains(otherCouplePlayer))
+			{
+				return;
+			}
+
+			immunePlayersForGettingChosen.Add(otherCouplePlayer);
 		}
 
 		private void OnVoteStarting(ChoicePurpose purpose)
