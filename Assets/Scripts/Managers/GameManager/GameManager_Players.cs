@@ -37,7 +37,7 @@ namespace Werewolf
 
 		private readonly Dictionary<PlayerRef, Action<PlayerRef>> _promptPlayerCallbacks = new();
 
-		public event Action<PlayerRef, ChoicePurpose> PreChoosePlayers;
+		public event Action<PlayerRef, ChoicePurpose, List<PlayerRef>> PreChoosePlayers;
 		public event Action<PlayerRef> PostPlayerDisconnected;
 
 		#region Get Players
@@ -304,7 +304,7 @@ namespace Werewolf
 		public bool ChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback, out PlayerRef[] choices)
 		{
 			_immunePlayersForGettingChosen = immunePlayers;
-			PreChoosePlayers?.Invoke(choosingPlayer, purpose);
+			PreChoosePlayers?.Invoke(choosingPlayer, purpose, _immunePlayersForGettingChosen);
 
 			choices = PlayerGameInfos.Keys.Except(_immunePlayersForGettingChosen).ToArray();
 
@@ -317,16 +317,6 @@ namespace Werewolf
 			RPC_ChoosePlayers(choosingPlayer, _immunePlayersForGettingChosen.ToArray(), imageID, maximumDuration, mustChoose, playerAmount);
 
 			return true;
-		}
-
-		public void AddImmunePlayerForGettingChosen(PlayerRef player)
-		{
-			if (_immunePlayersForGettingChosen.Contains(player))
-			{
-				return;
-			}
-
-			_immunePlayersForGettingChosen.Add(player);
 		}
 
 		private void ChooseNoCard()
