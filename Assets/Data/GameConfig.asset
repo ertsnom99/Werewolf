@@ -273,6 +273,7 @@ MonoBehaviour:
   <CountdownText>k__BackingField: 'Time left: {0}'
   <SkipDebateText>k__BackingField: Skip debate
   <SkipChoiceText>k__BackingField: Skip
+  <MustChooseText>k__BackingField: Must choose one
   <ConfirmChoiceText>k__BackingField: Confirm Choice
   <PlayerLeftMarkForDeath>k__BackingField: {fileID: 9216349172710836488, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
