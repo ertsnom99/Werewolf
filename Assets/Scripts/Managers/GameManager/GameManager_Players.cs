@@ -215,9 +215,14 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayPlayerDeadIcon(PlayerRef playerDead)
+		public void RPC_DisplayPlayerDeadIcon(PlayerRef deadPlayer)
 		{
-			_playerCards[playerDead].DisplayDeadIcon();
+			if (!_playerCards.ContainsKey(deadPlayer) || !_playerCards[deadPlayer])
+			{
+				return;
+			}
+
+			_playerCards[deadPlayer].DisplayDeadIcon();
 		}
 		#endregion
 		#endregion
