@@ -342,6 +342,9 @@ namespace Werewolf.Data
 		public string SkipChoiceText { get; private set; }
 
 		[field: SerializeField]
+		public string MustChooseText { get; private set; }
+
+		[field: SerializeField]
 		public string ConfirmChoiceText { get; private set; }
 
 		[field: Header("Network")]

@@ -23,7 +23,7 @@ namespace Werewolf.UI
 		private Choice _roleChoicePrefab;
 
 		[SerializeField]
-		private Button _confirmButton;
+		private Button _SkipButton;
 
 		[SerializeField]
 		private TMP_Text _buttonText;
@@ -72,10 +72,15 @@ namespace Werewolf.UI
 				_choices[i] = choice;
 			}
 
-			_confirmButton.onClick.AddListener(OnConfirmChoice);
-			_confirmButton.interactable = true;
+			_SkipButton.onClick.RemoveAllListeners();
 
-			_buttonText.text = _config.SkipChoiceText;
+			if (!mustChooseOne)
+			{
+				_SkipButton.onClick.AddListener(OnConfirmChoice);
+			}
+
+			_SkipButton.interactable = !mustChooseOne;
+			_buttonText.text = mustChooseOne ? _config.MustChooseText : _config.SkipChoiceText;
 
 			_countdownCoroutine = Countdown(countdownDuration);
 			StartCoroutine(_countdownCoroutine);
@@ -144,8 +149,8 @@ namespace Werewolf.UI
 
 		public void DisableConfirmButton()
 		{
-			_confirmButton.onClick.RemoveAllListeners();
-			_confirmButton.interactable = false;
+			_SkipButton.onClick.RemoveAllListeners();
+			_SkipButton.interactable = false;
 		}
 
 		public void StopCountdown()
