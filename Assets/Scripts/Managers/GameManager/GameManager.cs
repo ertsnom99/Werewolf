@@ -1228,13 +1228,13 @@ namespace Werewolf
 				}
 			}
 
+			RPC_DisplayPlayerDeadIcon(deadPlayer);
+#if UNITY_SERVER && UNITY_EDITOR
 			if (!_playerCards.ContainsKey(deadPlayer) || !_playerCards[deadPlayer])
 			{
 				return;
 			}
 
-			RPC_DisplayPlayerDeadIcon(deadPlayer);
-#if UNITY_SERVER && UNITY_EDITOR
 			_playerCards[deadPlayer].DisplayDeadIcon();
 #endif
 		}
