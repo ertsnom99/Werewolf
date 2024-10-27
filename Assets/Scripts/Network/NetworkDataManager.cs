@@ -55,7 +55,6 @@ namespace Werewolf.Network
 		[field: SerializeField]
 		public GameSpeed GameSpeed { get; private set; }
 
-		[Networked]
 		public bool GameSetupReady { get; private set; }
 
 		private ChangeDetector _changeDetector;
@@ -88,9 +87,6 @@ namespace Werewolf.Network
 					case nameof(PlayerInfos):
 						PlayerInfosChanged?.Invoke();
 						break;
-					case nameof(GameSetupReady):
-						GameSetupReadyChanged?.Invoke();
-						break;
 				}
 			}
 		}
@@ -99,6 +95,12 @@ namespace Werewolf.Network
 		{
 			//TODO: Check if setup is valid
 			return true;
+		}
+
+		private void SetGameSetupReady(bool isReady)
+		{
+			GameSetupReady = isReady;
+			GameSetupReadyChanged?.Invoke();
 		}
 
 		public void ClearRolesSetup()
@@ -220,13 +222,21 @@ namespace Werewolf.Network
 
 			RolesSetup = rolesSetup;
 			GameSpeed = gameSpeed;
-			GameSetupReady = true;
+			SetGameSetupReady(true);
+
+			RPC_SetGameSetupReady();
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_WarnInvalidRolesSetup([RpcTarget] PlayerRef player)
 		{
 			InvalidRolesSetupReceived?.Invoke();
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_SetGameSetupReady()
+		{
+			SetGameSetupReady(true);
 		}
 		#endregion
 
