@@ -61,12 +61,13 @@ namespace Werewolf.Network
 		{
 			Log.Info($"Player left: {player}");
 
-			if (runner.ActivePlayers.Count() > 0 || runner.SceneManager.MainRunnerScene.buildIndex != (int)SceneDefs.GAME)
+			if (runner.ActivePlayers.Count() > 0 || runner.SceneManager.MainRunnerScene.buildIndex != (int)SceneDefs.GAME || runner.SceneManager.IsBusy)
 			{
 				return;
 			}
 
-			Log.Info("Last player left, shutdown...");
+			Log.Info("Last player left, return to lobby");
+
 			Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.MENU), LoadSceneMode.Single);
 		}
 
