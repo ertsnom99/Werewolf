@@ -58,7 +58,7 @@ namespace Werewolf.Network
 			_gameManager = GameManager.Instance;
 			_UIManager.LoadingScreen.Initialize(_gameManager.Config.LoadingScreenText);
 
-			_gameManager.RoleReceived += StartLoadingFade;
+			_gameManager.PlayerInitialized += StartLoadingFade;
 			StartCoroutine(ConfirmReadyToReceiveRole());
 		}
 
@@ -74,7 +74,7 @@ namespace Werewolf.Network
 
 		private void StartLoadingFade()
 		{
-			_gameManager.RoleReceived -= StartLoadingFade;
+			_gameManager.PlayerInitialized -= StartLoadingFade;
 
 			_UIManager.LoadingScreen.FadeFinished += ConfirmReadyToPlay;
 			_UIManager.LoadingScreen.Initialize("");
