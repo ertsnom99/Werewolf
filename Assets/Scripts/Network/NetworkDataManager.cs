@@ -39,7 +39,7 @@ namespace Werewolf.Network
 
 	public enum GameSpeed
 	{
-		Slow,
+		Slow = 0,
 		Normal,
 		Fast
 	}
@@ -52,7 +52,7 @@ namespace Werewolf.Network
 		[field: SerializeField]
 		public RolesSetup RolesSetup { get; private set; }
 
-		[field: SerializeField]
+		[Networked]
 		public GameSpeed GameSpeed { get; private set; }
 
 		public bool GameSetupReady { get; private set; }
@@ -61,6 +61,7 @@ namespace Werewolf.Network
 
 		public static event Action FinishedSpawning;
 		public event Action PlayerInfosChanged;
+		public event Action<GameSpeed> GameSpeedChanged;
 		public event Action InvalidRolesSetupReceived;
 		public event Action GameSetupReadyChanged;
 		public event Action<PlayerRef> PlayerDisconnected;
@@ -74,6 +75,7 @@ namespace Werewolf.Network
 		public override void Spawned()
 		{
 			_changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+			GameSpeed = GameSpeed.Normal;
 
 			FinishedSpawning?.Invoke();
 		}
@@ -86,6 +88,9 @@ namespace Werewolf.Network
 				{
 					case nameof(PlayerInfos):
 						PlayerInfosChanged?.Invoke();
+						break;
+					case nameof(GameSpeed):
+						GameSpeedChanged?.Invoke(GameSpeed);
 						break;
 				}
 			}
@@ -106,7 +111,8 @@ namespace Werewolf.Network
 		public void ClearRolesSetup()
 		{
 			RolesSetup = new();
-			GameSetupReady = false;
+			SetGameSetupReady(false);
+			RPC_SetGameSetupReady(false);
 		}
 
 		#region Convertion Methods
@@ -180,6 +186,17 @@ namespace Werewolf.Network
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_KickPlayer(PlayerRef kickedPlayer, RpcInfo info = default)
+		{
+			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader)
+			{
+				return;
+			}
+
+			Runner.Disconnect(kickedPlayer);
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_SetPlayerNickname(PlayerRef playerRef, string nickname)
 		{
 			PlayerNetworkInfo playerData = new()
@@ -194,14 +211,14 @@ namespace Werewolf.Network
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_KickPlayer(PlayerRef kickedPlayer, RpcInfo info = default)
+		public void RPC_SetGameSpeed(GameSpeed gameSpeed, RpcInfo info = default)
 		{
-			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader)
+			if (!PlayerInfos[info.Source].IsLeader)
 			{
 				return;
 			}
 
-			Runner.Disconnect(kickedPlayer);
+			GameSpeed = gameSpeed;
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -224,7 +241,7 @@ namespace Werewolf.Network
 			GameSpeed = gameSpeed;
 			SetGameSetupReady(true);
 
-			RPC_SetGameSetupReady();
+			RPC_SetGameSetupReady(true);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -234,9 +251,9 @@ namespace Werewolf.Network
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_SetGameSetupReady()
+		public void RPC_SetGameSetupReady(bool isReady)
 		{
-			SetGameSetupReady(true);
+			SetGameSetupReady(isReady);
 		}
 		#endregion
 
