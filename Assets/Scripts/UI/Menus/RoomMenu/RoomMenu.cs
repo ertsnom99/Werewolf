@@ -66,6 +66,7 @@ namespace Werewolf.UI
 			_networkDataManager.PlayerInfosChanged += UpdatePlayerList;
 			_networkDataManager.InvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
 
+			UpdatePlayerList();
 			_nickname.text = string.Empty;
 
 			if (!string.IsNullOrEmpty(gameHistory) && GameHistoryManager.Instance.LoadGameHistorySaveFromJson(gameHistory, out GameHistorySave gameHistorySave))
