@@ -30,7 +30,10 @@ namespace Werewolf.UI
 		private TMP_InputField _nickname;
 
 		[SerializeField]
-		private TMP_Dropdown _gameSpeed;
+		private TMP_Dropdown _gameSpeedDropdown;
+
+		[SerializeField]
+		private TMP_Text _gameSpeedText;
 
 		[SerializeField]
 		private TMP_Text _warningText;
@@ -49,6 +52,7 @@ namespace Werewolf.UI
 
 		public event Action<PlayerRef> KickPlayerClicked;
 		public event Action<PlayerRef, string> ChangeNicknameClicked;
+		public event Action<GameSpeed> GameSpeedChanged;
 		public event Action<GameSpeed> StartGameClicked;
 		public event Action LeaveSessionClicked;
 
@@ -64,6 +68,7 @@ namespace Werewolf.UI
 			}
 
 			_networkDataManager.PlayerInfosChanged += UpdatePlayerList;
+			_networkDataManager.GameSpeedChanged += ChangeGameSpeed;
 			_networkDataManager.InvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
 
 			UpdatePlayerList();
@@ -117,7 +122,9 @@ namespace Werewolf.UI
 				_nickname.text = _networkDataManager.PlayerInfos[_localPlayer].Nickname;
 			}
 
-			_gameSpeed.gameObject.SetActive(isLocalPlayerLeader);
+			_gameSpeedDropdown.gameObject.SetActive(isLocalPlayerLeader);
+			_gameSpeedText.gameObject.SetActive(!isLocalPlayerLeader);
+			ChangeGameSpeed(_networkDataManager.GameSpeed);
 
 			_startGameBtn.interactable = isLocalPlayerLeader
 										&& _minPlayer > -1
@@ -136,6 +143,17 @@ namespace Werewolf.UI
 			ChangeNicknameClicked?.Invoke(_localPlayer, _nickname.text);
 		}
 
+		public void OnChangeGameSpeed(int gameSpeed)
+		{
+			GameSpeedChanged?.Invoke((GameSpeed)gameSpeed);
+		}
+
+		private void ChangeGameSpeed(GameSpeed gameSpeed)
+		{
+			_gameSpeedDropdown.value = (int)gameSpeed;
+			_gameSpeedText.text = _gameSpeedDropdown.options[(int)gameSpeed].text;
+		}
+
 		private void ShowInvalidRolesSetupWarning()
 		{
 			_warningText.text = "An invalid roles setup was sent to the server";
@@ -149,7 +167,7 @@ namespace Werewolf.UI
 		public void OnStartGame()
 		{
 			ClearWarning();
-			StartGameClicked?.Invoke((GameSpeed)_gameSpeed.value);
+			StartGameClicked?.Invoke((GameSpeed)_gameSpeedDropdown.value);
 		}
 
 		public void OnLeaveSession()
@@ -167,6 +185,7 @@ namespace Werewolf.UI
 			}
 
 			_networkDataManager.PlayerInfosChanged -= UpdatePlayerList;
+			_networkDataManager.GameSpeedChanged -= ChangeGameSpeed;
 			_networkDataManager.InvalidRolesSetupReceived -= ShowInvalidRolesSetupWarning;
 		}
 	}
