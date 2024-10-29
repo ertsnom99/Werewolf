@@ -171,7 +171,14 @@ namespace Werewolf
 				Directory.CreateDirectory($"{_saveDirectoryPath}");
 			}
 
-			File.WriteAllText($"{_saveDirectoryPath}/{DateTime.Now:yyyy'_'MM'_'dd'_'HH'_'mm}{SAVE_FILE_EXTENSION}", gameHistoryJson);
+			string path = $"{_saveDirectoryPath}/{DateTime.Now:yyyy'_'MM'_'dd'_'HH'_'mm}{SAVE_FILE_EXTENSION}";
+
+			if (File.Exists(path))
+			{
+				return;
+			}
+
+			File.WriteAllText(path, gameHistoryJson);
 		}
 
 		public string[] GetSavedGameHistoryFilePaths()
