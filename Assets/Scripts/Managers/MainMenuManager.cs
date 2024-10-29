@@ -101,10 +101,22 @@ namespace Werewolf
 			DisplayJoinMenu();
 		}
 
-		private void JoinSession()
+		private async void JoinSession()
 		{
-			_runner = GetRunner("Client");
-			ConnectToServer(_runner, _joinMenu.GetSessionName());
+			if (!_runner)
+			{
+				_runner = GetRunner("Client");
+			}
+
+			Task<StartGameResult> connection = ConnectToServer(_runner, _joinMenu.GetSessionName());
+			await connection;
+			
+			if (connection.Result.Ok)
+			{
+				return;
+			}
+
+			_joinMenu.Initialize($"Could not join: {connection.Result.ShutdownReason}");
 		}
 
 		private void OpenRoomMenu(bool setNickname = true)
