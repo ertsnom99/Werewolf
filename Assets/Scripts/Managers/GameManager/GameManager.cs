@@ -31,7 +31,9 @@ namespace Werewolf
 
 		private PlayerGroupsData _playerGroupsData;
 
-		private bool _allPlayersReadyToReceiveRole = false;
+		private RolesSetup _rolesSetup;
+
+		private bool _allPlayersReadyToBeInitialized = false;
 		private bool _startedPlayersInitialization = false;
 		private bool _allPlayersReadyToPlay = false;
 
@@ -124,30 +126,136 @@ namespace Werewolf
 			_networkDataManager = NetworkDataManager.Instance;
 			_networkDataManager.PlayerDisconnected += OnPlayerDisconnected;
 
+			_rolesSetup = rolesSetup;
+			GameSpeedModifier = Config.GameSpeedModifier[(int)gameSpeed];
+
 			_gameHistoryManager.ClearEntries();
 
-			SelectRolesToDistribute(rolesSetup);
+			UpdatePreGameplayLoopProgress();
+		}
 
-			PreRoleDistribution?.Invoke();
-			DistributeRoles();
-			PostRoleDistribution?.Invoke();
+		#region Pre Gameplay Loop Progress
+		private void UpdatePreGameplayLoopProgress()
+		{
+			if (!_allPlayersReadyToBeInitialized)
+			{
+				foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> playerInfo in _networkDataManager.PlayerInfos)
+				{
+					if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+					{
+						continue;
+					}
 
-			AlivePlayerCount = PlayerGameInfos.Count;
+					WaitForPlayer(playerInfo.Key);
+				}
+			}
+			else if (!_startedPlayersInitialization)
+			{
+				SelectRolesToDistribute(_rolesSetup);
+				DistributeRoles();
 
-			DeterminePlayerGroups();
-			DetermineNightCalls();
+				DeterminePlayerGroups();
+				DetermineNightCalls();
 #if UNITY_SERVER && UNITY_EDITOR
-			CreatePlayerCardsForServer();
-			CreateReservedRoleCardsForServer();
-			AdjustCamera();
-			LogNightCalls();
-			_voteManager.SetPlayerCards(_playerCards);
+				CreatePlayerCardsForServer();
+				CreateReservedRoleCardsForServer();
+				AdjustCamera();
+				LogNightCalls();
+				_voteManager.SetPlayerCards(_playerCards);
 #endif
-			GameSpeedModifier = Config.GameSpeedModifier[(int)gameSpeed];
+				InitializeConfigAndManagers();
+				AlivePlayerCount = PlayerGameInfos.Count;
+
+				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in PlayerGameInfos)
+				{
+					if (!_networkDataManager.PlayerInfos[playerGameInfo.Key].IsConnected)
+					{
+						continue;
+					}
+
+					WaitForPlayer(playerGameInfo.Key);
+					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, PlayerGameInfos[playerGameInfo.Key].Role.GameplayTag.CompactTagId);
+				}
+
+				_startedPlayersInitialization = true;
+			}
+			else if (_allPlayersReadyToPlay)
+			{
+				PreStartGame?.Invoke();
+				StartGame();
+			}
+		}
+
+		private void InitializeConfigAndManagers()
+		{
+			Config.ImagesData.Initialize();
+
+			_voteManager.Initialize(Config);
+			_voteManager.SetPlayers(PlayerGameInfos);
+			_daytimeManager.Initialize(Config);
+			_UIManager.TitleScreen.SetConfig(Config);
+			_UIManager.ChoiceScreen.SetConfig(Config);
+			_UIManager.VoteScreen.SetConfig(Config);
+			_UIManager.EndGameScreen.SetConfig(Config);
+			_UIManager.DisconnectedScreen.SetConfig(Config);
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+
+			if (PlayersWaitingFor.Count > 0)
+			{
+				return;
+			}
+
+			_allPlayersReadyToPlay = true;
+
+			UpdatePreGameplayLoopProgress();
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_ConfirmPlayerReadyToBeInitialized(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+
+			Log.Info($"{info.Source} is ready! Waiting for {PlayersWaitingFor.Count} players");
+
+			if (PlayersWaitingFor.Count > 0)
+			{
+				return;
+			}
+
+			_allPlayersReadyToBeInitialized = true;
+
+			Log.Info("All players are ready to receive their role!");
+
+			UpdatePreGameplayLoopProgress();
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_InitializePlayer([RpcTarget] PlayerRef player, float gameSpeedModifier, int roleGameplayTagID)
+		{
+			GameSpeedModifier = gameSpeedModifier;
 			InitializeConfigAndManagers();
 
-			CheckPreGameplayLoopProgress();
+			if (!_networkDataManager)
+			{
+				_networkDataManager = NetworkDataManager.Instance;
+			}
+
+			CreatePlayerCards(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
+			CreateReservedRoleCards();
+			AdjustCamera();
+
+			_voteManager.SetPlayerCards(_playerCards);
+
+			PlayerInitialized?.Invoke();
 		}
+		#endregion
+		#endregion
 
 		#region Roles Selection
 		private void SelectRolesToDistribute(RolesSetup rolesSetup)
@@ -274,6 +382,8 @@ namespace Werewolf
 		#region Roles Distribution
 		private void DistributeRoles()
 		{
+			PreRoleDistribution?.Invoke();
+
 			foreach (KeyValuePair<PlayerRef, Network.PlayerNetworkInfo> playerInfo in _networkDataManager.PlayerInfos)
 			{
 				RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
@@ -312,6 +422,8 @@ namespace Werewolf
 											},
 											selectedRole.GameplayTag);
 			}
+
+			PostRoleDistribution?.Invoke();
 		}
 
 		public void AddRolesToDistribute(RoleData[] roles)
@@ -420,114 +532,6 @@ namespace Werewolf
 			Debug.Log("-------------------------------------------------------");
 		}
 #endif
-		#endregion
-
-		#region Pre Gameplay Loop Progress
-		private void CheckPreGameplayLoopProgress()
-		{
-			if (!_allPlayersReadyToReceiveRole)
-			{
-				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in PlayerGameInfos)
-				{
-					if (!_networkDataManager.PlayerInfos[playerGameInfo.Key].IsConnected)
-					{
-						continue;
-					}
-
-					WaitForPlayer(playerGameInfo.Key);
-				}
-			}
-			else if (!_startedPlayersInitialization)
-			{
-				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in PlayerGameInfos)
-				{
-					if (!_networkDataManager.PlayerInfos[playerGameInfo.Key].IsConnected)
-					{
-						continue;
-					}
-
-					WaitForPlayer(playerGameInfo.Key);
-					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, PlayerGameInfos[playerGameInfo.Key].Role.GameplayTag.CompactTagId);
-				}
-
-				_startedPlayersInitialization = true;
-			}
-			else if (_allPlayersReadyToPlay)
-			{
-				PreStartGame?.Invoke();
-				StartGame();
-			}
-		}
-
-		private void InitializeConfigAndManagers()
-		{
-			Config.ImagesData.Initialize();
-
-			_voteManager.Initialize(Config);
-			_voteManager.SetPlayers(PlayerGameInfos);
-			_daytimeManager.Initialize(Config);
-			_UIManager.TitleScreen.SetConfig(Config);
-			_UIManager.ChoiceScreen.SetConfig(Config);
-			_UIManager.VoteScreen.SetConfig(Config);
-			_UIManager.EndGameScreen.SetConfig(Config);
-			_UIManager.DisconnectedScreen.SetConfig(Config);
-		}
-
-		#region RPC Calls
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_ConfirmPlayerReadyToReceiveRole(RpcInfo info = default)
-		{
-			StopWaintingForPlayer(info.Source);
-
-			Log.Info($"{info.Source} is ready!");
-
-			if (PlayersWaitingFor.Count > 0)
-			{
-				return;
-			}
-
-			_allPlayersReadyToReceiveRole = true;
-
-			Log.Info("All players are ready to receive their role!");
-
-			CheckPreGameplayLoopProgress();
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_InitializePlayer([RpcTarget] PlayerRef player, float gameSpeedModifier, int roleGameplayTagID)
-		{
-			GameSpeedModifier = gameSpeedModifier;
-			InitializeConfigAndManagers();
-
-			if (!_networkDataManager)
-			{
-				_networkDataManager = NetworkDataManager.Instance;
-			}
-
-			CreatePlayerCards(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
-			CreateReservedRoleCards();
-			AdjustCamera();
-
-			_voteManager.SetPlayerCards(_playerCards);
-
-			PlayerInitialized?.Invoke();
-		}
-
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
-		{
-			StopWaintingForPlayer(info.Source);
-
-			if (PlayersWaitingFor.Count > 0)
-			{
-				return;
-			}
-
-			_allPlayersReadyToPlay = true;
-
-			CheckPreGameplayLoopProgress();
-		}
-		#endregion
 		#endregion
 
 		private void AdjustCamera()
