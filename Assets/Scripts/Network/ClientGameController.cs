@@ -59,17 +59,17 @@ namespace Werewolf.Network
 			_UIManager.LoadingScreen.Initialize(_gameManager.Config.LoadingScreenText);
 
 			_gameManager.PlayerInitialized += StartLoadingFade;
-			StartCoroutine(ConfirmReadyToReceiveRole());
+			StartCoroutine(ConfirmReadyToBeInitialized());
 		}
 
-		private IEnumerator ConfirmReadyToReceiveRole()
+		private IEnumerator ConfirmReadyToBeInitialized()
 		{
 			while (!_gameManager.Object.IsValid)
 			{
 				yield return 0;
 			}
 
-			_gameManager.RPC_ConfirmPlayerReadyToReceiveRole();
+			_gameManager.RPC_ConfirmPlayerReadyToBeInitialized();
 		}
 
 		private void StartLoadingFade()
