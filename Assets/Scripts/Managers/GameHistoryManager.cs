@@ -18,9 +18,6 @@ namespace Werewolf
 		[SerializeField]
 		private GameplayTag[] _acceptedGameplayTagsForImageOverride;
 
-		[field: SerializeField]
-		public GameHistoryEntriesData GameHistoryEntriesData { get; private set; }
-
 		private string _saveDirectoryPath;
 
 		private readonly GameHistorySave _gameHistorySave = new();
@@ -66,14 +63,7 @@ namespace Werewolf
 		{
 			base.Awake();
 
-			if (!GameHistoryEntriesData)
-			{
-				Debug.LogError($"The GameHistoryEntriesData of the GameHistoryManager is not set");
-				return;
-			}
-
 			DontDestroyOnLoad(gameObject);
-			GameHistoryEntriesData.Initialize();
 			_saveDirectoryPath = $"{Application.persistentDataPath}/{SAVE_FOLDER}";
 		}
 

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cfac39c14e84f04194d8759ba09ace5, type: 3}
+  m_Name: Villagers
+  m_EditorClassIdentifier: 
+  <GameplayTag>k__BackingField: {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  <DebugName>k__BackingField: Villagers
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 6103014752256
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <HasMultiplePlayers>k__BackingField: 1
+  <Priority>k__BackingField: 1
+  <Image>k__BackingField: {fileID: 21300000, guid: ddb55fc2572245948a2f91aba9aa18ee,
+    type: 3}
+  Leader: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

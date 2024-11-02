@@ -230,7 +230,7 @@ namespace Werewolf
 		#region Player Groups
 		public void AddPlayerToPlayerGroup(PlayerRef player, GameplayTag playerGroup)
 		{
-			int priority = _playerGroupsData.GetPlayerGroupPriority(playerGroup);
+			int priority = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(playerGroup.CompactTagId).Priority;
 
 			for (int i = 0; i < _playerGroups.Count; i++)
 			{

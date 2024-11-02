@@ -26,18 +26,18 @@ namespace Werewolf.Data
 		public RoleData alias;
 	};
 
-	[CreateAssetMenu(fileName = "Role", menuName = "ScriptableObjects/Roles/Role")]
+	[CreateAssetMenu(fileName = "RoleData", menuName = "ScriptableObjects/Roles/RoleData")]
 	public class RoleData : GameplayData
 	{
 		[field: SerializeField]
-		public LocalizedString Name { get; protected set; }
+		public LocalizedString Name { get; private set; }
 
 		[field: SerializeField]
-		public LocalizedString Description { get; protected set; }
+		public LocalizedString Description { get; private set; }
 
 		[field: SerializeField]
 		[field: PreviewSprite]
-		public Sprite Image { get; protected set; }
+		public Sprite Image { get; private set; }
 
 		[field: SerializeField]
 		public PrimaryRoleType PrimaryType { get; private set; }

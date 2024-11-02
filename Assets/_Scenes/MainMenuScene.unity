@@ -8385,39 +8385,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1416705263}
   m_CullTransparentMesh: 1
---- !u!1001 &1422966138
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 8007412384500699556, guid: 08e30429e7dc50e48a108787977e31ce,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8007412384500699556, guid: 08e30429e7dc50e48a108787977e31ce,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8007412384500699556, guid: 08e30429e7dc50e48a108787977e31ce,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8988078447861244261, guid: 08e30429e7dc50e48a108787977e31ce,
-        type: 3}
-      propertyPath: m_Name
-      value: PlayerGroupsManager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 08e30429e7dc50e48a108787977e31ce, type: 3}
 --- !u!1 &1429491963
 GameObject:
   m_ObjectHideFlags: 0
@@ -13049,7 +13016,6 @@ SceneRoots:
   - {fileID: 1371295894}
   - {fileID: 69326812}
   - {fileID: 7134024759240778540}
-  - {fileID: 1422966138}
   - {fileID: 1126110457}
   - {fileID: 347617533}
   - {fileID: 1511165401}
