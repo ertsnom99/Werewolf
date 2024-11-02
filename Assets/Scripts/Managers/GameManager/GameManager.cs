@@ -666,7 +666,7 @@ namespace Werewolf
 				StopPromptingPlayer(playerInfo.Key, false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_UIManager.FadeOut(Config.UITransitionNormalDuration);
+			_UIManager.FadeOutAll(Config.UITransitionNormalDuration);
 #endif
 			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
