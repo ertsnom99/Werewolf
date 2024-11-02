@@ -45,7 +45,7 @@ namespace Werewolf
 
 		public void HideUI()
 		{
-			_UIManager.FadeOut(Config.UITransitionNormalDuration);
+			_UIManager.FadeOutAll(Config.UITransitionNormalDuration);
 		}
 
 		#region RPC Calls

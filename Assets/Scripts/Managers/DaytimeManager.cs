@@ -103,7 +103,7 @@ namespace Werewolf
 
 			yield return new WaitForSeconds(_config.DaytimeTransitionDuration - _config.DaytimeTextFadeInDelay - _config.UITransitionNormalDuration);
 
-			_UIManager.FadeOut(_config.UITransitionNormalDuration);
+			_UIManager.FadeOutAll(_config.UITransitionNormalDuration);
 
 			yield return new WaitForSeconds(_config.UITransitionNormalDuration);
 
