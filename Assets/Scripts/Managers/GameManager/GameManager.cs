@@ -29,8 +29,6 @@ namespace Werewolf
 
 		public int AlivePlayerCount { get; private set; }
 
-		private PlayerGroupsData _playerGroupsData;
-
 		private RolesSetup _rolesSetup;
 
 		private bool _allPlayersReadyToBeInitialized = false;
@@ -103,8 +101,6 @@ namespace Werewolf
 
 		private void Start()
 		{
-			_playerGroupsData = PlayerGroupsManager.Instance.PlayerGroupsData;
-
 			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_UIManager = UIManager.Instance;
@@ -1449,7 +1445,7 @@ namespace Werewolf
 					continue;
 				}
 
-				_playerGroupsData.GetPlayerGroupData(playerGroup.GameplayTag.CompactTagId, out PlayerGroupData playerGroupData);
+				PlayerGroupData playerGroupData = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(playerGroup.GameplayTag.CompactTagId);
 
 				_gameHistoryManager.AddEntry(Config.EndGamePlayerGroupWonGameHistoryEntry,
 											new GameHistorySaveEntryVariable[] {
@@ -1542,8 +1538,8 @@ namespace Werewolf
 
 			if (winningPlayerGroupID > -1)
 			{
-				_playerGroupsData.GetPlayerGroupData(winningPlayerGroupID, out PlayerGroupData playerGroup);
-				DisplayTitle(playerGroup.Image, string.Format(Config.WinningPlayerGroupText, playerGroup.Name.GetLocalizedString()));
+				PlayerGroupData playerGroupData = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(winningPlayerGroupID);
+				DisplayTitle(playerGroupData.Image, string.Format(Config.WinningPlayerGroupText, playerGroupData.Name.GetLocalizedString()));
 			}
 			else
 			{

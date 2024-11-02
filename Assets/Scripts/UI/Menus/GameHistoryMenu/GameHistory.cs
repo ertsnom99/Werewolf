@@ -20,16 +20,13 @@ namespace Werewolf.UI
 
 		private readonly List<GameHistoryEntry> _gameHistoryEntries = new();
 
-		private GameHistoryEntriesData _gameHistoryEntriesData;
-		private PlayerGroupsData _playerGroupsData;
+		private ScrollRect _scrollRect;
 
 		private GameplayDatabaseManager _gameplayDatabaseManager;
 
-		private ScrollRect _scrollRect;
-
 		private void Start()
 		{
-			if (!_gameHistoryEntriesData)
+			if (!_gameplayDatabaseManager)
 			{
 				Initialize();
 			}
@@ -37,8 +34,6 @@ namespace Werewolf.UI
 
 		private void Initialize()
 		{
-			_gameHistoryEntriesData = GameHistoryManager.Instance.GameHistoryEntriesData;
-			_playerGroupsData = PlayerGroupsManager.Instance.PlayerGroupsData;
 			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
 
 			_scrollRect = GetComponent<ScrollRect>();
@@ -46,7 +41,7 @@ namespace Werewolf.UI
 
 		public void DisplayGameHistory(GameHistorySave gameHistorySave)
 		{
-			if(!_gameHistoryEntriesData)
+			if(!_gameplayDatabaseManager)
 			{
 				Initialize();
 			}
@@ -60,7 +55,7 @@ namespace Werewolf.UI
 
 			foreach (GameHistorySaveEntry entry in gameHistorySave.Entries)
 			{
-				_gameHistoryEntriesData.GetGameHistoryEntryData(entry.EntryGameplayTagName, out GameHistoryEntryData gameHistoryEntryData);
+				GameHistoryEntryData gameHistoryEntryData = _gameplayDatabaseManager.GetGameplayData<GameHistoryEntryData>(entry.EntryGameplayTagName);
 
 				if (string.IsNullOrEmpty(entry.ImageOverrideGameplayTagName))
 				{
@@ -78,8 +73,8 @@ namespace Werewolf.UI
 					}
 					else if (GameplayTagType == "PlayerGroup")
 					{
-						_playerGroupsData.GetPlayerGroupData(entry.ImageOverrideGameplayTagName, out PlayerGroupData playerGroupsData);
-						image = playerGroupsData.Image;
+						PlayerGroupData playerGroupData = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(entry.ImageOverrideGameplayTagName);
+						image = playerGroupData.Image;
 					}
 				}
 
@@ -110,8 +105,8 @@ namespace Werewolf.UI
 							text.Add(variable.Name, new LocalizedStringListVariable() { Values = localizedRoleNames });
 							break;
 						case GameHistorySaveEntryVariableType.PlayerGroupeName:
-							_playerGroupsData.GetPlayerGroupData(variable.Data, out PlayerGroupData playerGroupsData);
-							text.Add(variable.Name, playerGroupsData.Name);
+							PlayerGroupData playerGroupData = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(variable.Data);
+							text.Add(variable.Name, playerGroupData.Name);
 							break;
 						case GameHistorySaveEntryVariableType.Bool:
 							text.Add(variable.Name, new BoolVariable() { Value = bool.Parse(variable.Data) });

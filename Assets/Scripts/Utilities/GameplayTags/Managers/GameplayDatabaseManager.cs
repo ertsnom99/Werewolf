@@ -14,13 +14,11 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 	[field: SerializeField]
 	[field: ReadOnly]
 	public bool IsReady { get; private set; }
-
 #if UNITY_EDITOR
 	[Header("Debug")]
 	[SerializeField]
 	private bool _logDatabase = false;
 #endif
-
 	protected override void Awake()
 	{
 		base.Awake();

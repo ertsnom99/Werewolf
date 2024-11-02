@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cfac39c14e84f04194d8759ba09ace5, type: 3}
+  m_Name: Sectarian
+  m_EditorClassIdentifier: 
+  <GameplayTag>k__BackingField: {fileID: 1363378225548369814, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  <DebugName>k__BackingField: Sectarian
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <HasMultiplePlayers>k__BackingField: 0
+  <Priority>k__BackingField: 4
+  <Image>k__BackingField: {fileID: -1321321227, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
+    type: 3}
+  Leader: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []
