@@ -48,5 +48,6 @@ MonoBehaviour:
   - Roles
   - GameHistoryEntries
   - PlayerGroups
+  - Images
   <IsReady>k__BackingField: 0
   _logDatabase: 0

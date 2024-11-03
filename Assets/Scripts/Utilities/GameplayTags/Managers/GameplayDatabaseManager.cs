@@ -89,6 +89,7 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 	{
 		if (!_IDtoGameplayData.ContainsKey(ID))
 		{
+			Debug.LogError($"No GameplayData has the gameplayTag ID {ID}");
 			return null;
 		}
 

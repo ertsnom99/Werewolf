@@ -21,11 +21,13 @@ namespace Werewolf
 
 		private GameConfig _config;
 
+		private GameplayDatabaseManager _gameplayDatabaseManager;
 		private UIManager _UIManager;
 
 		public void Initialize(GameConfig config)
 		{
 			_config = config;
+			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
 			_UIManager = UIManager.Instance;
 
 			SetDaytime(CurrentDaytime);
@@ -90,12 +92,14 @@ namespace Werewolf
 
 		private IEnumerator TransitionTitle(int imageID)
 		{
-			if (!_config.ImagesData.GetImageData(imageID, out ImageData titleData))
+			ImageData imageData = _gameplayDatabaseManager.GetGameplayData<ImageData>(imageID);
+
+			if (imageData == null)
 			{
 				yield break;
 			}
 
-			_UIManager.TitleScreen.Initialize(titleData.Image, titleData.Text);
+			_UIManager.TitleScreen.Initialize(imageData.Image, imageData.Text);
 
 			yield return new WaitForSeconds(_config.DaytimeTextFadeInDelay);
 

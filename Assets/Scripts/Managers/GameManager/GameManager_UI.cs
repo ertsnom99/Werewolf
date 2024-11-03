@@ -9,12 +9,14 @@ namespace Werewolf
 	{
 		public void DisplayTitle(int imageID, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "", bool fastFade = false)
 		{
-			if (!Config.ImagesData.GetImageData(imageID, out ImageData titleData))
+			ImageData imageData = _gameplayDatabaseManager.GetGameplayData<ImageData>(imageID);
+
+			if (imageData == null)
 			{
 				return;
 			}
 
-			_UIManager.TitleScreen.Initialize(titleData.Image, titleData.Text, countdownDuration, showConfirmButton, confirmButtonText);
+			_UIManager.TitleScreen.Initialize(imageData.Image, imageData.Text, countdownDuration, showConfirmButton, confirmButtonText);
 			_UIManager.FadeIn(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
 		}
 

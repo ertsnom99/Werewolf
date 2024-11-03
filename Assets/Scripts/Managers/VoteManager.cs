@@ -13,7 +13,6 @@ namespace Werewolf
 	public class VoteManager : NetworkBehaviourSingleton<VoteManager>
 	{
 		private GameConfig _config;
-		private Dictionary<PlayerRef, PlayerGameInfo> _players;
 		private Dictionary<PlayerRef, Card> _playerCards;
 
 		public List<PlayerRef> Voters { get; private set; }
@@ -87,11 +86,6 @@ namespace Werewolf
 			_networkDataManager.PlayerDisconnected += OnPlayerDisconnected;
 		}
 
-		public void SetPlayers(Dictionary<PlayerRef, PlayerGameInfo> players)
-		{
-			_players = players;
-		}
-
 		public bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
 											string titleText,
 											float maxDuration,
@@ -112,7 +106,7 @@ namespace Werewolf
 
 			PrepareVote(titleText, maxDuration, allowedToNotVote, failingToVoteGivesPenalty, purpose, modifiers);
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _players)
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
 				if (spectatingPlayers.Contains(playerInfo.Key))
 				{
@@ -318,7 +312,7 @@ namespace Werewolf
 								_immune.ToArray(),
 								_immuneFromPlayers[voter].ToArray(),
 								_titleText,
-								_immuneFromPlayers[voter].Count >= _players.Count,
+								_immuneFromPlayers[voter].Count >= _gameManager.PlayerGameInfos.Count,
 								voteDuration,
 								_allowedToNotVote);
 			}
@@ -376,7 +370,7 @@ namespace Werewolf
 					_immuneFromPlayers[voter].Add(player);
 				}
 
-				if (_immuneFromPlayers[voter].Count < _players.Count)
+				if (_immuneFromPlayers[voter].Count < _gameManager.PlayerGameInfos.Count)
 				{
 					canAtLeastOneVoterVote = true;
 				}
