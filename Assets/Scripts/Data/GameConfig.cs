@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Werewolf.Data
 {
-	[CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/Config/GameConfig")]
+	[CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/GameConfig")]
 	public class GameConfig : ScriptableObject
 	{
 		public const int MAX_PLAYER_COUNT = 20;
@@ -323,9 +323,6 @@ namespace Werewolf.Data
 		public float RoleRevealHoldDuration { get; private set; }
 
 		[field: Header("UI")]
-		[field: SerializeField]
-		public ImagesData ImagesData { get; private set; }
-
 		[field: SerializeField]
 		public float UITransitionNormalDuration { get; private set; }
 

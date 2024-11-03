@@ -49,7 +49,9 @@ namespace Werewolf
 
 			foreach (int choiceImageID in choiceImageIDs)
 			{
-				if (!Config.ImagesData.GetImageData(choiceImageID, out ImageData imageData))
+				ImageData imageData = _gameplayDatabaseManager.GetGameplayData<ImageData>(choiceImageID);
+
+				if (imageData == null)
 				{
 					continue;
 				}

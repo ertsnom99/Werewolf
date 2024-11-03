@@ -184,10 +184,7 @@ namespace Werewolf
 
 		private void InitializeConfigAndManagers()
 		{
-			Config.ImagesData.Initialize();
-
 			_voteManager.Initialize(Config);
-			_voteManager.SetPlayers(PlayerGameInfos);
 			_daytimeManager.Initialize(Config);
 			_UIManager.TitleScreen.SetConfig(Config);
 			_UIManager.ChoiceScreen.SetConfig(Config);
