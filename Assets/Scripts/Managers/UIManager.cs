@@ -42,12 +42,11 @@ namespace Werewolf
 
 		public void FadeIn(FadingScreen fadingScreen, float transitionDuration)
 		{
-			if (_activeFadingScreens.Contains(fadingScreen))
+			if (!_activeFadingScreens.Contains(fadingScreen))
 			{
-				return;
+				_activeFadingScreens.Add(fadingScreen);
 			}
 
-			_activeFadingScreens.Add(fadingScreen);
 			fadingScreen.FadeIn(transitionDuration);
 		}
 
