@@ -50,7 +50,7 @@ namespace Werewolf
 			}
 		}
 #endif
-		private void CreatePlayerCards(PlayerRef bottomPlayer, RoleData playerRole)
+		private void CreatePlayerCards(PlayerRef[] playersOrder, PlayerRef bottomPlayer, RoleData playerRole)
 		{
 			NetworkDictionary<PlayerRef, Network.PlayerNetworkInfo> playerInfos = _networkDataManager.PlayerInfos;
 			int playerCount = playerInfos.Count;
@@ -62,9 +62,9 @@ namespace Werewolf
 			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(playerCount);
 
 			// Offset the rotation to keep bottomPlayer at the bottom
-			foreach (KeyValuePair<PlayerRef, Network.PlayerNetworkInfo> playerInfo in playerInfos)
+			foreach (PlayerRef player in playersOrder)
 			{
-				if (playerInfo.Key == bottomPlayer)
+				if (player == bottomPlayer)
 				{
 					break;
 				}
@@ -73,7 +73,7 @@ namespace Werewolf
 			}
 
 			// Create cards
-			foreach (KeyValuePair<PlayerRef, Network.PlayerNetworkInfo> playerInfo in playerInfos)
+			foreach (PlayerRef player in playersOrder)
 			{
 				counter++;
 				rotationOffset++;
@@ -84,19 +84,19 @@ namespace Werewolf
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetOriginalPosition(card.transform.position);
-				card.SetPlayer(playerInfo.Key);
-				card.SetNickname(playerInfo.Value.Nickname);
+				card.SetPlayer(player);
+				card.SetNickname(playerInfos[player].Nickname);
 				card.DetachGroundCanvas();
 
 				card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role); };
 
-				if (playerInfo.Key == bottomPlayer)
+				if (player == bottomPlayer)
 				{
 					card.SetRole(playerRole);
 					card.Flip();
 				}
 
-				_playerCards.Add(playerInfo.Key, card);
+				_playerCards.Add(player, card);
 			}
 		}
 
