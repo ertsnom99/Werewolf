@@ -130,7 +130,6 @@ namespace Werewolf
 			UpdatePreGameplayLoopProgress();
 		}
 
-		#region Pre Gameplay Loop Progress
 		private void UpdatePreGameplayLoopProgress()
 		{
 			if (!_allPlayersReadyToBeInitialized)
@@ -152,15 +151,11 @@ namespace Werewolf
 
 				DeterminePlayerGroups();
 				DetermineNightCalls();
-#if UNITY_SERVER && UNITY_EDITOR
-				CreatePlayerCardsForServer();
-				CreateReservedRoleCardsForServer();
-				AdjustCamera();
-				LogNightCalls();
-				_voteManager.SetPlayerCards(_playerCards);
-#endif
+
 				InitializeConfigAndManagers();
 				AlivePlayerCount = PlayerGameInfos.Count;
+
+				PlayerRef[] playersOrder = CreatePlayersOrder();
 
 				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in PlayerGameInfos)
 				{
@@ -170,10 +165,17 @@ namespace Werewolf
 					}
 
 					WaitForPlayer(playerGameInfo.Key);
-					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, PlayerGameInfos[playerGameInfo.Key].Role.GameplayTag.CompactTagId);
+					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, playersOrder, PlayerGameInfos[playerGameInfo.Key].Role.GameplayTag.CompactTagId);
 				}
 
 				_startedPlayersInitialization = true;
+#if UNITY_SERVER && UNITY_EDITOR
+				CreatePlayerCardsForServer();
+				CreateReservedRoleCardsForServer();
+				AdjustCamera();
+				LogNightCalls();
+				_voteManager.SetPlayerCards(_playerCards);
+#endif
 			}
 			else if (_allPlayersReadyToPlay)
 			{
@@ -181,74 +183,6 @@ namespace Werewolf
 				StartGame();
 			}
 		}
-
-		private void InitializeConfigAndManagers()
-		{
-			_voteManager.Initialize(Config);
-			_daytimeManager.Initialize(Config);
-			_UIManager.TitleScreen.SetConfig(Config);
-			_UIManager.ChoiceScreen.SetConfig(Config);
-			_UIManager.VoteScreen.SetConfig(Config);
-			_UIManager.EndGameScreen.SetConfig(Config);
-			_UIManager.DisconnectedScreen.SetConfig(Config);
-		}
-
-		#region RPC Calls
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
-		{
-			StopWaintingForPlayer(info.Source);
-
-			if (PlayersWaitingFor.Count > 0)
-			{
-				return;
-			}
-
-			_allPlayersReadyToPlay = true;
-
-			UpdatePreGameplayLoopProgress();
-		}
-
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_ConfirmPlayerReadyToBeInitialized(RpcInfo info = default)
-		{
-			StopWaintingForPlayer(info.Source);
-
-			Log.Info($"{info.Source} is ready! Waiting for {PlayersWaitingFor.Count} players");
-
-			if (PlayersWaitingFor.Count > 0)
-			{
-				return;
-			}
-
-			_allPlayersReadyToBeInitialized = true;
-
-			Log.Info("All players are ready to receive their role!");
-
-			UpdatePreGameplayLoopProgress();
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_InitializePlayer([RpcTarget] PlayerRef player, float gameSpeedModifier, int roleGameplayTagID)
-		{
-			GameSpeedModifier = gameSpeedModifier;
-			InitializeConfigAndManagers();
-
-			if (!_networkDataManager)
-			{
-				_networkDataManager = NetworkDataManager.Instance;
-			}
-
-			CreatePlayerCards(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
-			CreateReservedRoleCards();
-			AdjustCamera();
-
-			_voteManager.SetPlayerCards(_playerCards);
-
-			PlayerInitialized?.Invoke();
-		}
-		#endregion
-		#endregion
 
 		#region Roles Selection
 		private void SelectRolesToDistribute(RolesSetup rolesSetup)
@@ -527,10 +461,92 @@ namespace Werewolf
 #endif
 		#endregion
 
+		private void InitializeConfigAndManagers()
+		{
+			_voteManager.Initialize(Config);
+			_daytimeManager.Initialize(Config);
+			_UIManager.TitleScreen.SetConfig(Config);
+			_UIManager.ChoiceScreen.SetConfig(Config);
+			_UIManager.VoteScreen.SetConfig(Config);
+			_UIManager.EndGameScreen.SetConfig(Config);
+			_UIManager.DisconnectedScreen.SetConfig(Config);
+		}
+
+		private PlayerRef[] CreatePlayersOrder()
+		{
+			PlayerRef[] playersOrder = new PlayerRef[PlayerGameInfos.Count];
+			List<PlayerRef> tempPlayers = PlayerGameInfos.Keys.ToList();
+
+			while (tempPlayers.Count > 0)
+			{
+				int randomIndex = UnityEngine.Random.Range(0, tempPlayers.Count - 1);
+				playersOrder[^tempPlayers.Count] = tempPlayers[randomIndex];
+				tempPlayers.RemoveAt(randomIndex);
+			}
+
+			return playersOrder;
+		}
+
 		private void AdjustCamera()
 		{
 			Camera.main.transform.position = Camera.main.transform.position.normalized * Config.CameraOffset.Evaluate(_networkDataManager.PlayerInfos.Count);
 		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+
+			if (PlayersWaitingFor.Count > 0)
+			{
+				return;
+			}
+
+			_allPlayersReadyToPlay = true;
+
+			UpdatePreGameplayLoopProgress();
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_ConfirmPlayerReadyToBeInitialized(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+
+			Log.Info($"{info.Source} is ready! Waiting for {PlayersWaitingFor.Count} players");
+
+			if (PlayersWaitingFor.Count > 0)
+			{
+				return;
+			}
+
+			_allPlayersReadyToBeInitialized = true;
+
+			Log.Info("All players are ready to receive their role!");
+
+			UpdatePreGameplayLoopProgress();
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_InitializePlayer([RpcTarget] PlayerRef player, float gameSpeedModifier, PlayerRef[] playersOrder, int roleGameplayTagID)
+		{
+			GameSpeedModifier = gameSpeedModifier;
+			InitializeConfigAndManagers();
+
+			if (!_networkDataManager)
+			{
+				_networkDataManager = NetworkDataManager.Instance;
+			}
+
+			CreatePlayerCards(playersOrder, player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
+			CreateReservedRoleCards();
+			AdjustCamera();
+
+			_voteManager.SetPlayerCards(_playerCards);
+
+			PlayerInitialized?.Invoke();
+		}
+		#endregion
 		#endregion
 
 		#region Gameplay Loop
