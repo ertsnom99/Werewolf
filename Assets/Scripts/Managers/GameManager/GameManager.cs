@@ -538,11 +538,14 @@ namespace Werewolf
 				_networkDataManager = NetworkDataManager.Instance;
 			}
 
-			CreatePlayerCards(playersOrder, player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
+			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
+
+			CreatePlayerCards(playersOrder, player, roleData);
 			CreateReservedRoleCards();
 			AdjustCamera();
 
 			_voteManager.SetPlayerCards(_playerCards);
+			_UIManager.RolesScreen.SelectRole(roleData, false);
 
 			PlayerInitialized?.Invoke();
 		}

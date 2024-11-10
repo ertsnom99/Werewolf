@@ -109,7 +109,10 @@ namespace Werewolf
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		private void RPC_ChangePlayerCardRole([RpcTarget] PlayerRef player, int roleGameplayTagID)
 		{
-			ChangePlayerCardRole(player, _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID));
+			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
+
+			ChangePlayerCardRole(player, roleData);
+			_UIManager.RolesScreen.SelectRole(roleData, false);
 		}
 		#endregion
 		#endregion
