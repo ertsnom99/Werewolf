@@ -68,10 +68,9 @@ namespace Werewolf.UI
 
 				EndGamePlayer endGamePlayer = Instantiate(_endGamePlayerPrefab, parent);
 
-				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(endGamePlayerInfo.Role);
-
-				if (roleData)
+				if (endGamePlayerInfo.Role > -1)
 				{
+					RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(endGamePlayerInfo.Role);
 					endGamePlayer.Initialize(roleData.Image, _networkDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname, roleData.Name.GetLocalizedString());
 				}
 				else
