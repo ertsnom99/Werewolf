@@ -52,14 +52,14 @@ namespace Werewolf.UI
 			_roleDescription.text = roleButton.RoleData.Description.GetLocalizedString();
 		}
 
-		public void SelectRole(RoleData role)
+		public void SelectRole(RoleData role, bool openMenu)
 		{
 			if (!role || !_roleButtonByRoleData.ContainsKey(role))
 			{
 				return;
 			}
 
-			if (!_areRolesDisplayed)
+			if (openMenu && !_areRolesDisplayed)
 			{
 				ToggleRoles();
 			}

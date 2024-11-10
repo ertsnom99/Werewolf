@@ -88,7 +88,7 @@ namespace Werewolf
 				card.SetNickname(playerInfos[player].Nickname);
 				card.DetachGroundCanvas();
 
-				card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role); };
+				card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role, true); };
 
 				if (player == bottomPlayer)
 				{
@@ -172,7 +172,7 @@ namespace Werewolf
 					Card card = Instantiate(Config.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
-					card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role); };
+					card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role, true); };
 
 					if (roleGameplayTagID > 0)
 					{
