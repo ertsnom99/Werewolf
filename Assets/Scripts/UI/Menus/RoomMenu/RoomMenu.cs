@@ -27,7 +27,10 @@ namespace Werewolf.UI
 
 		[Header("UI")]
 		[SerializeField]
-		private TMP_InputField _nickname;
+		private TMP_InputField _nicknameInputField;
+
+		[SerializeField]
+		private Button _nicknameButton;
 
 		[SerializeField]
 		private TMP_Dropdown _gameSpeedDropdown;
@@ -47,8 +50,9 @@ namespace Werewolf.UI
 		private NetworkDataManager _networkDataManager;
 
 		private PlayerRef _localPlayer;
-
 		private int _minPlayer = -1;
+		private int _minNicknameCharacterCount;
+		private bool _initializedNicknameInputField;
 
 		public event Action<PlayerRef> KickPlayerClicked;
 		public event Action<PlayerRef, string> ChangeNicknameClicked;
@@ -56,23 +60,25 @@ namespace Werewolf.UI
 		public event Action<GameSpeed> StartGameClicked;
 		public event Action LeaveSessionClicked;
 
-		public void Initialize(NetworkDataManager networkDataManager, int minPlayer, PlayerRef localPlayer, string gameHistory)
+		public void Initialize(NetworkDataManager networkDataManager, PlayerRef localPlayer, int minPlayer, int minNicknameCharacterCount, string gameHistory)
 		{
 			_networkDataManager = networkDataManager;
-			_minPlayer = minPlayer;
 			_localPlayer = localPlayer;
+			_minPlayer = minPlayer;
 
 			if (!_networkDataManager || _localPlayer == null)
 			{
 				return;
 			}
 
+			_minNicknameCharacterCount = minNicknameCharacterCount;
+			_nicknameInputField.text = string.Empty;
+
+			UpdatePlayerList();
+
 			_networkDataManager.PlayerInfosChanged += UpdatePlayerList;
 			_networkDataManager.GameSpeedChanged += ChangeGameSpeed;
 			_networkDataManager.InvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
-
-			UpdatePlayerList();
-			_nickname.text = string.Empty;
 
 			if (!string.IsNullOrEmpty(gameHistory) && GameHistoryManager.Instance.LoadGameHistorySaveFromJson(gameHistory, out GameHistorySave gameHistorySave))
 			{
@@ -117,10 +123,13 @@ namespace Werewolf.UI
 				isOdd = !isOdd;
 			}
 
-			if (_networkDataManager.PlayerInfos.ContainsKey(_localPlayer) && string.IsNullOrEmpty(_nickname.text))
+			if (!_initializedNicknameInputField && _networkDataManager.PlayerInfos.ContainsKey(_localPlayer))
 			{
-				_nickname.text = _networkDataManager.PlayerInfos[_localPlayer].Nickname;
+				_nicknameInputField.text = _networkDataManager.PlayerInfos[_localPlayer].Nickname;
+				_initializedNicknameInputField = true;
 			}
+
+			UpdateNicknameButton();
 
 			_gameSpeedDropdown.gameObject.SetActive(isLocalPlayerLeader);
 			_gameSpeedText.gameObject.SetActive(!isLocalPlayerLeader);
@@ -133,6 +142,11 @@ namespace Werewolf.UI
 			_leaveSessionBtn.interactable = !_networkDataManager.GameSetupReady;
 		}
 
+		public void UpdateNicknameButton()
+		{
+			_nicknameButton.interactable = _nicknameInputField.text.Length >= _minNicknameCharacterCount && !_networkDataManager.GameSetupReady;
+		}
+
 		private void OnKickPlayer(PlayerRef kickedPlayer)
 		{
 			KickPlayerClicked?.Invoke(kickedPlayer);
@@ -140,7 +154,7 @@ namespace Werewolf.UI
 
 		public void OnChangeNickname()
 		{
-			ChangeNicknameClicked?.Invoke(_localPlayer, _nickname.text);
+			ChangeNicknameClicked?.Invoke(_localPlayer, _nicknameInputField.text);
 		}
 
 		public void OnChangeGameSpeed(int gameSpeed)
