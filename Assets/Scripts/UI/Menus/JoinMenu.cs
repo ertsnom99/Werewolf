@@ -20,13 +20,14 @@ namespace Werewolf.UI
 		[SerializeField]
 		private TMP_Text _messageText;
 
+		private int _minNicknameCharacterCount;
+
 		public event Action JoinSessionClicked;
 		public event Action ReturnClicked;
 
-		private readonly int MIN_NICKNAME_CHARACTER_COUNT = 3;
-
-		public void Initialize(string message)
+		public void Initialize(string message, int minNicknameCharacterCount)
 		{
+			_minNicknameCharacterCount = minNicknameCharacterCount;
 			_nicknameInputField.interactable = true;
 			_sessionNameInputField.interactable = true;
 			UpdateButtonState();
@@ -36,7 +37,7 @@ namespace Werewolf.UI
 		public void UpdateButtonState()
 		{
 			string nickname = GetNickname();
-			bool enteredValidNickname = !string.IsNullOrEmpty(nickname) && nickname.Length >= MIN_NICKNAME_CHARACTER_COUNT;
+			bool enteredValidNickname = !string.IsNullOrEmpty(nickname) && nickname.Length >= _minNicknameCharacterCount;
 			_joinBtn.interactable = enteredValidNickname;
 		}
 

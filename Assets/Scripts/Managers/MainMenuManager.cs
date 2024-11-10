@@ -46,6 +46,8 @@ namespace Werewolf
 		public static bool GAME_STARTED = false;
 		public static string GAME_HISTORY;
 
+		private readonly int MIN_NICKNAME_CHARACTER_COUNT = 3;
+
 		private void Start()
 		{
 			_joinMenu.JoinSessionClicked += JoinSession;
@@ -97,7 +99,7 @@ namespace Werewolf
 
 		public void OpenJoinMenu(string message)
 		{
-			_joinMenu.Initialize(message);
+			_joinMenu.Initialize(message, MIN_NICKNAME_CHARACTER_COUNT);
 			DisplayJoinMenu();
 		}
 
@@ -116,7 +118,7 @@ namespace Werewolf
 				return;
 			}
 
-			_joinMenu.Initialize($"Could not join: {connection.Result.ShutdownReason}");
+			_joinMenu.Initialize($"Could not join: {connection.Result.ShutdownReason}", MIN_NICKNAME_CHARACTER_COUNT);
 		}
 
 		private void OpenRoomMenu(bool setNickname = true)
@@ -130,7 +132,7 @@ namespace Werewolf
 			_networkDataManager.GameSetupReadyChanged += _roomMenu.UpdatePlayerList;
 
 			// TODO : Change min player everytime the leader select a new game setup
-			_roomMenu.Initialize(_networkDataManager, _debugGameSetupData.MinPlayerCount, _runner.LocalPlayer, GAME_HISTORY);
+			_roomMenu.Initialize(_networkDataManager, _runner.LocalPlayer, _debugGameSetupData.MinPlayerCount, MIN_NICKNAME_CHARACTER_COUNT, GAME_HISTORY);
 
 			if (setNickname)
 			{
