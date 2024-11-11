@@ -13,14 +13,14 @@ namespace Werewolf
 
 		#region Create Card
 #if UNITY_SERVER && UNITY_EDITOR
-		private void CreatePlayerCardsForServer()
+		private void CreatePlayerCardsForServer(PlayerRef[] playersOrder)
 		{
-			float rotationIncrement = 360.0f / PlayerGameInfos.Count;
-			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(PlayerGameInfos.Count);
+			float rotationIncrement = 360.0f / playersOrder.Length;
+			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(playersOrder.Length);
 
 			int counter = -1;
 
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
+			foreach (PlayerRef player in playersOrder)
 			{
 				counter++;
 
@@ -30,20 +30,20 @@ namespace Werewolf
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetOriginalPosition(card.transform.position);
-				card.SetPlayer(playerInfo.Key);
-				card.SetRole(playerInfo.Value.Role);
-				card.SetNickname(_networkDataManager.PlayerInfos[playerInfo.Key].Nickname);
+				card.SetPlayer(player);
+				card.SetRole(PlayerGameInfos[player].Role);
+				card.SetNickname(_networkDataManager.PlayerInfos[player].Nickname);
 				card.DetachGroundCanvas();
 				card.Flip();
 
-				_playerCards.Add(playerInfo.Key, card);
+				_playerCards.Add(player, card);
 
-				if (playerInfo.Value.Behaviors.Count <= 0)
+				if (PlayerGameInfos[player].Behaviors.Count <= 0)
 				{
 					continue;
 				}
 
-				foreach (RoleBehavior behavior in playerInfo.Value.Behaviors)
+				foreach (RoleBehavior behavior in PlayerGameInfos[player].Behaviors)
 				{
 					behavior.transform.position = card.transform.position;
 				}
@@ -52,8 +52,7 @@ namespace Werewolf
 #endif
 		private void CreatePlayerCards(PlayerRef[] playersOrder, PlayerRef bottomPlayer, RoleData playerRole)
 		{
-			NetworkDictionary<PlayerRef, Network.PlayerNetworkInfo> playerInfos = _networkDataManager.PlayerInfos;
-			int playerCount = playerInfos.Count;
+			int playerCount = playersOrder.Length;
 
 			int counter = -1;
 			int rotationOffset = -1;
@@ -85,7 +84,7 @@ namespace Werewolf
 
 				card.SetOriginalPosition(card.transform.position);
 				card.SetPlayer(player);
-				card.SetNickname(playerInfos[player].Nickname);
+				card.SetNickname(_networkDataManager.PlayerInfos[player].Nickname);
 				card.DetachGroundCanvas();
 
 				card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role, true); };

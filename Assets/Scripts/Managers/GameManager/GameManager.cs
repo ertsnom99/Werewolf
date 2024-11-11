@@ -170,7 +170,7 @@ namespace Werewolf
 
 				_startedPlayersInitialization = true;
 #if UNITY_SERVER && UNITY_EDITOR
-				CreatePlayerCardsForServer();
+				CreatePlayerCardsForServer(playersOrder);
 				CreateReservedRoleCardsForServer();
 				AdjustCamera();
 				LogNightCalls();
