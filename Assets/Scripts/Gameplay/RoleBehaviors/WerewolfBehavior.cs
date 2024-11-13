@@ -46,7 +46,7 @@ namespace Werewolf
 		{
 			isWakingUp = true;
 
-			_preparedVote = _voteManager.PrepareVote(_voteTitle, _commonData.VoteMaxDuration * _gameManager.GameSpeedModifier, true, false, ChoicePurpose.Kill);
+			_preparedVote = _voteManager.PrepareVote(_voteTitle, _commonData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{

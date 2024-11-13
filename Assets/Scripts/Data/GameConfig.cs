@@ -269,13 +269,7 @@ namespace Werewolf.Data
 
 		[field: Header("Vote")]
 		[field: SerializeField]
-		public string LockedInButtonText { get; private set; }
-
-		[field: SerializeField]
-		public string LockedOutButtonText { get; private set; }
-
-		[field: SerializeField]
-		public float AllLockedInDelayToEndVote { get; private set; }
+		public float AllVotedDelayToEndVote { get; private set; }
 
 		[field: SerializeField]
 		public float NoVoteDuration { get; private set; }
