@@ -19,23 +19,16 @@ namespace Werewolf
 		private readonly List<PlayerRef> _immune = new();
 		private readonly Dictionary<PlayerRef, List<PlayerRef>> _immuneFromPlayers = new();
 		private readonly List<PlayerRef> _spectators = new();
-		private readonly Dictionary<PlayerRef, Vote> _votes = new();
-
-		public class Vote
-		{
-			public PlayerRef VotedFor;
-			public bool LockedIn;
-		}
+		private readonly Dictionary<PlayerRef, PlayerRef> _votes = new();
 
 		private string _titleText;
 		private float _maxDuration;
-		private bool _allowedToNotVote;
 		private bool _failingToVoteGivesPenalty;
 		private Dictionary<PlayerRef, int> _modifiers;
-		private int _lockedInVoteCount;
+		private int _voteCount;
+		private bool _resetAllVotedElapsedTime;
 
 		private ChoicePurpose _purpose;
-
 		private Step _step;
 
 		private enum Step
@@ -46,11 +39,8 @@ namespace Werewolf
 		}
 
 		private Action<PlayerRef[]> _votesCountedCallback;
-
 		private IEnumerator _voteCoroutine;
-
 		private Card _selectedCard;
-
 		private PlayerRef[] _playersImmuneFromLocalPlayer;
 
 		private GameManager _gameManager;
@@ -81,7 +71,7 @@ namespace Werewolf
 			_networkDataManager = NetworkDataManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 
-			_UIManager.VoteScreen.SetLockedInDelayDuration(_config.AllLockedInDelayToEndVote * _gameManager.GameSpeedModifier);
+			_UIManager.VoteScreen.SetConfirmVoteDelayDuration(_config.AllVotedDelayToEndVote * _gameManager.GameSpeedModifier);
 
 			_networkDataManager.PlayerDisconnected += OnPlayerDisconnected;
 		}
@@ -89,7 +79,6 @@ namespace Werewolf
 		public bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
 											string titleText,
 											float maxDuration,
-											bool allowedToNotVote,
 											bool failingToVoteGivesPenalty,
 											ChoicePurpose purpose,
 											PlayerRef[] spectatingPlayers,
@@ -104,7 +93,7 @@ namespace Werewolf
 
 			_votesCountedCallback = votesCountedCallback;
 
-			PrepareVote(titleText, maxDuration, allowedToNotVote, failingToVoteGivesPenalty, purpose, modifiers);
+			PrepareVote(titleText, maxDuration, failingToVoteGivesPenalty, purpose, modifiers);
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
@@ -136,7 +125,7 @@ namespace Werewolf
 			return true;
 		}
 
-		public bool PrepareVote(string titleText, float maxDuration, bool allowedToNotVote, bool failingToVoteGivesPenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
+		public bool PrepareVote(string titleText, float maxDuration, bool failingToVoteGivesPenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
 		{
 			if (_step != Step.NotVoting)
 			{
@@ -151,10 +140,9 @@ namespace Werewolf
 
 			_titleText = titleText;
 			_maxDuration = maxDuration;
-			_allowedToNotVote = allowedToNotVote;
 			_failingToVoteGivesPenalty = failingToVoteGivesPenalty;
 			_modifiers = modifiers;
-			_lockedInVoteCount = 0;
+			_voteCount = 0;
 
 			_purpose = purpose;
 			_step = Step.Preparing;
@@ -173,51 +161,6 @@ namespace Werewolf
 			_immuneFromPlayers.Add(voter, new());
 		}
 
-		public void RemoveVoter(PlayerRef voter)
-		{
-			if (_step == Step.NotVoting || !Voters.Contains(voter))
-			{
-				return;
-			}
-
-			if (_step == Step.Voting && _votes[voter].LockedIn)
-			{
-				_lockedInVoteCount--;
-			}
-
-			Voters.Remove(voter);
-			_immuneFromPlayers.Remove(voter);
-			_votes.Remove(voter);
-
-			if (_step != Step.Voting)
-			{
-				return;
-			}
-
-			foreach (PlayerRef otherVoter in Voters)
-			{
-				if (!_networkDataManager.PlayerInfos[otherVoter].IsConnected)
-				{
-					continue;
-				}
-
-				RPC_RemoveVoter(otherVoter, voter);
-			}
-
-			foreach (PlayerRef spectator in _spectators)
-			{
-				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
-				{
-					continue;
-				}
-
-				RPC_RemoveVoter(spectator, voter);
-			}
-#if UNITY_SERVER && UNITY_EDITOR
-			UpdateVisualFeedback();
-#endif
-		}
-
 		public void AddVoteImmunity(PlayerRef player)
 		{
 			if (_step != Step.Preparing || _immune.Contains(player))
@@ -226,16 +169,6 @@ namespace Werewolf
 			}
 
 			_immune.Add(player);
-		}
-
-		public void RemoveVoteImmunity(PlayerRef player)
-		{
-			if (_step != Step.Preparing || !_immune.Contains(player))
-			{
-				return;
-			}
-
-			_immune.Remove(player);
 		}
 
 		public void AddVoteImmunity(PlayerRef immunePlayer, PlayerRef from)
@@ -248,16 +181,6 @@ namespace Werewolf
 			_immuneFromPlayers[from].Add(immunePlayer);
 		}
 
-		public void RemoveVoteImmunity(PlayerRef immunePlayer, PlayerRef from)
-		{
-			if (_step != Step.Preparing || !_immuneFromPlayers.ContainsKey(from) || !_immuneFromPlayers[from].Contains(immunePlayer))
-			{
-				return;
-			}
-
-			_immuneFromPlayers[from].Remove(immunePlayer);
-		}
-
 		public void AddSpectator(PlayerRef spectator)
 		{
 			if (_step != Step.Preparing || _spectators.Contains(spectator) || Voters.Contains(spectator))
@@ -266,16 +189,6 @@ namespace Werewolf
 			}
 
 			_spectators.Add(spectator);
-		}
-
-		public void RemoveSpectator(PlayerRef spectator)
-		{
-			if (_step != Step.Preparing || !_spectators.Contains(spectator))
-			{
-				return;
-			}
-
-			_spectators.Remove(spectator);
 		}
 
 		public void StartVote()
@@ -313,8 +226,7 @@ namespace Werewolf
 								_immuneFromPlayers[voter].ToArray(),
 								_titleText,
 								_immuneFromPlayers[voter].Count >= _gameManager.PlayerGameInfos.Count,
-								voteDuration,
-								_allowedToNotVote);
+								voteDuration);
 			}
 
 			foreach (PlayerRef spectator in _spectators)
@@ -349,7 +261,7 @@ namespace Werewolf
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
-			_UIManager.VoteScreen.Initialize(_titleText, false, voteDuration, false);
+			_UIManager.VoteScreen.Initialize(_titleText, false, voteDuration);
 #endif
 			_step = Step.Voting;
 		}
@@ -401,19 +313,21 @@ namespace Werewolf
 		private IEnumerator WaitForVoteEnd(float duration)
 		{
 			float elapsedTime = .0f;
-			float allLockedInElapsedTime = .0f;
+			float allVotedElapsedTime = .0f;
 
-			while (elapsedTime < duration && (_lockedInVoteCount < Voters.Count || allLockedInElapsedTime < _config.AllLockedInDelayToEndVote * _gameManager.GameSpeedModifier))
+			while (elapsedTime < duration && (_voteCount < Voters.Count || allVotedElapsedTime < _config.AllVotedDelayToEndVote * _gameManager.GameSpeedModifier))
 			{
 				yield return 0;
 
-				if (_lockedInVoteCount < Voters.Count && allLockedInElapsedTime > .0f)
+				if (_resetAllVotedElapsedTime)
 				{
-					allLockedInElapsedTime = .0f;
+					allVotedElapsedTime = .0f;
+					_resetAllVotedElapsedTime = false;
 				}
-				else if (_lockedInVoteCount >= Voters.Count)
+
+				if (_voteCount >= Voters.Count)
 				{
-					allLockedInElapsedTime += Time.deltaTime;
+					allVotedElapsedTime += Time.deltaTime;
 				}
 
 				elapsedTime += Time.deltaTime;
@@ -443,20 +357,10 @@ namespace Werewolf
 
 			PlayerRef selectedPlayer = _selectedCard ? _selectedCard.Player : PlayerRef.None;
 
-			_votes[Runner.LocalPlayer].VotedFor = selectedPlayer;
+			_votes[Runner.LocalPlayer] = selectedPlayer;
 			UpdateVisualFeedback();
 
-			RPC_UpdateServerVote(selectedPlayer, _votes[Runner.LocalPlayer].LockedIn);
-		}
-
-		private void OnVoteLockChanged(bool isLocked)
-		{
-			_votes[Runner.LocalPlayer].LockedIn = isLocked;
-			SetCardsClickable(!isLocked);
-
-			UpdateVisualFeedback();
-
-			RPC_UpdateServerVote(_votes[Runner.LocalPlayer].VotedFor, isLocked);
+			RPC_UpdateServerVote(selectedPlayer);
 		}
 
 		private void UpdateVisualFeedback()
@@ -471,30 +375,46 @@ namespace Werewolf
 				playerCard.Value.ResetVoteCount();
 			}
 
-			bool allLockedIn = _votes.Count > 0;
-
-			foreach (KeyValuePair<PlayerRef, Vote> vote in _votes)
+			foreach (KeyValuePair<PlayerRef, PlayerRef> vote in _votes)
 			{
-				if (!vote.Value.LockedIn)
-				{
-					allLockedIn = false;
-				}
-				else if (!vote.Value.VotedFor.IsNone)
-				{
-					_playerCards[vote.Value.VotedFor].IncrementVoteCount();
-				}
-
-				if (!vote.Value.VotedFor.IsNone && vote.Value.LockedIn)
-				{
-					_playerCards[vote.Key].DisplayVote(true, _playerCards[vote.Value.VotedFor].transform.position, vote.Key == vote.Value.VotedFor);
-				}
-				else
+				if (vote.Value.IsNone)
 				{
 					_playerCards[vote.Key].DisplayVote(false);
 				}
+				else
+				{
+					_playerCards[vote.Value].IncrementVoteCount();
+					_playerCards[vote.Key].DisplayVote(true, _playerCards[vote.Value].transform.position, vote.Key == vote.Value);
+				}
 			}
 
-			_UIManager.VoteScreen.SetLockedInDelayActive(allLockedIn);
+			_UIManager.VoteScreen.SetConfirmVoteDelayActive(_voteCount >= _votes.Count);
+		}
+
+		private void UpdateAllClientsVisualFeedback(PlayerRef inVoter, PlayerRef votedFor)
+		{
+#if UNITY_SERVER && UNITY_EDITOR
+			UpdateVisualFeedback();
+#endif
+			foreach (PlayerRef voter in Voters)
+			{
+				if (!_networkDataManager.PlayerInfos[voter].IsConnected)
+				{
+					continue;
+				}
+
+				RPC_UpdateClientVote(voter, inVoter, votedFor, _voteCount);
+			}
+
+			foreach (PlayerRef spectator in _spectators)
+			{
+				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
+				{
+					continue;
+				}
+
+				RPC_UpdateClientVote(spectator, inVoter, votedFor, _voteCount);
+			}
 		}
 
 		private void EndVote()
@@ -506,7 +426,7 @@ namespace Werewolf
 
 			foreach (PlayerRef voter in Voters)
 			{
-				if (!_votes[voter].VotedFor.IsNone && _votes[voter].LockedIn)
+				if (!_votes[voter].IsNone)
 				{
 					_gameHistoryManager.AddEntry(_config.VoteVotedForGameHistoryEntry,
 												new GameHistorySaveEntryVariable[] {
@@ -519,7 +439,7 @@ namespace Werewolf
 													new()
 													{
 														Name = "Voted",
-														Data = _networkDataManager.PlayerInfos[_votes[voter].VotedFor].Nickname,
+														Data = _networkDataManager.PlayerInfos[_votes[voter]].Nickname,
 														Type = GameHistorySaveEntryVariableType.Player
 													}
 												});
@@ -529,7 +449,7 @@ namespace Werewolf
 
 				if (_failingToVoteGivesPenalty)
 				{
-					_votes[voter] = new() { VotedFor = voter, LockedIn = true };
+					_votes[voter] = voter;
 				}
 
 				_gameHistoryManager.AddEntry(_failingToVoteGivesPenalty ? _config.VoteDidNotVoteWithPenalityGameHistoryEntry : _config.VoteDidNotVoteGameHistoryEntry,
@@ -565,22 +485,22 @@ namespace Werewolf
 
 			Dictionary<PlayerRef, int> totalVotes = new();
 
-			foreach (KeyValuePair<PlayerRef, Vote> vote in _votes)
+			foreach (KeyValuePair<PlayerRef, PlayerRef> vote in _votes)
 			{
-				if (vote.Value.VotedFor.IsNone || !vote.Value.LockedIn)
+				if (vote.Value.IsNone)
 				{
 					continue;
 				}
 
 				int voteValue = (_modifiers != null && _modifiers.ContainsKey(vote.Key)) ? _modifiers[vote.Key] : 1;
 
-				if (totalVotes.ContainsKey(vote.Value.VotedFor))
+				if (totalVotes.ContainsKey(vote.Value))
 				{
-					totalVotes[vote.Value.VotedFor] += voteValue;
+					totalVotes[vote.Value] += voteValue;
 					continue;
 				}
 
-				totalVotes.Add(vote.Value.VotedFor, voteValue);
+				totalVotes.Add(vote.Value, voteValue);
 			}
 
 			VoteCompleted?.Invoke(totalVotes);
@@ -600,7 +520,7 @@ namespace Werewolf
 			}
 
 			_UIManager.SetFade(_UIManager.TitleScreen, .0f);
-			_UIManager.VoteScreen.SetLockedInDelayActive(false);
+			_UIManager.VoteScreen.SetConfirmVoteDelayActive(false);
 			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 #endif
 			_step = Step.NotVoting;
@@ -638,25 +558,22 @@ namespace Werewolf
 			return _step == Step.Preparing;
 		}
 
-		public bool IsVoting()
-		{
-			return _step == Step.Voting;
-		}
-
 		private void OnPlayerDisconnected(PlayerRef player)
 		{
-			if (_step != Step.Voting || _voteCoroutine == null || !_votes.ContainsKey(player) || _votes[player].LockedIn)
+			if (_step != Step.Voting || _voteCoroutine == null || !_votes.ContainsKey(player) || !_votes[player].IsNone)
 			{
 				return;
 			}
 
-			_votes[player].LockedIn = true;
-			_lockedInVoteCount++;
+			_voteCount++;
+			_resetAllVotedElapsedTime = true;
+
+			UpdateAllClientsVisualFeedback(player, PlayerRef.None);
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, string titleText, bool displayWarning, float maxDuration, bool allowedToNotVote)
+		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, string titleText, bool displayWarning, float maxDuration)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -665,6 +582,7 @@ namespace Werewolf
 			}
 
 			_votes.Clear();
+			_voteCount = 0;
 
 			foreach (PlayerRef voter in voters)
 			{
@@ -693,8 +611,7 @@ namespace Werewolf
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
-			_UIManager.VoteScreen.Initialize(titleText, displayWarning, maxDuration, true, allowedToNotVote ? null : () => { return _selectedCard != null; });
-			_UIManager.VoteScreen.VoteLockChanged += OnVoteLockChanged;
+			_UIManager.VoteScreen.Initialize(titleText, displayWarning, maxDuration);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -728,67 +645,38 @@ namespace Werewolf
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
-			_UIManager.VoteScreen.Initialize(titleText, false, maxDuration, false);
+			_UIManager.VoteScreen.Initialize(titleText, false, maxDuration);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		private void RPC_UpdateServerVote(PlayerRef votedFor, bool islocked, RpcInfo info = default)
+		private void RPC_UpdateServerVote(PlayerRef votedFor, RpcInfo info = default)
 		{
-			if (_step != Step.Voting)
+			if (_step != Step.Voting || _votes[info.Source] == votedFor)
 			{
 				return;
 			}
 
-			if (_votes[info.Source].LockedIn != islocked)
+			if (_votes[info.Source].IsNone && !votedFor.IsNone)
 			{
-				if (islocked)
-				{
-					_lockedInVoteCount++;
-				}
-				else
-				{
-					_lockedInVoteCount--;
-				}
+				_voteCount++;
+			}
+			else if (!_votes[info.Source].IsNone && votedFor.IsNone)
+			{
+				_voteCount--;
 			}
 
-			_votes[info.Source].VotedFor = votedFor;
-			_votes[info.Source].LockedIn = islocked;
-#if UNITY_SERVER && UNITY_EDITOR
-			UpdateVisualFeedback();
-#endif
-			foreach (PlayerRef voter in Voters)
-			{
-				if (!_networkDataManager.PlayerInfos[voter].IsConnected)
-				{
-					continue;
-				}
+			_resetAllVotedElapsedTime = true;
+			_votes[info.Source] = votedFor;
 
-				RPC_UpdateClientVote(voter, info.Source, votedFor, islocked);
-			}
-
-			foreach (PlayerRef spectator in _spectators)
-			{
-				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
-				{
-					continue;
-				}
-
-				RPC_UpdateClientVote(spectator, info.Source, votedFor, islocked);
-			}
+			UpdateAllClientsVisualFeedback(info.Source, votedFor);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_UpdateClientVote([RpcTarget] PlayerRef player, PlayerRef voter, PlayerRef votedFor, bool islocked)
+		private void RPC_UpdateClientVote([RpcTarget] PlayerRef player, PlayerRef voter, PlayerRef votedFor, int totalVoteCount)
 		{
-			_votes[voter].VotedFor = votedFor;
-			_votes[voter].LockedIn = islocked;
-			UpdateVisualFeedback();
-		}
+			_votes[voter] = votedFor;
+			_voteCount = totalVoteCount;
 
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_RemoveVoter([RpcTarget] PlayerRef player, PlayerRef voter)
-		{
-			_votes.Remove(voter);
 			UpdateVisualFeedback();
 		}
 
@@ -809,8 +697,7 @@ namespace Werewolf
 				playerCard.Value.LeftClicked -= OnCardSelectedChanged;
 			}
 
-			_UIManager.VoteScreen.SetLockedInDelayActive(false);
-			_UIManager.VoteScreen.VoteLockChanged -= OnVoteLockChanged;
+			_UIManager.VoteScreen.SetConfirmVoteDelayActive(false);
 			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 		}
 		#endregion

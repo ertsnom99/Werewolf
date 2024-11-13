@@ -246,9 +246,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <LockedInButtonText>k__BackingField: Confirm Vote
-  <LockedOutButtonText>k__BackingField: Cancel Vote
-  <AllLockedInDelayToEndVote>k__BackingField: 3
+  <AllVotedDelayToEndVote>k__BackingField: 3
   <NoVoteDuration>k__BackingField: 10
   <VoteVotedForGameHistoryEntry>k__BackingField: {fileID: -6371537381687074625, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
@@ -266,8 +264,6 @@ MonoBehaviour:
   <RoleRevealWaitDuration>k__BackingField: 2
   <RoleRevealFlipDuration>k__BackingField: 0.25
   <RoleRevealHoldDuration>k__BackingField: 2.5
-  <ImagesData>k__BackingField: {fileID: 11400000, guid: fe40d48f080d39f4b8e2adbf60edb59b,
-    type: 2}
   <UITransitionNormalDuration>k__BackingField: 0.75
   <UITransitionFastDuration>k__BackingField: 0.1
   <CountdownText>k__BackingField: 'Time left: {0}'
