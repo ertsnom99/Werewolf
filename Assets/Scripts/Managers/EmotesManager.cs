@@ -106,7 +106,7 @@ namespace Werewolf
 
 			Vector3 positionOffsetRelativeToCard = Quaternion.Euler(0, Random.Range(.0f, 360.0f), 0) * Vector3.back * Random.Range(.0f, _maxDistance);
 
-			Emote emote = Instantiate(_emotePrefab, _playerCards[selectedPlayer].transform.position + positionOffsetRelativeToCard + _globalOffset, Quaternion.identity);
+			Emote emote = Instantiate(_emotePrefab, _playerCards[selectedPlayer].OriginalPosition + positionOffsetRelativeToCard + _globalOffset, Quaternion.identity);
 			emote.SetEmote(_emotes[emoteIndex]);
 		}
 
