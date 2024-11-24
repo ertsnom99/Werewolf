@@ -87,7 +87,7 @@ namespace Werewolf
 			RoleData servantRole = _gameManager.PlayerGameInfos[Player].Role;
 			PlayerRef previousPlayer = Player;
 
-			_gameManager.TransferRole(_playerRevealed, Player, false, !_notResettedRoles.Contains(RoleToTake.GameplayTag));
+			_gameManager.TransferRole(_playerRevealed, Player, !_notResettedRoles.Contains(RoleToTake.GameplayTag));
 
 			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry,
 										new GameHistorySaveEntryVariable[] {
@@ -130,14 +130,18 @@ namespace Werewolf
 					_gameManager.RPC_HideUI(_playerRevealed);
 				}
 
+				_gameManager.RPC_SetRole(playerInfo.Key, _playerRevealed, -1);
+				_gameManager.RPC_PutCardBackDown(playerInfo.Key, _playerRevealed, false);
+
 				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, previousPlayer, true, servantRole.GameplayTag.CompactTagId);
-				_gameManager.RPC_DestroyPlayerCard(playerInfo.Key, _playerRevealed);
 				_gameManager.RPC_DisplayTitle(playerInfo.Key, _tookThisRoleText);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
+			_gameManager.ChangePlayerCardRole(_playerRevealed, null);
+			_gameManager.PutCardBackDown(_playerRevealed, false);
+
 			_gameManager.ChangePlayerCardRole(previousPlayer, servantRole);
 			_gameManager.MoveCardToCamera(previousPlayer, true);
-			_gameManager.DestroyPlayerCard(_playerRevealed);
 			_gameManager.DisplayTitle(null, _tookThisRoleText);
 #endif
 			yield return new WaitForSeconds(_servantRevealDuration * _gameManager.GameSpeedModifier);
@@ -151,7 +155,9 @@ namespace Werewolf
 
 				if (playerInfo.Key == previousPlayer)
 				{
-					_gameManager.RPC_DestroyPlayerCard(previousPlayer, _playerRevealed);
+					_gameManager.RPC_SetRole(previousPlayer, _playerRevealed, -1);
+					_gameManager.RPC_PutCardBackDown(previousPlayer, _playerRevealed, false);
+
 					continue;
 				}
 

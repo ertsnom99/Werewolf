@@ -14,6 +14,10 @@ namespace Werewolf
 		public float Thickness { get; private set; }
 		public Vector3 OriginalPosition { get; private set; }
 
+		[Header("Role")]
+		[SerializeField]
+		private Sprite _lostRole;
+
 		[Header("Selection")]
 		[SerializeField]
 		private float _leftClickHoldDuration;
@@ -101,7 +105,7 @@ namespace Werewolf
 		public void SetRole(RoleData role)
 		{
 			Role = role;
-			_roleImage.sprite = role != null ? role.Image : null;
+			_roleImage.sprite = role != null ? role.Image : _lostRole;
 		}
 
 		public void SetNickname(string nickname)

@@ -64,9 +64,9 @@ namespace Werewolf
 #endif
 		}
 
-		public void TransferRole(PlayerRef from, PlayerRef to, bool destroyOldBehavior = true, bool reInitNewBehavior = false)
+		public void TransferRole(PlayerRef from, PlayerRef to, bool reInitNewBehavior = false)
 		{
-			RemovePrimaryBehavior(to, destroyOldBehavior);
+			RemovePrimaryBehavior(to);
 
 			if (PlayerGameInfos[from].Behaviors.Count <= 0)
 			{
@@ -81,7 +81,7 @@ namespace Werewolf
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
-						RemoveBehavior(from, behavior, destroyBehavior: false);
+						RemoveBehavior(from, behavior);
 						AddBehavior(to, behavior, reInitBehavior: reInitNewBehavior);
 						break;
 					}
@@ -156,7 +156,7 @@ namespace Werewolf
 #endif
 		}
 
-		private void RemovePrimaryBehavior(PlayerRef player, bool destroyOldBehavior = true)
+		private void RemovePrimaryBehavior(PlayerRef player)
 		{
 			if (PlayerGameInfos[player].Behaviors.Count <= 0)
 			{
@@ -171,14 +171,14 @@ namespace Werewolf
 				{
 					if (behavior.IsPrimaryBehavior)
 					{
-						RemoveBehavior(player, behavior, destroyBehavior: destroyOldBehavior);
+						RemoveBehavior(player, behavior);
 						break;
 					}
 				}
 			}
 		}
 
-		public void RemoveBehavior(PlayerRef player, RoleBehavior behavior, bool removePlayerFromGroup = true, bool destroyBehavior = true)
+		public void RemoveBehavior(PlayerRef player, RoleBehavior behavior, bool removePlayerFromGroup = true)
 		{
 			int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -207,13 +207,6 @@ namespace Werewolf
 			}
 
 			behavior.SetPlayer(PlayerRef.None);
-
-			if (!destroyBehavior)
-			{
-				return;
-			}
-
-			Destroy(behavior.gameObject);
 		}
 
 		// Returns all the RoleBehavior that are called during a night call and that have at least one of the prioritiesIndex
@@ -739,6 +732,19 @@ namespace Werewolf
 
 			_flipCardCallbacks[info.Source]();
 			_flipCardCallbacks.Remove(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_SetRole([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int gameplayDataID)
+		{
+			if (gameplayDataID == -1)
+			{
+				_playerCards[cardPlayer].SetRole(null);
+			}
+			else
+			{
+				_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
+			}
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]

@@ -834,6 +834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Thickness>k__BackingField: 0.026
+  _lostRole: {fileID: 21300000, guid: e49a89800030d03408dd630845cce68a, type: 3}
   _leftClickHoldDuration: 0.5
   _notClickableCache: {fileID: 8761506578589015732}
   _selectedFrame: {fileID: 2296024381478053590}
