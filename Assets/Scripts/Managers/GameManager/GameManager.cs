@@ -64,6 +64,7 @@ namespace Werewolf
 		private GameHistoryManager _gameHistoryManager;
 		private UIManager _UIManager;
 		private VoteManager _voteManager;
+		private EmotesManager _emotesManager;
 		private DaytimeManager _daytimeManager;
 		private NetworkDataManager _networkDataManager;
 
@@ -105,6 +106,7 @@ namespace Werewolf
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_UIManager = UIManager.Instance;
 			_voteManager = VoteManager.Instance;
+			_emotesManager = EmotesManager.Instance;
 			_daytimeManager = DaytimeManager.Instance;
 		}
 
@@ -153,7 +155,9 @@ namespace Werewolf
 				DetermineNightCalls();
 
 				InitializeConfigAndManagers();
+
 				AlivePlayerCount = PlayerGameInfos.Count;
+				_emotesManager.SetAsleepCanSee(true);
 
 				PlayerRef[] playersOrder = CreatePlayersOrder();
 
@@ -330,7 +334,7 @@ namespace Werewolf
 					}
 				}
 
-				PlayerGameInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAlive = true });
+				PlayerGameInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAwake = true, IsAlive = true });
 
 				_gameHistoryManager.AddEntry(Config.PlayerGivenRoleGameHistoryEntry,
 											new GameHistorySaveEntryVariable[] {
@@ -463,8 +467,9 @@ namespace Werewolf
 
 		private void InitializeConfigAndManagers()
 		{
-			_voteManager.Initialize(Config);
 			_daytimeManager.Initialize(Config);
+			_voteManager.Initialize(Config);
+			_emotesManager.Initialize(Config);
 			_UIManager.TitleScreen.SetConfig(Config);
 			_UIManager.ChoiceScreen.SetConfig(Config);
 			_UIManager.VoteScreen.SetConfig(Config);
@@ -545,6 +550,7 @@ namespace Werewolf
 			AdjustCamera();
 
 			_voteManager.SetPlayerCards(_playerCards);
+			_emotesManager.SetPlayerCards(_playerCards);
 			_UIManager.RolesScreen.SelectRole(roleData, false);
 
 			PlayerInitialized?.Invoke();
@@ -781,6 +787,10 @@ namespace Werewolf
 					break;
 			}
 
+			bool isDaytime = daytime == Daytime.Day;
+			SetAllPlayersAwake(isDaytime);
+			_emotesManager.SetAsleepCanSee(isDaytime);
+
 			yield return new WaitForSeconds(Config.DaytimeTransitionDuration);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
@@ -825,6 +835,8 @@ namespace Werewolf
 							{
 								break;
 							}
+
+							SetPlayerAwake(player, true);
 
 							if (isWakingUp)
 							{
@@ -893,6 +905,8 @@ namespace Werewolf
 						yield return 0;
 						elapsedTime += Time.deltaTime;
 					}
+
+					SetAllPlayersAwake(false);
 
 					RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1192,7 +1206,8 @@ namespace Werewolf
 
 		private void SetPlayerDead(PlayerRef deadPlayer)
 		{
-			PlayerGameInfos[deadPlayer] = new() { Role = PlayerGameInfos[deadPlayer].Role, Behaviors = PlayerGameInfos[deadPlayer].Behaviors, IsAlive = false };
+			SetPlayerAwake(deadPlayer, false);
+			PlayerGameInfos[deadPlayer].IsAlive = false;
 			AlivePlayerCount--;
 
 			RemovePlayerFromAllPlayerGroups(deadPlayer);

@@ -70,7 +70,7 @@ namespace Werewolf
 			_networkDataManager = NetworkDataManager.Instance;
 			_voteManager = VoteManager.Instance;
 
-			_gameManager.PreChoosePlayers += OnChoosePlayers;
+			_gameManager.PreChoosePlayers += OnPreChoosePlayers;
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
 			_voteManager.VoteStarting += OnVoteStarting;
@@ -104,7 +104,8 @@ namespace Werewolf
 			}
 			else if (!_showedCouple && _couple[0] != PlayerRef.None && _couple[1] != PlayerRef.None && priorityIndex == NightPriorities[1].index)
 			{
-				return ShowCouple();
+				 StartCoroutine(ShowCouple());
+				return true;
 			}
 
 			return false;
@@ -262,8 +263,10 @@ namespace Werewolf
 		#endregion
 
 		#region Show Couple
-		private bool ShowCouple()
+		private IEnumerator ShowCouple()
 		{
+			_gameManager.StartWaitingForPlayersRollCall += OnStartWaitingForPlayersRollCall;
+
 			for (int i = 0; i < _couple.Length; i++)
 			{
 				if (!_networkDataManager.PlayerInfos[_couple[i]].IsConnected)
@@ -281,15 +284,10 @@ namespace Werewolf
 
 			_showedCouple = true;
 
-			StartCoroutine(EndShowCouple());
-
-			return true;
-		}
-
-		private IEnumerator EndShowCouple()
-		{
 			yield return new WaitForSeconds(_showCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
 			_gameManager.StopWaintingForPlayer(Player);
+
+			_gameManager.StartWaitingForPlayersRollCall -= OnStartWaitingForPlayersRollCall;
 		}
 		#endregion
 
@@ -332,7 +330,14 @@ namespace Werewolf
 			}
 		}
 
-		private void OnChoosePlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> immunePlayersForGettingChosen)
+		private void OnStartWaitingForPlayersRollCall()
+		{
+			_gameManager.SetPlayerAwake(Player, false);
+			_gameManager.SetPlayerAwake(_couple[0], true);
+			_gameManager.SetPlayerAwake(_couple[1], true);
+		}
+
+		private void OnPreChoosePlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> immunePlayersForGettingChosen)
 		{
 			if (purpose != ChoicePurpose.Kill || !IsCoupleSelected() || !_couple.Contains(player))
 			{

@@ -10,10 +10,11 @@ using static Werewolf.GameHistoryManager;
 
 namespace Werewolf
 {
-	public struct PlayerGameInfo
+	public class PlayerGameInfo
 	{
 		public RoleData Role;
 		public List<RoleBehavior> Behaviors;
+		public bool IsAwake;
 		public bool IsAlive;
 	}
 
@@ -302,6 +303,23 @@ namespace Werewolf
 			}
 
 			return inPlayerGroup;
+		}
+		#endregion
+
+		#region Player Awake
+		private void SetAllPlayersAwake(bool isAwake)
+		{
+			PlayerGameInfos.Keys.ToList().ForEach(player => SetPlayerAwake(player, isAwake));
+		}
+
+		public void SetPlayerAwake(PlayerRef player, bool isAwake)
+		{
+			if (!PlayerGameInfos[player].IsAlive)
+			{
+				return;
+			}
+
+			PlayerGameInfos[player].IsAwake = isAwake;
 		}
 		#endregion
 
