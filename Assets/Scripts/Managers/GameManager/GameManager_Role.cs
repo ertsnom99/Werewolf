@@ -53,7 +53,7 @@ namespace Werewolf
 				roleBehavior.SetIsPrimaryBehavior(true);
 			}
 
-			PlayerGameInfos[player] = new() { Role = roleData, Behaviors = PlayerGameInfos[player].Behaviors, IsAlive = PlayerGameInfos[player].IsAlive };
+			PlayerGameInfos[player].Role = roleData;
 
 			if (_networkDataManager.PlayerInfos[player].IsConnected)
 			{
@@ -88,8 +88,8 @@ namespace Werewolf
 				}
 			}
 
-			PlayerGameInfos[to] = new() { Role = PlayerGameInfos[from].Role, Behaviors = PlayerGameInfos[to].Behaviors, IsAlive = PlayerGameInfos[to].IsAlive };
-			PlayerGameInfos[from] = new() { Role = null, Behaviors = PlayerGameInfos[from].Behaviors, IsAlive = PlayerGameInfos[from].IsAlive };
+			PlayerGameInfos[to].Role = PlayerGameInfos[from].Role;
+			PlayerGameInfos[from].Role = null;
 
 			if (_networkDataManager.PlayerInfos[to].IsConnected)
 			{

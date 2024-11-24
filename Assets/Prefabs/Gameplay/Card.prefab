@@ -834,6 +834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Thickness>k__BackingField: 0.026
+  _leftClickHoldDuration: 0.5
   _notClickableCache: {fileID: 8761506578589015732}
   _selectedFrame: {fileID: 2296024381478053590}
   _selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

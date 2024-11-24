@@ -1,5 +1,6 @@
 using Fusion;
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using Werewolf.Data;
@@ -11,19 +12,17 @@ namespace Werewolf
 		[field: Header("Card")]
 		[field: SerializeField]
 		public float Thickness { get; private set; }
-
 		public Vector3 OriginalPosition { get; private set; }
 
 		[Header("Selection")]
 		[SerializeField]
+		private float _leftClickHoldDuration;
+		[SerializeField]
 		private GameObject _notClickableCache;
-
 		[SerializeField]
 		private GameObject _selectedFrame;
-
 		[SerializeField]
 		private Color _selectedColor = Color.yellow;
-
 		[SerializeField]
 		private Color _notSelectedColor = Color.white;
 
@@ -38,7 +37,6 @@ namespace Werewolf
 		private LineRenderer _voteLine;
 		[SerializeField]
 		private GameObject _voteSelf;
-
 		[SerializeField]
 		private GameObject _skip;
 
@@ -49,20 +47,16 @@ namespace Werewolf
 		[Header("Death")]
 		[SerializeField]
 		private GameObject _deathIcon;
-
 		[SerializeField]
 		private Color _deathTint;
 
 		[Header("UI")]
 		[SerializeField]
 		private SpriteRenderer _roleImage;
-
 		[SerializeField]
 		private Canvas _groundCanvas;
-
 		[SerializeField]
 		private GameObject _highlight;
-
 		[SerializeField]
 		private TMP_Text _nicknameText;
 
@@ -70,10 +64,11 @@ namespace Werewolf
 		[field: SerializeField]
 		[field: ReadOnly]
 		public PlayerRef Player { get; private set; }
-
 		[field: SerializeField]
 		[field: ReadOnly]
 		public RoleData Role { get; private set; }
+
+		private IEnumerator _waitForLeftClickHoldCoroutine;
 
 		private int _voteCount;
 
@@ -82,6 +77,7 @@ namespace Werewolf
 		private bool _isSelected;
 
 		public event Action<Card> LeftClicked;
+		public event Action<Card> LeftClickHolded;
 		public event Action<Card> RightClicked;
 #if UNITY_EDITOR
 		private void Awake()
@@ -215,7 +211,9 @@ namespace Werewolf
 		}
 
 		#region MouseDetectionListener methods
-		public void MouseEntered()
+		public void MouseEntered() { }
+
+		public void MouseOver(Vector3 MousePosition)
 		{
 			if (!_inSelectionMode || !_isClickable)
 			{
@@ -225,10 +223,14 @@ namespace Werewolf
 			SetHighlightVisible(true);
 		}
 
-		public void MouseOver(Vector3 MousePosition) { }
-
 		public void MouseExited()
 		{
+			if (_waitForLeftClickHoldCoroutine != null)
+			{
+				StopCoroutine(_waitForLeftClickHoldCoroutine);
+				_waitForLeftClickHoldCoroutine = null;
+			}
+
 			if (!_inSelectionMode || !_isClickable)
 			{
 				return;
@@ -237,10 +239,28 @@ namespace Werewolf
 			SetHighlightVisible(false);
 		}
 
-		public void LeftMouseButtonPressed(Vector3 MousePosition) { }
+		public void LeftMouseButtonPressed(Vector3 MousePosition)
+		{
+			_waitForLeftClickHoldCoroutine = WaitForLeftClickHold();
+			StartCoroutine(_waitForLeftClickHoldCoroutine);
+		}
+
+		private IEnumerator WaitForLeftClickHold()
+		{
+			yield return new WaitForSeconds(_leftClickHoldDuration);
+
+			_waitForLeftClickHoldCoroutine = null;
+			LeftClickHolded?.Invoke(this);
+		}
 
 		public void LeftMouseButtonReleased(Vector3 MousePosition)
 		{
+			if (_waitForLeftClickHoldCoroutine != null)
+			{
+				StopCoroutine(_waitForLeftClickHoldCoroutine);
+				_waitForLeftClickHoldCoroutine = null;
+			}
+
 			if (!_inSelectionMode || !_isClickable)
 			{
 				return;

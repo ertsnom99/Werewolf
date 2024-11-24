@@ -27,6 +27,9 @@ namespace Werewolf
 		public RolesScreen RolesScreen { get; private set; }
 
 		[field: SerializeField]
+		public EmoteScreen EmoteScreen { get; private set; }
+
+		[field: SerializeField]
 		public DisconnectedScreen DisconnectedScreen { get; private set; }
 
 		private readonly List<FadingScreen> _activeFadingScreens = new();
