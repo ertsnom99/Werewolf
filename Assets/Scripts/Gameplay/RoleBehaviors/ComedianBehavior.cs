@@ -221,7 +221,7 @@ namespace Werewolf
 				return;
 			}
 
-			_gameManager.RemoveBehavior(Player, _currentRoleBehavior, false, false);
+			_gameManager.RemoveBehavior(Player, _currentRoleBehavior, removePlayerFromGroup: false);
 			_currentRoleBehavior = null;
 		}
 
