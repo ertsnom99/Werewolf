@@ -13,14 +13,14 @@ namespace Werewolf
 
 		#region Create Card
 #if UNITY_SERVER && UNITY_EDITOR
-		private void CreatePlayerCardsForServer(PlayerRef[] playersOrder)
+		private void CreatePlayerCardsForServer()
 		{
-			float rotationIncrement = 360.0f / playersOrder.Length;
-			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(playersOrder.Length);
+			float rotationIncrement = 360.0f / _playersOrder.Length;
+			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(_playersOrder.Length);
 
 			int counter = -1;
 
-			foreach (PlayerRef player in playersOrder)
+			foreach (PlayerRef player in _playersOrder)
 			{
 				counter++;
 
