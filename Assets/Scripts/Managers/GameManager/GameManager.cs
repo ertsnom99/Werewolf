@@ -159,7 +159,7 @@ namespace Werewolf
 				AlivePlayerCount = PlayerGameInfos.Count;
 				_emotesManager.SetAsleepCanSee(true);
 
-				PlayerRef[] playersOrder = CreatePlayersOrder();
+				CreatePlayersOrder();
 
 				foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in PlayerGameInfos)
 				{
@@ -169,12 +169,12 @@ namespace Werewolf
 					}
 
 					WaitForPlayer(playerGameInfo.Key);
-					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, playersOrder, PlayerGameInfos[playerGameInfo.Key].Role.GameplayTag.CompactTagId);
+					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, _playersOrder, PlayerGameInfos[playerGameInfo.Key].Role.GameplayTag.CompactTagId);
 				}
 
 				_startedPlayersInitialization = true;
 #if UNITY_SERVER && UNITY_EDITOR
-				CreatePlayerCardsForServer(playersOrder);
+				CreatePlayerCardsForServer();
 				CreateReservedRoleCardsForServer();
 				AdjustCamera();
 				LogNightCalls();
@@ -475,21 +475,6 @@ namespace Werewolf
 			_UIManager.VoteScreen.SetConfig(Config);
 			_UIManager.EndGameScreen.SetConfig(Config);
 			_UIManager.DisconnectedScreen.SetConfig(Config);
-		}
-
-		private PlayerRef[] CreatePlayersOrder()
-		{
-			PlayerRef[] playersOrder = new PlayerRef[PlayerGameInfos.Count];
-			List<PlayerRef> tempPlayers = PlayerGameInfos.Keys.ToList();
-
-			while (tempPlayers.Count > 0)
-			{
-				int randomIndex = UnityEngine.Random.Range(0, tempPlayers.Count - 1);
-				playersOrder[^tempPlayers.Count] = tempPlayers[randomIndex];
-				tempPlayers.RemoveAt(randomIndex);
-			}
-
-			return playersOrder;
 		}
 
 		private void AdjustCamera()

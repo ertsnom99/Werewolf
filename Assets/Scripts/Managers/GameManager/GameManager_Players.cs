@@ -31,6 +31,8 @@ namespace Werewolf
 			public List<PlayerRef> Players;
 		}
 
+		private PlayerRef[] _playersOrder;
+
 		private readonly Dictionary<PlayerRef, Action<PlayerRef[]>> _choosePlayersCallbacks = new();
 		private List<PlayerRef> _immunePlayersForGettingChosen = new();
 		private readonly List<PlayerRef> _selectedPlayers = new();
@@ -40,6 +42,19 @@ namespace Werewolf
 
 		public event Action<PlayerRef, ChoicePurpose, List<PlayerRef>> PreChoosePlayers;
 		public event Action<PlayerRef> PostPlayerDisconnected;
+
+		private void CreatePlayersOrder()
+		{
+			_playersOrder = new PlayerRef[PlayerGameInfos.Count];
+			List<PlayerRef> tempPlayers = PlayerGameInfos.Keys.ToList();
+
+			while (tempPlayers.Count > 0)
+			{
+				int randomIndex = UnityEngine.Random.Range(0, tempPlayers.Count - 1);
+				_playersOrder[^tempPlayers.Count] = tempPlayers[randomIndex];
+				tempPlayers.RemoveAt(randomIndex);
+			}
+		}
 
 		#region Get Players
 		public List<PlayerRef> GetDeadPlayers()
@@ -97,16 +112,15 @@ namespace Werewolf
 		{
 			List<PlayerRef> SurroundingPlayers = new();
 
-			List<PlayerRef> allPlayers = PlayerGameInfos.Keys.ToList();
-			int playerIndex = allPlayers.IndexOf(player);
+			int playerIndex = Array.IndexOf(_playersOrder, player);
 
-			FindNextSurroundingPlayer(playerIndex, -1, allPlayers, ref SurroundingPlayers);
-			FindNextSurroundingPlayer(playerIndex, 1, allPlayers, ref SurroundingPlayers);
+			FindNextSurroundingPlayer(playerIndex, -1, ref SurroundingPlayers);
+			FindNextSurroundingPlayer(playerIndex, 1, ref SurroundingPlayers);
 
 			return SurroundingPlayers;
 		}
 
-		private void FindNextSurroundingPlayer(int playerIndex, int iteration, List<PlayerRef> allPlayers, ref List<PlayerRef> SurroundingPlayers)
+		private void FindNextSurroundingPlayer(int playerIndex, int iteration, ref List<PlayerRef> SurroundingPlayers)
 		{
 			int currentIndex = playerIndex;
 
@@ -116,14 +130,14 @@ namespace Werewolf
 
 				if (currentIndex < 0)
 				{
-					currentIndex = allPlayers.Count - 1;
+					currentIndex = _playersOrder.Length - 1;
 				}
-				else if (currentIndex >= allPlayers.Count)
+				else if (currentIndex >= _playersOrder.Length)
 				{
 					currentIndex = 0;
 				}
 
-				PlayerRef currentPlayer = allPlayers[currentIndex];
+				PlayerRef currentPlayer = _playersOrder[currentIndex];
 
 				if (PlayerGameInfos[currentPlayer].IsAlive && !SurroundingPlayers.Contains(currentPlayer))
 				{
