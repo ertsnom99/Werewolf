@@ -254,7 +254,7 @@ MonoBehaviour:
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <VoteDidNotVoteWithPenalityGameHistoryEntry>k__BackingField: {fileID: -5852892113263125513,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  <HighlightDuration>k__BackingField: 3
+  <HighlightDuration>k__BackingField: 5
   <ChooseRoleText>k__BackingField: You MAY choose one
   <ChooseRoleObligatoryText>k__BackingField: You MUST choose one
   <ChoosedRoleText>k__BackingField: Your choice
