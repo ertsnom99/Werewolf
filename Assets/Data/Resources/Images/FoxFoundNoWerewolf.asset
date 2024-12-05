@@ -17,4 +17,24 @@ MonoBehaviour:
   <DebugName>k__BackingField: FoxFoundNoWerewolf
   <Image>k__BackingField: {fileID: 21300000, guid: 5eaca46b1536e1142b05125255d75062,
     type: 3}
-  <Text>k__BackingField: There is no werewolf in this group! You just lost your power!
+  <TextNew>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 8087697915904
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 8087697915904
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

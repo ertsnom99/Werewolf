@@ -17,4 +17,24 @@ MonoBehaviour:
   <DebugName>k__BackingField: EndGameNoWinner
   <Image>k__BackingField: {fileID: 21300000, guid: 47ca1304295214142bf7d4fa8f29c05d,
     type: 3}
-  <Text>k__BackingField: No one won!
+  <TextNew>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 6572358795264
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 6572358795264
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

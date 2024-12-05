@@ -1,0 +1,173 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: StringTableImage Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: StringTableImage
+  m_TableCollectionNameGuidString: 0d1be4a4109b4914b871fb5b3860e3ed
+  m_Entries:
+  - m_Id: 424192802816
+    m_Key: Captain_ChooseNextCaptain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 760991219712
+    m_Key: Captain_OldCaptainChoosing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1129129476096
+    m_Key: Captain_Reveal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1288592719872
+    m_Key: Cupid_ChooseCouple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1465684623360
+    m_Key: Cupid_CoupleDeath
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1764906270720
+    m_Key: Cupid_CoupleRecognizingEachOther
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2185586573312
+    m_Key: Cupid_InCouple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573417086976
+    m_Key: Day_Transition
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2787137847296
+    m_Key: DeathReveal_NoOneDied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3110720012288
+    m_Key: DeathReveal_PlayerDied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3288390729728
+    m_Key: DeathReveal_PlayerExecuted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3540103495680
+    m_Key: DeathReveal_SomeoneDied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3887026962432
+    m_Key: Election_Debate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5436641935360
+    m_Key: Election_MultipleCandidates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6150407618560
+    m_Key: Election_NoCandidate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6391932420096
+    m_Key: Election_Prompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6572358795264
+    m_Key: EndGame_NoWinner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6799388082176
+    m_Key: Execution_Debate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7079081050112
+    m_Key: Execution_DrawAgain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7287475044352
+    m_Key: Execution_DrawCaptainChoose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7421973790720
+    m_Key: Execution_DrawNewVote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7593353052160
+    m_Key: Execution_DrawYouChoose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7842247245824
+    m_Key: FortuneTeller_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7940146495488
+    m_Key: Fox_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8087697915904
+    m_Key: Fox_FoundNoWerewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8209857019904
+    m_Key: Fox_FoundWerewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8324776755200
+    m_Key: Fox_LostPower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8656277766144
+    m_Key: Hunter_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8870799638528
+    m_Key: Hunter_ChoosingPlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8953955909632
+    m_Key: Night_Transition
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9065444704256
+    m_Key: Savior_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9160047230976
+    m_Key: Witch_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9296928342016
+    m_Key: Witch_Kill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9378331394048
+    m_Key: Witch_NoPotionToUse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9500591161344
+    m_Key: Witch_PlayerDeadTonight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9717625421824
+    m_Key: Witch_Save
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 4972454591479152642
+  references:
+    version: 2
+    RefIds:
+    - rid: 4972454591479152642
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1733370835996

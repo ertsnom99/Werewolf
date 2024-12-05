@@ -17,4 +17,24 @@ MonoBehaviour:
   <DebugName>k__BackingField: FoxFoundWerewolf
   <Image>k__BackingField: {fileID: 21300000, guid: e02ef3bca11dcfc4c9d7f50a02df94e6,
     type: 3}
-  <Text>k__BackingField: There is one or more werewolf in this group!
+  <TextNew>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 8209857019904
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 8209857019904
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

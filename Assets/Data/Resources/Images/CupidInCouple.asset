@@ -17,4 +17,24 @@ MonoBehaviour:
   <DebugName>k__BackingField: CupidInCouple
   <Image>k__BackingField: {fileID: 21300000, guid: ff5ef4fef58e24d4a9eca5847e4b794a,
     type: 3}
-  <Text>k__BackingField: You are now in a couple
+  <TextNew>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 2185586573312
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 2185586573312
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

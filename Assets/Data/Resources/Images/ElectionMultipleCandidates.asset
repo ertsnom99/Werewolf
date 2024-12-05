@@ -17,5 +17,24 @@ MonoBehaviour:
   <DebugName>k__BackingField: ElectionMultipleCandidates
   <Image>k__BackingField: {fileID: 21300000, guid: 723867f920a3d1446b1200068f4cbfe7,
     type: 3}
-  <Text>k__BackingField: Multiple players want to be captain. The village will debate,
-    then vote!
+  <TextNew>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 5436641935360
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 5436641935360
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

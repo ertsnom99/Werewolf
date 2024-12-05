@@ -56,7 +56,7 @@ namespace Werewolf
 					continue;
 				}
 
-				choices.Add(new() { Image = imageData.Image, Name = imageData.Text });
+				choices.Add(new() { Image = imageData.Image, Text = imageData.Text });
 			}
 
 			_UIManager.ChoiceScreen.ConfirmedChoice += GiveChoice;
