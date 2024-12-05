@@ -17,4 +17,24 @@ MonoBehaviour:
   <DebugName>k__BackingField: ElectionNoCandidate
   <Image>k__BackingField: {fileID: 21300000, guid: f4df889c8b0abaa498e6c3ff151ed42c,
     type: 3}
-  <Text>k__BackingField: No one wanted to be the captain!
+  <TextNew>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 6150407618560
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 6150407618560
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

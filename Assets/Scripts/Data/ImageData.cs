@@ -1,5 +1,6 @@
 using Assets.Scripts.Data;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace Werewolf.Data
 {
@@ -11,6 +12,6 @@ namespace Werewolf.Data
 		public Sprite Image { get; private set; }
 
 		[field: SerializeField]
-		public string Text { get; private set; }
+		public LocalizedString Text { get; private set; }
 	}
 }

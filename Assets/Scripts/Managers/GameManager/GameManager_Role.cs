@@ -450,7 +450,7 @@ namespace Werewolf
 				}
 
 				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
-				choices.Add(new() { Image = roleData.Image, Name = roleData.name });
+				choices.Add(new() { Image = roleData.Image, Text = roleData.Name });
 			}
 
 			_UIManager.ChoiceScreen.ConfirmedChoice += GiveReservedRoleChoice;

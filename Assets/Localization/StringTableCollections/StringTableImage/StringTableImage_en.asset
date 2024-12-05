@@ -1,0 +1,168 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: StringTableImage_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 0d1be4a4109b4914b871fb5b3860e3ed, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 424192802816
+    m_Localized: Choose the next captain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 760991219712
+    m_Localized: The old captain is choosing the new one
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1129129476096
+    m_Localized: Here is the captain!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1288592719872
+    m_Localized: Choose the couple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1465684623360
+    m_Localized: The couple can't live appart from each other!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1764906270720
+    m_Localized: The couple is recognizing each other
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2185586573312
+    m_Localized: You are now in a couple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573417086976
+    m_Localized: The sun is rising, the village wakes up...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2787137847296
+    m_Localized: No one died tonight!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3110720012288
+    m_Localized: You died!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3288390729728
+    m_Localized: You were executed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3540103495680
+    m_Localized: Some people died...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3887026962432
+    m_Localized: Debate about which of these villagers should be captain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5436641935360
+    m_Localized: Multiple players want to be captain. The village will debate, then
+      vote!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6150407618560
+    m_Localized: No one wanted to be the captain!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6391932420096
+    m_Localized: Do you want to be the captain?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6572358795264
+    m_Localized: No one won!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6799388082176
+    m_Localized: Debate about which of these villagers should be executed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7079081050112
+    m_Localized: The vote was a draw again! No one will be executed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7287475044352
+    m_Localized: The vote was a draw! The captain will choose who to execute.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7421973790720
+    m_Localized: The vote was a draw! A new vote will start to break the draw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7593353052160
+    m_Localized: The vote was a draw! Choose who to execute.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7842247245824
+    m_Localized: Choose a player to see his role
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7940146495488
+    m_Localized: Choose the middle player to check
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8087697915904
+    m_Localized: There is no werewolf in this group! You just lost your power!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8209857019904
+    m_Localized: There is one or more werewolf in this group!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8324776755200
+    m_Localized: Can't use your power, because you lost it!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8656277766144
+    m_Localized: Choose a player to kill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8870799638528
+    m_Localized: The hunter is choosing who to kill!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8953955909632
+    m_Localized: The sun is setting, the village goes to sleep...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9065444704256
+    m_Localized: Choose a player to protect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9160047230976
+    m_Localized: Choose a player to kill!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9296928342016
+    m_Localized: Kill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9378331394048
+    m_Localized: No potion left to use
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9500591161344
+    m_Localized: This player will die tonight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9717625421824
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

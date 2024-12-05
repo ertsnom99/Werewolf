@@ -1,6 +1,8 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace Werewolf.UI
@@ -18,7 +20,7 @@ namespace Werewolf.UI
 		private Button _button;
 
 		[SerializeField]
-		private TMP_Text _nameText;
+		private LocalizeStringEvent _text;
 
 		private bool _isSelected;
 
@@ -27,7 +29,7 @@ namespace Werewolf.UI
 		public struct ChoiceData
 		{
 			public Sprite Image;
-			public string Name;
+			public LocalizedString Text;
 		}
 
 		public void Start()
@@ -44,7 +46,7 @@ namespace Werewolf.UI
 		public void SetChoice(ChoiceData choice)
 		{
 			_image.sprite = choice.Image;
-			_nameText.text = choice.Name;
+			_text.StringReference = choice.Text;
 		}
 
 		public void SetSelected(bool isSelected)

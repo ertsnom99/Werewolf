@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 using Werewolf.Data;
 
@@ -15,6 +17,9 @@ namespace Werewolf.UI
 
 		[SerializeField]
 		private Image _image;
+
+		[SerializeField]
+		private LocalizeStringEvent _localizedText;
 
 		[SerializeField]
 		private TMP_Text _text;
@@ -34,6 +39,34 @@ namespace Werewolf.UI
 		public void SetConfig(GameConfig config)
 		{
 			_config = config;
+		}
+
+		public void Initialize(Sprite image, LocalizedString title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
+		{
+			_image.gameObject.SetActive(image);
+			_image.sprite = image;
+
+			_localizedText.StringReference = title;
+
+			_confirmButton.gameObject.SetActive(showConfirmButton);
+			_confirmButtonText.text = confirmButtonText;
+			_confirmButton.interactable = true;
+
+			if (_countdownCoroutine != null)
+			{
+				StopCoroutine(_countdownCoroutine);
+			}
+
+			bool displayCountdown = countdownDuration > -1;
+			_countdownText.gameObject.SetActive(displayCountdown);
+
+			if (!displayCountdown)
+			{
+				return;
+			}
+
+			_countdownCoroutine = Countdown(countdownDuration);
+			StartCoroutine(_countdownCoroutine);
 		}
 
 		public void Initialize(Sprite image, string title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
