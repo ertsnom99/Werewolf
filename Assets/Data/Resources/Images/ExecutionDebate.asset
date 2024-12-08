@@ -17,7 +17,7 @@ MonoBehaviour:
   <DebugName>k__BackingField: ExecutionDebate
   <Image>k__BackingField: {fileID: 21300000, guid: 2ecbfbb514ac3a643b7777c3a8f90bea,
     type: 3}
-  <TextNew>k__BackingField:
+  <Text>k__BackingField:
     m_TableReference:
       m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
     m_TableEntryReference:
@@ -26,11 +26,11 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <Text>k__BackingField:
+  <PromptButtonText>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+      m_TableCollectionName: GUID:ecf16318bb6cc7d42a507b623f97360d
     m_TableEntryReference:
-      m_KeyId: 6799388082176
+      m_KeyId: 827206403915776
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0

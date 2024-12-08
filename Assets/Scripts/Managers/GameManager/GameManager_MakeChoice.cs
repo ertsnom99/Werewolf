@@ -10,7 +10,7 @@ namespace Werewolf
 	{
 		private readonly Dictionary<PlayerRef, Action<int>> _makeChoiceCallbacks = new();
 
-		public bool MakeChoice(PlayerRef choosingPlayer, int[] choiceImageIDs, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose, Action<int> callback)
+		public bool MakeChoice(PlayerRef choosingPlayer, int[] choiceImageIDs, int choiceScreenID, bool mustChoose, float maximumDuration, Action<int> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _makeChoiceCallbacks.ContainsKey(choosingPlayer))
 			{
@@ -18,7 +18,7 @@ namespace Werewolf
 			}
 
 			_makeChoiceCallbacks.Add(choosingPlayer, callback);
-			RPC_MakeChoice(choosingPlayer, choiceImageIDs, maximumDuration, chooseText, choosedText, didNotChoosedText, mustChoose);
+			RPC_MakeChoice(choosingPlayer, choiceImageIDs, choiceScreenID, mustChoose, maximumDuration);
 
 			return true;
 		}
@@ -43,7 +43,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_MakeChoice([RpcTarget] PlayerRef player, int[] choiceImageIDs, float maximumDuration, string chooseText, string choosedText, string didNotChoosedText, bool mustChoose)
+		public void RPC_MakeChoice([RpcTarget] PlayerRef player, int[] choiceImageIDs, int choiceScreenID, bool mustChoose, float maximumDuration)
 		{
 			List<Choice.ChoiceData> choices = new();
 
@@ -59,9 +59,16 @@ namespace Werewolf
 				choices.Add(new() { Image = imageData.Image, Text = imageData.Text });
 			}
 
+			var choiceScreen = _gameplayDatabaseManager.GetGameplayData<ChoiceScreenData>(choiceScreenID);
+
+			if (choiceScreen == null)
+			{
+				return;
+			}
+
 			_UIManager.ChoiceScreen.ConfirmedChoice += GiveChoice;
 
-			_UIManager.ChoiceScreen.Initialize(maximumDuration, chooseText, choosedText, didNotChoosedText, choices.ToArray(), mustChoose);
+			_UIManager.ChoiceScreen.Initialize(choices.ToArray(), choiceScreen.ChooseText, choiceScreen.ChoosedText, choiceScreen.DidNotChoosedText, mustChoose, maximumDuration);
 			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionNormalDuration);
 		}
 

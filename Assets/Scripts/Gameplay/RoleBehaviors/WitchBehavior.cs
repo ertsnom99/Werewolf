@@ -23,16 +23,10 @@ namespace Werewolf
 		private GameplayTag _noPotionToUseImage;
 
 		[SerializeField]
+		private GameplayTag _choiceScreen;
+
+		[SerializeField]
 		private float _choosePotionMaximumDuration = 10.0f;
-
-		[SerializeField]
-		private string _choosePotionText;
-
-		[SerializeField]
-		private string _choosedPotionText;
-
-		[SerializeField]
-		private string _choosedNoPotionText;
 
 		[SerializeField]
 		private float _choiceSelectedHoldDuration;
@@ -191,11 +185,9 @@ namespace Werewolf
 
 			return _gameManager.MakeChoice(Player,
 											_choices,
-											_choosePotionTimeLeft,
-											_choosePotionText,
-											_choosedPotionText,
-											_choosedNoPotionText,
+											_choiceScreen.CompactTagId,
 											false,
+											_choosePotionTimeLeft,
 											OnPotionSelected);
 		}
 

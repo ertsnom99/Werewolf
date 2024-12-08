@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.UI;
 using Werewolf.Data;
 
@@ -11,10 +13,10 @@ namespace Werewolf.UI
 	{
 		[Header("UI")]
 		[SerializeField]
-		private TMP_Text _countdownText;
+		private LocalizeStringEvent _countdownText;
 
 		[SerializeField]
-		private TMP_Text _text;
+		private LocalizeStringEvent _text;
 
 		[SerializeField]
 		private HorizontalLayoutGroup _choicesContainer;
@@ -26,7 +28,7 @@ namespace Werewolf.UI
 		private Button _SkipButton;
 
 		[SerializeField]
-		private TMP_Text _buttonText;
+		private LocalizeStringEvent _buttonText;
 
 		private GameConfig _config;
 
@@ -35,8 +37,8 @@ namespace Werewolf.UI
 		private Choice[] _choices;
 
 		private Choice _selectedChoice;
-		private string _choosedText;
-		private string _didNotChoosedText;
+		private LocalizedString _choosedText;
+		private LocalizedString _didNotChoosedText;
 
 		private IEnumerator _countdownCoroutine;
 
@@ -47,14 +49,8 @@ namespace Werewolf.UI
 			_config = config;
 		}
 
-		public void Initialize(float countdownDuration, string chooseText, string choosedText, string didNotChoosedText, Choice.ChoiceData[] choices, bool mustChooseOne)
+		public void Initialize(Choice.ChoiceData[] choices, LocalizedString chooseText, LocalizedString choosedText, LocalizedString didNotChoosedText, bool mustChooseOne, float countdownDuration)
 		{
-			_text.text = chooseText;
-			_choosedText = choosedText;
-			_didNotChoosedText = didNotChoosedText;
-
-			_mustChooseOne = mustChooseOne;
-
 			foreach (Transform choice in _choicesContainer.transform)
 			{
 				choice.GetComponent<Choice>().Selected -= OnChoiceSelected;
@@ -72,6 +68,12 @@ namespace Werewolf.UI
 				_choices[i] = choice;
 			}
 
+			_text.StringReference = chooseText;
+			_choosedText = choosedText;
+			_didNotChoosedText = didNotChoosedText;
+
+			_mustChooseOne = mustChooseOne;
+
 			_SkipButton.onClick.RemoveAllListeners();
 
 			if (!mustChooseOne)
@@ -80,7 +82,7 @@ namespace Werewolf.UI
 			}
 
 			_SkipButton.interactable = !mustChooseOne;
-			_buttonText.text = mustChooseOne ? _config.MustChooseText : _config.SkipChoiceText;
+			_buttonText.StringReference = mustChooseOne ? _config.MustChooseText : _config.SkipChoiceText;
 
 			_countdownCoroutine = Countdown(countdownDuration);
 			StartCoroutine(_countdownCoroutine);
@@ -93,7 +95,7 @@ namespace Werewolf.UI
 				if (_selectedChoice == choice)
 				{
 					_selectedChoice = null;
-					_buttonText.text = _config.SkipChoiceText;
+					_buttonText.StringReference = _config.SkipChoiceText;
 					return;
 				}
 				else
@@ -103,7 +105,7 @@ namespace Werewolf.UI
 			}
 
 			_selectedChoice = choice;
-			_buttonText.text = _config.ConfirmChoiceText;
+			_buttonText.StringReference = _config.ConfirmChoiceText;
 		}
 
 		private void OnConfirmChoice()
@@ -113,7 +115,7 @@ namespace Werewolf.UI
 				return;
 			}
 
-			_text.text = _selectedChoice ? _choosedText : _didNotChoosedText;
+			_text.StringReference = _selectedChoice ? _choosedText : _didNotChoosedText;
 
 			foreach (Choice choice in _choices)
 			{
@@ -142,8 +144,7 @@ namespace Werewolf.UI
 				yield return 0;
 
 				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
-
-				_countdownText.text = string.Format(_config.CountdownText, Mathf.CeilToInt(timeLeft));
+				((IntVariable)_countdownText.StringReference["Time"]).Value = Mathf.CeilToInt(timeLeft);
 			}
 		}
 

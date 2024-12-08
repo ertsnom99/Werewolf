@@ -55,8 +55,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 28d64caafe8877649a56d1661a9604fb, type: 2}
   _wasGivenRolesGameHistoryEntry: {fileID: 7785847060838763036, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  _usedRoleGameHistoryEntry: {fileID: -5309287748526777260, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choiceScreen: {fileID: -5589280072798000104, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _chooseReservedRoleMaximumDuration: 10
-  _chooseRoleText: You MAY choose one role to use until the next night
-  _choosedRoleText: You have choosen this role
+  _usedRoleGameHistoryEntry: {fileID: -5309287748526777260, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}

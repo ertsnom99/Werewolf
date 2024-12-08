@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: StringTableUI_fr
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: ecf16318bb6cc7d42a507b623f97360d, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 4972454616256217109
+  m_TableData:
+  - m_Id: 782570201317376
+    m_Localized: 
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217109
+  - m_Id: 791509907308544
+    m_Localized: 
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217109
+  - m_Id: 802396118482944
+    m_Localized: 
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217109
+  - m_Id: 816035818930176
+    m_Localized: 
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217109
+  references:
+    version: 2
+    RefIds:
+    - rid: 4972454616256217109
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 0080dc52bec702000080dcc2dfcf020000809c67c6d9020000801c252ee60200

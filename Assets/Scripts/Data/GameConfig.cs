@@ -1,5 +1,6 @@
 using Assets.Scripts.Data.Tags;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace Werewolf.Data
 {
@@ -10,7 +11,7 @@ namespace Werewolf.Data
 
 		[field: Header("Loading Screen")]
 		[field: SerializeField]
-		public string LoadingScreenText { get; private set; }
+		public LocalizedString WaitingForServerText { get; private set; }
 
 		[field: SerializeField]
 		public float LoadingScreenTransitionDuration { get; private set; }
@@ -51,14 +52,11 @@ namespace Werewolf.Data
 
 		[field: Header("Given Role Reveal")]
 		[field: SerializeField]
-		public string RoleGivenRevealText { get; private set; }
+		public LocalizedString GivenRoleText { get; private set; }
 
 		[field: Header("Election")]
 		[field: SerializeField]
 		public GameplayTag ElectionPromptImage { get; private set; }
-
-		[field: SerializeField]
-		public string ElectionPromptButtonText { get; private set; }
 
 		[field: SerializeField]
 		public float ElectionPromptDuration { get; private set; }
@@ -88,7 +86,7 @@ namespace Werewolf.Data
 		public float ElectionNoCandidateDuration { get; private set; }
 
 		[field: SerializeField]
-		public string ElectionVoteTitle { get; private set; }
+		public GameplayTag ElectionVoteImage { get; private set; }
 
 		[field: SerializeField]
 		public float ElectionVoteDuration { get; private set; }
@@ -132,10 +130,7 @@ namespace Werewolf.Data
 		public GameplayTag WokeUpPlayerGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
-		public string RolePlayingTextSingular { get; private set; }
-
-		[field: SerializeField]
-		public string RolePlayingTextPlurial { get; private set; }
+		public LocalizedString RolePlayingText { get; private set; }
 
 		[field: SerializeField]
 		public float NightCallMinimumDuration { get; private set; }
@@ -173,7 +168,7 @@ namespace Werewolf.Data
 		public float ExecutionDebateDuration { get; private set; }
 
 		[field: SerializeField]
-		public string ExecutionVoteTitle { get; private set; }
+		public GameplayTag ExecutionVoteImage { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionVoteDuration { get; private set; }
@@ -222,7 +217,7 @@ namespace Werewolf.Data
 		public GameplayTag EndGamePlayerGroupWonGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
-		public string WinningPlayerGroupText { get; private set; }
+		public LocalizedString PlayerGroupWonText { get; private set; }
 
 		[field: SerializeField]
 		public GameplayTag EndGameNobodyWonGameHistoryEntry { get; private set; }
@@ -232,9 +227,6 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public float EndGameTitleHoldDuration { get; private set; }
-
-		[field: SerializeField]
-		public string ReturnToLobbyCountdownText { get; private set; }
 
 		[field: SerializeField]
 		public float ReturnToLobbyCountdownDuration { get; private set; }
@@ -287,19 +279,6 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float HighlightDuration { get; private set; }
 
-		[field: Header("Role Reservation")]
-		[field: SerializeField]
-		public string ChooseRoleText { get; private set; }
-
-		[field: SerializeField]
-		public string ChooseRoleObligatoryText { get; private set; }
-
-		[field: SerializeField]
-		public string ChoosedRoleText { get; private set; }
-
-		[field: SerializeField]
-		public string DidNotChoosedRoleText { get; private set; }
-
 		[field: Header("Role Reveal")]
 		[field: SerializeField]
 		public float MoveToCameraDuration { get; private set; }
@@ -324,19 +303,13 @@ namespace Werewolf.Data
 		public float UITransitionFastDuration { get; private set; }
 
 		[field: SerializeField]
-		public string CountdownText { get; private set; }
+		public LocalizedString SkipChoiceText { get; private set; }
 
 		[field: SerializeField]
-		public string SkipDebateText { get; private set; }
+		public LocalizedString MustChooseText { get; private set; }
 
 		[field: SerializeField]
-		public string SkipChoiceText { get; private set; }
-
-		[field: SerializeField]
-		public string MustChooseText { get; private set; }
-
-		[field: SerializeField]
-		public string ConfirmChoiceText { get; private set; }
+		public LocalizedString ConfirmChoiceText { get; private set; }
 
 		[field: Header("Network")]
 		[field: SerializeField]

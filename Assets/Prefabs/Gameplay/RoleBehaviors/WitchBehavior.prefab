@@ -54,10 +54,9 @@ MonoBehaviour:
   _playerHighlightHoldDuration: 3
   _noPotionToUseImage: {fileID: -8715855821755236391, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  _choiceScreen: {fileID: 5184849998100429465, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _choosePotionMaximumDuration: 10
-  _choosePotionText: You can choose a potion to use
-  _choosedPotionText: You chose this potion
-  _choosedNoPotionText: You didn't choose any potion
   _choiceSelectedHoldDuration: 2
   _saveImage: {fileID: -8974482386819651042, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}

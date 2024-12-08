@@ -159,6 +159,42 @@ MonoBehaviour:
     m_Key: Witch_Save
     m_Metadata:
       m_Items: []
+  - m_Id: 403563773460480
+    m_Key: Election_PromptButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 403990304817152
+    m_Key: Election_Vote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1058760967356416
+    m_Key: NightCall_RolePlaying
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1081749771419648
+    m_Key: Execution_Vote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1089443479715840
+    m_Key: Werewolf_Vote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1192834260303872
+    m_Key: Servant_TakeRoleText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1193054352211968
+    m_Key: Servant_TakeRolePrompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1194417882693632
+    m_Key: Servant_NewRole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1194478347780096
+    m_Key: Servant_TookThisRole
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

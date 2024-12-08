@@ -17,7 +17,7 @@ namespace Werewolf
 
 		[Header("Vote")]
 		[SerializeField]
-		private string _voteTitle;
+		private GameplayTag _votePlayerImage;
 
 		[SerializeField]
 		private GameplayTag _votedPlayerGameHistoryEntry;
@@ -46,7 +46,7 @@ namespace Werewolf
 		{
 			isWakingUp = true;
 
-			_preparedVote = _voteManager.PrepareVote(_voteTitle, _commonData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
+			_preparedVote = _voteManager.PrepareVote(_votePlayerImage.CompactTagId, _commonData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{

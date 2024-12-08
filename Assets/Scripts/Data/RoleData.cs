@@ -30,7 +30,10 @@ namespace Werewolf.Data
 	public class RoleData : GameplayData
 	{
 		[field: SerializeField]
-		public LocalizedString Name { get; private set; }
+		public LocalizedString NameSingular { get; private set; }
+
+		[field: SerializeField]
+		public LocalizedString NamePlural { get; private set; }
 
 		[field: SerializeField]
 		public LocalizedString Description { get; private set; }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.SceneManagement;
 using Werewolf.Data;
 using Werewolf.Network;
@@ -54,6 +55,12 @@ namespace Werewolf
 		private int _nightCount = 0;
 
 		private readonly List<PlayerRef> _captainCandidates = new();
+
+		private readonly Dictionary<string, IVariable> _rolePlayingTextVariables = new()
+		{
+			{ "Role", null },
+			{ "Multiple", new BoolVariable() }
+		};
 
 		private bool _isPlayerDeathRevealCompleted;
 		private IEnumerator _revealPlayerDeathCoroutine;
@@ -454,7 +461,7 @@ namespace Werewolf
 
 				foreach (PlayerRef player in nightCall.Players)
 				{
-					roles += $"{PlayerGameInfos[player].Role.Name} || ";
+					roles += $"{PlayerGameInfos[player].Role.NameSingular} || ";
 				}
 
 				Debug.Log(roles);
@@ -620,10 +627,11 @@ namespace Werewolf
 
 				if (RevealPlayerRole(playerInfo.Key, playerInfo.Key, false, false, (PlayerRef revealTo) => { StopWaintingForPlayer(revealTo); }))
 				{
-					RPC_DisplayTitle(playerInfo.Key, string.Format(Config.RoleGivenRevealText, playerInfo.Value.Role.Name.GetLocalizedString().ToLower()));
 					WaitForPlayer(playerInfo.Key);
 				}
 			}
+
+			RPC_ShowGivenRoleTitle();
 
 			while (PlayersWaitingFor.Count > 0)
 			{
@@ -644,7 +652,18 @@ namespace Werewolf
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_ShowGivenRoleTitle()
+		{
+			Dictionary<string, IVariable> variables = new()
+			{
+				{ "Role", _playerCards[Runner.LocalPlayer].Role.NameSingular }
+			};
 
+			DisplayTitle(null, Config.GivenRoleText, variables);
+		}
+		#endregion
 		#endregion
 
 		#region Election
@@ -655,12 +674,11 @@ namespace Werewolf
 				PromptPlayer(playerInfo.Key,
 							Config.ElectionPromptImage.CompactTagId,
 							Config.ElectionPromptDuration * GameSpeedModifier,
-							Config.ElectionPromptButtonText,
 							OnPlayerWantsToBeCaptain,
 							false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(Config.ElectionPromptImage.CompactTagId, Config.ElectionPromptDuration * GameSpeedModifier);
+			DisplayTitle(Config.ElectionPromptImage.CompactTagId, variables: null, countdownDuration: Config.ElectionPromptDuration * GameSpeedModifier);
 #endif
 			yield return new WaitForSeconds(Config.ElectionPromptDuration * GameSpeedModifier);
 
@@ -718,7 +736,7 @@ namespace Werewolf
 		private void StartElection()
 		{
 			_voteManager.StartVoteForAllPlayers(OnElectionVotesCounted,
-												Config.ElectionVoteTitle,
+												Config.ElectionVoteImage.CompactTagId,
 												Config.ElectionVoteDuration * GameSpeedModifier,
 												false,
 												ChoicePurpose.Other,
@@ -945,9 +963,12 @@ namespace Werewolf
 		private void DisplayRolePlaying(int roleGameplayTagID)
 		{
 			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
-			string text = roleData.CanHaveMultiples ? Config.RolePlayingTextPlurial : Config.RolePlayingTextSingular;
+			bool multipleRole = roleData.CanHaveMultiples;
 
-			DisplayTitle(roleData.Image, string.Format(text, roleData.Name.GetLocalizedString().ToLower()));
+			_rolePlayingTextVariables["Role"] = multipleRole ? roleData.NamePlural : roleData.NameSingular;
+			((BoolVariable)_rolePlayingTextVariables["Multiple"]).Value = multipleRole;
+
+			DisplayTitle(roleData.Image, Config.RolePlayingText, _rolePlayingTextVariables);
 		}
 
 		#region RPC Calls
@@ -1235,7 +1256,7 @@ namespace Werewolf
 		private void StartExecution()
 		{
 			if (!_voteManager.StartVoteForAllPlayers(OnExecutionVotesCounted,
-													Config.ExecutionVoteTitle,
+													Config.ExecutionVoteImage.CompactTagId,
 													Config.ExecutionVoteDuration * GameSpeedModifier,
 													true,
 													ChoicePurpose.Kill,
@@ -1271,7 +1292,7 @@ namespace Werewolf
 			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteImage.CompactTagId, Config.ExecutionTitleHoldDuration * GameSpeedModifier);
 
 			if (!_voteManager.StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
-													Config.ExecutionVoteTitle,
+													Config.ExecutionVoteImage.CompactTagId,
 													Config.ExecutionVoteDuration * GameSpeedModifier,
 													false,
 													ChoicePurpose.Kill,
@@ -1552,7 +1573,13 @@ namespace Werewolf
 			if (winningPlayerGroupID > -1)
 			{
 				PlayerGroupData playerGroupData = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(winningPlayerGroupID);
-				DisplayTitle(playerGroupData.Image, string.Format(Config.WinningPlayerGroupText, playerGroupData.Name.GetLocalizedString()));
+
+				Dictionary<string, IVariable> variables = new()
+				{
+					{ "PlayerGroup", playerGroupData.Name }
+				};
+
+				DisplayTitle(playerGroupData.Image, Config.PlayerGroupWonText, variables);
 			}
 			else
 			{
@@ -1568,7 +1595,7 @@ namespace Werewolf
 
 			yield return new WaitForSeconds(Config.ReturnToLobbyCountdownDuration * GameSpeedModifier);
 
-			_UIManager.LoadingScreen.Initialize("");
+			_UIManager.LoadingScreen.Initialize(null);
 			_UIManager.FadeIn(_UIManager.LoadingScreen, Config.LoadingScreenTransitionDuration);
 		}
 

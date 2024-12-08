@@ -91,7 +91,7 @@ namespace Werewolf.UI
 							text.Add(variable.Name, new StringListVariable() { Values = SplitData(variable.Data).ToList() });
 							break;
 						case GameHistorySaveEntryVariableType.RoleName:
-							text.Add(variable.Name, _gameplayDatabaseManager.GetGameplayData<RoleData>(variable.Data).Name);
+							text.Add(variable.Name, _gameplayDatabaseManager.GetGameplayData<RoleData>(variable.Data).NameSingular);
 							break;
 						case GameHistorySaveEntryVariableType.RoleNames:
 							List<string> roleNames = SplitData(variable.Data).ToList();
@@ -99,7 +99,7 @@ namespace Werewolf.UI
 
 							foreach(string roleName in roleNames)
 							{
-								localizedRoleNames.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(roleName).Name);
+								localizedRoleNames.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(roleName).NameSingular);
 							}
 
 							text.Add(variable.Name, new LocalizedStringListVariable() { Values = localizedRoleNames });
