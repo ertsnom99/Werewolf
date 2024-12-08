@@ -13,5 +13,8 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public LocalizedString Text { get; private set; }
+
+		[field: SerializeField]
+		public LocalizedString PromptButtonText { get; private set; }
 	}
 }

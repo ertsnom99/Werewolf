@@ -1,7 +1,9 @@
-using TMPro;
 using UnityEngine;
 using System.Collections;
 using Werewolf.Data;
+using UnityEngine.Localization.Components;
+using UnityEngine.Localization;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 namespace Werewolf.UI
 {
@@ -9,10 +11,10 @@ namespace Werewolf.UI
 	{
 		[Header("UI")]
 		[SerializeField]
-		private TMP_Text _titleText;
+		private LocalizeStringEvent _titleText;
 
 		[SerializeField]
-		private TMP_Text _countdownText;
+		private LocalizeStringEvent _countdownText;
 
 		[SerializeField]
 		private RectTransform _confirmVoteDelay;
@@ -36,9 +38,9 @@ namespace Werewolf.UI
 			_confirmVoteDelayDuration = confirmVoteDelayDuration;
 		}
 
-		public void Initialize(string titleText, bool displayWarning, float countdownDuration)
+		public void Initialize(LocalizedString title, bool displayWarning, float countdownDuration)
 		{
-			_titleText.text = titleText;
+			_titleText.StringReference = title;
 
 			SetConfirmVoteDelayActive(false);
 			_warningText.SetActive(displayWarning);
@@ -58,8 +60,7 @@ namespace Werewolf.UI
 				yield return 0;
 
 				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
-
-				_countdownText.text = string.Format(_config.CountdownText, Mathf.CeilToInt(timeLeft));
+				((IntVariable)_countdownText.StringReference["Time"]).Value = Mathf.CeilToInt(timeLeft);
 			}
 		}
 

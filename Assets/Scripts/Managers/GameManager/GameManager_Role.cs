@@ -7,7 +7,6 @@ using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.UI;
-using static Werewolf.GameManager;
 
 namespace Werewolf
 {
@@ -365,7 +364,7 @@ namespace Werewolf
 		}
 
 		// Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
-		public bool ChooseReservedRole(RoleBehavior ReservedRoleOwner, float maximumDuration, string chooseText, string choosedText, bool mustChoose, Action<int> callback)
+		public bool ChooseReservedRole(RoleBehavior ReservedRoleOwner, int choiceScreenID, bool mustChoose, float maximumDuration, Action<int> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[ReservedRoleOwner.Player].IsConnected || !_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
 			{
@@ -385,7 +384,7 @@ namespace Werewolf
 			}
 
 			_chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-			RPC_ChooseReservedRole(ReservedRoleOwner.Player, maximumDuration, chooseText, choosedText, roles, mustChoose);
+			RPC_ChooseReservedRole(ReservedRoleOwner.Player, roles, choiceScreenID, mustChoose, maximumDuration);
 
 			return true;
 		}
@@ -438,24 +437,32 @@ namespace Werewolf
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_ChooseReservedRole([RpcTarget] PlayerRef player, float maximumDuration, string chooseText, string choosedText, int[] roles, bool mustChooseOne)
+		public void RPC_ChooseReservedRole([RpcTarget] PlayerRef player, int[] roles, int choiceScreenID, bool mustChoose, float maximumDuration)
 		{
 			List<Choice.ChoiceData> choices = new();
 
 			foreach (int roleGameplayTag in roles)
 			{
-				if (roleGameplayTag <= 0)
+				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
+
+				if (roleData == null)
 				{
 					continue;
 				}
 
-				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
-				choices.Add(new() { Image = roleData.Image, Text = roleData.Name });
+				choices.Add(new() { Image = roleData.Image, Text = roleData.NameSingular });
+			}
+
+			var choiceScreen = _gameplayDatabaseManager.GetGameplayData<ChoiceScreenData>(choiceScreenID);
+
+			if (choiceScreen == null)
+			{
+				return;
 			}
 
 			_UIManager.ChoiceScreen.ConfirmedChoice += GiveReservedRoleChoice;
 
-			_UIManager.ChoiceScreen.Initialize(maximumDuration, chooseText, choosedText, Config.DidNotChoosedRoleText, choices.ToArray(), mustChooseOne);
+			_UIManager.ChoiceScreen.Initialize(choices.ToArray(), choiceScreen.ChooseText, choiceScreen.ChoosedText, choiceScreen.DidNotChoosedText, mustChoose, maximumDuration);
 			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionNormalDuration);
 		}
 

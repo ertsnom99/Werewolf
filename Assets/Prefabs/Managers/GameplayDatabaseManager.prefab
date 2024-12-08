@@ -49,5 +49,6 @@ MonoBehaviour:
   - GameHistoryEntries
   - PlayerGroups
   - Images
+  - ChoiceScreens
   <IsReady>k__BackingField: 0
   _logDatabase: 0

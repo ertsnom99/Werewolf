@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.UI;
 using Werewolf.Data;
 
@@ -13,7 +14,7 @@ namespace Werewolf.UI
 	{
 		[Header("UI")]
 		[SerializeField]
-		private TMP_Text _countdownText;
+		private LocalizeStringEvent _countdownText;
 
 		[SerializeField]
 		private Image _image;
@@ -22,13 +23,10 @@ namespace Werewolf.UI
 		private LocalizeStringEvent _localizedText;
 
 		[SerializeField]
-		private TMP_Text _text;
-
-		[SerializeField]
 		private Button _confirmButton;
 
 		[SerializeField]
-		private TMP_Text _confirmButtonText;
+		private LocalizeStringEvent _confirmButtonText;
 
 		private GameConfig _config;
 
@@ -41,43 +39,29 @@ namespace Werewolf.UI
 			_config = config;
 		}
 
-		public void Initialize(Sprite image, LocalizedString title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
+		public void Initialize(Sprite image, LocalizedString title, Dictionary<string, IVariable> variables = null, bool showConfirmButton = false, LocalizedString confirmButtonText = null, float countdownDuration = -1)
 		{
 			_image.gameObject.SetActive(image);
 			_image.sprite = image;
 
-			_localizedText.StringReference = title;
-
-			_confirmButton.gameObject.SetActive(showConfirmButton);
-			_confirmButtonText.text = confirmButtonText;
-			_confirmButton.interactable = true;
-
-			if (_countdownCoroutine != null)
+			if (variables != null)
 			{
-				StopCoroutine(_countdownCoroutine);
+				LocalizedString localizedString = new(title.TableReference, title.TableEntryReference.KeyId);
+
+				foreach (KeyValuePair<string, IVariable> variable in variables)
+				{
+					localizedString.Add(variable.Key, variable.Value);
+				}
+
+				_localizedText.StringReference = localizedString;
+			}
+			else
+			{
+				_localizedText.StringReference = title;
 			}
 
-			bool displayCountdown = countdownDuration > -1;
-			_countdownText.gameObject.SetActive(displayCountdown);
-
-			if (!displayCountdown)
-			{
-				return;
-			}
-
-			_countdownCoroutine = Countdown(countdownDuration);
-			StartCoroutine(_countdownCoroutine);
-		}
-
-		public void Initialize(Sprite image, string title, float countdownDuration = -1, bool showConfirmButton = false, string confirmButtonText = "")
-		{
-			_image.gameObject.SetActive(image);
-			_image.sprite = image;
-
-			_text.text = title;
-
 			_confirmButton.gameObject.SetActive(showConfirmButton);
-			_confirmButtonText.text = confirmButtonText;
+			_confirmButtonText.StringReference = confirmButtonText;
 			_confirmButton.interactable = true;
 
 			if (_countdownCoroutine != null)
@@ -116,8 +100,7 @@ namespace Werewolf.UI
 				yield return 0;
 
 				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
-
-				_countdownText.text = string.Format(_config.CountdownText, Mathf.CeilToInt(timeLeft));
+				((IntVariable)_countdownText.StringReference["Time"]).Value = Mathf.CeilToInt(timeLeft);
 			}
 		}
 

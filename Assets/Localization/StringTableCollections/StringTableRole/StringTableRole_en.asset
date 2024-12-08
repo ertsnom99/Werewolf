@@ -203,6 +203,14 @@ MonoBehaviour:
 '
     m_Metadata:
       m_Items: []
+  - m_Id: 58103591669104640
+    m_Localized: Villagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58104528299130880
+    m_Localized: Werewolves
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

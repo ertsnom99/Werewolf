@@ -20,16 +20,13 @@ namespace Werewolf
 
 		[Header("Use Role")]
 		[SerializeField]
-		private GameplayTag _usedRoleGameHistoryEntry;
+		private GameplayTag _choiceScreen;
 
 		[SerializeField]
 		private float _chooseReservedRoleMaximumDuration = 10.0f;
 
 		[SerializeField]
-		private string _chooseRoleText;
-
-		[SerializeField]
-		private string _choosedRoleText;
+		private GameplayTag _usedRoleGameHistoryEntry;
 
 		private GameManager.IndexedReservedRoles _reservedRoles;
 		private RoleBehavior _currentRoleBehavior;
@@ -237,7 +234,11 @@ namespace Werewolf
 				return false;
 			}
 
-			if (!_gameManager.ChooseReservedRole(this, _chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier, _chooseRoleText, _choosedRoleText, false, OnRoleSelected))
+			if (!_gameManager.ChooseReservedRole(this,
+												_choiceScreen.CompactTagId,
+												false,
+												_chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier,
+												OnRoleSelected))
 			{
 				StartCoroutine(WaitOnRoleSelected(-1));
 			}

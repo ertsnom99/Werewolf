@@ -16,7 +16,7 @@ MonoBehaviour:
   m_TableCollectionNameGuidString: 25402ef7d32c3cb47a782073354eda10
   m_Entries:
   - m_Id: 1069766066176
-    m_Key: Comedian_Name
+    m_Key: Comedian_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 1155975790592
@@ -24,7 +24,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2521448235008
-    m_Key: Cupid_Name
+    m_Key: Cupid_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 2525135028224
@@ -36,7 +36,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3931116060672
-    m_Key: FortuneTeller_Name
+    m_Key: FortuneTeller_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 3933225795584
@@ -44,7 +44,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4372801437696
-    m_Key: Fox_Name
+    m_Key: Fox_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 4374936338432
@@ -52,7 +52,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4704545718272
-    m_Key: Hunter_Name
+    m_Key: Hunter_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 4706357657600
@@ -60,7 +60,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4887052468224
-    m_Key: Saviour_Name
+    m_Key: Saviour_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 4889510330368
@@ -68,7 +68,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5095198998528
-    m_Key: Servant_Name
+    m_Key: Servant_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 5097270984704
@@ -76,7 +76,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5773111771136
-    m_Key: Thief_Name
+    m_Key: Thief_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 5775175368704
@@ -84,7 +84,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6095993487360
-    m_Key: Villager_Name
+    m_Key: Villager_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 6100871462912
@@ -96,7 +96,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7362610380800
-    m_Key: Werewolf_Name
+    m_Key: Werewolf_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 7364653006848
@@ -108,11 +108,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8299815026688
-    m_Key: Witch_Name
+    m_Key: Witch_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 8301756989440
     m_Key: Witch_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58103591669104640
+    m_Key: Villager_NamePlural
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58104528299130880
+    m_Key: Werewolf_NamePlural
     m_Metadata:
       m_Items: []
   m_Metadata:

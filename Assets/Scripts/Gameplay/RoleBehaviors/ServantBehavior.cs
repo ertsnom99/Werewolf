@@ -14,10 +14,7 @@ namespace Werewolf
 	{
 		[Header("Take Role")]
 		[SerializeField]
-		private string _takeRolePrompt;
-
-		[SerializeField]
-		private string _confirmTakeRoleButtonText;
+		private GameplayTag _takeRoleImage;
 
 		[SerializeField]
 		private GameplayTag[] _notResettedRoles;
@@ -26,10 +23,10 @@ namespace Werewolf
 		private GameplayTag _tookRoleGameHistoryEntry;
 
 		[SerializeField]
-		private string _newRoleText;
+		private GameplayTag _newRoleImage;
 
 		[SerializeField]
-		private string _tookThisRoleText;
+		private GameplayTag _tookThisRoleImage;
 
 		[SerializeField]
 		private float _servantRevealDuration = 3.0f;
@@ -64,7 +61,7 @@ namespace Werewolf
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| Player == playerRevealed
 				|| !marks.Contains(_gameManager.Config.ExecutionMarkForDeath)
-				|| !_gameManager.PromptPlayer(Player, _takeRolePrompt, revealDuration, _confirmTakeRoleButtonText, OnTakeRole))
+				|| !_gameManager.PromptPlayer(Player, _takeRoleImage.CompactTagId, revealDuration, OnTakeRole))
 			{
 				return;
 			}
@@ -121,7 +118,7 @@ namespace Werewolf
 				if (playerInfo.Key == previousPlayer)
 				{
 					_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
-					_gameManager.RPC_DisplayTitle(playerInfo.Key, string.Format(_newRoleText, RoleToTake.Name.GetLocalizedString().ToLower()));
+					_gameManager.RPC_DisplayTitle(playerInfo.Key, _newRoleImage.CompactTagId, RoleToTake.GameplayTag.CompactTagId);
 					continue;
 				}
 
@@ -134,7 +131,7 @@ namespace Werewolf
 				_gameManager.RPC_PutCardBackDown(playerInfo.Key, _playerRevealed, false);
 
 				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, previousPlayer, true, servantRole.GameplayTag.CompactTagId);
-				_gameManager.RPC_DisplayTitle(playerInfo.Key, _tookThisRoleText);
+				_gameManager.RPC_DisplayTitle(playerInfo.Key, _tookThisRoleImage.CompactTagId);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.ChangePlayerCardRole(_playerRevealed, null);
@@ -142,7 +139,7 @@ namespace Werewolf
 
 			_gameManager.ChangePlayerCardRole(previousPlayer, servantRole);
 			_gameManager.MoveCardToCamera(previousPlayer, true);
-			_gameManager.DisplayTitle(null, _tookThisRoleText);
+			_gameManager.DisplayTitle(_tookThisRoleImage.CompactTagId);
 #endif
 			yield return new WaitForSeconds(_servantRevealDuration * _gameManager.GameSpeedModifier);
 

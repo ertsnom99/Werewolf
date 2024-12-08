@@ -50,7 +50,8 @@ MonoBehaviour:
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _commonData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32, type: 2}
-  _voteTitle: Vote for who should be killed
+  _votePlayerImage: {fileID: -7926231009157707299, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   _votedPlayerGameHistoryEntry: {fileID: -4676981004224442684, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _failedToVotePlayerGameHistoryEntry: {fileID: 4954223030057824743, guid: 0e7014af8e28a88409bdb3f0abb80632,

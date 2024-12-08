@@ -1,5 +1,6 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace Werewolf.UI
@@ -11,11 +12,11 @@ namespace Werewolf.UI
 		private Image _image;
 
 		[SerializeField]
-		private TMP_Text _loading;
+		private LocalizeStringEvent _text;
 
-		public void Initialize(string text, Sprite image = null)
+		public void Initialize(LocalizedString text, Sprite image = null)
 		{
-			_loading.text = text;
+			_text.StringReference = text;
 
 			if (image)
 			{

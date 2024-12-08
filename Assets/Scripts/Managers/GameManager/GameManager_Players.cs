@@ -441,7 +441,7 @@ namespace Werewolf
 				playerCard.Value.LeftClicked += ChooseCard;
 			}
 
-			DisplayTitle(imageID, maximumDuration, !mustChoose, Config.SkipChoiceText);
+			DisplayTitle(imageID, variables: null, showConfirmButton: !mustChoose, countdownDuration: maximumDuration);
 
 			if (mustChoose)
 			{
@@ -472,7 +472,7 @@ namespace Werewolf
 		#endregion
 
 		#region Prompt Player
-		public bool PromptPlayer(PlayerRef promptedPlayer, int imageID, float duration, string confirmButtonText, Action<PlayerRef> callback, bool fastFade = true)
+		public bool PromptPlayer(PlayerRef promptedPlayer, int imageID, float duration, Action<PlayerRef> callback, bool fastFade = true)
 		{
 			if (!_networkDataManager.PlayerInfos[promptedPlayer].IsConnected || _promptPlayerCallbacks.ContainsKey(promptedPlayer))
 			{
@@ -480,20 +480,7 @@ namespace Werewolf
 			}
 
 			_promptPlayerCallbacks.Add(promptedPlayer, callback);
-			RPC_PromptPlayer(promptedPlayer, imageID, duration, confirmButtonText, fastFade);
-
-			return true;
-		}
-
-		public bool PromptPlayer(PlayerRef promptedPlayer, string prompt, float duration, string confirmButtonText, Action<PlayerRef> callback, bool fastFade = true)
-		{
-			if (!_networkDataManager.PlayerInfos[promptedPlayer].IsConnected || _promptPlayerCallbacks.ContainsKey(promptedPlayer))
-			{
-				return false;
-			}
-
-			_promptPlayerCallbacks.Add(promptedPlayer, callback);
-			RPC_PromptPlayer(promptedPlayer, prompt, duration, confirmButtonText, fastFade);
+			RPC_PromptPlayer(promptedPlayer, imageID, duration, fastFade);
 
 			return true;
 		}
@@ -517,17 +504,10 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, int imageID, float duration, string confirmButtonText, bool fastFade)
+		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, int imageID, float duration, bool fastFade)
 		{
 			_UIManager.TitleScreen.ConfirmClicked += OnPromptAccepted;
-			DisplayTitle(imageID, duration, true, confirmButtonText, fastFade);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, string prompt, float duration, string confirmButtonText, bool fastFade)
-		{
-			_UIManager.TitleScreen.ConfirmClicked += OnPromptAccepted;
-			DisplayTitle(null, prompt, duration, true, confirmButtonText, fastFade);
+			DisplayTitle(imageID, showConfirmButton: true, countdownDuration: duration, fastFade: fastFade);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]

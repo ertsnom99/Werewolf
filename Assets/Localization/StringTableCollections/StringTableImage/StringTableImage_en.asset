@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: 0d1be4a4109b4914b871fb5b3860e3ed, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 4972454616256217094
   m_TableData:
   - m_Id: 424192802816
     m_Localized: Choose the next captain
@@ -163,6 +164,48 @@ MonoBehaviour:
     m_Localized: Save
     m_Metadata:
       m_Items: []
+  - m_Id: 403563773460480
+    m_Localized: Yes!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 403990304817152
+    m_Localized: Vote for who should be the captain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1058760967356416
+    m_Localized: The {Role} {Multiple:are playing|is playing}...
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217094
+  - m_Id: 1081749771419648
+    m_Localized: Vote for who should be executed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1089443479715840
+    m_Localized: Vote for who should be killed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1192834260303872
+    m_Localized: Take this role?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1193054352211968
+    m_Localized: Take role
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1194417882693632
+    m_Localized: 'Your new role is: {Role}'
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217094
+  - m_Id: 1194478347780096
+    m_Localized: The servant has decided to take this role!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 4972454616256217094
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00805cffefc2030000809c15513e0400

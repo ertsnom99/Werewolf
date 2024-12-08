@@ -1,8 +1,9 @@
 using Fusion;
 using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using Werewolf.Data;
 using Werewolf.Network;
 
@@ -33,7 +34,7 @@ namespace Werewolf.UI
 		private EndGamePlayer _endGamePlayerPrefab;
 
 		[SerializeField]
-		private TMP_Text _countdownText;
+		private LocalizeStringEvent _countdownText;
 
 		private GameConfig _config;
 
@@ -51,7 +52,7 @@ namespace Werewolf.UI
 			_config = config;
 		}
 
-		public void Initialize(PlayerEndGameInfo[] endGamePlayerInfos, float returnToLobbyCountdownDuration)
+		public void Initialize(PlayerEndGameInfo[] endGamePlayerInfos, float countdownDuration)
 		{
 			foreach(PlayerEndGameInfo endGamePlayerInfo in endGamePlayerInfos)
 			{
@@ -71,7 +72,7 @@ namespace Werewolf.UI
 				if (endGamePlayerInfo.Role > -1)
 				{
 					RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(endGamePlayerInfo.Role);
-					endGamePlayer.Initialize(roleData.Image, _networkDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname, roleData.Name.GetLocalizedString());
+					endGamePlayer.Initialize(roleData.Image, _networkDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname, roleData.NameSingular.GetLocalizedString());
 				}
 				else
 				{
@@ -83,20 +84,19 @@ namespace Werewolf.UI
 			_winnersTitle.SetActive(anyWinners);
 			_winners.gameObject.SetActive(anyWinners);
 
-			StartCoroutine(StartReturnToLobbyCountdown(returnToLobbyCountdownDuration));
+			StartCoroutine(Countdown(countdownDuration));
 		}
 
-		private IEnumerator StartReturnToLobbyCountdown(float returnToLobbyCountdownDuration)
+		private IEnumerator Countdown(float countdownDuration)
 		{
-			float currentCountdown = returnToLobbyCountdownDuration;
+			float timeLeft = countdownDuration;
 
-			while (currentCountdown > 0)
+			while (timeLeft > 0)
 			{
 				yield return 0;
 
-				currentCountdown = Mathf.Max(currentCountdown - Time.deltaTime, .0f);
-
-				_countdownText.text = string.Format(_config.ReturnToLobbyCountdownText, Mathf.CeilToInt(currentCountdown));
+				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
+				((IntVariable)_countdownText.StringReference["Time"]).Value = Mathf.CeilToInt(timeLeft);
 			}
 		}
 
