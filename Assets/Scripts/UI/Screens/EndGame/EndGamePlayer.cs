@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace Werewolf.UI
@@ -14,23 +16,26 @@ namespace Werewolf.UI
 		private TMP_Text _nickname;
 
 		[SerializeField]
-		private TMP_Text _roleName;
+		private LocalizeStringEvent _roleName;
 
 		[SerializeField]
-		private Sprite _lostRole;
+		private Sprite _lostRoleImage;
 
-		public void Initialize(Sprite roleImage, string nickname, string roleName)
+		[SerializeField]
+		private LocalizedString _lostRoleText;
+
+		public void Initialize(Sprite roleImage, string nickname, LocalizedString roleName)
 		{
 			_role.sprite = roleImage;
 			_nickname.text = nickname;
-			_roleName.text = roleName;
+			_roleName.StringReference = roleName;
 		}
 
 		public void Initialize(string nickname)
 		{
-			_role.sprite = _lostRole;
+			_role.sprite = _lostRoleImage;
 			_nickname.text = nickname;
-			_roleName.text = "Lost their role";
+			_roleName.StringReference = _lostRoleText;
 		}
 	}
 }

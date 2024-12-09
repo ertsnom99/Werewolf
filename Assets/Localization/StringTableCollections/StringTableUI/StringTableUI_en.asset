@@ -64,6 +64,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 4972454616256217108
+  - m_Id: 1109735005085696
+    m_Localized: Winners
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109786976706560
+    m_Localized: Losers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109975535837184
+    m_Localized: Lost their role
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

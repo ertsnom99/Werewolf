@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7583508801281187016}
   - component: {fileID: 5903869303653283914}
+  - component: {fileID: 1393145342617763476}
   - component: {fileID: 2123974279218585505}
   m_Layer: 5
   m_Name: RoleName
@@ -45,6 +46,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4311698994055763683}
   m_CullTransparentMesh: 1
+--- !u!114 &1393145342617763476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4311698994055763683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2123974279218585505}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &2123974279218585505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,8 +228,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _role: {fileID: 3448549325187779404}
   _nickname: {fileID: 9178939699573536065}
-  _roleName: {fileID: 2123974279218585505}
-  _lostRole: {fileID: 21300000, guid: e49a89800030d03408dd630845cce68a, type: 3}
+  _roleName: {fileID: 1393145342617763476}
+  _lostRoleImage: {fileID: 21300000, guid: e49a89800030d03408dd630845cce68a, type: 3}
+  _lostRoleText:
+    m_TableReference:
+      m_TableCollectionName: GUID:ecf16318bb6cc7d42a507b623f97360d
+    m_TableEntryReference:
+      m_KeyId: 1109975535837184
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &8278405875152724612
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,7 +441,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2272, guid: bbce9110de612ae49aa0fd57f7c093d2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e49a89800030d03408dd630845cce68a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

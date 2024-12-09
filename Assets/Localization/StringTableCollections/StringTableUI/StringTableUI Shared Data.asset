@@ -55,6 +55,18 @@ MonoBehaviour:
     m_Key: Disconnected
     m_Metadata:
       m_Items: []
+  - m_Id: 1109735005085696
+    m_Key: EndGame_Winners
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109786976706560
+    m_Key: EndGame_Losers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1109975535837184
+    m_Key: EndGame_LostRole
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
