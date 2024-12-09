@@ -150,31 +150,17 @@ namespace Werewolf
 		#endregion
 
 		#region Highlight Players
-		private IEnumerator HighlightPlayerToggle(PlayerRef player)
+		private IEnumerator HighlightPlayerToggle(PlayerRef player, float duration)
 		{
 			RPC_SetPlayerCardHighlightVisible(player, true);
 #if UNITY_SERVER && UNITY_EDITOR
 			SetPlayerCardHighlightVisible(player, true);
 #endif
-			yield return new WaitForSeconds(Config.HighlightDuration * GameSpeedModifier);
+			yield return new WaitForSeconds(duration);
 
 			RPC_SetPlayerCardHighlightVisible(player, false);
 #if UNITY_SERVER && UNITY_EDITOR
 			SetPlayerCardHighlightVisible(player, false);
-#endif
-		}
-
-		private IEnumerator HighlightPlayersToggle(PlayerRef[] players)
-		{
-			RPC_SetPlayersCardHighlightVisible(players, true);
-#if UNITY_SERVER && UNITY_EDITOR
-			SetPlayersCardHighlightVisible(players, true);
-#endif
-			yield return new WaitForSeconds(Config.HighlightDuration * GameSpeedModifier);
-
-			RPC_SetPlayersCardHighlightVisible(players, false);
-#if UNITY_SERVER && UNITY_EDITOR
-			SetPlayersCardHighlightVisible(players, false);
 #endif
 		}
 
