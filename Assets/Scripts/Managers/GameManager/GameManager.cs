@@ -1490,14 +1490,14 @@ namespace Werewolf
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
-													Name = "PlayerGroupeName",
+													Name = "PlayerGroup",
 													Data = playerGroup.GameplayTag.name,
 													Type = GameHistorySaveEntryVariableType.PlayerGroupeName
 												},
 												new()
 												{
-													Name = "PlayerGroupeHasMultiplePlayers",
-													Data = playerGroupData.HasMultiplePlayers.ToString(),
+													Name = "PluralName",
+													Data = playerGroupData.HasPluralName.ToString(),
 													Type = GameHistorySaveEntryVariableType.Bool
 												}
 											},
@@ -1581,7 +1581,8 @@ namespace Werewolf
 
 				Dictionary<string, IVariable> variables = new()
 				{
-					{ "PlayerGroup", playerGroupData.Name }
+					{ "PlayerGroup", playerGroupData.Name },
+					{ "PluralName",  new BoolVariable() { Value = playerGroupData.HasPluralName } }
 				};
 
 				DisplayTitle(playerGroupData.Image, Config.PlayerGroupWonText, variables);

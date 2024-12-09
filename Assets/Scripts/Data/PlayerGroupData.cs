@@ -11,7 +11,7 @@ namespace Werewolf.Data
 		public LocalizedString Name { get; private set; }
 
 		[field: SerializeField]
-		public bool HasMultiplePlayers { get; private set; }
+		public bool HasPluralName { get; private set; }
 
 		[field: SerializeField]
 		public int Priority { get; private set; }

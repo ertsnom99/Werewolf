@@ -16,43 +16,43 @@ MonoBehaviour:
   m_TableCollectionNameGuidString: ecf16318bb6cc7d42a507b623f97360d
   m_Entries:
   - m_Id: 9866870784
-    m_Key: WaitingForServer
+    m_Key: Loading_WaitingForServer
     m_Metadata:
       m_Items: []
   - m_Id: 782570201317376
-    m_Key: ReturningToLobby
+    m_Key: EndGame_ReturningToLobby
     m_Metadata:
       m_Items: []
   - m_Id: 791509907308544
-    m_Key: TimeLeft
+    m_Key: Common_TimeLeft
     m_Metadata:
       m_Items: []
   - m_Id: 791768389681152
-    m_Key: Skip
+    m_Key: Common_Skip
     m_Metadata:
       m_Items: []
   - m_Id: 791857740939264
-    m_Key: ConfirmChoice
+    m_Key: Common_ConfirmChoice
     m_Metadata:
       m_Items: []
   - m_Id: 802396118482944
-    m_Key: GivenRole
+    m_Key: Role_GivenRole
     m_Metadata:
       m_Items: []
   - m_Id: 811711369871360
-    m_Key: MustChoose
+    m_Key: Common_MustChoose
     m_Metadata:
       m_Items: []
   - m_Id: 816035818930176
-    m_Key: PlayerGroupWon
+    m_Key: EndGame_PlayerGroupWon
     m_Metadata:
       m_Items: []
   - m_Id: 827206403915776
-    m_Key: SkipDebate
+    m_Key: Common_SkipDebate
     m_Metadata:
       m_Items: []
   - m_Id: 1104334805131264
-    m_Key: Disconnected
+    m_Key: Common_Disconnected
     m_Metadata:
       m_Items: []
   - m_Id: 1109735005085696
