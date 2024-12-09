@@ -4205,7 +4205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disconnectedTextsContainer: {fileID: 902062936}
-  _disconnectedText: {fileID: 886140747075158291, guid: a6f18f89ad4b74947a2c3ad61b241add,
+  _disconnectedText: {fileID: 7901947925721393796, guid: a6f18f89ad4b74947a2c3ad61b241add,
     type: 3}
 --- !u!225 &848439312
 CanvasGroup:
@@ -4873,7 +4873,6 @@ MonoBehaviour:
   _countdownText: {fileID: 2013283355}
   _image: {fileID: 173588703}
   _localizedText: {fileID: 120710193}
-  _text: {fileID: 120710191}
   _confirmButton: {fileID: 784332593}
   _confirmButtonText: {fileID: 1040549066}
 --- !u!225 &982152552

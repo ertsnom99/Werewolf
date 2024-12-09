@@ -1,7 +1,8 @@
 using Fusion;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using Werewolf.Data;
 using Werewolf.Network;
 
@@ -13,7 +14,7 @@ namespace Werewolf.UI
 		[SerializeField]
 		private Transform _disconnectedTextsContainer;
 		[SerializeField]
-		private TMP_Text _disconnectedText;
+		private LocalizeStringEvent _disconnectedText;
 
 		private readonly Dictionary<Transform, float> DisconnectedTextDisplayStartTimes = new();
 
@@ -52,10 +53,10 @@ namespace Werewolf.UI
 
 		public void DisplayDisconnectedPlayer(PlayerRef player)
 		{
-			TMP_Text playerNickname = Instantiate(_disconnectedText, _disconnectedTextsContainer);
-			playerNickname.text = $"{_networkDataManager.PlayerInfos[player].Nickname} disconnected";
+			LocalizeStringEvent disconnectedText = Instantiate(_disconnectedText, _disconnectedTextsContainer);
+			((StringVariable)disconnectedText.StringReference["Nickname"]).Value = _networkDataManager.PlayerInfos[player].Nickname;
 
-			DisconnectedTextDisplayStartTimes.Add(playerNickname.transform, Time.time);
+			DisconnectedTextDisplayStartTimes.Add(disconnectedText.transform, Time.time);
 		}
 	}
 }
