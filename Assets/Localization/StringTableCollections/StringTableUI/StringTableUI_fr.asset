@@ -35,7 +35,7 @@ MonoBehaviour:
       m_Items:
       - rid: 4972454616256217109
   - m_Id: 816035818930176
-    m_Localized: 
+    m_Localized: "{PluralName:Les|Le} {PlayerGroup:t(PlayerGroupName)} {PluralName:gagn\xE8rent|gagna}."
     m_Metadata:
       m_Items:
       - rid: 4972454616256217109

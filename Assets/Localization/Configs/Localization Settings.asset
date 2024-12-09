@@ -49,7 +49,7 @@ MonoBehaviour:
           text: <color=#006CBF><b>{}</b></color>
         - name: RoleName
           text: <color=#FF56D2><b>{}</b></color>
-        - name: PlayerGroupeName
+        - name: PlayerGroupName
           text: <color=#BF9100><b>{}</b></color>
     - rid: 7029503860835352576
       type: {class: CommandLineLocaleSelector, ns: UnityEngine.Localization.Settings,
