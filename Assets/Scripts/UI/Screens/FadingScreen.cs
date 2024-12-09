@@ -13,7 +13,7 @@ namespace Werewolf.UI
 
 		public event Action<FadingScreen, float> FadeFinished;
 
-		private void Awake()
+		protected virtual void Awake()
 		{
 			_canvasGroup = GetComponent<CanvasGroup>();
 		}

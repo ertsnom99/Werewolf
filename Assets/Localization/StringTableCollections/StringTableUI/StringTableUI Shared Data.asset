@@ -67,6 +67,10 @@ MonoBehaviour:
     m_Key: EndGame_LostRole
     m_Metadata:
       m_Items: []
+  - m_Id: 1129837255581696
+    m_Key: Common_VoteCount
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

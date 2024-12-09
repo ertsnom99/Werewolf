@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using Werewolf.Data;
 
 namespace Werewolf
@@ -34,7 +36,7 @@ namespace Werewolf
 		[SerializeField]
 		private GameObject _voteCountContainer;
 		[SerializeField]
-		private TMP_Text _voteCountText;
+		private LocalizeStringEvent _voteCountText;
 		[SerializeField]
 		private RectTransform _vote;
 		[SerializeField]
@@ -75,6 +77,7 @@ namespace Werewolf
 		private IEnumerator _waitForLeftClickHoldCoroutine;
 
 		private int _voteCount;
+		private IntVariable _voteCountVariable;
 
 		private bool _inSelectionMode;
 		private bool _isClickable;
@@ -83,15 +86,23 @@ namespace Werewolf
 		public event Action<Card> LeftClicked;
 		public event Action<Card> LeftClickHolded;
 		public event Action<Card> RightClicked;
-#if UNITY_EDITOR
+
 		private void Awake()
 		{
+#if UNITY_EDITOR
 			if (!_roleImage)
 			{
 				Debug.LogError($"_roleImage of the player {gameObject.name} is null");
 			}
-		}
 #endif
+			_voteCountVariable = (IntVariable)_voteCountText.StringReference["Count"];
+
+			if (_voteCountVariable == null)
+			{
+				Debug.LogError($"_voteCountText must have a local int variable named Count");
+			}
+		}
+
 		public void SetOriginalPosition(Vector3 originalPosition)
 		{
 			OriginalPosition = originalPosition;
@@ -172,13 +183,13 @@ namespace Werewolf
 		public void ResetVoteCount()
 		{
 			_voteCount = 0;
-			_voteCountText.text = _voteCount.ToString();
+			_voteCountVariable.Value = _voteCount;
 		}
 
 		public void IncrementVoteCount()
 		{
 			_voteCount++;
-			_voteCountText.text = _voteCount.ToString();
+			_voteCountVariable.Value = _voteCount;
 		}
 
 		public void DisplayVote(bool display, Vector3 pointTo = default, bool voteSelf = false)
