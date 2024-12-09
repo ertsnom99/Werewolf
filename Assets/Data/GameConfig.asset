@@ -162,7 +162,7 @@ MonoBehaviour:
     type: 2}
   <DeathRevealNoOneDiedImage>k__BackingField: {fileID: -2834002916931835057, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <DeathRevealTitleHoldDuration>k__BackingField: 2
+  <DeathRevealHoldDuration>k__BackingField: 2
   <DelayBeforeRevealingDeadPlayer>k__BackingField: 1
   <PlayerDiedImage>k__BackingField: {fileID: 1534591760579037349, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
@@ -180,7 +180,7 @@ MonoBehaviour:
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionDrawNewVoteImage>k__BackingField: {fileID: -6473885156194452207, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <ExecutionTitleHoldDuration>k__BackingField: 5
+  <ExecutionHoldDuration>k__BackingField: 5
   <ExecutionDrawNewVoteGameHistoryEntry>k__BackingField: {fileID: -951212456345614295,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionDrawAgainGameHistoryEntry>k__BackingField: {fileID: -4287951944148663951,
@@ -200,6 +200,7 @@ MonoBehaviour:
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <ExecutionMarkForDeath>k__BackingField: {fileID: 8184940356768289636, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ExecutionVotedPlayerDuration>k__BackingField: 3
   <EndGamePlayerGroupWonGameHistoryEntry>k__BackingField: {fileID: 7490826577571526794,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <PlayerGroupWonText>k__BackingField:
@@ -215,10 +216,11 @@ MonoBehaviour:
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <NoWinnerImage>k__BackingField: {fileID: -46525750058059440, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <EndGameTitleHoldDuration>k__BackingField: 5
+  <EndGameHoldDuration>k__BackingField: 5
   <ReturnToLobbyCountdownDuration>k__BackingField: 5
   <CaptainChangedGameHistoryEntry>k__BackingField: {fileID: -7311221229780604641,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <CaptainRevealDuration>k__BackingField: 3
   <CaptainRevealImage>k__BackingField: {fileID: -4152609035969618942, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <CaptainDiedGameHistoryEntry>k__BackingField: {fileID: -6353037308325946689, guid: 0e7014af8e28a88409bdb3f0abb80632,
@@ -285,16 +287,6 @@ MonoBehaviour:
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <VoteDidNotVoteWithPenalityGameHistoryEntry>k__BackingField: {fileID: -5852892113263125513,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  <HighlightDuration>k__BackingField: 5
-  <DidNotChoosedRoleText>k__BackingField:
-    m_TableReference:
-      m_TableCollectionName: GUID:ecf16318bb6cc7d42a507b623f97360d
-    m_TableEntryReference:
-      m_KeyId: 799750418628608
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   <MoveToCameraDuration>k__BackingField: 0.5
   <RoleRevealDistanceToCamera>k__BackingField: 2
   <RoleRevealWaitDuration>k__BackingField: 2

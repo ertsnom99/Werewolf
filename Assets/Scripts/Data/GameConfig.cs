@@ -146,7 +146,7 @@ namespace Werewolf.Data
 		public GameplayTag DeathRevealNoOneDiedImage { get; private set; }
 
 		[field: SerializeField]
-		public float DeathRevealTitleHoldDuration { get; private set; }
+		public float DeathRevealHoldDuration { get; private set; }
 
 		[field: SerializeField]
 		public float DelayBeforeRevealingDeadPlayer { get; private set; }
@@ -180,7 +180,7 @@ namespace Werewolf.Data
 		public GameplayTag ExecutionDrawNewVoteImage { get; private set; }
 
 		[field: SerializeField]
-		public float ExecutionTitleHoldDuration { get; private set; }
+		public float ExecutionHoldDuration { get; private set; }
 
 		[field: SerializeField]
 		public GameplayTag ExecutionDrawNewVoteGameHistoryEntry { get; private set; }
@@ -212,6 +212,9 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public GameplayTag ExecutionMarkForDeath { get; private set; }
 
+		[field: SerializeField]
+		public float ExecutionVotedPlayerDuration { get; private set; }
+
 		[field: Header("End Game")]
 		[field: SerializeField]
 		public GameplayTag EndGamePlayerGroupWonGameHistoryEntry { get; private set; }
@@ -226,7 +229,7 @@ namespace Werewolf.Data
 		public GameplayTag NoWinnerImage { get; private set; }
 
 		[field: SerializeField]
-		public float EndGameTitleHoldDuration { get; private set; }
+		public float EndGameHoldDuration { get; private set; }
 
 		[field: SerializeField]
 		public float ReturnToLobbyCountdownDuration { get; private set; }
@@ -234,6 +237,9 @@ namespace Werewolf.Data
 		[field: Header("Captain")]
 		[field: SerializeField]
 		public GameplayTag CaptainChangedGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
+		public float CaptainRevealDuration { get; private set; }
 
 		[field: SerializeField]
 		public GameplayTag CaptainRevealImage { get; private set; }
@@ -274,10 +280,6 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public GameplayTag VoteDidNotVoteWithPenalityGameHistoryEntry { get; private set; }
-
-		[field: Header("Highlight Players")]
-		[field: SerializeField]
-		public float HighlightDuration { get; private set; }
 
 		[field: Header("Role Reveal")]
 		[field: SerializeField]

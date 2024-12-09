@@ -147,8 +147,9 @@ namespace Werewolf
 #endif
 			}
 
-			StartCoroutine(HighlightPlayerToggle(_captain));
-			yield return DisplayTitleForAllPlayers(Config.CaptainRevealImage.CompactTagId, Config.HighlightDuration * GameSpeedModifier);
+			float titleDuration = Config.CaptainRevealDuration * GameSpeedModifier;
+			StartCoroutine(HighlightPlayerToggle(_captain, titleDuration));
+			yield return DisplayTitleForAllPlayers(Config.CaptainRevealImage.CompactTagId, titleDuration);
 		}
 
 		private IEnumerator MoveCaptainCard(Vector3 newPosition)

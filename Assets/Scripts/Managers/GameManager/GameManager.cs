@@ -703,9 +703,14 @@ namespace Werewolf
 												}
 											});
 
-				StartCoroutine(HighlightPlayersToggle(_captainCandidates.ToArray()));
+				PlayerRef[] captainCandidates = _captainCandidates.ToArray();
+
+				RPC_SetPlayersCardHighlightVisible(captainCandidates, true);
+#if UNITY_SERVER && UNITY_EDITOR
+				SetPlayersCardHighlightVisible(captainCandidates, true);
+#endif
 				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidatesImage.CompactTagId, Config.ElectionMultipleCandidatesDuration * GameSpeedModifier);
-				StartCoroutine(StartDebate(_captainCandidates.ToArray(), Config.ElectionDebateImage.CompactTagId, Config.ElectionDebateDuration * GameSpeedModifier));
+				StartCoroutine(StartDebate(captainCandidates, Config.ElectionDebateImage.CompactTagId, Config.ElectionDebateDuration * GameSpeedModifier));
 				yield break;
 			}
 			else if (_captainCandidates.Count == 1)
@@ -992,7 +997,7 @@ namespace Werewolf
 				DisplayDeathRevealTitle(hasAnyPlayerDied);
 #endif
 				yield return new WaitForSeconds(Config.UITransitionNormalDuration);
-				yield return new WaitForSeconds(Config.DeathRevealTitleHoldDuration * GameSpeedModifier);
+				yield return new WaitForSeconds(Config.DeathRevealHoldDuration * GameSpeedModifier);
 
 				RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1289,7 +1294,7 @@ namespace Werewolf
 
 		private IEnumerator StartSecondaryExecution(PlayerRef[] mostVotedPlayers)
 		{
-			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteImage.CompactTagId, Config.ExecutionTitleHoldDuration * GameSpeedModifier);
+			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteImage.CompactTagId, Config.ExecutionHoldDuration * GameSpeedModifier);
 
 			if (!_voteManager.StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
 													Config.ExecutionVoteImage.CompactTagId,
@@ -1437,14 +1442,14 @@ namespace Werewolf
 										});
 
 			AddMarkForDeath(executedPlayer, Config.ExecutionMarkForDeath);
-			yield return HighlightPlayerToggle(executedPlayer);
+			yield return HighlightPlayerToggle(executedPlayer, Config.ExecutionVotedPlayerDuration);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
 		private IEnumerator DisplayFailedExecution()
 		{
-			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainImage.CompactTagId, Config.ExecutionTitleHoldDuration * GameSpeedModifier);
+			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainImage.CompactTagId, Config.ExecutionHoldDuration * GameSpeedModifier);
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
@@ -1586,7 +1591,7 @@ namespace Werewolf
 				DisplayTitle(Config.NoWinnerImage.CompactTagId);
 			}
 
-			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration * GameSpeedModifier);
+			yield return new WaitForSeconds(Config.EndGameHoldDuration * GameSpeedModifier);
 			HideUI();
 			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
@@ -1601,7 +1606,7 @@ namespace Werewolf
 
 		private IEnumerator ReturnToLobby()
 		{
-			yield return new WaitForSeconds(Config.EndGameTitleHoldDuration * GameSpeedModifier +
+			yield return new WaitForSeconds(Config.EndGameHoldDuration * GameSpeedModifier +
 											Config.UITransitionNormalDuration +
 											Config.ReturnToLobbyCountdownDuration * GameSpeedModifier +
 											Config.LoadingScreenTransitionDuration);
