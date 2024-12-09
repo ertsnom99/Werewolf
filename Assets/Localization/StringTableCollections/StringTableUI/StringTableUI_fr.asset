@@ -44,10 +44,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 4972454616256217109
+  - m_Id: 1129837255581696
+    m_Localized: 'Vote: {Count}'
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217109
   references:
     version: 2
     RefIds:
     - rid: 4972454616256217109
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 0080dc52bec702000080dcc2dfcf020000809c67c6d9020000801c252ee6020000e0c5fb62ec0300
+        m_Entries: 0080dc52bec702000080dcc2dfcf020000809c67c6d9020000801c252ee6020000e0c5fb62ec030000e045bc94030400

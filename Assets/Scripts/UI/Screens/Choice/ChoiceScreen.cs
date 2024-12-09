@@ -40,9 +40,23 @@ namespace Werewolf.UI
 		private LocalizedString _choosedText;
 		private LocalizedString _didNotChoosedText;
 
+		private IntVariable _countdownVariable;
+
 		private IEnumerator _countdownCoroutine;
 
 		public event Action<int> ConfirmedChoice;
+
+		protected override void Awake()
+		{
+			base.Awake();
+
+			_countdownVariable = (IntVariable)_countdownText.StringReference["Time"];
+
+			if (_countdownVariable == null)
+			{
+				Debug.LogError($"_countdownText must have a local int variable named Time");
+			}
+		}
 
 		public void SetConfig(GameConfig config)
 		{
@@ -144,7 +158,7 @@ namespace Werewolf.UI
 				yield return 0;
 
 				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
-				((IntVariable)_countdownText.StringReference["Time"]).Value = Mathf.CeilToInt(timeLeft);
+				_countdownVariable.Value = Mathf.CeilToInt(timeLeft);
 			}
 		}
 

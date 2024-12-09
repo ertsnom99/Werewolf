@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using Werewolf.Data;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
@@ -22,15 +21,23 @@ namespace Werewolf.UI
 		[SerializeField]
 		private GameObject _warningText;
 
-		private GameConfig _config;
+		private IntVariable _countdownVariable;
+
 		private float _confirmVoteDelayDuration;
 
 		private IEnumerator _countdownCoroutine;
 		private IEnumerator _confirmVoteDelayCountdownCoroutine;
 
-		public void SetConfig(GameConfig config)
+		protected override void Awake()
 		{
-			_config = config;
+			base.Awake();
+
+			_countdownVariable = (IntVariable)_countdownText.StringReference["Time"];
+
+			if (_countdownVariable == null)
+			{
+				Debug.LogError($"_countdownText must have a local int variable named Time");
+			}
 		}
 
 		public void SetConfirmVoteDelayDuration(float confirmVoteDelayDuration)
@@ -60,7 +67,7 @@ namespace Werewolf.UI
 				yield return 0;
 
 				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
-				((IntVariable)_countdownText.StringReference["Time"]).Value = Mathf.CeilToInt(timeLeft);
+				_countdownVariable.Value = Mathf.CeilToInt(timeLeft);
 			}
 		}
 

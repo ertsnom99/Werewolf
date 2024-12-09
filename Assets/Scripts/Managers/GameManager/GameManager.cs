@@ -477,10 +477,7 @@ namespace Werewolf
 			_daytimeManager.Initialize(Config);
 			_voteManager.Initialize(Config);
 			_emotesManager.Initialize(Config);
-			_UIManager.TitleScreen.SetConfig(Config);
 			_UIManager.ChoiceScreen.SetConfig(Config);
-			_UIManager.VoteScreen.SetConfig(Config);
-			_UIManager.EndGameScreen.SetConfig(Config);
 			_UIManager.DisconnectedScreen.SetConfig(Config);
 		}
 

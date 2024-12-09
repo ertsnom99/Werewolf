@@ -28,15 +28,22 @@ namespace Werewolf.UI
 		[SerializeField]
 		private LocalizeStringEvent _confirmButtonText;
 
-		private GameConfig _config;
+		private IntVariable _countdownVariable;
 
 		private IEnumerator _countdownCoroutine;
 
 		public event Action ConfirmClicked;
 
-		public void SetConfig(GameConfig config)
+		protected override void Awake()
 		{
-			_config = config;
+			base.Awake();
+
+			_countdownVariable = (IntVariable)_countdownText.StringReference["Time"];
+
+			if (_countdownVariable == null)
+			{
+				Debug.LogError($"_countdownText must have a local int variable named Time");
+			}
 		}
 
 		public void Initialize(Sprite image, LocalizedString title, Dictionary<string, IVariable> variables = null, bool showConfirmButton = false, LocalizedString confirmButtonText = null, float countdownDuration = -1)
@@ -100,7 +107,7 @@ namespace Werewolf.UI
 				yield return 0;
 
 				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
-				((IntVariable)_countdownText.StringReference["Time"]).Value = Mathf.CeilToInt(timeLeft);
+				_countdownVariable.Value = Mathf.CeilToInt(timeLeft);
 			}
 		}
 

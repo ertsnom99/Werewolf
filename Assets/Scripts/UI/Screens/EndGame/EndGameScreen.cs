@@ -36,20 +36,27 @@ namespace Werewolf.UI
 		[SerializeField]
 		private LocalizeStringEvent _countdownText;
 
-		private GameConfig _config;
+		private IntVariable _countdownVariable;
 
 		private NetworkDataManager _networkDataManager;
 		private GameplayDatabaseManager _gameplayDatabaseManager;
+
+		protected override void Awake()
+		{
+			base.Awake();
+
+			_countdownVariable = (IntVariable)_countdownText.StringReference["Time"];
+
+			if (_countdownVariable == null)
+			{
+				Debug.LogError($"_countdownText must have a local int variable named Time");
+			}
+		}
 
 		private void Start()
 		{
 			_networkDataManager = NetworkDataManager.Instance;
 			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
-		}
-
-		public void SetConfig(GameConfig config)
-		{
-			_config = config;
 		}
 
 		public void Initialize(PlayerEndGameInfo[] endGamePlayerInfos, float countdownDuration)
@@ -96,7 +103,7 @@ namespace Werewolf.UI
 				yield return 0;
 
 				timeLeft = Mathf.Max(timeLeft - Time.deltaTime, .0f);
-				((IntVariable)_countdownText.StringReference["Time"]).Value = Mathf.CeilToInt(timeLeft);
+				_countdownVariable.Value = Mathf.CeilToInt(timeLeft);
 			}
 		}
 
