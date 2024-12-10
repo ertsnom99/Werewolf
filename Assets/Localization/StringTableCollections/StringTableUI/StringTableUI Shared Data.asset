@@ -71,6 +71,10 @@ MonoBehaviour:
     m_Key: Common_VoteCount
     m_Metadata:
       m_Items: []
+  - m_Id: 1441783485947904
+    m_Key: Common_Roles
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
