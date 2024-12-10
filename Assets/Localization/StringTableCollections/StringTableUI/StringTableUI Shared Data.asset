@@ -95,6 +95,22 @@ MonoBehaviour:
     m_Key: MainMenu_GameHistory
     m_Metadata:
       m_Items: []
+  - m_Id: 1793519694241792
+    m_Key: GameHistoryMenu_Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1793630541307904
+    m_Key: GameHistoryMenu_DeleteAll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1794053713027072
+    m_Key: GameHistoryMenu_NoHistories
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1794113452498944
+    m_Key: GameHistoryMenu_SelectToSee
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
