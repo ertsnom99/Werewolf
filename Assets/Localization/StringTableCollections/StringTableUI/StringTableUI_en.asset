@@ -85,6 +85,14 @@ MonoBehaviour:
     m_Localized: Roles
     m_Metadata:
       m_Items: []
+  - m_Id: 1484643690209280
+    m_Localized: Return
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1484696349696000
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
