@@ -105,6 +105,22 @@ MonoBehaviour:
     m_Localized: Game History
     m_Metadata:
       m_Items: []
+  - m_Id: 1793519694241792
+    m_Localized: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1793630541307904
+    m_Localized: Delete All
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1794053713027072
+    m_Localized: No histories to see
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1794113452498944
+    m_Localized: Select one of the histories on the left to see it
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
