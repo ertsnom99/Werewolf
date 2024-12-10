@@ -81,6 +81,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 4972454616256217108
+  - m_Id: 1441783485947904
+    m_Localized: Roles
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

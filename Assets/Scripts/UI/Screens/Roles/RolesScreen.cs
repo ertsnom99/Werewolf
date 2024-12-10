@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
 using Werewolf.Data;
 
 namespace Werewolf.UI
@@ -20,7 +20,10 @@ namespace Werewolf.UI
 		private RoleButton _roleButtonPrefab;
 
 		[SerializeField]
-		private TextMeshProUGUI _roleDescription;
+		private LocalizeStringEvent _roleNameText;
+
+		[SerializeField]
+		private LocalizeStringEvent _roleDescriptionText;
 
 		private bool _areRolesDisplayed;
 		private readonly Dictionary<RoleData, RoleButton> _roleButtonByRoleData = new();
@@ -49,7 +52,9 @@ namespace Werewolf.UI
 			}
 
 			_selectedRoleButton = roleButton;
-			_roleDescription.text = roleButton.RoleData.Description.GetLocalizedString();
+
+			_roleNameText.StringReference = roleButton.RoleData.NameSingular;
+			_roleDescriptionText.StringReference = roleButton.RoleData.Description;
 		}
 
 		public void SelectRole(RoleData role, bool openMenu)
