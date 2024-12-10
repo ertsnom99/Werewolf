@@ -93,6 +93,18 @@ MonoBehaviour:
     m_Localized: Quit
     m_Metadata:
       m_Items: []
+  - m_Id: 1791536237240320
+    m_Localized: Join Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1791618726617088
+    m_Localized: Rules and Roles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1791791347392512
+    m_Localized: Game History
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
