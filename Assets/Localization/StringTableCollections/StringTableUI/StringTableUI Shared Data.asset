@@ -111,6 +111,14 @@ MonoBehaviour:
     m_Key: GameHistoryMenu_SelectToSee
     m_Metadata:
       m_Items: []
+  - m_Id: 1795165400719360
+    m_Key: RulesAndRolesMenu_Rules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1797041118633984
+    m_Key: RulesMenu_Rules
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
