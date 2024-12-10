@@ -83,6 +83,18 @@ MonoBehaviour:
     m_Key: Common_Quit
     m_Metadata:
       m_Items: []
+  - m_Id: 1791536237240320
+    m_Key: MainMenu_JoinGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1791618726617088
+    m_Key: MainMenu_RulesAndRoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1791791347392512
+    m_Key: MainMenu_GameHistory
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
