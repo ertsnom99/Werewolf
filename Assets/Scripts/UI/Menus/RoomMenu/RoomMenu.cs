@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 using Werewolf.Network;
 using static Werewolf.GameHistoryManager;
@@ -36,10 +37,13 @@ namespace Werewolf.UI
 		private TMP_Dropdown _gameSpeedDropdown;
 
 		[SerializeField]
-		private TMP_Text _gameSpeedText;
+		private LocalizeDropdown _gameSpeedLocalizeDropdown;
 
 		[SerializeField]
-		private TMP_Text _warningText;
+		private LocalizeStringEvent _gameSpeedText;
+
+		[SerializeField]
+		private GameObject _warning;
 
 		[SerializeField]
 		private Button _startGameBtn;
@@ -78,7 +82,7 @@ namespace Werewolf.UI
 
 			_networkDataManager.PlayerInfosChanged += UpdatePlayerList;
 			_networkDataManager.GameSpeedChanged += ChangeGameSpeed;
-			_networkDataManager.InvalidRolesSetupReceived += ShowInvalidRolesSetupWarning;
+			_networkDataManager.InvalidRolesSetupReceived += OnInvalidRolesSetupReceived;
 
 			if (!string.IsNullOrEmpty(gameHistory) && GameHistoryManager.Instance.LoadGameHistorySaveFromJson(gameHistory, out GameHistorySave gameHistorySave))
 			{
@@ -165,22 +169,22 @@ namespace Werewolf.UI
 		private void ChangeGameSpeed(GameSpeed gameSpeed)
 		{
 			_gameSpeedDropdown.value = (int)gameSpeed;
-			_gameSpeedText.text = _gameSpeedDropdown.options[(int)gameSpeed].text;
+			_gameSpeedText.StringReference = _gameSpeedLocalizeDropdown.GetLocalizedValue();
 		}
 
-		private void ShowInvalidRolesSetupWarning()
+		private void OnInvalidRolesSetupReceived()
 		{
-			_warningText.text = "An invalid roles setup was sent to the server";
+			DisplayInvalidRolesSetupWarning(true);
 		}
 
-		private void ClearWarning()
+		private void DisplayInvalidRolesSetupWarning(bool display)
 		{
-			_warningText.text = "";
+			_warning.SetActive(display);
 		}
 
 		public void OnStartGame()
 		{
-			ClearWarning();
+			DisplayInvalidRolesSetupWarning(false);
 			StartGameClicked?.Invoke((GameSpeed)_gameSpeedDropdown.value);
 		}
 
@@ -191,7 +195,7 @@ namespace Werewolf.UI
 
 		private void OnDisable()
 		{
-			ClearWarning();
+			DisplayInvalidRolesSetupWarning(false);
 
 			if (!_networkDataManager)
 			{
@@ -200,7 +204,7 @@ namespace Werewolf.UI
 
 			_networkDataManager.PlayerInfosChanged -= UpdatePlayerList;
 			_networkDataManager.GameSpeedChanged -= ChangeGameSpeed;
-			_networkDataManager.InvalidRolesSetupReceived -= ShowInvalidRolesSetupWarning;
+			_networkDataManager.InvalidRolesSetupReceived -= OnInvalidRolesSetupReceived;
 		}
 	}
 }

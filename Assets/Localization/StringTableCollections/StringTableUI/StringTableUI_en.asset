@@ -203,6 +203,46 @@ MonoBehaviour:
     m_Localized: Connection failed
     m_Metadata:
       m_Items: []
+  - m_Id: 2592706014863360
+    m_Localized: Leader
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2593132139372544
+    m_Localized: Change Nickname
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2593788350816256
+    m_Localized: 'Game Speed:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2594361137553408
+    m_Localized: Leave Session
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2594341835366400
+    m_Localized: Start Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2595742095368192
+    m_Localized: An invalid roles setup was sent to the server
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2596856752627712
+    m_Localized: Kick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2601788520128512
+    m_Localized: Slow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2601811496525824
+    m_Localized: Normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2601852554567680
+    m_Localized: Fast
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
