@@ -1,6 +1,8 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace Werewolf.UI
@@ -18,20 +20,27 @@ namespace Werewolf.UI
 		private Button _joinBtn;
 
 		[SerializeField]
-		private TMP_Text _messageText;
+		private LocalizeStringEvent _messageText;
+
+		[Header("Localization")]
+		[SerializeField]
+		private LocalizedString _joiningLocalizedString;
 
 		private int _minNicknameCharacterCount;
 
 		public event Action JoinSessionClicked;
 		public event Action ReturnClicked;
 
-		public void Initialize(string message, int minNicknameCharacterCount)
+		public void Initialize(LocalizedString message, int minNicknameCharacterCount)
 		{
 			_minNicknameCharacterCount = minNicknameCharacterCount;
 			_nicknameInputField.interactable = true;
 			_sessionNameInputField.interactable = true;
+
 			UpdateButtonState();
-			_messageText.text = message;
+
+			_messageText.gameObject.SetActive(message != null);
+			_messageText.StringReference = message;
 		}
 
 		public void UpdateButtonState()
@@ -76,7 +85,7 @@ namespace Werewolf.UI
 			_nicknameInputField.interactable = false;
 			_sessionNameInputField.interactable = false;
 			_joinBtn.interactable = false;
-			_messageText.text = "Joining session...";
+			_messageText.StringReference = _joiningLocalizedString;
 
 			JoinSessionClicked?.Invoke();
 		}

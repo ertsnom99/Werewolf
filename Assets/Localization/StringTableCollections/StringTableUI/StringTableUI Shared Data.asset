@@ -83,10 +83,6 @@ MonoBehaviour:
     m_Key: Common_Quit
     m_Metadata:
       m_Items: []
-  - m_Id: 1791536237240320
-    m_Key: MainMenu_JoinGame
-    m_Metadata:
-      m_Items: []
   - m_Id: 1791618726617088
     m_Key: MainMenu_RulesAndRoles
     m_Metadata:
@@ -117,6 +113,50 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1797041118633984
     m_Key: RulesMenu_Rules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532273190985728
+    m_Key: Common_Nickname
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532676611727360
+    m_Key: JoinMenu_Session
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532745750634496
+    m_Key: JoinMenu_EnterNickname
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532851879108608
+    m_Key: JoinMenu_EnterSession
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532929297571840
+    m_Key: JoinMenu_JoinGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2533729558192128
+    m_Key: MainMenu_Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2534339196084224
+    m_Key: JoinMenu_Joining
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580590675484672
+    m_Key: JoinMenu_Disconnected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583478575423488
+    m_Key: JoinMenu_JoinFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585505565106176
+    m_Key: JoinMenu_Kicked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586029882466304
+    m_Key: JoinMenu_ConnectionFailed
     m_Metadata:
       m_Items: []
   m_Metadata:

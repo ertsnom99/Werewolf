@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Werewolf.Network;
 using Werewolf.Data;
 using Werewolf.UI;
+using UnityEngine.Localization;
 
 namespace Werewolf
 {
@@ -28,6 +29,19 @@ namespace Werewolf
 		[SerializeField]
 		private GameHistoryMenu _gameHistoryMenu;
 
+		[Header("Localization")]
+		[SerializeField]
+		private LocalizedString _joinFailedLocalizedString;
+
+		[SerializeField]
+		private LocalizedString _disconnectedLocalizedString;
+
+		[SerializeField]
+		private LocalizedString _kickedLocalizedString;
+
+		[SerializeField]
+		private LocalizedString _connectionFailedLocalizedString;
+
 		[Header("Network")]
 		[SerializeField]
 		private NetworkRunner _runnerPrefab;
@@ -42,7 +56,7 @@ namespace Werewolf
 		private NetworkDataManager _networkDataManager;
 
 		public static bool JUST_OPEN = true;
-		public static string START_MESSAGE = string.Empty;
+		public static LocalizedString START_MESSAGE = null;
 		public static bool GAME_STARTED = false;
 		public static string GAME_HISTORY;
 
@@ -92,12 +106,17 @@ namespace Werewolf
 			}
 
 			JUST_OPEN = false;
-			START_MESSAGE = string.Empty;
+			START_MESSAGE = null;
 			GAME_STARTED = false;
 			GAME_HISTORY = default;
 		}
 
-		public void OpenJoinMenu(string message)
+		public void OpenJoinMenu()
+		{
+			OpenJoinMenu(null);
+		}
+
+		private void OpenJoinMenu(LocalizedString message)
 		{
 			_joinMenu.Initialize(message, MIN_NICKNAME_CHARACTER_COUNT);
 			DisplayJoinMenu();
@@ -118,7 +137,9 @@ namespace Werewolf
 				return;
 			}
 
-			_joinMenu.Initialize($"Could not join: {connection.Result.ShutdownReason}", MIN_NICKNAME_CHARACTER_COUNT);
+			_joinMenu.Initialize(_joinFailedLocalizedString, MIN_NICKNAME_CHARACTER_COUNT);
+
+			Debug.Log($"Join failed: {connection.Result.ShutdownReason}");
 		}
 
 		private void OpenRoomMenu(bool setNickname = true)
@@ -293,10 +314,11 @@ namespace Werewolf
 			switch (shutdownReason)
 			{
 				case ShutdownReason.Ok:
-					OpenJoinMenu("");
+					OpenJoinMenu(null);
 					break;
 				default:
-					OpenJoinMenu($"Runner shutdown: {shutdownReason}");
+					OpenJoinMenu(_disconnectedLocalizedString);
+					Debug.Log($"Runner shutdown: {shutdownReason}");
 					break;
 			}
 
@@ -315,10 +337,11 @@ namespace Werewolf
 			switch (reason)
 			{
 				case NetDisconnectReason.Requested:
-					OpenJoinMenu($"Disconnected from server: You were kicked");
+					OpenJoinMenu(_kickedLocalizedString);
 					break;
 				default:
-					OpenJoinMenu($"Disconnected from server: {reason}");
+					OpenJoinMenu(_disconnectedLocalizedString);
+					Debug.Log($"Disconnected from server: {reason}");
 					break;
 			}
 
@@ -334,7 +357,9 @@ namespace Werewolf
 				return;
 			}
 
-			OpenJoinMenu($"Connection failed: {reason}");
+			OpenJoinMenu(_connectionFailedLocalizedString);
+			Debug.Log($"Connection failed: {reason}");
+
 			CleanupNetwork();
 		}
 

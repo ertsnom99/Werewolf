@@ -93,8 +93,8 @@ MonoBehaviour:
     m_Localized: Quit
     m_Metadata:
       m_Items: []
-  - m_Id: 1791536237240320
-    m_Localized: Join Game
+  - m_Id: 2533729558192128
+    m_Localized: Play
     m_Metadata:
       m_Items: []
   - m_Id: 1791618726617088
@@ -161,6 +161,46 @@ MonoBehaviour:
       The winners are only declared after all dead players are revealed. This means
       that it is possible that all players left died during the night, therefore
       resulting in no one winning.\r\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532273190985728
+    m_Localized: Nickname
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532676611727360
+    m_Localized: Session
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532745750634496
+    m_Localized: Enter your nickname
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532851879108608
+    m_Localized: Enter the session name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532929297571840
+    m_Localized: Join Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2534339196084224
+    m_Localized: Joining session...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580590675484672
+    m_Localized: Disconnected from server
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583478575423488
+    m_Localized: Could not join
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585505565106176
+    m_Localized: You were kicked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586029882466304
+    m_Localized: Connection failed
     m_Metadata:
       m_Items: []
   references:
