@@ -7,6 +7,7 @@ using Werewolf.Network.Configs;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using Werewolf.UI;
+using UnityEngine.Localization;
 
 namespace Werewolf.Network
 {
@@ -14,6 +15,10 @@ namespace Werewolf.Network
 	[SimulationBehaviour(Modes = SimulationModes.Client)]
 	public class ClientGameController : MonoBehaviour, INetworkRunnerCallbacks
 	{
+		[Header("Localization")]
+		[SerializeField]
+		private LocalizedString _disconnectedLocalizedString;
+
 		private NetworkRunner _networkRunner;
 		private GameManager _gameManager;
 		private UIManager _UIManager;
@@ -94,7 +99,9 @@ namespace Werewolf.Network
 			{
 				if (shutdownReason != ShutdownReason.Ok)
 				{
-					MainMenuManager.START_MESSAGE = $"Runner shutdown: {shutdownReason}";
+					MainMenuManager.START_MESSAGE = _disconnectedLocalizedString;
+
+					Debug.Log($"Runner shutdown: {shutdownReason}");
 				}
 
 				SceneManager.LoadScene((int)SceneDefs.MENU);
