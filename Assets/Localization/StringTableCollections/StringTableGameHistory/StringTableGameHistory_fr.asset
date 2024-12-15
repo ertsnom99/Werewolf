@@ -173,7 +173,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107201
   - m_Id: 1116699403665408
-    m_Localized: "Aucun joueur voulait \xEAtre le capitaine."
+    m_Localized: "Aucun villageois voulait \xEAtre le capitaine."
     m_Metadata:
       m_Items: []
   - m_Id: 1119927147085824
@@ -202,7 +202,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1483978075193344
     m_Localized: "Les {\"Loups-garous\":t(RoleName)} ne r\xE9ussirent pas \xE0 voter
-      pour un joueur \xE0 tuer."
+      pour un villageois \xE0 tuer."
     m_Metadata:
       m_Items:
       - rid: 7029503930381107201

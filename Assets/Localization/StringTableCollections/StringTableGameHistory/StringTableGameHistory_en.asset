@@ -36,7 +36,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107200
   - m_Id: 1116699403665408
-    m_Localized: No player wanted to be captain.
+    m_Localized: No villager wanted to be captain.
     m_Metadata:
       m_Items: []
   - m_Id: 1117060612931584
@@ -188,7 +188,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107200
   - m_Id: 1483978075193344
-    m_Localized: The {"Werewolves":t(RoleName)} failed to vote for a player to kill.
+    m_Localized: The {"Werewolves":t(RoleName)} failed to vote for a villager to
+      kill.
     m_Metadata:
       m_Items:
       - rid: 7029503930381107200

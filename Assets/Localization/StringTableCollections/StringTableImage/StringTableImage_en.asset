@@ -64,7 +64,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3540103495680
-    m_Localized: Some people died...
+    m_Localized: Some villagers died...
     m_Metadata:
       m_Items: []
   - m_Id: 3887026962432
@@ -72,8 +72,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5436641935360
-    m_Localized: Multiple players want to be captain. The village will debate, then
-      vote!
+    m_Localized: Multiple villagers want to be captain. The village will debate,
+      then vote!
     m_Metadata:
       m_Items: []
   - m_Id: 6150407618560
@@ -93,7 +93,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7079081050112
-    m_Localized: The vote was a draw again! No one will be executed
+    m_Localized: The vote was a draw again! No one will be executed.
     m_Metadata:
       m_Items: []
   - m_Id: 7287475044352
@@ -101,7 +101,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7421973790720
-    m_Localized: The vote was a draw! A new vote will start to break the draw
+    m_Localized: The vote was a draw! A new vote will start to break the draw.
     m_Metadata:
       m_Items: []
   - m_Id: 7593353052160
@@ -109,15 +109,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7842247245824
-    m_Localized: Choose a player to see his role
+    m_Localized: Choose a villager to see his role
     m_Metadata:
       m_Items: []
   - m_Id: 7940146495488
-    m_Localized: Choose the middle player to check
+    m_Localized: Choose the middle villager to check
     m_Metadata:
       m_Items: []
   - m_Id: 8087697915904
-    m_Localized: There is no werewolf in this group! You just lost your power!
+    m_Localized: There is no werewolf in this group! You lost your power!
     m_Metadata:
       m_Items: []
   - m_Id: 8209857019904
@@ -129,7 +129,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8656277766144
-    m_Localized: Choose a player to kill
+    m_Localized: Choose a villager to kill
     m_Metadata:
       m_Items: []
   - m_Id: 8870799638528
@@ -141,11 +141,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9065444704256
-    m_Localized: Choose a player to protect
+    m_Localized: Choose a villager to protect
     m_Metadata:
       m_Items: []
   - m_Id: 9160047230976
-    m_Localized: Choose a player to kill!
+    m_Localized: Choose a villager to kill!
     m_Metadata:
       m_Items: []
   - m_Id: 9296928342016
@@ -157,7 +157,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9500591161344
-    m_Localized: This player will die tonight
+    m_Localized: This villager will die tonight
     m_Metadata:
       m_Items: []
   - m_Id: 9717625421824

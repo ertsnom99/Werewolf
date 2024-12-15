@@ -17,7 +17,36 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 4d669c4ca484b5d4f9d00f73b8c3d992, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 1067804557312
+    m_Localized: "Vous avez choisi ce r\xF4le"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1023026167808
+    m_Localized: "Vous POUVEZ choisir un r\xF4le \xE0 utiliser jusqu\u2019\xE0 la
+      prochaine nuit"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20935639040
+    m_Localized: "Vous n\u2019avez rien choisi"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1262713864192
+    m_Localized: "Vous POUVEZ changer votre r\xF4le pour un de ceux-ci"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1403676033024
+    m_Localized: "Vous DEVEZ changer votre r\xF4le pour un de ceux-ci"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3169079558144
+    m_Localized: "Vous pouvez choisir une potion \xE0 utiliser"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3357890347008
+    m_Localized: Vous avez choisi cette potion
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
