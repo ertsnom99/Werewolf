@@ -20,7 +20,7 @@ MonoBehaviour:
     - rid: 4972454616256217095
   m_TableData:
   - m_Id: 1058760967356416
-    m_Localized: '{Multiple:Les|Le} {Role} {Multiple:jouent|joue}...'
+    m_Localized: '{Role} {Multiple:jouent|joue}...'
     m_Metadata:
       m_Items:
       - rid: 4972454616256217095
