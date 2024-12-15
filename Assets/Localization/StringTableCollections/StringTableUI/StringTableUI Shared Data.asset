@@ -83,10 +83,6 @@ MonoBehaviour:
     m_Key: Common_Quit
     m_Metadata:
       m_Items: []
-  - m_Id: 1791618726617088
-    m_Key: MainMenu_RulesAndRoles
-    m_Metadata:
-      m_Items: []
   - m_Id: 1791791347392512
     m_Key: MainMenu_GameHistory
     m_Metadata:
@@ -108,7 +104,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1795165400719360
-    m_Key: RulesAndRolesMenu_Rules
+    m_Key: MainMenu_Rules
     m_Metadata:
       m_Items: []
   - m_Id: 1797041118633984

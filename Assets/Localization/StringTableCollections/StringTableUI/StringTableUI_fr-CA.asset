@@ -93,8 +93,45 @@ MonoBehaviour:
     m_Localized: Quitter
     m_Metadata:
       m_Items: []
-  - m_Id: 1791618726617088
-    m_Localized: "\rR\xE8gles et r\xF4les"
+  - m_Id: 1797041118633984
+    m_Localized: "Cycle jour et nuit\r\n\r\nLe jeu fonction avec un cycle jour et
+      nuit. Durant la nuit, certain villageois pourront utiliser le pouvoir de leur
+      r\xF4le. Les loups-garous seront aussi appel\xE9s \xE0 choisir une victime.
+      Une fois que tous les villageois auront \xE9t\xE9 appel\xE9, le jour se l\xE8vera.
+      Au d\xE9but du jour, tout les villageois morts, et leurs r\xF4les, seront r\xE9v\xE9l\xE9.
+      Ensuite, le village va d\xE9battre as propos de qui devrait \xEAtre ex\xE9cut\xE9,
+      puis voter. Une fois que le villageois vot\xE9 aura \xE9t\xE9 ex\xE9cut\xE9,
+      la nuit va tomber. S\u2019il n\u2019y a pas de capitaine et une \xE9galit\xE9
+      survient, un second vote va commencer, mais seuls les villageois avec le plus
+      grand nombre de vote pourront \xEAtre vot\xE9. Si une \xE9galit\xE9 survient
+      \xE0 nouveau, aucun villageois ne sera ex\xE9cut\xE9, et le jour prendra fin.
+      S\u2019abstenir de voter durant ce vote va ajouter un vote contre soi-m\xEAme.
+      \r\n\r\nR\xF4les\r\n\r\nChaque villageois recevra un r\xF4le. Chaque r\xF4le
+      appartient \xE0 un groupe de villageois. Les deux groupes principaux sont les
+      villageois et les loups-garous. Il y aussi des r\xF4les sp\xE9ciaux, appel\xE9
+      solitaire, qui veulent gagner seul en compl\xE9tant une condition sp\xE9ciale.
+      Il y a aussi des r\xF4les ambigus qui peuvent changer de groupe durant la partie.
+      Lisez la description de chaque r\xF4le pour plus de d\xE9tails. \r\n\r\nCapitaine\r\n\r\nLe
+      capitaine est un titre qui peut \xEAtre donn\xE9 \xE0 un villageois. Le vote
+      d\u2019ex\xE9cution du capitaine compte pour deux votes. Lorsqu\u2019une \xE9galit\xE9
+      survient, le capitaine choisi qui sera ex\xE9cut\xE9. Quand le capitaine meurt,
+      il choisi quel villageois sera le prochain capitaine. \r\n\r\n\xC9lire un capitaine\r\n\r\nAu
+      d\xE9but du premier jour, une \xE9lection aura lieu. Tous les villageois auront
+      l\u2019occasion de dire qu\u2019ils veulent devenir capitaine. Si plus d\u2019un
+      villageois veux devenir capitaine, un d\xE9bat commencera pour permettre \xE0
+      ces villageois d\u2019expliquer pourquoi ils devraient \xEAtre capitaine. Apr\xE8s
+      ce d\xE9bat, tous les villageois voteront pour qui devrait \xEAtre capitaine.
+      Si le vote est une \xE9galit\xE9, le capitaine sera choisi au hasard. Si personne
+      ne veut \xEAtre capitaine, il n\u2019y aura pas de capitaine. \r\n\r\nComment
+      gagner\r\n\r\nLes gagnants sont d\xE9clar\xE9s lorsque tous les villageois
+      en vie font partie du m\xEAme groupe. Par exemple, si tous les villageois restants
+      font partie des loups-garous, les loups-garous gagnent. Un villageois peut
+      appartenir \xE0 plusieurs groupes. Par exemple, un loup-garou pourrait aussi
+      faire partie d\u2019un couple. Dans ce cas, il pourrait gagner si le reste
+      des villageois \xE9tait des loups-garous ou en couple avec lui. Les gagnants
+      sont d\xE9clar\xE9s seulement apr\xE8s que tous les villageois morts sont r\xE9v\xE9l\xE9.
+      Il est possible que tous les villageois soit mort durant la nuit, r\xE9sultant
+      en aucun gagnant.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 1791791347392512
