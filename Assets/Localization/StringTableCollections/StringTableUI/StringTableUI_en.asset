@@ -97,10 +97,6 @@ MonoBehaviour:
     m_Localized: Play
     m_Metadata:
       m_Items: []
-  - m_Id: 1791618726617088
-    m_Localized: Rules and Roles
-    m_Metadata:
-      m_Items: []
   - m_Id: 1791791347392512
     m_Localized: Game History
     m_Metadata:
@@ -126,41 +122,39 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1797041118633984
-    m_Localized: "Day and Night Cycle\n\r\nThe game works with a day and night cycle.
-      During the night, some players will be asked to use a power associated with
-      their role. The werewolves will also be called to select a victim. Once all
-      necessary players have been called, it will become day. At the start of the
-      day, any dead players, and their roles, will be revealed. The village will
-      than debate about who should be executed today, then vote. After the voted
-      player was executed, it will become night. Not voting for someone during this
-      vote will result in voting for yourself.\r\n\r\nRoles\r\n\r\nEach player will
-      be given a role. Each of them has a group of players which they belong to.
-      The two principal groups are the villagers and the werewolves. There are also
-      special roles call lonely, because they want to win alone, by fulfilling some
-      special condition. There are also ambiguous roles that can change which group
-      they belong to during the game. Read the description of each role for more
-      details.\r\n\r\nCaptain\r\n\r\nThe captain is a title that can be given to
-      a player. The captain's vote, for the execution during the day will count for
-      two. In the case of an equality, the captain chooses who will be eliminated.
-      If there is no captain and an equality happens, a second vote will start, but
-      only the players that had the highs number of votes can be voted for. If an
-      equality happens again, no one will be executed, and the day will end. When
-      the captain dies, he will choose who will be the next captain. \r\n\r\nElecting
-      a Captain\r\n\r\nAt the start of the first day, an election will take place.
-      This process will start with all players being asked if they wish to be the
-      captain. If more then one player wants to be the captain, a debate will start
-      to allow those players to say why they should be the captain. After this debate,
-      all the players will vote for who they think should be captain. If the vote
-      result into an equality, the captain will be randomly selected. If no one wanted
-      to be captain, there will be no captain.\r\n\r\nHow to Win\r\n\r\nWinners are
-      declared when all the players left alive are part of the same group. For example,
-      if only villagers are left, the villagers win. A player can belong to multiple
-      groups. For example, a villager could be in a couple, which mean that he would
-      belong to both the villager group and the couple group. In this case, if all
-      other players are also part of the villager group, the villagers would win.
-      The winners are only declared after all dead players are revealed. This means
-      that it is possible that all players left died during the night, therefore
-      resulting in no one winning.\r\n"
+    m_Localized: "Day and Night Cycle\r\n\r\nThe game works with a day and night
+      cycle. During the night, some villagers will be able to use their role power.
+      The werewolves will also be called to select a victim. Once all necessary villagers
+      have been called, it will become day. At the start of the day, any dead villagers,
+      and their roles, will be revealed. The village will than debate about who should
+      be executed, then vote. After the voted villager was executed, it will become
+      night. If there is no captain and an equality happens, a second vote will start,
+      but only the villagers that had the highest number of votes can be voted for.
+      If an equality happens again, no villager will be executed, and the day will
+      end. Not voting for any villager during this vote will result in voting for
+      yourself.\r\n\r\nRoles\r\n\r\nEach villager will be given a role. Each of them
+      has a group of villagers which they belong to. The two principal groups are
+      the villagers and the werewolves. There are also special roles, called lonely,
+      that wants to win alone by fulfilling some special condition. There are also
+      ambiguous roles that can change which group they belong to during the game.
+      Read the description of each role for more details.\r\n\r\nCaptain\r\n\r\nThe
+      captain is a title that can be given to a villager. The captain's execution
+      vote will count for two. In the case of an equality, the captain chooses who
+      will be executed. When the captain dies, he will choose which villager will
+      be the next captain. \r\n\r\nElecting a Captain\r\n\r\nAt the start of the
+      first day, an election will take place. It will start with all villagers being
+      asked if they wish to be the captain. If more then one villager wants to be
+      the captain, a debate will start to allow those villagers to say why they should
+      be the captain. After this debate, all the villagers will vote for who they
+      think should be captain. If the vote result into an equality, the captain will
+      be randomly selected. If no one wants to be captain, there will be no captain.\r\n\r\nHow
+      to Win\r\n\r\nWinners are declared when all the villagers left alive are part
+      of the same group. For example, if only werewolves are left, the werewolves
+      win. A villager can belong to multiple groups. For example, a werewolf could
+      also be in a couple. In this case, he could win if the rest of the villagers
+      are werewolves or part of the couple. The winners are only declared after all
+      dead villagers are revealed. This means that it is possible that all villagers
+      left died during the night, therefore resulting in no one winning.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 2532273190985728
