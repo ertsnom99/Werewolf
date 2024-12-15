@@ -10,68 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: StringTableRole_fr
+  m_Name: StringTableRole_fr-CA
   m_EditorClassIdentifier: 
   m_LocaleId:
-    m_Code: fr
+    m_Code: fr-CA
   m_SharedData: {fileID: 11400000, guid: 25402ef7d32c3cb47a782073354eda10, type: 2}
   m_Metadata:
     m_Items: []
   m_TableData:
   - m_Id: 1069766066176
     m_Localized: "Com\xE9dien"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2521448235008
-    m_Localized: Cupidon
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2578041978880
-    m_Localized: Couple
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3931116060672
-    m_Localized: Voyante
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4372801437696
-    m_Localized: Renard
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4704545718272
-    m_Localized: Chasseur
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4887052468224
-    m_Localized: Salvateur
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5095198998528
-    m_Localized: Servante
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5773111771136
-    m_Localized: Voleur
-    m_Metadata:
-      m_Items: []
-  - m_Id: 6095993487360
-    m_Localized: Villageois
-    m_Metadata:
-      m_Items: []
-  - m_Id: 6103014752256
-    m_Localized: Villageois
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7362610380800
-    m_Localized: Loup-Garou
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7366301368320
-    m_Localized: Loup-Garous
-    m_Metadata:
-      m_Items: []
-  - m_Id: 8299815026688
-    m_Localized: "Sorci\xE8re"
     m_Metadata:
       m_Items: []
   - m_Id: 1155975790592
@@ -84,21 +32,8 @@ MonoBehaviour:
       role sera retir\xE9."
     m_Metadata:
       m_Items: []
-  - m_Id: 6100871462912
-    m_Localized: Un simple villageois qui tente de survivre la nuit. Il n'a aucun
-      pouvoir special et doit utiliser son esprit vif pour se sauver.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7364653006848
-    m_Localized: "Une b\xEAte de la for\xEAt. Il agit comme un villageois durant
-      le jour, mais devient un tueur la nuit.\n\nChaque nuit, tout les loup-garous
-      devront voter ensemble pour un villageois a \xE9liminer. Le vote doit \xEAtre
-      unanime ou aucun villageois sera \xE9limin\xE9 cette nuit."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3933225795584
-    m_Localized: "Avec sa boule de crystal, elle peut voir la vrai identit\xE9 d'un
-      villageois.\n\nChaque nuit, elle peut regarder la carte d'un autre villageois."
+  - m_Id: 2521448235008
+    m_Localized: Cupidon
     m_Metadata:
       m_Items: []
   - m_Id: 2525135028224
@@ -111,9 +46,21 @@ MonoBehaviour:
       pour gagner."
     m_Metadata:
       m_Items: []
-  - m_Id: 4706357657600
-    m_Localized: "Il est un chasseur exp\xE9riment\xE9 et ne mourra pas sans se d\xE9fendre!\n\nQuand
-      il meurt, il doit choisir un autre villageois \xE0 tuer."
+  - m_Id: 2578041978880
+    m_Localized: Couple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3931116060672
+    m_Localized: Voyante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3933225795584
+    m_Localized: "Avec sa boule de crystal, elle peut voir la vrai identit\xE9 d'un
+      villageois.\n\nChaque nuit, elle peut regarder la carte d'un autre villageois."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4372801437696
+    m_Localized: Renard
     m_Metadata:
       m_Items: []
   - m_Id: 4374936338432
@@ -126,6 +73,19 @@ MonoBehaviour:
       la."
     m_Metadata:
       m_Items: []
+  - m_Id: 4704545718272
+    m_Localized: Chasseur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4706357657600
+    m_Localized: "Il est un chasseur exp\xE9riment\xE9 et ne mourra pas sans se d\xE9fendre!\n\nQuand
+      il meurt, il doit choisir un autre villageois \xE0 tuer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4887052468224
+    m_Localized: Salvateur
+    m_Metadata:
+      m_Items: []
   - m_Id: 4889510330368
     m_Localized: "Son pouvoir peut sauver un villageois en le prot\xE9geant des loups-garous.\n\nChaque
       nuit, il peut choisir un villageois \xE0 prot\xE9ger. Ce villageois ne sera
@@ -133,6 +93,25 @@ MonoBehaviour:
       Il ne peut pas prot\xE9ger le m\xEAme villageois deux fois d\u2019affil\xE9.
       Cette protection ne fonctionne pas sur la petite fille. Elle ne prot\xE8ge
       pas non plus de l\u2019infection de l\u2019infect p\xE8re des loups."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5095198998528
+    m_Localized: Servante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5097270984704
+    m_Localized: "Qui pourrait demander pour une meilleure servante qu\u2019une qui
+      serait pr\xEAte \xE0 reprendre le flambeau de son maitre. Soyez prudent, car
+      ses ambitions pourraient amener le village a sa fin. \n\nJuste avant que le
+      r\xF4le d\u2019un villageois ex\xE9cut\xE9 soit r\xE9v\xE9l\xE9, elle peut
+      se r\xE9v\xE9ler. Par la suite, elle perdra son r\xF4le de servante et prendra
+      le r\xF4le du villageois ex\xE9cut\xE9, sans que celui-ci soit r\xE9v\xE9l\xE9
+      aux autres villageois. Elle jouera en temps que ce r\xF4le pour le reste de
+      la partie. "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5773111771136
+    m_Localized: Voleur
     m_Metadata:
       m_Items: []
   - m_Id: 5775175368704
@@ -146,15 +125,36 @@ MonoBehaviour:
       doit choisir l\u2019un des deux. "
     m_Metadata:
       m_Items: []
-  - m_Id: 5097270984704
-    m_Localized: "Qui pourrait demander pour une meilleure servante qu\u2019une qui
-      serait pr\xEAte \xE0 reprendre le flambeau de son maitre. Soyez prudent, car
-      ses ambitions pourraient amener le village a sa fin. \n\nJuste avant que le
-      r\xF4le d\u2019un villageois ex\xE9cut\xE9 soit r\xE9v\xE9l\xE9, elle peut
-      se r\xE9v\xE9ler. Par la suite, elle perdra son r\xF4le de servante et prendra
-      le r\xF4le du villageois ex\xE9cut\xE9, sans que celui-ci soit r\xE9v\xE9l\xE9
-      aux autres villageois. Elle jouera en temps que ce r\xF4le pour le reste de
-      la partie. "
+  - m_Id: 6095993487360
+    m_Localized: Villageois
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6100871462912
+    m_Localized: Un simple villageois qui tente de survivre la nuit. Il n'a aucun
+      pouvoir special et doit utiliser son esprit vif pour se sauver.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6103014752256
+    m_Localized: Villageois
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7362610380800
+    m_Localized: Loup-Garou
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7364653006848
+    m_Localized: "Une b\xEAte de la for\xEAt. Il agit comme un villageois durant
+      le jour, mais devient un tueur la nuit.\n\nChaque nuit, tout les loup-garous
+      devront voter ensemble pour un villageois a \xE9liminer. Le vote doit \xEAtre
+      unanime ou aucun villageois sera \xE9limin\xE9 cette nuit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7366301368320
+    m_Localized: Loup-Garous
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8299815026688
+    m_Localized: "Sorci\xE8re"
     m_Metadata:
       m_Items: []
   - m_Id: 8301756989440
@@ -174,7 +174,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 58104528299130880
-    m_Localized: Loups-arous
+    m_Localized: Loups-garous
     m_Metadata:
       m_Items: []
   references:

@@ -10,57 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: StringTableUI_fr
+  m_Name: StringTableUI_fr-CA
   m_EditorClassIdentifier: 
   m_LocaleId:
-    m_Code: fr
+    m_Code: fr-CA
   m_SharedData: {fileID: 11400000, guid: ecf16318bb6cc7d42a507b623f97360d, type: 2}
   m_Metadata:
     m_Items:
-    - rid: 4972454616256217109
+    - rid: 4972454835144097795
   m_TableData:
   - m_Id: 782570201317376
     m_Localized: Retour au lobby dans {Time}...
     m_Metadata:
       m_Items:
-      - rid: 4972454616256217109
+      - rid: 4972454835144097795
   - m_Id: 791509907308544
     m_Localized: 'Temps restant: {Time}'
     m_Metadata:
       m_Items:
-      - rid: 4972454616256217109
+      - rid: 4972454835144097795
   - m_Id: 802396118482944
     m_Localized: "Vous avez re\xE7u le r\xF4le de {Role}"
     m_Metadata:
       m_Items:
-      - rid: 4972454616256217109
+      - rid: 4972454835144097795
   - m_Id: 816035818930176
     m_Localized: "{PlayerGroup:t(PlayerGroupName)} {PluralName:gagn\xE8rent|gagna}."
     m_Metadata:
       m_Items:
-      - rid: 4972454616256217109
-  - m_Id: 1104334805131264
-    m_Localized: "{Nickname} s'est d\xE9connect\xE9"
-    m_Metadata:
-      m_Items:
-      - rid: 4972454616256217109
-  - m_Id: 1129837255581696
-    m_Localized: 'Vote: {Count}'
-    m_Metadata:
-      m_Items:
-      - rid: 4972454616256217109
-  - m_Id: 2601788520128512
-    m_Localized: Lente
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2601811496525824
-    m_Localized: Normal
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2601852554567680
-    m_Localized: Vite
-    m_Metadata:
-      m_Items: []
+      - rid: 4972454835144097795
   - m_Id: 9866870784
     m_Localized: En attente du serveur...
     m_Metadata:
@@ -81,6 +59,16 @@ MonoBehaviour:
     m_Localized: "Passer le d\xE9bat"
     m_Metadata:
       m_Items: []
+  - m_Id: 1104334805131264
+    m_Localized: "{Nickname} s'est d\xE9connect\xE9"
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097795
+  - m_Id: 1129837255581696
+    m_Localized: 'Vote: {Count}'
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097795
   - m_Id: 1109735005085696
     m_Localized: Gagnants
     m_Metadata:
@@ -206,10 +194,22 @@ MonoBehaviour:
     m_Localized: Expulser
     m_Metadata:
       m_Items: []
+  - m_Id: 2601788520128512
+    m_Localized: Lente
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2601811496525824
+    m_Localized: Normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2601852554567680
+    m_Localized: Vite
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
-    - rid: 4972454616256217109
+    - rid: 4972454835144097795
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_Entries: 0080dc52bec702000080dcc2dfcf020000809c67c6d9020000801c252ee6020000e0c5fb62ec030000e045bc94030400
