@@ -79,7 +79,7 @@ MonoBehaviour:
       avant de descendre passer l'hiver dans le sud. G\xE9nial a interpr\xE9ter 
       la com\xE9die et le drame, il est un acteur talentueux. \n\nAvant la partie,
       trois roles seront mit de cot\xE9 pour le com\xE9dien. Ils seront plac\xE9,
-      face visible, au milieu des joueurs. Chaque nuit, le com\xE9dien peut choisir
+      face visible, au milieu des villageois. Chaque nuit, le com\xE9dien peut choisir
       un de ces roles et l'utiliser jusqu'a la prochaine nuit. Une fois choisi, le
       role sera retir\xE9."
     m_Metadata:
@@ -92,66 +92,69 @@ MonoBehaviour:
   - m_Id: 7364653006848
     m_Localized: "Une b\xEAte de la for\xEAt. Il agit comme un villageois durant
       le jour, mais devient un tueur la nuit.\n\nChaque nuit, tout les loup-garous
-      devront voter ensemble pour un joueur, qui n'est pas un loup-garous, a \xE9liminer.
-      Le vote doit \xEAtre unanime ou aucun joueur sera \xE9limin\xE9 cette nuit."
+      devront voter ensemble pour un villageois a \xE9liminer. Le vote doit \xEAtre
+      unanime ou aucun villageois sera \xE9limin\xE9 cette nuit."
     m_Metadata:
       m_Items: []
   - m_Id: 3933225795584
     m_Localized: "Avec sa boule de crystal, elle peut voir la vrai identit\xE9 d'un
-      joueur.\n\nChaque nuit, elle peut regarder la carte d'un autre joueur."
+      villageois.\n\nChaque nuit, elle peut regarder la carte d'un autre villageois."
     m_Metadata:
       m_Items: []
   - m_Id: 2525135028224
     m_Localized: "Grace au pouvoir de ses fl\xEAches c\xE9l\xE8bre, il peut faire
-      deux joueur tomber en amour.\n\nDurant la premi\xE8re nuit, il choisi deux
-      joueurs qui deviendront amoureux. Il peut \xEAtre un des amoureux. Si un amoureux
-      meurt, l'autre meurt de tristesse imm\xE9diatement. Un amoureux ne peut jamais
-      tenter de tuer l'autre amoureux. Si un amoureux est un loup-garous et l'autre
-      est un villageois, ils devront \xEAtre les seuls joueurs en vie pour gagner."
+      deux villageois tomber en amour.\n\nDurant la premi\xE8re nuit, il choisi deux
+      villageois qui deviendront amoureux. Il peut \xEAtre un des amoureux. Si un
+      amoureux meurt, l'autre meurt de tristesse imm\xE9diatement. Un amoureux ne
+      peut jamais tenter de tuer l'autre amoureux. Si un amoureux est un loup-garous
+      et l'autre est un villageois, ils devront \xEAtre les seuls villageois en vie
+      pour gagner."
     m_Metadata:
       m_Items: []
   - m_Id: 4706357657600
     m_Localized: "Il est un chasseur exp\xE9riment\xE9 et ne mourra pas sans se d\xE9fendre!\n\nQuand
-      il meurt, il doit choisir un autre joueur \xE0 tuer."
+      il meurt, il doit choisir un autre villageois \xE0 tuer."
     m_Metadata:
       m_Items: []
   - m_Id: 4374936338432
     m_Localized: "Dans le village, tout le monde adore l\u2019odorat de ce personnage
       rapide et fut\xE9, \xE0 l\u2019exception des loups-garous.\n\nChaque nuit,
-      il peut choisir un group de trois joueurs cons\xE9cutifs, en s\xE9lectionnant
-      celui du milieu (les joueurs morts sont ignor\xE9s). Il sera par la suite r\xE9v\xE9l\xE9
-      s\u2019il y a au moins un loup-garou parmi ce groupe. S\u2019il ne trouve pas
-      de loups-garous, le renard perd son pouvoir pour le reste de la."
+      il peut choisir un group de trois villageois cons\xE9cutifs, en s\xE9lectionnant
+      celui du milieu (les villageois morts sont ignor\xE9s). Il sera par la suite
+      r\xE9v\xE9l\xE9 s\u2019il y a au moins un loup-garou parmi ce groupe. S\u2019il
+      ne trouve pas de loups-garous, le renard perd son pouvoir pour le reste de
+      la."
     m_Metadata:
       m_Items: []
   - m_Id: 4889510330368
     m_Localized: "Son pouvoir peut sauver un villageois en le prot\xE9geant des loups-garous.\n\nChaque
-      nuit, il peut choisir un joueur \xE0 prot\xE9ger. Ce joueur ne sera pas tu\xE9
-      par les loups-garous, durant cette nuit. Le salvateur peu se prot\xE9ger. Il
-      ne peut pas prot\xE9ger la m\xEAme personne deux fois d\u2019affil\xE9. Cette
-      protection ne fonctionne pas sur la petite fille. Elle ne prot\xE8ge pas non
-      plus de l\u2019infection de l\u2019infect p\xE8re des loups."
+      nuit, il peut choisir un villageois \xE0 prot\xE9ger. Ce villageois ne sera
+      pas tu\xE9 par les loups-garous, durant cette nuit. Le salvateur peu se prot\xE9ger.
+      Il ne peut pas prot\xE9ger le m\xEAme villageois deux fois d\u2019affil\xE9.
+      Cette protection ne fonctionne pas sur la petite fille. Elle ne prot\xE8ge
+      pas non plus de l\u2019infection de l\u2019infect p\xE8re des loups."
     m_Metadata:
       m_Items: []
   - m_Id: 5775175368704
     m_Localized: "Quel r\xF4le va-t-il r\xE9ellement jouer? Il faudra attendre pour
       avoir la r\xE9ponse.\n\nSi le voleur est dans la partie, deux villageois suppl\xE9mentaires
-      seront ajout\xE9 aux r\xF4les distribu\xE9s parmi les joueurs. Une fois que
-      tous les r\xF4les seront distribu\xE9s, les deux r\xF4les restants seront plac\xE9s,
-      face cach\xE9e, au milieu des joueurs. La premi\xE8re nuit, le voleur aura
-      la possibilit\xE9 de changer son r\xF4le pour un des deux r\xF4les restants,
-      s\u2019il le veut. Si les deux r\xF4les sont des loups-garous, il doit choisir
-      l\u2019un des deux. "
+      seront ajout\xE9 aux r\xF4les distribu\xE9s parmi les villageois. Une fois
+      que tous les r\xF4les seront distribu\xE9s, les deux r\xF4les restants seront
+      plac\xE9s, face cach\xE9e, au milieu des villageois. La premi\xE8re nuit, le
+      voleur aura la possibilit\xE9 de changer son r\xF4le pour un des deux r\xF4les
+      restants, s\u2019il le veut. Si les deux r\xF4les sont des loups-garous, il
+      doit choisir l\u2019un des deux. "
     m_Metadata:
       m_Items: []
   - m_Id: 5097270984704
     m_Localized: "Qui pourrait demander pour une meilleure servante qu\u2019une qui
       serait pr\xEAte \xE0 reprendre le flambeau de son maitre. Soyez prudent, car
       ses ambitions pourraient amener le village a sa fin. \n\nJuste avant que le
-      r\xF4le d\u2019un joueur ex\xE9cut\xE9 soit r\xE9v\xE9l\xE9, elle peut se r\xE9v\xE9ler.
-      Par la suite, elle perdra son r\xF4le de servante et prendra le r\xF4le de
-      la personne ex\xE9cut\xE9, sans que celui-ci soit r\xE9v\xE9l\xE9 aux autres
-      villageois. Elle jouera en temps que ce r\xF4le pour le reste de la partie. "
+      r\xF4le d\u2019un villageois ex\xE9cut\xE9 soit r\xE9v\xE9l\xE9, elle peut
+      se r\xE9v\xE9ler. Par la suite, elle perdra son r\xF4le de servante et prendra
+      le r\xF4le du villageois ex\xE9cut\xE9, sans que celui-ci soit r\xE9v\xE9l\xE9
+      aux autres villageois. Elle jouera en temps que ce r\xF4le pour le reste de
+      la partie. "
     m_Metadata:
       m_Items: []
   - m_Id: 8301756989440
@@ -162,8 +165,8 @@ MonoBehaviour:
       \xE9t\xE9 tu\xE9 par les loups-garous durant la nuit. Elle pourra ensuite utiliser
       ses potions. Chaque potion peut \xEAtre utilis\xE9 une seul fois durant la
       partie, mais elle peut utiliser les deux durant la m\xEAme nuit. Sa potion
-      de vie va sauver le joueur tu\xE9 par les loups-garous. Sa potion de mort va
-      tuer un joueur de son choix."
+      de vie va sauver le villageois tu\xE9 par les loups-garous. Sa potion de mort
+      va tuer un villageois de son choix."
     m_Metadata:
       m_Items: []
   - m_Id: 58103591669104640

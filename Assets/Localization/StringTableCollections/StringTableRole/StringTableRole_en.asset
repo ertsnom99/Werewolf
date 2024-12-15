@@ -27,7 +27,7 @@ MonoBehaviour:
 
       Before the game, three roles will be set aside
       for the comedian. They will be placed, with their role visible, in the middle
-      of all the players. Each night, the comedian can choose one of these roles
+      of all the villagers. Each night, the comedian can choose one of these roles
       and use that role until the next night. Once a role is selected, it is removed.'
     m_Metadata:
       m_Items: []
@@ -40,16 +40,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2525135028224
-    m_Localized: 'With the power of his famous arrows, he can make two players fall
-      in love.
+    m_Localized: 'With the power of his famous arrows, he can make two villagers
+      fall in love.
 
 
 
-      During the first night, he chooses two players that will
-      become lovers. One of the lovers can be himself. If one of the lovers dies,
-      the other dies of sadness immediately. The lovers can never attempt to kill
-      or frame each other. If one of the lovers is a werewolf and the other is a
-      villager, they will need to be the last players left to win.'
+      During the first night, he chooses two villagers that
+      will become lovers. One of the lovers can be himself. If one of the lovers
+      dies, the other dies of sadness immediately. The lovers can never attempt to
+      kill or frame each other. If one of the lovers is a werewolf and the other
+      is a villager, they will need to be the last villagers left to win.'
     m_Metadata:
       m_Items: []
   - m_Id: 2578041978880
@@ -57,11 +57,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3933225795584
-    m_Localized: 'With her crystal ball, she can see a player''s true identity.
+    m_Localized: 'With her crystal ball, she can see a villager''s true identity.
 
 
       Each
-      night, she can look at an other players card.'
+      night, she can look at an other villager''s card.'
     m_Metadata:
       m_Items: []
   - m_Id: 3931116060672
@@ -75,7 +75,7 @@ MonoBehaviour:
 
 
       Each night, he can choose a
-      group of three consecutive players, by selecting the middle one (dead players
+      group of three consecutive villagers, by selecting the middle one (dead villagers
       are skipped). He will then be told if there is at least one werewolf in this
       group. If there is no werewolf, the fox loose his power for the rest of the
       game.'
@@ -90,7 +90,7 @@ MonoBehaviour:
 
 
       When
-      he gets killed, he must choose an other player to kill.'
+      he gets killed, he must choose an other villager to kill.'
     m_Metadata:
       m_Items: []
   - m_Id: 4704545718272
@@ -102,13 +102,11 @@ MonoBehaviour:
       the werewolves.
 
 
-      Each night, he can select a player to protect. That
-      player will not get killed by any werewolves, during that night. The savior
-      can protect himself. He cannot protect the same player twice in a row. This
+      Each night, he can select a villager to protect. That
+      villager will not get killed by any werewolves, during that night. The savior
+      can protect himself. He cannot protect the same villager twice in a row. This
       protection doesn''t work on the little girl. It also doesn''t protect from
-      the infection of the foul father wolf.
-
-'
+      the infection of the foul father wolf.'
     m_Metadata:
       m_Items: []
   - m_Id: 4887052468224
@@ -125,12 +123,10 @@ MonoBehaviour:
       the village to its end!
 
 
-      Just before the reveal of the role of a player
+      Just before the reveal of the role of a villager
       killed by the village vote, she can reveal herself. Afterward, she will lose
-      her role and take the one of the dead player, without revealing what it is.
-      From that point on, she will play as that new role.
-
-'
+      her role and take the one of the dead villager, without revealing what it is.
+      From that point on, she will play as that new role.'
     m_Metadata:
       m_Items: []
   - m_Id: 5775175368704
@@ -139,12 +135,11 @@ MonoBehaviour:
 
       If the
       thief is in the game, two extra villager cards will be added to the roles distributed
-      to the players. once all the roles are distributed, the two leftover will be
-      placed, face down, in the middle of all the players. The first night, the thief
-      will be allowed to change his role for either of the two leftover roles, if
-      he wants to. If both roles are werewolves, he must choose one of them.
-
-'
+      to the villagers. once all the roles are distributed, the two leftover will
+      be placed, face down, in the middle of all the villagers. The first night,
+      the thief will be allowed to change his role for either of the two leftover
+      roles, if he wants to. If both roles are werewolves, he must choose one of
+      them.'
     m_Metadata:
       m_Items: []
   - m_Id: 5773111771136
@@ -170,10 +165,8 @@ MonoBehaviour:
 
 
       Each night, all werewolves will be asked
-      to vote together for a none werewolf player to eliminate. The vote must be
-      unanimous or else, no player will be eliminated that night.
-
-'
+      to vote together for a villager to eliminate. The vote must be unanimous or
+      else, no villager will be eliminated that night.'
     m_Metadata:
       m_Items: []
   - m_Id: 7362610380800
@@ -197,10 +190,8 @@ MonoBehaviour:
       she can used: a life potion and a death potion. Each night, she will be told
       who was killed by the werewolves. she can then use her potions. Each potion
       can be only used once during the game, but she can use both potion at the same
-      time. Her life potion will save the player who was supposed to die, which could
-      be herself. The death potion will kill a player that she selects.
-
-'
+      time. Her life potion will save the villager who was supposed to die, which
+      could be herself. The death potion will kill a villager of her choice.'
     m_Metadata:
       m_Items: []
   - m_Id: 58103591669104640
