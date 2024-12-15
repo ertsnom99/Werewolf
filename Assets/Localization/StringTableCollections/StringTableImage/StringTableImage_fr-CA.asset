@@ -10,25 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: StringTableImage_fr
+  m_Name: StringTableImage_fr-CA
   m_EditorClassIdentifier: 
   m_LocaleId:
-    m_Code: fr
+    m_Code: fr-CA
   m_SharedData: {fileID: 11400000, guid: 0d1be4a4109b4914b871fb5b3860e3ed, type: 2}
   m_Metadata:
     m_Items:
-    - rid: 4972454616256217095
+    - rid: 4972454835144097793
   m_TableData:
-  - m_Id: 1058760967356416
-    m_Localized: '{Role} {Multiple:jouent|joue}...'
-    m_Metadata:
-      m_Items:
-      - rid: 4972454616256217095
-  - m_Id: 1194417882693632
-    m_Localized: "Votre nouveau r\xF4le est: {Role}"
-    m_Metadata:
-      m_Items:
-      - rid: 4972454616256217095
   - m_Id: 424192802816
     m_Localized: Choisissez le prochain capitaine
     m_Metadata:
@@ -188,6 +178,11 @@ MonoBehaviour:
     m_Localized: "Voter pour qui devrait \xEAtre le capitaine"
     m_Metadata:
       m_Items: []
+  - m_Id: 1058760967356416
+    m_Localized: '{Role} {Multiple:jouent|joue}...'
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097793
   - m_Id: 1081749771419648
     m_Localized: "Votez pour qui devrait \xEAtre ex\xE9cut\xE9"
     m_Metadata:
@@ -204,6 +199,11 @@ MonoBehaviour:
     m_Localized: "Prendre le r\xF4le"
     m_Metadata:
       m_Items: []
+  - m_Id: 1194417882693632
+    m_Localized: "Votre nouveau r\xF4le est: {Role}"
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097793
   - m_Id: 1194478347780096
     m_Localized: "La servante a d\xE9cid\xE9 de prendre ce r\xF4le!"
     m_Metadata:
@@ -211,7 +211,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 4972454616256217095
+    - rid: 4972454835144097793
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_Entries: 00805cffefc2030000809c15513e0400

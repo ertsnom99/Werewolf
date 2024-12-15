@@ -10,172 +10,45 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: StringTableGameHistory_fr
+  m_Name: StringTableGameHistory_fr-CA
   m_EditorClassIdentifier: 
   m_LocaleId:
-    m_Code: fr
+    m_Code: fr-CA
   m_SharedData: {fileID: 11400000, guid: 42fef827aafa1c84b91c2840eb784a8d, type: 2}
   m_Metadata:
     m_Items:
-    - rid: 7029503930381107201
+    - rid: 4972454835144097792
   m_TableData:
   - m_Id: 1110805244723200
     m_Localized: "{Player:t(PlayerName)} a re\xE7u le role de {RoleName:t(RoleName)}."
     m_Metadata:
       m_Items:
-      - rid: 7029503930381107201
+      - rid: 4972454835144097792
   - m_Id: 1112754602033152
     m_Localized: '{Player:t(PlayerName)} mourut et avait le role de {RoleName:t(RoleName)}.'
     m_Metadata:
       m_Items:
-      - rid: 7029503930381107201
+      - rid: 4972454835144097792
   - m_Id: 1113228340281344
     m_Localized: "{Players:list:{:t(PlayerName)}|, | et } {Players:plural:voulait|voulaient}
       \xEAtre capitaine."
     m_Metadata:
       m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1117060612931584
-    m_Localized: '{Player:t(PlayerName)} est devenu le capitaine.'
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1119725610778624
-    m_Localized: Le capitaine ({Player:t(PlayerName)}) mourut.
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1120198329810944
-    m_Localized: "{Player:t(PlayerName)} ({RoleName:t(RoleName)}) s'est r\xE9veill\xE9."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1123387561132032
-    m_Localized: "Le vote fut une \xE9galit\xE9. Le capitaine ({Player:t(PlayerName)})
-      choisit qui \xE9x\xE9cuter."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1127826892177408
-    m_Localized: "Le village vota pour \xE9x\xE9cuter {Player:t(PlayerName)}."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1128219831353344
-    m_Localized: '{Voter:t(PlayerName)} vota pour {Voted:t(PlayerName)}.'
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1130489763512320
-    m_Localized: '{Player:t(PlayerName)} ne vota pas.'
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1131051640864768
-    m_Localized: "{Player:t(PlayerName)} ne vota pas et fut p\xE9nalis\xE9."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1133519254765568
-    m_Localized: "{PluralName:Les|Le} {PlayerGroup:t(PlayerGroupName)} {PluralName:gagn\xE8rent|gagna}."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1135565391446016
-    m_Localized: "Le {\"Com\xE9dien\":t(RoleName)} fut donn\xE9 les roles {RoleNames:list:{:t(RoleName)}|,
-      | et } \xE0 utiliser."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1138930317967360
-    m_Localized: "Le {\"Com\xE9dien\":t(RoleName)} ({Player:t(PlayerName)}) utilisa
-      le role de {RoleName:t(RoleName)}."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1142184317730816
-    m_Localized: "Le {\"Cupidon\":t(RoleName)} ({CupidPlayer:t(PlayerName)}) choisit
-      {FirstCouplePlayer:t(PlayerName)} et {SecondCouplePlayer:t(PlayerName)} pour
-      \xEAtre en couple ensemble."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1143798327853056
-    m_Localized: '{FirstCouplePlayer:t(PlayerName)} fut en couple avec {SecondCouplePlayer:t(PlayerName)}
-      et mourut.'
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1145710523629568
-    m_Localized: La {"Voyante":t(RoleName)} ({FortuneTellerPlayer:t(PlayerName)})
-      regarda le role de {PlayerLookedAt:t(PlayerName)} ({RoleName:t(RoleName)}).
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1147394884812800
-    m_Localized: Le {"Renard":t(RoleName)} ({FoxPlayer:t(PlayerName)}) sentit {SniffedPlayers:list:{:t(PlayerName)}|,
-      | et }, et trouva un {"Loup-garous":t(RoleName)} parmis ce groupe.
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1147428170809344
-    m_Localized: Le {"Renard":t(RoleName)} ({FoxPlayer:t(PlayerName)}) sentit {SniffedPlayers:list:{:t(PlayerName)}|,
-      | et }, ne trouva pas de {"Loup-garous":t(RoleName)} parmis ce groupe et perdit
-      son pouvoir.
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1147502372241408
-    m_Localized: Le {"Chasseur":t(RoleName)} ({HunterPlayer:t(PlayerName)}) choisit
-      de tuer {KilledPlayer:t(PlayerName)}.
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1147552502562816
-    m_Localized: "Le {\"Salvateur\":t(RoleName)} ({SaviorPlayer:t(PlayerName)}) choisit
-      de prot\xE9ger {ProtectedPlayer:t(PlayerName)}."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1480962706161664
-    m_Localized: La {"Servante":t(RoleName)} ({ServantPlayer:t(PlayerName)}) prit
-      le role de {PlayerTakenFrom:t(PlayerName)} ({RoleName:t(RoleName)}).
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1481631815090176
-    m_Localized: "Le {\"Voleur\":t(RoleName)} fut donn\xE9 les roles {FirstRoleName:t(RoleName)}
-      and {SecondRoleName:t(RoleName)} \xE0 utiliser."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1482753103544320
-    m_Localized: Le {"Voleur":t(RoleName)} ({Player:t(PlayerName)}) prit le role
-      de {RoleName:t(RoleName)}.
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1483584792084480
-    m_Localized: "Les {\"Loups-garous\":t(RoleName)} vot\xE8rent pour tuer {Player:t(PlayerName)}."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1484150020685824
-    m_Localized: "La {\"Sorci\xE8re\":t(RoleName)} ({WitchPlayer:t(PlayerName)})
-      utilisa sa potion de vie pour sauver {SavedPlayer:t(PlayerName)}."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 1484152184946688
-    m_Localized: "La {\"Sorci\xE8re\":t(RoleName)} ({WitchPlayer:t(PlayerName)})
-      utilisa sa potion de mort pour tuer {KilledPlayer:t(PlayerName)}."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
+      - rid: 4972454835144097792
   - m_Id: 1116699403665408
     m_Localized: "Aucun villageois voulait \xEAtre le capitaine."
     m_Metadata:
       m_Items: []
+  - m_Id: 1117060612931584
+    m_Localized: '{Player:t(PlayerName)} est devenu le capitaine.'
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1119725610778624
+    m_Localized: Le capitaine ({Player:t(PlayerName)}) mourut.
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
   - m_Id: 1119927147085824
     m_Localized: "Le soleil s'est couch\xE9"
     m_Metadata:
@@ -184,6 +57,11 @@ MonoBehaviour:
     m_Localized: "Le soleil s'est lev\xE9"
     m_Metadata:
       m_Items: []
+  - m_Id: 1120198329810944
+    m_Localized: "{Player:t(PlayerName)} ({RoleName:t(RoleName)}) s'est r\xE9veill\xE9."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
   - m_Id: 1123097671811072
     m_Localized: "Le vote d'\xE9x\xE9cution commen\xE7a."
     m_Metadata:
@@ -192,35 +70,157 @@ MonoBehaviour:
     m_Localized: "Le vote fut une \xE9galit\xE9. Un nouveau vote commen\xE7a."
     m_Metadata:
       m_Items: []
-  - m_Id: 1124997385338880
-    m_Localized: "Le vote fut \xE0 nouveau une \xE9galit\xE9. Personne ne fut \xE9x\xE9cut\xE9."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1135454057840640
-    m_Localized: Personne ne gagna.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1483978075193344
-    m_Localized: "Les {\"Loups-garous\":t(RoleName)} ne r\xE9ussirent pas \xE0 voter
-      pour un villageois \xE0 tuer."
+  - m_Id: 1123387561132032
+    m_Localized: "Le vote fut une \xE9galit\xE9. Le capitaine ({Player:t(PlayerName)})
+      choisit qui \xE9x\xE9cuter."
     m_Metadata:
       m_Items:
-      - rid: 7029503930381107201
-  - m_Id: 6814071425196032
-    m_Localized: "{Player:t(PlayerName)} s'est d\xE9connect\xE9."
-    m_Metadata:
-      m_Items:
-      - rid: 7029503930381107201
+      - rid: 4972454835144097792
   - m_Id: 7623024505643008
     m_Localized: "Le vote fut une \xE9galit\xE9 et le capitaine ({Player:t(PlayerName)})
       ne choisit pas de joueur a \xE9x\xE9cuter."
     m_Metadata:
       m_Items:
-      - rid: 7029503930381107201
+      - rid: 4972454835144097792
+  - m_Id: 1124997385338880
+    m_Localized: "Le vote fut \xE0 nouveau une \xE9galit\xE9. Personne ne fut \xE9x\xE9cut\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1127826892177408
+    m_Localized: "Le village vota pour \xE9x\xE9cuter {Player:t(PlayerName)}."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1128219831353344
+    m_Localized: '{Voter:t(PlayerName)} vota pour {Voted:t(PlayerName)}.'
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1130489763512320
+    m_Localized: '{Player:t(PlayerName)} ne vota pas.'
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1131051640864768
+    m_Localized: "{Player:t(PlayerName)} ne vota pas et fut p\xE9nalis\xE9."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1133519254765568
+    m_Localized: "{PluralName:Les|Le} {PlayerGroup:t(PlayerGroupName)} {PluralName:gagn\xE8rent|gagna}."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1135454057840640
+    m_Localized: Personne ne gagna.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1135565391446016
+    m_Localized: "Le {\"Com\xE9dien\":t(RoleName)} fut donn\xE9 les roles {RoleNames:list:{:t(RoleName)}|,
+      | et } \xE0 utiliser."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1138930317967360
+    m_Localized: "Le {\"Com\xE9dien\":t(RoleName)} ({Player:t(PlayerName)}) utilisa
+      le role de {RoleName:t(RoleName)}."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1142184317730816
+    m_Localized: "Le {\"Cupidon\":t(RoleName)} ({CupidPlayer:t(PlayerName)}) choisit
+      {FirstCouplePlayer:t(PlayerName)} et {SecondCouplePlayer:t(PlayerName)} pour
+      \xEAtre en couple ensemble."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1143798327853056
+    m_Localized: '{FirstCouplePlayer:t(PlayerName)} fut en couple avec {SecondCouplePlayer:t(PlayerName)}
+      et mourut.'
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1145710523629568
+    m_Localized: La {"Voyante":t(RoleName)} ({FortuneTellerPlayer:t(PlayerName)})
+      regarda le role de {PlayerLookedAt:t(PlayerName)} ({RoleName:t(RoleName)}).
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1147394884812800
+    m_Localized: Le {"Renard":t(RoleName)} ({FoxPlayer:t(PlayerName)}) sentit {SniffedPlayers:list:{:t(PlayerName)}|,
+      | et }, et trouva un {"Loup-garous":t(RoleName)} parmis ce groupe.
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1147428170809344
+    m_Localized: Le {"Renard":t(RoleName)} ({FoxPlayer:t(PlayerName)}) sentit {SniffedPlayers:list:{:t(PlayerName)}|,
+      | et }, ne trouva pas de {"Loup-garous":t(RoleName)} parmis ce groupe et perdit
+      son pouvoir.
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1147502372241408
+    m_Localized: Le {"Chasseur":t(RoleName)} ({HunterPlayer:t(PlayerName)}) choisit
+      de tuer {KilledPlayer:t(PlayerName)}.
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1147552502562816
+    m_Localized: "Le {\"Salvateur\":t(RoleName)} ({SaviorPlayer:t(PlayerName)}) choisit
+      de prot\xE9ger {ProtectedPlayer:t(PlayerName)}."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1480962706161664
+    m_Localized: La {"Servante":t(RoleName)} ({ServantPlayer:t(PlayerName)}) prit
+      le role de {PlayerTakenFrom:t(PlayerName)} ({RoleName:t(RoleName)}).
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1481631815090176
+    m_Localized: "Le {\"Voleur\":t(RoleName)} fut donn\xE9 les roles {FirstRoleName:t(RoleName)}
+      and {SecondRoleName:t(RoleName)} \xE0 utiliser."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1482753103544320
+    m_Localized: Le {"Voleur":t(RoleName)} ({Player:t(PlayerName)}) prit le role
+      de {RoleName:t(RoleName)}.
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1483584792084480
+    m_Localized: "Les {\"Loups-garous\":t(RoleName)} vot\xE8rent pour tuer {Player:t(PlayerName)}."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1483978075193344
+    m_Localized: "Les {\"Loups-garous\":t(RoleName)} ne r\xE9ussirent pas \xE0 voter
+      pour un villageois \xE0 tuer."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1484150020685824
+    m_Localized: "La {\"Sorci\xE8re\":t(RoleName)} ({WitchPlayer:t(PlayerName)})
+      utilisa sa potion de vie pour sauver {SavedPlayer:t(PlayerName)}."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 1484152184946688
+    m_Localized: "La {\"Sorci\xE8re\":t(RoleName)} ({WitchPlayer:t(PlayerName)})
+      utilisa sa potion de mort pour tuer {KilledPlayer:t(PlayerName)}."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
+  - m_Id: 6814071425196032
+    m_Localized: "{Player:t(PlayerName)} s'est d\xE9connect\xE9."
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097792
   references:
     version: 2
     RefIds:
-    - rid: 7029503930381107201
+    - rid: 4972454835144097792
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00c0068045f2030000c0c65e0bf4030000c0c6ab79f4030000c006f1f5f7030000c0466f62fa030000c0867fd0fa030000c0860cb7fd030000c046a9c001040000c046261c02040000c0c6a82c04040000c0467baf04040000c08604ee06040000c0c66bca08040000c006e1d90b040000c08682cf0e040000c0064d4710040000c0c6840412040000c086b08c13040000c086709413040000c046b7a513040000c04663b113040000c00680ed42050000c0064a8943050000c0065c8e44050000c086005045050000c0c69ad345050000c0c61bd445050000c00692ab45050000e0c5a25c35180000e0c5b319151b00
+        m_Entries: 00c0064d4710040000c08682cf0e040000c006e1d90b040000c0c66bca08040000c08604ee06040000c0467baf04040000c0c6a82c04040000c046261c02040000c046a9c001040000e0c5b319151b0000c0860cb7fd030000c0867fd0fa030000c0466f62fa030000c006f1f5f7030000c0c6ab79f4030000c0c65e0bf4030000c0068045f2030000c0c6840412040000c086b08c13040000c086709413040000c046b7a513040000c04663b113040000c00680ed42050000c0064a8943050000c0065c8e44050000c086005045050000c00692ab45050000c0c69ad345050000c0c61bd445050000e0c5a25c351800

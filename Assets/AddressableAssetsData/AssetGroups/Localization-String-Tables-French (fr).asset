@@ -16,37 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: df12aade8b0d1c945b5e351c44c84c6b
-  m_SerializeEntries:
-  - m_GUID: 5bd34a21fc192de4fb17d0b2a8ffb971
-    m_Address: StringTableGameHistory_fr
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-fr
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 22e9cde0116f08743ae5df0188d6e7e7
-    m_Address: StringTableRole_fr
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-fr
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c3ea382e92bcc9f4aaf65a8d0fa9dad4
-    m_Address: StringTableImage_fr
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-fr
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5693c0e4cd8bc58409c717c8da12b1fc
-    m_Address: StringTableUI_fr
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-fr
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a16a83f3cd586e24a9e749dceccb8ed4
-    m_Address: StringTableChoiceScreen_fr
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-fr
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: a8a246b39e9e2a24794273b9332c68df, type: 2}
   m_SchemaSet:
