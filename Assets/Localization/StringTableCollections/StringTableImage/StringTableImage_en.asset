@@ -173,7 +173,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1058760967356416
-    m_Localized: The {Role} {Multiple:are playing|is playing}...
+    m_Localized: '{Role} {Multiple:are playing|is playing}...'
     m_Metadata:
       m_Items:
       - rid: 4972454616256217094
