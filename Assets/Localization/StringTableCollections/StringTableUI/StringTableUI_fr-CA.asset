@@ -265,6 +265,14 @@ MonoBehaviour:
       Cliquer en dehors de la roue pour la fermer. \r"
     m_Metadata:
       m_Items: []
+  - m_Id: 3620152336048128
+    m_Localized: Options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3631796738973696
+    m_Localized: Langue
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

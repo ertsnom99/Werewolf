@@ -29,6 +29,9 @@ namespace Werewolf
 		[SerializeField]
 		private GameHistoryMenu _gameHistoryMenu;
 
+		[SerializeField]
+		private SettingsMenu _settingsMenu;
+
 		[Header("Localization")]
 		[SerializeField]
 		private LocalizedString _joinFailedLocalizedString;
@@ -73,6 +76,7 @@ namespace Werewolf
 			_roomMenu.LeaveSessionClicked += LeaveSession;
 			_rulesMenu.ReturnClicked += OpenMainMenu;
 			_gameHistoryMenu.ReturnClicked += OpenMainMenu;
+			_settingsMenu.ReturnClicked += OpenMainMenu;
 
 			if (_runner)
 			{
@@ -209,6 +213,11 @@ namespace Werewolf
 			DisplayGameHistoryMenu();
 		}
 
+		public void OpenSettingsMenu()
+		{
+			DisplaySettingsMenu();
+		}
+
 		private void OpenMainMenu()
 		{
 			DisplayMainMenu();
@@ -227,6 +236,7 @@ namespace Werewolf
 			_roomMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
 			_gameHistoryMenu.gameObject.SetActive(false);
+			_settingsMenu.gameObject.SetActive(false);
 		}
 
 		private void DisplayJoinMenu()
@@ -236,6 +246,7 @@ namespace Werewolf
 			_roomMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
 			_gameHistoryMenu.gameObject.SetActive(false);
+			_settingsMenu.gameObject.SetActive(false);
 		}
 
 		private void DisplayRoomMenu()
@@ -245,6 +256,7 @@ namespace Werewolf
 			_roomMenu.gameObject.SetActive(true);
 			_rulesMenu.gameObject.SetActive(false);
 			_gameHistoryMenu.gameObject.SetActive(false);
+			_settingsMenu.gameObject.SetActive(false);
 		}
 
 		private void DisplayRulesMenu()
@@ -254,6 +266,7 @@ namespace Werewolf
 			_roomMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(true);
 			_gameHistoryMenu.gameObject.SetActive(false);
+			_settingsMenu.gameObject.SetActive(false);
 		}
 
 		private void DisplayGameHistoryMenu()
@@ -263,6 +276,17 @@ namespace Werewolf
 			_roomMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
 			_gameHistoryMenu.gameObject.SetActive(true);
+			_settingsMenu.gameObject.SetActive(false);
+		}
+
+		private void DisplaySettingsMenu()
+		{
+			_mainMenu.SetActive(false);
+			_joinMenu.gameObject.SetActive(false);
+			_roomMenu.gameObject.SetActive(false);
+			_rulesMenu.gameObject.SetActive(false);
+			_gameHistoryMenu.gameObject.SetActive(false);
+			_settingsMenu.gameObject.SetActive(true);
 		}
 		#endregion
 
