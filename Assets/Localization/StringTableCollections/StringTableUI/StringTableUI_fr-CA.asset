@@ -243,6 +243,28 @@ MonoBehaviour:
     m_Localized: Vite
     m_Metadata:
       m_Items: []
+  - m_Id: 3600263512711168
+    m_Localized: "\xC9motic\xF4nes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3603741865795584
+    m_Localized: "Les \xE9motic\xF4nes sont des petites images affich\xE9es au-dessus
+      de la carte d\u2019un villageois. Les villageois peuvent les utiliser pour
+      communiquer entre eux de fa\xE7on discr\xE8te. Par exemple, les loups-garous
+      peuvent communiquer pendant leurs votes sans que les autres villageois ne puissent
+      les voir. Les \xE9motic\xF4nes sont visibles pour tous les villageois durant
+      le jour. Durant la nuit, seul les villageois r\xE9veill\xE9s (lorsqu\u2019il
+      utilisent le pouvoir de leur r\xF4le, quand le couple se reconnait, etc.) peuvent
+      les voir. Il y a une limite de quantit\xE9 d\u2019\xE9motic\xF4nes qu\u2019un
+      villageois peut envoyer sur une courte p\xE9riode. Si cette limite est atteinte,
+      les \xE9motic\xF4nes d\u2019un villageois ne seront pas envoy\xE9s jusqu\u2019\xE0
+      ce qu\u2019assez de temps se sois \xE9coul\xE9. \r\n\r\nPour envoyer un \xE9motic\xF4ne,
+      faite un clic gauche sur la carte d\u2019un villageois et garder le bouton
+      enfonc\xE9 jusqu\u2019\xE0 ce que la roue de s\xE9lection des \xE9motic\xF4nes
+      apparaisse. Une fois visible, cliquez un \xE9motic\xF4ne pour tenter de l\u2019envoyer.
+      Cliquer en dehors de la roue pour la fermer. \r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

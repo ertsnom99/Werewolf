@@ -237,6 +237,25 @@ MonoBehaviour:
     m_Localized: Fast
     m_Metadata:
       m_Items: []
+  - m_Id: 3600263512711168
+    m_Localized: Emotes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3603741865795584
+    m_Localized: "Emotes are small pictures that can be displayed above a villager\u2019s
+      card. Villagers can use those to communicate with each other in a more discrete
+      way. For example, this can allow werewolves to communicate will they are voting
+      without other villagers seeing it. Emotes can be seen by all villagers during
+      the day. During the night, only the villagers who are awake (while they are
+      using their role\u2019s power, while the couple recognize each other, etc.)
+      can see them. There is a limit to how many emotes a villager can send in a
+      short period of time. If this limit is reach, a villager emote won\u2019t be
+      send until enough time has passed.\r\n\r\nTo send an emote, left click and
+      hold on the card of a villager to make the emote well appear. Once the wheel
+      is visible, click an emote to attempt to send it. Clicking outside the wheel
+      will close it. \r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

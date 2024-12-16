@@ -195,6 +195,14 @@ MonoBehaviour:
     m_Key: RoomMenu_GameSpeedFast
     m_Metadata:
       m_Items: []
+  - m_Id: 3600263512711168
+    m_Key: RulesMenu_Emotes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3603741865795584
+    m_Key: RulesMenu_EmotesRules
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
