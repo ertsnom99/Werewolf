@@ -256,6 +256,14 @@ MonoBehaviour:
       will close it. \r"
     m_Metadata:
       m_Items: []
+  - m_Id: 3620152336048128
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3631796738973696
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

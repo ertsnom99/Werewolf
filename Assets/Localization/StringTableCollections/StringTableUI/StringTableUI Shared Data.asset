@@ -203,6 +203,14 @@ MonoBehaviour:
     m_Key: RulesMenu_EmotesRules
     m_Metadata:
       m_Items: []
+  - m_Id: 3620152336048128
+    m_Key: MainMenu_Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3631796738973696
+    m_Key: SettingsMenu_Language
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
