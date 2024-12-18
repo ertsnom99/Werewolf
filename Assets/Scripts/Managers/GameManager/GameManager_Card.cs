@@ -1,49 +1,42 @@
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Splines;
 using Werewolf.Data;
 
 namespace Werewolf
 {
 	public partial class GameManager
 	{
-		private readonly Dictionary<PlayerRef, Card> _playerCards = new();
+		[SerializeField]
+		public SplineContainer _cardPlacementSpline;
 
-		private readonly Vector3 STARTING_DIRECTION = Vector3.back;
+		private readonly Dictionary<PlayerRef, Card> _playerCards = new();
 
 		#region Create Card
 #if UNITY_SERVER && UNITY_EDITOR
 		private void CreatePlayerCardsForServer()
 		{
-			float rotationIncrement = 360.0f / _playersOrder.Length;
-			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(_playersOrder.Length);
-
-			int counter = -1;
-
-			foreach (PlayerRef player in _playersOrder)
+			for (int i = 0; i < _playersOrder.Length; i++)
 			{
-				counter++;
-
-				Quaternion rotation = Quaternion.Euler(0, rotationIncrement * counter, 0);
-
-				Card card = Instantiate(Config.CardPrefab, rotation * startingPosition, Quaternion.identity);
+				Card card = Instantiate(Config.CardPrefab, _cardPlacementSpline.EvaluatePosition((float)i / _playersOrder.Length), Quaternion.identity);
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetOriginalPosition(card.transform.position);
-				card.SetPlayer(player);
-				card.SetRole(PlayerGameInfos[player].Role);
-				card.SetNickname(_networkDataManager.PlayerInfos[player].Nickname);
+				card.SetPlayer(_playersOrder[i]);
+				card.SetRole(PlayerGameInfos[_playersOrder[i]].Role);
+				card.SetNickname(_networkDataManager.PlayerInfos[_playersOrder[i]].Nickname);
 				card.DetachGroundCanvas();
 				card.Flip();
 
-				_playerCards.Add(player, card);
+				_playerCards.Add(_playersOrder[i], card);
 
-				if (PlayerGameInfos[player].Behaviors.Count <= 0)
+				if (PlayerGameInfos[_playersOrder[i]].Behaviors.Count <= 0)
 				{
 					continue;
 				}
 
-				foreach (RoleBehavior behavior in PlayerGameInfos[player].Behaviors)
+				foreach (RoleBehavior behavior in PlayerGameInfos[_playersOrder[i]].Behaviors)
 				{
 					behavior.transform.position = card.transform.position;
 				}
@@ -52,50 +45,43 @@ namespace Werewolf
 #endif
 		private void CreatePlayerCards(PlayerRef[] playersOrder, PlayerRef bottomPlayer, RoleData playerRole)
 		{
-			int playerCount = playersOrder.Length;
+			// Calculate the index necessary to offset all cards to place the bottom player card at the bottom
+			int playerAmount = playersOrder.Length;
+			int indexOffset = 0;
 
-			int counter = -1;
-			int rotationOffset = -1;
-
-			float rotationIncrement = 360.0f / playerCount;
-			Vector3 startingPosition = STARTING_DIRECTION * Config.CardsOffset.Evaluate(playerCount);
-
-			// Offset the rotation to keep bottomPlayer at the bottom
-			foreach (PlayerRef player in playersOrder)
+			if (playersOrder[0] != bottomPlayer)
 			{
-				if (player == bottomPlayer)
+				for (int i = playerAmount - 1; i >= 0; i--)
 				{
-					break;
-				}
+					indexOffset++;
 
-				rotationOffset--;
+					if (playersOrder[i] == bottomPlayer)
+					{
+						break;
+					}
+				}
 			}
 
-			// Create cards
-			foreach (PlayerRef player in playersOrder)
+			// Create all player cards
+			for (int i = 0; i < playerAmount; i++)
 			{
-				counter++;
-				rotationOffset++;
-
-				Quaternion rotation = Quaternion.Euler(0, rotationIncrement * rotationOffset, 0);
-
-				Card card = Instantiate(Config.CardPrefab, rotation * startingPosition, Quaternion.identity);
+				Card card = Instantiate(Config.CardPrefab, _cardPlacementSpline.EvaluatePosition((float)((i + indexOffset) % playerAmount) / playerAmount), Quaternion.identity);
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetOriginalPosition(card.transform.position);
-				card.SetPlayer(player);
-				card.SetNickname(_networkDataManager.PlayerInfos[player].Nickname);
+				card.SetPlayer(playersOrder[i]);
+				card.SetNickname(_networkDataManager.PlayerInfos[playersOrder[i]].Nickname);
 				card.DetachGroundCanvas();
 
 				card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role, true); };
 
-				if (player == bottomPlayer)
+				if (playersOrder[i] == bottomPlayer)
 				{
 					card.SetRole(playerRole);
 					card.Flip();
 				}
 
-				_playerCards.Add(player, card);
+				_playerCards.Add(playersOrder[i], card);
 			}
 		}
 
