@@ -183,7 +183,6 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 				CreatePlayerCardsForServer();
 				CreateReservedRoleCardsForServer();
-				AdjustCamera();
 				LogNightCalls();
 				_voteManager.SetPlayerCards(_playerCards);
 #endif
@@ -481,11 +480,6 @@ namespace Werewolf
 			_UIManager.DisconnectedScreen.SetConfig(Config);
 		}
 
-		private void AdjustCamera()
-		{
-			Camera.main.transform.position = Camera.main.transform.position.normalized * Config.CameraOffset.Evaluate(_networkDataManager.PlayerInfos.Count);
-		}
-
 		#region RPC Calls
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
@@ -536,7 +530,6 @@ namespace Werewolf
 
 			CreatePlayerCards(playersOrder, player, roleData);
 			CreateReservedRoleCards();
-			AdjustCamera();
 
 			_voteManager.SetPlayerCards(_playerCards);
 			_emotesManager.SetPlayerCards(_playerCards);

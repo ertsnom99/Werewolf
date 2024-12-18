@@ -21,9 +21,6 @@ namespace Werewolf.Data
 		public Card CardPrefab { get; private set; }
 
 		[field: SerializeField]
-		public AnimationCurve CardsOffset { get; private set; }
-
-		[field: SerializeField]
 		public float ReservedRolesSpacing { get; private set; }
 
 		[field: SerializeField]
@@ -31,9 +28,6 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public Vector3 CaptainCardOffset { get; private set; }
-
-		[field: SerializeField]
-		public AnimationCurve CameraOffset { get; private set; }
 
 		[field: Header("Role Distribution")]
 		[field: SerializeField]
