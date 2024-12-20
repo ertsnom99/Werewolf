@@ -58,11 +58,11 @@ namespace Werewolf
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			isWakingUp = true;
-		
 			if (!_hasPower)
 			{
 				StartCoroutine(ShowLostPower());
+
+				isWakingUp = false;
 				return true;
 			}
 
@@ -84,7 +84,7 @@ namespace Werewolf
 			_endRoleCallAfterTimeCoroutine = EndRoleCallAfterTime();
 			StartCoroutine(_endRoleCallAfterTimeCoroutine);
 
-			return true;
+			return isWakingUp = true;
 		}
 
 		private IEnumerator ShowLostPower()

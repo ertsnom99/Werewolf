@@ -834,7 +834,7 @@ namespace Werewolf
 								break;
 							}
 
-							SetPlayerAwake(player, true);
+							SetPlayerAwake(player, isWakingUp);
 
 							if (isWakingUp)
 							{

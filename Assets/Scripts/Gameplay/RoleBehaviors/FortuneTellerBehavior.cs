@@ -38,8 +38,6 @@ namespace Werewolf
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			isWakingUp = true;
-
 			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
 			immunePlayers.Add(Player);
 
@@ -59,7 +57,7 @@ namespace Werewolf
 			_endRoleCallAfterTimeCoroutine = EndRoleCallAfterTime();
 			StartCoroutine(_endRoleCallAfterTimeCoroutine);
 
-			return true;
+			return isWakingUp = true;
 		}
 
 		private IEnumerator WaitToStopWaitingForPlayer()
