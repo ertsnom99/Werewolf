@@ -443,13 +443,12 @@ namespace Werewolf
 
 			foreach (int roleGameplayTag in roles)
 			{
-				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
-
-				if (roleData == null)
+				if (roleGameplayTag == 0)
 				{
 					continue;
 				}
 
+				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
 				choices.Add(new() { Image = roleData.Image, Text = roleData.NameSingular });
 			}
 
