@@ -2,79 +2,80 @@
 
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine;
 using UnityEngine.Localization.Settings;
-using UnityEngine.Localization;
 using System.Collections;
 
-[RequireComponent(typeof(TMP_Dropdown))]
-public class LocalizeDropdown : MonoBehaviour
+namespace UnityEngine.Localization
 {
-	[SerializeField]
-	private List<LocalizedString> _dropdownOptions;
-
-	private Locale _currentLocale;
-
-	private TMP_Dropdown _tmpDropdown;
-
-	private void Awake()
+	[RequireComponent(typeof(TMP_Dropdown))]
+	public class LocalizeDropdown : MonoBehaviour
 	{
-		if (_tmpDropdown == null)
+		[SerializeField]
+		private List<LocalizedString> _dropdownOptions;
+
+		private Locale _currentLocale;
+
+		private TMP_Dropdown _tmpDropdown;
+
+		private void Awake()
 		{
-			_tmpDropdown = GetComponent<TMP_Dropdown>();
+			if (_tmpDropdown == null)
+			{
+				_tmpDropdown = GetComponent<TMP_Dropdown>();
+			}
+
+			LocalizationSettings.SelectedLocaleChanged += ChangedLocale;
+
+			UpdateDropdownOptions();
 		}
 
-		LocalizationSettings.SelectedLocaleChanged += ChangedLocale;
-
-		UpdateDropdownOptions();
-	}
-
-	private void ChangedLocale(Locale newLocale)
-	{
-		if (_currentLocale == newLocale)
+		private void ChangedLocale(Locale newLocale)
 		{
-			return;
+			if (_currentLocale == newLocale)
+			{
+				return;
+			}
+
+			_currentLocale = newLocale;
+			UpdateDropdownOptions();
 		}
 
-		_currentLocale = newLocale;
-		UpdateDropdownOptions();
-	}
-
-	private void UpdateDropdownOptions()
-	{
-		_tmpDropdown.options.Clear();
-
-		for (int i = 0; i < _dropdownOptions.Count; i++)
+		private void UpdateDropdownOptions()
 		{
-			_tmpDropdown.options.Add(new TMP_Dropdown.OptionData(_dropdownOptions[i].GetLocalizedString()));
+			_tmpDropdown.options.Clear();
+
+			for (int i = 0; i < _dropdownOptions.Count; i++)
+			{
+				_tmpDropdown.options.Add(new TMP_Dropdown.OptionData(_dropdownOptions[i].GetLocalizedString()));
+			}
+
+			if (!gameObject.activeInHierarchy)
+			{
+				return;
+			}
+
+			StartCoroutine(RefreshShownValue());
 		}
 
-		if (!gameObject.activeInHierarchy)
+		private IEnumerator RefreshShownValue()
 		{
-			return;
+			yield return new WaitForEndOfFrame();
+			_tmpDropdown.RefreshShownValue();
 		}
 
-		StartCoroutine(RefreshShownValue());
-	}
-
-	private IEnumerator RefreshShownValue()
-	{
-		yield return new WaitForEndOfFrame();
-		_tmpDropdown.RefreshShownValue();
-	}
-
-	public LocalizedString GetLocalizedValue()
-	{
-		if (_tmpDropdown == null)
+		public LocalizedString GetLocalizedValue()
 		{
-			_tmpDropdown = GetComponent<TMP_Dropdown>();
+			if (_tmpDropdown == null)
+			{
+				_tmpDropdown = GetComponent<TMP_Dropdown>();
+			}
+
+			return _dropdownOptions[_tmpDropdown.value];
 		}
 
-		return _dropdownOptions[_tmpDropdown.value];
-	}
-
-	private void OnDestroy()
-	{
-		StopAllCoroutines();
+		private void OnDestroy()
+		{
+			StopAllCoroutines();
+		}
 	}
 }
