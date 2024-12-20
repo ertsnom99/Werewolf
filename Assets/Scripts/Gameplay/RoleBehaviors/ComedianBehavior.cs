@@ -228,7 +228,7 @@ namespace Werewolf
 			
 			_reservedRoles = _gameManager.GetReservedRoles(this);
 
-			if (_reservedRoles.Roles == null || _reservedRoles.Roles.Length < 0)
+			if (_reservedRoles.Roles == null)
 			{
 				isWakingUp = false;
 				return false;
