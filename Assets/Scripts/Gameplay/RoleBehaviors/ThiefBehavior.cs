@@ -96,14 +96,11 @@ namespace Werewolf
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			isWakingUp = true;
-
 			_reservedRoles = _gameManager.GetReservedRoles(this);
 
 			if (_reservedRoles.Roles == null)
 			{
-				isWakingUp = false;
-				return false;
+				return isWakingUp = false;
 			}
 
 			_reservedOnlyWerewolfs = true;
@@ -129,7 +126,7 @@ namespace Werewolf
 			_endRoleCallAfterTimeCoroutine = EndRoleCallAfterTime();
 			StartCoroutine(_endRoleCallAfterTimeCoroutine);
 
-			return true;
+			return isWakingUp = true;
 		}
 
 		private IEnumerator WaitOnRoleSelected(int choiceIndex)

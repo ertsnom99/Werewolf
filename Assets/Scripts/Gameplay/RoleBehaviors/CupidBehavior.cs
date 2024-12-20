@@ -332,7 +332,6 @@ namespace Werewolf
 
 		private void OnStartWaitingForPlayersRollCall()
 		{
-			_gameManager.SetPlayerAwake(Player, false);
 			_gameManager.SetPlayerAwake(_couple[0], true);
 			_gameManager.SetPlayerAwake(_couple[1], true);
 		}

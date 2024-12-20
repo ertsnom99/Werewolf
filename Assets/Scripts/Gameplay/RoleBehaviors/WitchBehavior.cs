@@ -83,16 +83,23 @@ namespace Werewolf
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			isWakingUp = true;
+			bool hasPotions = _hasLifePotion || _hasDeathPotion;
 
-			if (!_networkDataManager.PlayerInfos[Player].IsConnected)
+			if (_networkDataManager.PlayerInfos[Player].IsConnected && !hasPotions)
+			{
+				_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImage.CompactTagId);
+			}
+
+			if (!_networkDataManager.PlayerInfos[Player].IsConnected || !hasPotions)
 			{
 				StartCoroutine(WaitToStopWaitingForPlayer());
+
+				isWakingUp = false;
 				return true;
 			}
 
 			StartCoroutine(ReveilMarkedForDeathPlayer());
-			return true;
+			return isWakingUp = true;
 		}
 
 		private IEnumerator WaitToStopWaitingForPlayer()

@@ -49,8 +49,6 @@ namespace Werewolf
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			isWakingUp = true;
-			
 			if (_lastSelectionNightCount + 1 < nightCount)
 			{
 				_selectedPlayer = PlayerRef.None;
@@ -82,7 +80,7 @@ namespace Werewolf
 			_endRoleCallAfterTimeCoroutine = EndRoleCallAfterTime();
 			StartCoroutine(_endRoleCallAfterTimeCoroutine);
 
-			return true;
+			return isWakingUp = true;
 		}
 
 		private IEnumerator WaitToStopWaitingForPlayer()
