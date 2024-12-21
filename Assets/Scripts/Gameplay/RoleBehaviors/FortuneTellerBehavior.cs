@@ -65,11 +65,11 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnPlayerSelected(PlayerRef[] player)
+		private void OnPlayerSelected(PlayerRef[] players)
 		{
 			StopCoroutine(_endRoleCallAfterTimeCoroutine);
 
-			if (player.Length <= 0 || player[0].IsNone || !_gameManager.RevealPlayerRole(player[0], Player, false, true, OnRoleRevealed))
+			if (players == null || players.Length <= 0 || players[0].IsNone || !_gameManager.RevealPlayerRole(players[0], Player, false, true, OnRoleRevealed))
 			{
 				_gameManager.StopWaintingForPlayer(Player);
 				return;
@@ -77,7 +77,7 @@ namespace Werewolf
 
 			_gameManager.RPC_HideUI(Player);
 
-			PlayerRef playerLookedAt = player[0];
+			PlayerRef playerLookedAt = players[0];
 
 			_gameHistoryManager.AddEntry(_lookedPlayerRoleGameHistoryEntry,
 										new GameHistorySaveEntryVariable[] {

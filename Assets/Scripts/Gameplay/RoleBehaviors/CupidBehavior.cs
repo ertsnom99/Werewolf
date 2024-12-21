@@ -170,7 +170,7 @@ namespace Werewolf
 				_endChooseCoupleAfterTimeCoroutine = null;
 			}
 
-			if (players.Length < 2)
+			if (players == null || players.Length < 2)
 			{
 				ChooseRandomCouple(_choices);
 			}

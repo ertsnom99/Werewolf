@@ -34,7 +34,7 @@ namespace Werewolf
 		private PlayerRef[] _playersOrder;
 
 		private readonly Dictionary<PlayerRef, Action<PlayerRef[]>> _choosePlayersCallbacks = new();
-		private List<PlayerRef> _choices = new();
+		private List<PlayerRef> _choices;
 		private readonly List<PlayerRef> _selectedPlayers = new();
 		private int _playerAmountToSelect;
 
@@ -454,6 +454,16 @@ namespace Werewolf
 			if (!_choosePlayersCallbacks.ContainsKey(info.Source))
 			{
 				return;
+			}
+
+			// Make sure that the client didn't try to cheat by sending invalid choices
+			foreach (PlayerRef player in players)
+			{
+				if (!_choices.Contains(player))
+				{
+					players = null;
+					break;
+				}
 			}
 
 			_choosePlayersCallbacks[info.Source](players);

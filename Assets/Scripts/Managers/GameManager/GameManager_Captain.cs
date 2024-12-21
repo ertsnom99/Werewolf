@@ -12,7 +12,7 @@ namespace Werewolf
 		private GameObject _captainCard;
 
 		private IEnumerator _chooseNextCaptainCoroutine;
-
+		private List<PlayerRef> _captainChoices = new();
 		private bool _isNextCaptainChoiceCompleted;
 
 		private readonly int CAPTAIN_VOTE_MODIFIER = 2;
@@ -35,7 +35,7 @@ namespace Werewolf
 		#region Choose Captain
 		private IEnumerator ChooseNextCaptain()
 		{
-			List<PlayerRef> choices = new();
+			_captainChoices.Clear();
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
@@ -44,10 +44,10 @@ namespace Werewolf
 					continue;
 				}
 
-				choices.Add(playerInfo.Key);
+				_captainChoices.Add(playerInfo.Key);
 			}
 
-			if (choices.Count <= 0)
+			if (_captainChoices.Count <= 0)
 			{
 				RPC_DestroyCaptainCard();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -59,7 +59,7 @@ namespace Werewolf
 			}
 
 			if (!ChoosePlayers(_captain,
-								choices,
+								_captainChoices,
 								Config.ChooseNextCaptainImage.CompactTagId,
 								Config.CaptainChoiceDuration * GameSpeedModifier,
 								true,
@@ -67,9 +67,9 @@ namespace Werewolf
 								ChoicePurpose.Other,
 								OnChoosedNextCaptain))
 			{
-				if (choices.Count >= 1)
+				if (_captainChoices.Count >= 1)
 				{
-					StartCoroutine(EndChoosingNextCaptain(choices[Random.Range(0, choices.Count)]));
+					ChooseRandomCaptain(_captainChoices);
 				}
 
 				yield break;
@@ -95,7 +95,7 @@ namespace Werewolf
 				elapsedTime += Time.deltaTime;
 			}
 
-			StartCoroutine(EndChoosingNextCaptain(choices[Random.Range(0, choices.Count)]));
+			ChooseRandomCaptain(_captainChoices);
 		}
 
 		private void OnChoosedNextCaptain(PlayerRef[] nextCaptain)
@@ -105,7 +105,18 @@ namespace Werewolf
 				return;
 			}
 
+			if (nextCaptain == null || nextCaptain.Length <= 0)
+			{
+				ChooseRandomCaptain(_captainChoices);
+				return;
+			}
+
 			StartCoroutine(EndChoosingNextCaptain(nextCaptain[0]));
+		}
+
+		private void ChooseRandomCaptain(List<PlayerRef> choices)
+		{
+			StartCoroutine(EndChoosingNextCaptain(choices[Random.Range(0, choices.Count)]));
 		}
 
 		private IEnumerator EndChoosingNextCaptain(PlayerRef nextCaptain)

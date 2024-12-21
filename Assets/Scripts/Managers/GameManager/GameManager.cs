@@ -1363,14 +1363,14 @@ namespace Werewolf
 			StartCoroutine(DisplayFailedExecution());
 		}
 
-		private void OnCaptainChooseExecutedPlayer(PlayerRef[] executedPlayer)
+		private void OnCaptainChooseExecutedPlayer(PlayerRef[] players)
 		{
 			if (_startCaptainExecutionCoroutine == null)
 			{
 				return;
 			}
 
-			StartCoroutine(EndCaptainExecution(executedPlayer.Length > 0 ? executedPlayer[0] : PlayerRef.None));
+			StartCoroutine(EndCaptainExecution((players == null || players.Length <= 0) ? PlayerRef.None : players[0]));
 		}
 
 		private IEnumerator EndCaptainExecution(PlayerRef executedPlayer)
