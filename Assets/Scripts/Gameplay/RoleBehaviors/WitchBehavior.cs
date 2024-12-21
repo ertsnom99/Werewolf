@@ -283,7 +283,7 @@ namespace Werewolf
 
 		private void OnChosePlayers(PlayerRef[] players)
 		{
-			OnChosePlayer(players[0]);
+			OnChosePlayer((players == null || players.Length <= 0) ? PlayerRef.None : players[0]);
 		}
 
 		private void OnChosePlayer(PlayerRef player)

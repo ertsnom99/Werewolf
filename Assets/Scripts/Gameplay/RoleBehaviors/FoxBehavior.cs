@@ -98,17 +98,17 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnPlayerSelected(PlayerRef[] player)
+		private void OnPlayerSelected(PlayerRef[] players)
 		{
 			StopCoroutine(_endRoleCallAfterTimeCoroutine);
 
-			if (player.Length <= 0 || player[0].IsNone)
+			if (players == null || players.Length <= 0 || players[0].IsNone)
 			{
 				_gameManager.StopWaintingForPlayer(Player);
 				return;
 			}
 
-			StartCoroutine(CheckForWerewolfs(player[0]));
+			StartCoroutine(CheckForWerewolfs(players[0]));
 		}
 
 		private IEnumerator CheckForWerewolfs(PlayerRef middlePlayer)

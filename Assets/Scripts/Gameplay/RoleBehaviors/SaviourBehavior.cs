@@ -89,18 +89,18 @@ namespace Werewolf
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnPlayerSelected(PlayerRef[] player)
+		private void OnPlayerSelected(PlayerRef[] players)
 		{
 			StopCoroutine(_endRoleCallAfterTimeCoroutine);
 
-			if (player.Length <= 0 || player[0].IsNone)
+			if (players == null || players.Length <= 0 || players[0].IsNone)
 			{
 				_selectedPlayer = PlayerRef.None;
 				_gameManager.StopWaintingForPlayer(Player);
 				return;
 			}
 
-			_selectedPlayer = player[0];
+			_selectedPlayer = players[0];
 
 			_gameHistoryManager.AddEntry(_chosePlayerToProtectGameHistoryEntry,
 										new GameHistorySaveEntryVariable[] {

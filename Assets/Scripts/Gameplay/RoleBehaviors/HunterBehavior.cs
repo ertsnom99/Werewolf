@@ -132,9 +132,15 @@ namespace Werewolf
 			OnPlayerSelected(choices[Random.Range(0, choices.Length)]);
 		}
 
-		private void OnPlayersSelected(PlayerRef[] selectedPlayers)
+		private void OnPlayersSelected(PlayerRef[] players)
 		{
-			OnPlayerSelected(selectedPlayers[0]);
+			if (players == null || players.Length <= 0)
+			{
+				SelectRandomPlayer(_choices);
+				return;
+			}
+
+			OnPlayerSelected(players[0]);
 		}
 
 		private void OnPlayerSelected(PlayerRef selectedPlayer)
