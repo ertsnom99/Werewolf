@@ -34,7 +34,7 @@ namespace Werewolf
 		private PlayerRef[] _playersOrder;
 
 		private readonly Dictionary<PlayerRef, Action<PlayerRef[]>> _choosePlayersCallbacks = new();
-		private List<PlayerRef> _immunePlayersForGettingChosen = new();
+		private List<PlayerRef> _choices = new();
 		private readonly List<PlayerRef> _selectedPlayers = new();
 		private int _playerAmountToSelect;
 
@@ -57,21 +57,34 @@ namespace Werewolf
 		}
 
 		#region Get Players
-		public List<PlayerRef> GetDeadPlayers()
+		public List<PlayerRef> GetAlivePlayers()
 		{
-			List<PlayerRef> playersDead = new();
+			List<PlayerRef> alivePlayers = new();
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				if (playerInfo.Value.IsAlive)
 				{
-					continue;
+					alivePlayers.Add(playerInfo.Key);
 				}
-
-				playersDead.Add(playerInfo.Key);
 			}
 
-			return playersDead;
+			return alivePlayers;
+		}
+
+		public List<PlayerRef> GetDeadPlayers()
+		{
+			List<PlayerRef> deadPlayers = new();
+
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
+			{
+				if (!playerInfo.Value.IsAlive)
+				{
+					deadPlayers.Add(playerInfo.Key);
+				}
+			}
+
+			return deadPlayers;
 		}
 
 		private PlayerRef[] GetPlayersExcluding(PlayerRef playerToExclude)
@@ -324,20 +337,18 @@ namespace Werewolf
 		#endregion
 
 		#region Choose Players
-		public bool ChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback, out PlayerRef[] choices)
+		public bool ChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> choices, int imageID, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
 		{
-			_immunePlayersForGettingChosen = immunePlayers;
-			PreChoosePlayers?.Invoke(choosingPlayer, purpose, _immunePlayersForGettingChosen);
+			_choices = choices;
+			PreChoosePlayers?.Invoke(choosingPlayer, purpose, _choices);
 
-			choices = PlayerGameInfos.Keys.Except(_immunePlayersForGettingChosen).ToArray();
-
-			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayersCallbacks.ContainsKey(choosingPlayer) || choices.Length < playerAmount)
+			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayersCallbacks.ContainsKey(choosingPlayer) || _choices.Count < playerAmount)
 			{
 				return false;
 			}
 
 			_choosePlayersCallbacks.Add(choosingPlayer, callback);
-			RPC_ChoosePlayers(choosingPlayer, _immunePlayersForGettingChosen.ToArray(), imageID, maximumDuration, mustChoose, playerAmount);
+			RPC_ChoosePlayers(choosingPlayer, _choices.ToArray(), imageID, maximumDuration, mustChoose, playerAmount);
 
 			return true;
 		}
@@ -405,7 +416,7 @@ namespace Werewolf
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ChoosePlayers([RpcTarget] PlayerRef player, PlayerRef[] immunePlayers, int imageID, float maximumDuration, bool mustChoose, int playerAmount)
+		private void RPC_ChoosePlayers([RpcTarget] PlayerRef player, PlayerRef[] choices, int imageID, float maximumDuration, bool mustChoose, int playerAmount)
 		{
 			_playerAmountToSelect = playerAmount;
 			_selectedPlayers.Clear();
@@ -417,7 +428,7 @@ namespace Werewolf
 					continue;
 				}
 
-				if (Array.IndexOf(immunePlayers, playerCard.Key) >= 0)
+				if (Array.IndexOf(choices, playerCard.Key) < 0)
 				{
 					playerCard.Value.SetSelectionMode(true, false);
 					continue;

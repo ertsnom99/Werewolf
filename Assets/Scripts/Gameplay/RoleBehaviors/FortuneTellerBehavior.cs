@@ -38,18 +38,17 @@ namespace Werewolf
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
-			immunePlayers.Add(Player);
+			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
+			choices.Remove(Player);
 
 			if (!_gameManager.ChoosePlayers(Player,
-											immunePlayers,
+											choices,
 											_choosePlayerImage.CompactTagId,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
 											ChoicePurpose.Other,
-											OnPlayerSelected,
-											out PlayerRef[] choices))
+											OnPlayerSelected))
 			{
 				StartCoroutine(WaitToStopWaitingForPlayer());
 			}

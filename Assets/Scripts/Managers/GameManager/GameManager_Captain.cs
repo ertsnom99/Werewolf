@@ -1,7 +1,6 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using static Werewolf.GameHistoryManager;
 
@@ -36,7 +35,7 @@ namespace Werewolf
 		#region Choose Captain
 		private IEnumerator ChooseNextCaptain()
 		{
-			List<PlayerRef> captainChoices = new();
+			List<PlayerRef> choices = new();
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
@@ -45,10 +44,10 @@ namespace Werewolf
 					continue;
 				}
 
-				captainChoices.Add(playerInfo.Key);
+				choices.Add(playerInfo.Key);
 			}
 
-			if (captainChoices.Count <= 0)
+			if (choices.Count <= 0)
 			{
 				RPC_DestroyCaptainCard();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -60,18 +59,17 @@ namespace Werewolf
 			}
 
 			if (!ChoosePlayers(_captain,
-								GetPlayersExcluding(captainChoices.ToArray()).ToList(),
+								choices,
 								Config.ChooseNextCaptainImage.CompactTagId,
 								Config.CaptainChoiceDuration * GameSpeedModifier,
 								true,
 								1,
 								ChoicePurpose.Other,
-								OnChoosedNextCaptain,
-								out PlayerRef[] choices))
+								OnChoosedNextCaptain))
 			{
-				if (choices.Length >= 1)
+				if (choices.Count >= 1)
 				{
-					StartCoroutine(EndChoosingNextCaptain(choices[UnityEngine.Random.Range(0, choices.Length)]));
+					StartCoroutine(EndChoosingNextCaptain(choices[Random.Range(0, choices.Count)]));
 				}
 
 				yield break;
@@ -97,7 +95,7 @@ namespace Werewolf
 				elapsedTime += Time.deltaTime;
 			}
 
-			StartCoroutine(EndChoosingNextCaptain(captainChoices[UnityEngine.Random.Range(0, captainChoices.Count)]));
+			StartCoroutine(EndChoosingNextCaptain(choices[Random.Range(0, choices.Count)]));
 		}
 
 		private void OnChoosedNextCaptain(PlayerRef[] nextCaptain)

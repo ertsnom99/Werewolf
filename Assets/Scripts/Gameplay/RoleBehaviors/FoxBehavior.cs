@@ -66,19 +66,17 @@ namespace Werewolf
 				return true;
 			}
 
-			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
-
 			if (!_gameManager.ChoosePlayers(Player,
-											immunePlayers,
+											_gameManager.GetAlivePlayers(),
 											_choosePlayerImage.CompactTagId,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
 											ChoicePurpose.Other,
-											OnPlayerSelected,
-											out PlayerRef[] choices))
+											OnPlayerSelected))
 			{
 				StartCoroutine(WaitToStopWaitingForPlayer());
+				return isWakingUp = false;
 			}
 
 			_endRoleCallAfterTimeCoroutine = EndRoleCallAfterTime();
