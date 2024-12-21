@@ -73,28 +73,27 @@ namespace Werewolf
 				return;
 			}
 
-			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
-			immunePlayers.Add(Player);
+			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
+			choices.Remove(Player);
 
 			if (!_gameManager.ChoosePlayers(Player,
-											immunePlayers,
+											choices,
 											_choosePlayerImage.CompactTagId,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											true,
 											1,
 											ChoicePurpose.Kill,
-											OnPlayersSelected,
-											out PlayerRef[] choices))
+											OnPlayersSelected))
 			{
-				if (choices.Length >= 1)
+				if (choices.Count >= 1)
 				{
-					SelectRandomPlayer(choices);
+					SelectRandomPlayer(choices.ToArray());
 				}
 
 				return;
 			}
 
-			_choices = choices;
+			_choices = choices.ToArray();
 
 			_gameManager.WaitForPlayer(Player);
 
@@ -110,7 +109,7 @@ namespace Werewolf
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.DisplayTitle(_choosingPlayerImage.CompactTagId);
 #endif
-			_startChoiceTimerCoroutine = StartChoiceTimer(choices);
+			_startChoiceTimerCoroutine = StartChoiceTimer(_choices);
 			StartCoroutine(_startChoiceTimerCoroutine);
 		}
 

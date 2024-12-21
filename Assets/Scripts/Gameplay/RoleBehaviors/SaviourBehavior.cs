@@ -56,23 +56,22 @@ namespace Werewolf
 
 			_lastSelectionNightCount = nightCount;
 
-			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
+			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 
 			if (!_selectedPlayer.IsNone)
 			{
-				immunePlayers.Add(_selectedPlayer);
+				choices.Remove(_selectedPlayer);
 				_selectedPlayer = PlayerRef.None;
 			}
 
 			if (!_gameManager.ChoosePlayers(Player,
-											immunePlayers,
+											choices,
 											_choosePlayerImage.CompactTagId,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
 											ChoicePurpose.Other,
-											OnPlayerSelected,
-											out PlayerRef[] choices))
+											OnPlayerSelected))
 			{
 				StartCoroutine(WaitToStopWaitingForPlayer());
 			}

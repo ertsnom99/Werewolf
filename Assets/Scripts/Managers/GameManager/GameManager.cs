@@ -1317,18 +1317,17 @@ namespace Werewolf
 
 		private IEnumerator StartCaptainExecution(PlayerRef[] mostVotedPlayers)
 		{
-			List<PlayerRef> executionChoices = mostVotedPlayers.ToList();
-			executionChoices.Remove(_captain);
+			List<PlayerRef> choices = mostVotedPlayers.ToList();
+			choices.Remove(_captain);
 
 			if (!ChoosePlayers(_captain,
-								GetPlayersExcluding(executionChoices.ToArray()).ToList(),
+								choices,
 								Config.ExecutionDrawYouChooseImage.CompactTagId,
 								Config.ExecutionCaptainChoiceDuration * GameSpeedModifier,
 								false,
 								1,
 								ChoicePurpose.Other,
-								OnCaptainChooseExecutedPlayer,
-								out PlayerRef[] choices))
+								OnCaptainChooseExecutedPlayer))
 			{
 				AddExecutionDrawCaptainDidNotChoseGameHistoryEntry();
 				StartCoroutine(DisplayFailedExecution());

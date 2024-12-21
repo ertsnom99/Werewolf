@@ -251,18 +251,17 @@ namespace Werewolf
 			_gameManager.RPC_HideUI(Player);
 			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
 
-			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
-			immunePlayers.Add(Player);
+			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
+			choices.Remove(Player);
 
 			if (_gameManager.ChoosePlayers(Player,
-											immunePlayers,
+											choices,
 											_choosePlayerImage.CompactTagId,
 											_choosePlayerDuration * _gameManager.GameSpeedModifier,
 											true,
 											1,
 											ChoicePurpose.Kill,
-											OnChosePlayers,
-											out PlayerRef[] choices))
+											OnChosePlayers))
 			{
 				_endChoosePlayerCoroutine = EndChoosePlayer(_choosePlayerDuration * _gameManager.GameSpeedModifier);
 				StartCoroutine(_endChoosePlayerCoroutine);

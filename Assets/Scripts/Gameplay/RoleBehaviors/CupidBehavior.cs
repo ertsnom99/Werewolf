@@ -119,21 +119,20 @@ namespace Werewolf
 		#region Choose Couple
 		private bool ChooseCouple()
 		{
-			List<PlayerRef> immunePlayers = _gameManager.GetDeadPlayers();
+			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 
 			if (!_gameManager.ChoosePlayers(Player,
-											immunePlayers,
+											choices,
 											_chooseCoupleImage.CompactTagId,
 											_chooseCoupleMaximumDuration * _gameManager.GameSpeedModifier,
 											true,
 											2,
 											ChoicePurpose.Other,
-											OnCoupleSelected,
-											out PlayerRef[] choices))
+											OnCoupleSelected))
 			{
-				if (choices.Length >= 2)
+				if (choices.Count >= 2)
 				{
-					ChooseRandomCouple(choices);
+					ChooseRandomCouple(choices.ToArray());
 					AddCouplePlayerGroup();
 					AddCoupleSelectedGameHistoryEntry();
 				}
@@ -143,7 +142,7 @@ namespace Werewolf
 				return true;
 			}
 
-			_choices = choices;
+			_choices = choices.ToArray();
 
 			_endChooseCoupleAfterTimeCoroutine = EndChooseCoupleAfterTime();
 			StartCoroutine(_endChooseCoupleAfterTimeCoroutine);
@@ -345,12 +344,12 @@ namespace Werewolf
 
 			PlayerRef otherCouplePlayer = _couple[1 - Array.IndexOf(_couple, player)];
 
-			if (immunePlayersForGettingChosen.Contains(otherCouplePlayer))
+			if (!immunePlayersForGettingChosen.Contains(otherCouplePlayer))
 			{
 				return;
 			}
 
-			immunePlayersForGettingChosen.Add(otherCouplePlayer);
+			immunePlayersForGettingChosen.Remove(otherCouplePlayer);
 		}
 
 		private void OnVoteStarting(ChoicePurpose purpose)
