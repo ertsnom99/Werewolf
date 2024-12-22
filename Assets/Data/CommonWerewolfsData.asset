@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06123f5dc56c2e046a3decfb101634b1, type: 3}
   m_Name: CommonWerewolfsData
   m_EditorClassIdentifier: 
+  <VotePlayerImage>k__BackingField: {fileID: -7926231009157707299, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   <VoteMaxDuration>k__BackingField: 30
+  <VotedPlayerGameHistoryEntry>k__BackingField: {fileID: -4676981004224442684, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
   <MarkForDeath>k__BackingField: {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <FailedToVotePlayerGameHistoryEntry>k__BackingField: {fileID: 4954223030057824743,
+    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}

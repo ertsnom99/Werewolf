@@ -202,6 +202,14 @@ MonoBehaviour:
     m_Localized: The servant has decided to take this role!
     m_Metadata:
       m_Items: []
+  - m_Id: 6123585257463808
+    m_Localized: There isn't any other werewolves left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6125516872867840
+    m_Localized: Choose a werewolf to kill
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

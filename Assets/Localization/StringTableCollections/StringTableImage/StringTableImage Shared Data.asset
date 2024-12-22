@@ -195,6 +195,14 @@ MonoBehaviour:
     m_Key: Servant_TookThisRole
     m_Metadata:
       m_Items: []
+  - m_Id: 6123585257463808
+    m_Key: WhiteWerewolf_NoOtherWerewolves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6125516872867840
+    m_Key: WhiteWerewolf_ChooseOtherWerewolf
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

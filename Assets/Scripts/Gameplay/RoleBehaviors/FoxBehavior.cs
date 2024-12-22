@@ -66,7 +66,7 @@ namespace Werewolf
 				return true;
 			}
 
-			if (!_gameManager.ChoosePlayers(Player,
+			if (!_gameManager.SelectPlayers(Player,
 											_gameManager.GetAlivePlayers(),
 											_choosePlayerImage.CompactTagId,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
@@ -178,7 +178,7 @@ namespace Werewolf
 				timeLeft -= Time.deltaTime;
 			}
 
-			_gameManager.StopChoosingPlayers(Player);
+			_gameManager.StopSelectingPlayers(Player);
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 

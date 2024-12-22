@@ -208,6 +208,14 @@ MonoBehaviour:
     m_Localized: "La servante a d\xE9cid\xE9 de prendre ce r\xF4le!"
     m_Metadata:
       m_Items: []
+  - m_Id: 6123585257463808
+    m_Localized: Il n'y a plus d'autres loups-garous
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6125516872867840
+    m_Localized: Choisissez un loup-garou a tuer
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

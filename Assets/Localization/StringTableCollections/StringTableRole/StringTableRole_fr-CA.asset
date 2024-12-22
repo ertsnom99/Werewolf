@@ -145,12 +145,12 @@ MonoBehaviour:
   - m_Id: 7364653006848
     m_Localized: "Une b\xEAte de la for\xEAt. Il agit comme un villageois durant
       le jour, mais devient un tueur la nuit.\n\nChaque nuit, tout les loup-garous
-      devront voter ensemble pour un villageois a \xE9liminer. Le vote doit \xEAtre
+      devront voter ensemble pour un villageois a d\xE9vorer. Le vote doit \xEAtre
       unanime ou aucun villageois sera \xE9limin\xE9 cette nuit."
     m_Metadata:
       m_Items: []
   - m_Id: 7366301368320
-    m_Localized: Loup-Garous
+    m_Localized: Loups-Garous
     m_Metadata:
       m_Items: []
   - m_Id: 8299815026688
@@ -175,6 +175,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 58104528299130880
     m_Localized: Loups-garous
+    m_Metadata:
+      m_Items: []
+  - m_Id: 62483541757648896
+    m_Localized: Loup-Garou Blanc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 62484989748830208
+    m_Localized: "Ce tr\xE8s malfaisant personage d\xE9teste autant les loups-garous
+      que les villageois! Il parait qu\u2019une \xE9trange mutation serait survenue
+      au sein m\xEAme de la population lycanthropique. \r\n\r\nChaque nuit, il se
+      r\xE9veille et d\xE9vore avec les autres loups-garous. Cependant, une nuit
+      sur deux, il se reveille seul et peut \xE9liminer un loup-garou.\r"
     m_Metadata:
       m_Items: []
   references:
