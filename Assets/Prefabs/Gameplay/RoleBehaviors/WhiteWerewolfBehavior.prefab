@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8989029859430731621
+--- !u!1 &6218833607049159036
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8852441857876793869}
-  - component: {fileID: 3074801793367905639}
+  - component: {fileID: 7253562441888977956}
+  - component: {fileID: 1981575086992350424}
   m_Layer: 0
-  m_Name: WerewolfBehavior
+  m_Name: WhiteWerewolfBehavior
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8852441857876793869
+--- !u!4 &7253562441888977956
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8989029859430731621}
+  m_GameObject: {fileID: 6218833607049159036}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,16 +32,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3074801793367905639
+--- !u!114 &1981575086992350424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8989029859430731621}
+  m_GameObject: {fileID: 6218833607049159036}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f890e4d4e85ee704eb5a3e719d3f928f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4016ecb210e150b4f87a58ced9e99bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <RoleGameplayTag>k__BackingField: {fileID: 0}
@@ -51,3 +51,15 @@ MonoBehaviour:
   <IsPrimaryBehavior>k__BackingField: 0
   _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
+  _otherWerewolvesPlayerGroups:
+  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  _noOtherWerewolvesImage: {fileID: -7538681175632383403, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _chooseOtherWerewolfImage: {fileID: -7612617093408124056, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _chooseOtherWerewolfMaximumDuration: 10
+  _votedWerewolfGameHistoryEntry: {fileID: -1363357280739271870, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _markForDeath: {fileID: 4534347614920964079, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _selectedWerewolfHighlightDuration: 3

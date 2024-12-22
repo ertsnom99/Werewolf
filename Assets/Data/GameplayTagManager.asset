@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.Save
   m_EditorClassIdentifier: 
-  _compactTagId: 332291
+  _compactTagId: 332547
 --- !u!114 &-8923106137533346033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: GameHistoryEntry.Witch
   m_EditorClassIdentifier: 
-  _compactTagId: 4354
+  _compactTagId: 4610
 --- !u!114 &-8761640116101350222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.NoPotionToUse
   m_EditorClassIdentifier: 
-  _compactTagId: 201219
+  _compactTagId: 201475
 --- !u!114 &-8573035580249646065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,6 +169,19 @@ MonoBehaviour:
   m_Name: Image.Hunter
   m_EditorClassIdentifier: 
   _compactTagId: 2819
+--- !u!114 &-8144156083783160589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry.WhiteWerewolf
+  m_EditorClassIdentifier: 
+  _compactTagId: 4354
 --- !u!114 &-8103979790404170196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +273,19 @@ MonoBehaviour:
   m_Name: Image.Captain
   m_EditorClassIdentifier: 
   _compactTagId: 259
+--- !u!114 &-7612617093408124056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Image.WhiteWerewolf.ChooseOtherWerewolf
+  m_EditorClassIdentifier: 
+  _compactTagId: 70147
 --- !u!114 &-7602664661658529974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,9 +309,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Image
+  m_Name: Image.WhiteWerewolf.NoOtherWerewolves
   m_EditorClassIdentifier: 
-  _compactTagId: 3
+  _compactTagId: 135683
 --- !u!114 &-7474750659307109584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,7 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: GameHistoryEntry.WokeUpPlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 4610
+  _compactTagId: 4866
 --- !u!114 &-7226050190254201797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,7 +428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: GameHistoryEntry.Witch.UsedDeathPotion
   m_EditorClassIdentifier: 
-  _compactTagId: 69890
+  _compactTagId: 70146
 --- !u!114 &-6713003632940608740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch
   m_EditorClassIdentifier: 
-  _compactTagId: 4611
+  _compactTagId: 4867
 --- !u!114 &-6653758457213997753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,7 +519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: GameHistoryEntry.Witch.UsedLifePotion
   m_EditorClassIdentifier: 
-  _compactTagId: 135426
+  _compactTagId: 135682
 --- !u!114 &-6371537381687074625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -688,7 +714,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.Kill
   m_EditorClassIdentifier: 
-  _compactTagId: 135683
+  _compactTagId: 135939
 --- !u!114 &-4676981004224442684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -845,6 +871,19 @@ MonoBehaviour:
   m_Name: GameHistoryEntry.Fox.SniffedWerewolf
   m_EditorClassIdentifier: 
   _compactTagId: 133122
+--- !u!114 &-3388473606968454883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: MarkForDeath
+  m_EditorClassIdentifier: 
+  _compactTagId: 4
 --- !u!114 &-3234978832333433636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1050,9 +1089,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: GameHistoryEntry
+  m_Name: GameHistoryEntry.WhiteWerewolf.VotedWerewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 2
+  _compactTagId: 69890
 --- !u!114 &-1350852320458332129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1227,7 +1266,7 @@ MonoBehaviour:
   - {fileID: 2863830419304168545}
   - {fileID: 3819728793310299203}
   - {fileID: 5184849998100429465}
-  - {fileID: -1363357280739271870}
+  - {fileID: 1059487400372109908}
   - {fileID: -6512652506433678517}
   - {fileID: -7311221229780604641}
   - {fileID: -6353037308325946689}
@@ -1278,11 +1317,13 @@ MonoBehaviour:
   - {fileID: -1350852320458332129}
   - {fileID: 4954223030057824743}
   - {fileID: -4676981004224442684}
+  - {fileID: -8144156083783160589}
+  - {fileID: -1363357280739271870}
   - {fileID: -8923106137533346033}
   - {fileID: -6783649889304436894}
   - {fileID: -6404904665649978227}
   - {fileID: -7307408572042871932}
-  - {fileID: -7538681175632383403}
+  - {fileID: 3856226449680162218}
   - {fileID: -7684983644832771135}
   - {fileID: 385745502131665813}
   - {fileID: 6957548192255917565}
@@ -1342,17 +1383,21 @@ MonoBehaviour:
   - {fileID: -1265311115428382351}
   - {fileID: 2980123648864115323}
   - {fileID: -7926231009157707299}
+  - {fileID: 301760492394634713}
+  - {fileID: -7612617093408124056}
+  - {fileID: -7538681175632383403}
   - {fileID: -6713003632940608740}
   - {fileID: 7564377360445445541}
   - {fileID: -4830026793023973320}
   - {fileID: -8715855821755236391}
   - {fileID: 7828248529302745967}
   - {fileID: -8974482386819651042}
-  - {fileID: 4534347614920964079}
+  - {fileID: -3388473606968454883}
   - {fileID: 9216349172710836488}
   - {fileID: 8184940356768289636}
   - {fileID: -6186687672928004612}
   - {fileID: 1012340808859986049}
+  - {fileID: 4534347614920964079}
   - {fileID: 4944564988679888176}
   - {fileID: 4377652059447732450}
   - {fileID: 2130812115359760485}
@@ -1415,6 +1460,19 @@ MonoBehaviour:
   m_Name: Image.FortuneTeller
   m_EditorClassIdentifier: 
   _compactTagId: 2051
+--- !u!114 &301760492394634713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Image.WhiteWerewolf
+  m_EditorClassIdentifier: 
+  _compactTagId: 4611
 --- !u!114 &385745502131665813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1477,9 +1535,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: MarkForDeath.Mauled
+  m_Name: MarkForDeath.MauledByWerewolves
   m_EditorClassIdentifier: 
   _compactTagId: 1028
+--- !u!114 &1059487400372109908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: GameHistoryEntry
+  m_EditorClassIdentifier: 
+  _compactTagId: 2
 --- !u!114 &1078760075219708821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1909,6 +1980,19 @@ MonoBehaviour:
   m_Name: ChoiceScreen.ThiefMustChoose
   m_EditorClassIdentifier: 
   _compactTagId: 769
+--- !u!114 &3856226449680162218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Image
+  m_EditorClassIdentifier: 
+  _compactTagId: 3
 --- !u!114 &3935916943633048771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1960,7 +2044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: MarkForDeath.Shot
   m_EditorClassIdentifier: 
-  _compactTagId: 1540
+  _compactTagId: 1796
 --- !u!114 &4534347614920964079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1971,9 +2055,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: MarkForDeath
+  m_Name: MarkForDeath.MauledByWhiteWerewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 4
+  _compactTagId: 1284
 --- !u!114 &4838366214633630053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2012,7 +2096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: MarkForDeath.Poisoned
   m_EditorClassIdentifier: 
-  _compactTagId: 1284
+  _compactTagId: 1540
 --- !u!114 &4954223030057824743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2246,7 +2330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.ChoosePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 70147
+  _compactTagId: 70403
 --- !u!114 &7583335992150841462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2363,7 +2447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.PlayerDeadTonight
   m_EditorClassIdentifier: 
-  _compactTagId: 266755
+  _compactTagId: 267011
 --- !u!114 &7857262219002472655
 MonoBehaviour:
   m_ObjectHideFlags: 0

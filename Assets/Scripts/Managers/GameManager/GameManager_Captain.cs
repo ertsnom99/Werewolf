@@ -58,7 +58,7 @@ namespace Werewolf
 				yield break;
 			}
 
-			if (!ChoosePlayers(_captain,
+			if (!SelectPlayers(_captain,
 								_captainChoices,
 								Config.ChooseNextCaptainImage.CompactTagId,
 								Config.CaptainChoiceDuration * GameSpeedModifier,
@@ -124,7 +124,7 @@ namespace Werewolf
 			StopCoroutine(_chooseNextCaptainCoroutine);
 			_chooseNextCaptainCoroutine = null;
 
-			StopChoosingPlayers(_captain);
+			StopSelectingPlayers(_captain);
 
 			RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR

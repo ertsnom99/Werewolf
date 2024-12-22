@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,24 +12,14 @@ namespace Werewolf
 	{
 		[Header("Data")]
 		[SerializeField]
-		private CommonWerewolfsData _commonData;
-
-		[Header("Vote")]
-		[SerializeField]
-		private GameplayTag _votePlayerImage;
-
-		[SerializeField]
-		private GameplayTag _votedPlayerGameHistoryEntry;
-
-		[SerializeField]
-		private GameplayTag _failedToVotePlayerGameHistoryEntry;
+		protected CommonWerewolfsData _commonWerewolfsData;
 
 		private bool _preparedVote;
 
-		private GameManager _gameManager;
-		private VoteManager _voteManager;
-		private GameHistoryManager _gameHistoryManager;
-		private NetworkDataManager _networkDataManager;
+		protected GameManager _gameManager;
+		protected VoteManager _voteManager;
+		protected GameHistoryManager _gameHistoryManager;
+		protected NetworkDataManager _networkDataManager;
 
 		public override void Initialize()
 		{
@@ -44,9 +33,13 @@ namespace Werewolf
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			isWakingUp = true;
+			VoteForVillagers();
+			return isWakingUp = true;
+		}
 
-			_preparedVote = _voteManager.PrepareVote(_votePlayerImage.CompactTagId, _commonData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
+		protected void VoteForVillagers()
+		{
+			_preparedVote = _voteManager.PrepareVote(_commonWerewolfsData.VotePlayerImage.CompactTagId, _commonWerewolfsData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
@@ -66,13 +59,11 @@ namespace Werewolf
 
 					_voteManager.AddVoteImmunity(playerGameInfo.Key);
 				}
-			
+
 				_gameManager.StartWaitingForPlayersRollCall += OnStartWaitingForPlayersRollCall;
 			}
 
 			_voteManager.VoteCompleted += OnVoteEnded;
-
-			return true;
 		}
 
 		private void OnStartWaitingForPlayersRollCall()
@@ -100,7 +91,7 @@ namespace Werewolf
 
 			if (!firstPlayerVotedFor.IsNone && votes[firstPlayerVotedFor] == _voteManager.Voters.Count)
 			{
-				_gameHistoryManager.AddEntry(_votedPlayerGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_commonWerewolfsData.VotedPlayerGameHistoryEntry,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -110,11 +101,11 @@ namespace Werewolf
 												}
 											});
 
-				_gameManager.AddMarkForDeath(votes.Keys.ToArray()[0], _commonData.MarkForDeath);
+				_gameManager.AddMarkForDeath(firstPlayerVotedFor, _commonWerewolfsData.MarkForDeath);
 			}
 			else
 			{
-				_gameHistoryManager.AddEntry(_failedToVotePlayerGameHistoryEntry, null);
+				_gameHistoryManager.AddEntry(_commonWerewolfsData.FailedToVotePlayerGameHistoryEntry, null);
 			}
 		}
 

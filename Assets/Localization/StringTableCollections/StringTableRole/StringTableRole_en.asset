@@ -165,7 +165,7 @@ MonoBehaviour:
 
 
       Each night, all werewolves will be asked
-      to vote together for a villager to eliminate. The vote must be unanimous or
+      to vote together for a villager to feast on. The vote must be unanimous or
       else, no villager will be eliminated that night.'
     m_Metadata:
       m_Items: []
@@ -200,6 +200,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 58104528299130880
     m_Localized: Werewolves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 62483541757648896
+    m_Localized: White Werewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 62484989748830208
+    m_Localized: "This evil character hates the werewolves as much as the villagers!
+      It is said that a strange mutation happened within the lycanthropic population
+      itself. \r\n\r\nEach night, he wakes up and feast with all the other werewolves.
+      Every other night, he wakes up alone to eliminate a werewolf. He wins only
+      if he is the last one standing (unless he is in a couple).\r"
     m_Metadata:
       m_Items: []
   references:

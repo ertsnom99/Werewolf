@@ -10,26 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
-  m_Name: WerewolfVote
+  m_Name: WhiteWerewolfChooseOtherWerewolf
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -7926231009157707299, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  <GameplayTag>k__BackingField: {fileID: -7612617093408124056, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <DebugName>k__BackingField: WerewolfVote
-  <Image>k__BackingField: {fileID: 0}
+  <DebugName>k__BackingField: WhiteWerewolfChooseOtherWerewolf
+  <Image>k__BackingField: {fileID: -1846022942, guid: 57e5fee1eb9618343bcdb98861e6b594,
+    type: 3}
   <Text>k__BackingField:
     m_TableReference:
       m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
     m_TableEntryReference:
-      m_KeyId: 1089443479715840
+      m_KeyId: 6125516872867840
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   <PromptButtonText>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:ecf16318bb6cc7d42a507b623f97360d
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 791768389681152
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0

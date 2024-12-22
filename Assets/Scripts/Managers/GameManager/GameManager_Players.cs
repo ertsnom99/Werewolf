@@ -33,14 +33,14 @@ namespace Werewolf
 
 		private PlayerRef[] _playersOrder;
 
-		private readonly Dictionary<PlayerRef, Action<PlayerRef[]>> _choosePlayersCallbacks = new();
+		private readonly Dictionary<PlayerRef, Action<PlayerRef[]>> _selectPlayersCallbacks = new();
 		private List<PlayerRef> _choices;
 		private readonly List<PlayerRef> _selectedPlayers = new();
 		private int _playerAmountToSelect;
 
 		private readonly Dictionary<PlayerRef, Action<PlayerRef>> _promptPlayerCallbacks = new();
 
-		public event Action<PlayerRef, ChoicePurpose, List<PlayerRef>> PreChoosePlayers;
+		public event Action<PlayerRef, ChoicePurpose, List<PlayerRef>> PreSelectPlayers;
 		public event Action<PlayerRef> PostPlayerDisconnected;
 
 		private void CreatePlayersOrder()
@@ -302,6 +302,21 @@ namespace Werewolf
 			}
 		}
 
+		public List<PlayerRef> GetPlayersFromGroup(GameplayTag[] inPlayerGroup)
+		{
+			List<PlayerRef> players = new();
+
+			foreach (PlayerGroup playerGroup in _playerGroups)
+			{
+				if (inPlayerGroup.Contains(playerGroup.GameplayTag))
+				{
+					players.AddRange(playerGroup.Players.Except(players));
+				}
+			}
+
+			return players;
+		}
+
 		public bool IsPlayerInPlayerGroups(PlayerRef player, GameplayTag[] inPlayerGroups)
 		{
 			bool inPlayerGroup = false;
@@ -336,30 +351,30 @@ namespace Werewolf
 		}
 		#endregion
 
-		#region Choose Players
-		public bool ChoosePlayers(PlayerRef choosingPlayer, List<PlayerRef> choices, int imageID, float maximumDuration, bool mustChoose, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
+		#region Select Players
+		public bool SelectPlayers(PlayerRef selectingPlayer, List<PlayerRef> choices, int imageID, float maximumDuration, bool mustSelect, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
 		{
 			_choices = choices;
-			PreChoosePlayers?.Invoke(choosingPlayer, purpose, _choices);
+			PreSelectPlayers?.Invoke(selectingPlayer, purpose, _choices);
 
-			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _choosePlayersCallbacks.ContainsKey(choosingPlayer) || _choices.Count < playerAmount)
+			if (!_networkDataManager.PlayerInfos[selectingPlayer].IsConnected || _selectPlayersCallbacks.ContainsKey(selectingPlayer) || _choices.Count < playerAmount)
 			{
 				return false;
 			}
 
-			_choosePlayersCallbacks.Add(choosingPlayer, callback);
-			RPC_ChoosePlayers(choosingPlayer, _choices.ToArray(), imageID, maximumDuration, mustChoose, playerAmount);
+			_selectPlayersCallbacks.Add(selectingPlayer, callback);
+			RPC_SelectPlayers(selectingPlayer, _choices.ToArray(), imageID, maximumDuration, mustSelect, playerAmount);
 
 			return true;
 		}
 
-		private void ChooseNoCard()
+		private void SelectNoPlayer()
 		{
-			StopChoosingPlayers();
+			StopSelectingPlayers();
 			RPC_GivePlayerChoices(new PlayerRef[0]);
 		}
 
-		private void ChooseCard(Card card)
+		private void SelectCard(Card card)
 		{
 			if (_selectedPlayers.Contains(card.Player))
 			{
@@ -375,23 +390,23 @@ namespace Werewolf
 				return;
 			}
 
-			StopChoosingPlayers();
+			StopSelectingPlayers();
 			RPC_GivePlayerChoices(_selectedPlayers.ToArray());
 		}
 
-		public void StopChoosingPlayers(PlayerRef player)
+		public void StopSelectingPlayers(PlayerRef player)
 		{
-			_choosePlayersCallbacks.Remove(player);
+			_selectPlayersCallbacks.Remove(player);
 
 			if (!_networkDataManager.PlayerInfos[player].IsConnected)
 			{
 				return;
 			}
 
-			RPC_StopChoosingPlayers(player);
+			RPC_StopSelectingPlayers(player);
 		}
 
-		private void StopChoosingPlayers()
+		private void StopSelectingPlayers()
 		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
@@ -401,7 +416,7 @@ namespace Werewolf
 				}
 
 				playerCard.Value.ResetSelectionMode();
-				playerCard.Value.LeftClicked -= ChooseCard;
+				playerCard.Value.LeftClicked -= SelectCard;
 			}
 
 			foreach (PlayerRef selectedPlayer in _selectedPlayers)
@@ -409,14 +424,14 @@ namespace Werewolf
 				SetPlayerCardHighlightVisible(selectedPlayer, false);
 			}
 
-			_UIManager.TitleScreen.ConfirmClicked -= ChooseNoCard;
+			_UIManager.TitleScreen.ConfirmClicked -= SelectNoPlayer;
 			_UIManager.TitleScreen.SetConfirmButtonInteractable(false);
 			_UIManager.TitleScreen.StopCountdown();
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ChoosePlayers([RpcTarget] PlayerRef player, PlayerRef[] choices, int imageID, float maximumDuration, bool mustChoose, int playerAmount)
+		private void RPC_SelectPlayers([RpcTarget] PlayerRef player, PlayerRef[] choices, int imageID, float maximumDuration, bool mustSelect, int playerAmount)
 		{
 			_playerAmountToSelect = playerAmount;
 			_selectedPlayers.Clear();
@@ -435,23 +450,23 @@ namespace Werewolf
 				}
 
 				playerCard.Value.SetSelectionMode(true, true);
-				playerCard.Value.LeftClicked += ChooseCard;
+				playerCard.Value.LeftClicked += SelectCard;
 			}
 
-			DisplayTitle(imageID, variables: null, showConfirmButton: !mustChoose, countdownDuration: maximumDuration);
+			DisplayTitle(imageID, variables: null, showConfirmButton: !mustSelect, countdownDuration: maximumDuration);
 
-			if (mustChoose)
+			if (mustSelect)
 			{
 				return;
 			}
 
-			_UIManager.TitleScreen.ConfirmClicked += ChooseNoCard;
+			_UIManager.TitleScreen.ConfirmClicked += SelectNoPlayer;
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_GivePlayerChoices(PlayerRef[] players, RpcInfo info = default)
 		{
-			if (!_choosePlayersCallbacks.ContainsKey(info.Source))
+			if (!_selectPlayersCallbacks.ContainsKey(info.Source))
 			{
 				return;
 			}
@@ -466,14 +481,14 @@ namespace Werewolf
 				}
 			}
 
-			_choosePlayersCallbacks[info.Source](players);
-			_choosePlayersCallbacks.Remove(info.Source);
+			_selectPlayersCallbacks[info.Source](players);
+			_selectPlayersCallbacks.Remove(info.Source);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StopChoosingPlayers([RpcTarget] PlayerRef player)
+		private void RPC_StopSelectingPlayers([RpcTarget] PlayerRef player)
 		{
-			StopChoosingPlayers();
+			StopSelectingPlayers();
 		}
 		#endregion
 		#endregion
@@ -557,7 +572,7 @@ namespace Werewolf
 			StopWaintingForPlayer(player);
 
 			_chooseReservedRoleCallbacks.Remove(player);
-			_choosePlayersCallbacks.Remove(player);
+			_selectPlayersCallbacks.Remove(player);
 			_makeChoiceCallbacks.Remove(player);
 			_revealPlayerRoleCallbacks.Remove(player);
 			_moveCardToCameraCallbacks.Remove(player);

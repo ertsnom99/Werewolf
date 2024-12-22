@@ -76,7 +76,7 @@ namespace Werewolf
 			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 			choices.Remove(Player);
 
-			if (!_gameManager.ChoosePlayers(Player,
+			if (!_gameManager.SelectPlayers(Player,
 											choices,
 											_choosePlayerImage.CompactTagId,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
@@ -123,7 +123,7 @@ namespace Werewolf
 				elapsedTime += Time.deltaTime;
 			}
 
-			_gameManager.StopChoosingPlayers(Player);
+			_gameManager.StopSelectingPlayers(Player);
 			SelectRandomPlayer(choices);
 		}
 

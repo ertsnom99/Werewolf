@@ -460,7 +460,7 @@ namespace Werewolf
 
 				foreach (PlayerRef player in nightCall.Players)
 				{
-					roles += $"{PlayerGameInfos[player].Role.NameSingular} || ";
+					roles += $"{PlayerGameInfos[player].Role.NameSingular.GetLocalizedString()} || ";
 				}
 
 				Debug.Log(roles);
@@ -1320,7 +1320,7 @@ namespace Werewolf
 			List<PlayerRef> choices = mostVotedPlayers.ToList();
 			choices.Remove(_captain);
 
-			if (!ChoosePlayers(_captain,
+			if (!SelectPlayers(_captain,
 								choices,
 								Config.ExecutionDrawYouChooseImage.CompactTagId,
 								Config.ExecutionCaptainChoiceDuration * GameSpeedModifier,
@@ -1351,7 +1351,7 @@ namespace Werewolf
 
 			_startCaptainExecutionCoroutine = null;
 
-			StopChoosingPlayers(_captain);
+			StopSelectingPlayers(_captain);
 
 			RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR

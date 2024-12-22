@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d1eacae6feb964fb2367c2a8b1e95b, type: 3}
+  m_Name: WhiteWerewolfVotedWerewolf
+  m_EditorClassIdentifier: 
+  <GameplayTag>k__BackingField: {fileID: -1363357280739271870, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  <DebugName>k__BackingField: WhiteWerewolfVotedWerewolf
+  <Image>k__BackingField: {fileID: -1846022942, guid: 57e5fee1eb9618343bcdb98861e6b594,
+    type: 3}
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+    m_TableEntryReference:
+      m_KeyId: 65211932269207552
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables:
+    - name: WhiteWerewolfPlayer
+      variable:
+        rid: 4972454974253957126
+    - name: SelectedPlayer
+      variable:
+        rid: 4972454974253957127
+    - name: RoleName
+      variable:
+        rid: 4972454974253957128
+  references:
+    version: 2
+    RefIds:
+    - rid: 4972454974253957126
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 4972454974253957127
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 
+    - rid: 4972454974253957128
+      type: {class: LocalizedString, ns: UnityEngine.Localization, asm: Unity.Localization}
+      data:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []

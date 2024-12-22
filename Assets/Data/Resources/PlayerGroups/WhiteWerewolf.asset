@@ -17,14 +17,14 @@ MonoBehaviour:
   <DebugName>k__BackingField: WhiteWerewolf
   <Name>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 62483541757648896
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <HasMultiplePlayers>k__BackingField: 0
+  <HasPluralName>k__BackingField: 0
   <Priority>k__BackingField: 3
   <Image>k__BackingField: {fileID: -1846022942, guid: 57e5fee1eb9618343bcdb98861e6b594,
     type: 3}

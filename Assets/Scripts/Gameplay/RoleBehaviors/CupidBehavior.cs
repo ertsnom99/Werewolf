@@ -70,7 +70,7 @@ namespace Werewolf
 			_networkDataManager = NetworkDataManager.Instance;
 			_voteManager = VoteManager.Instance;
 
-			_gameManager.PreChoosePlayers += OnPreChoosePlayers;
+			_gameManager.PreSelectPlayers += OnPreChoosePlayers;
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
 			_voteManager.VoteStarting += OnVoteStarting;
@@ -121,7 +121,7 @@ namespace Werewolf
 		{
 			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 
-			if (!_gameManager.ChoosePlayers(Player,
+			if (!_gameManager.SelectPlayers(Player,
 											choices,
 											_chooseCoupleImage.CompactTagId,
 											_chooseCoupleMaximumDuration * _gameManager.GameSpeedModifier,
@@ -200,7 +200,7 @@ namespace Werewolf
 			}
 
 			_endChooseCoupleAfterTimeCoroutine = null;
-			_gameManager.StopChoosingPlayers(Player);
+			_gameManager.StopSelectingPlayers(Player);
 
 			ChooseRandomCouple(_choices);
 			AddCouplePlayerGroup();
@@ -335,7 +335,7 @@ namespace Werewolf
 			_gameManager.SetPlayerAwake(_couple[1], true);
 		}
 
-		private void OnPreChoosePlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> immunePlayersForGettingChosen)
+		private void OnPreChoosePlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> immunePlayersForGettingSelected)
 		{
 			if (purpose != ChoicePurpose.Kill || !IsCoupleSelected() || !_couple.Contains(player))
 			{
@@ -344,12 +344,12 @@ namespace Werewolf
 
 			PlayerRef otherCouplePlayer = _couple[1 - Array.IndexOf(_couple, player)];
 
-			if (!immunePlayersForGettingChosen.Contains(otherCouplePlayer))
+			if (!immunePlayersForGettingSelected.Contains(otherCouplePlayer))
 			{
 				return;
 			}
 
-			immunePlayersForGettingChosen.Remove(otherCouplePlayer);
+			immunePlayersForGettingSelected.Remove(otherCouplePlayer);
 		}
 
 		private void OnVoteStarting(ChoicePurpose purpose)
