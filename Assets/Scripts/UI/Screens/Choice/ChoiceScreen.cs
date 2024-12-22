@@ -25,10 +25,10 @@ namespace Werewolf.UI
 		private Choice _roleChoicePrefab;
 
 		[SerializeField]
-		private Button _SkipButton;
+		private Button _confirmButton;
 
 		[SerializeField]
-		private LocalizeStringEvent _buttonText;
+		private LocalizeStringEvent _confirmButtonText;
 
 		private GameConfig _config;
 
@@ -88,15 +88,14 @@ namespace Werewolf.UI
 
 			_mustChooseOne = mustChooseOne;
 
-			_SkipButton.onClick.RemoveAllListeners();
+			_confirmButton.onClick.RemoveAllListeners();
 
 			if (!mustChooseOne)
 			{
-				_SkipButton.onClick.AddListener(OnConfirmChoice);
+				_confirmButton.onClick.AddListener(OnConfirmChoice);
 			}
 
-			_SkipButton.interactable = !mustChooseOne;
-			_buttonText.StringReference = mustChooseOne ? _config.MustChooseText : _config.SkipChoiceText;
+			UpdateConfirmButton(hasChoiceSelected: false);
 
 			_countdownCoroutine = Countdown(countdownDuration);
 			StartCoroutine(_countdownCoroutine);
@@ -104,22 +103,22 @@ namespace Werewolf.UI
 
 		private void OnChoiceSelected(Choice choice)
 		{
-			if (_selectedChoice)
+			bool isCurrentChoice = _selectedChoice == choice;
+
+			if (!isCurrentChoice && _selectedChoice)
 			{
-				if (_selectedChoice == choice)
-				{
-					_selectedChoice = null;
-					_buttonText.StringReference = _config.SkipChoiceText;
-					return;
-				}
-				else
-				{
-					_selectedChoice.SetSelected(false);
-				}
+				_selectedChoice.SetSelected(false);
 			}
 
-			_selectedChoice = choice;
-			_buttonText.StringReference = _config.ConfirmChoiceText;
+			_selectedChoice = isCurrentChoice ? null : choice;
+
+			UpdateConfirmButton(hasChoiceSelected: !isCurrentChoice);
+		}
+
+		private void UpdateConfirmButton(bool hasChoiceSelected)
+		{
+			_confirmButton.interactable = hasChoiceSelected || !_mustChooseOne ? true : false;
+			_confirmButtonText.StringReference = !hasChoiceSelected ? (_mustChooseOne ? _config.MustChooseText : _config.SkipChoiceText) : _config.ConfirmChoiceText;
 		}
 
 		private void OnConfirmChoice()
@@ -164,8 +163,8 @@ namespace Werewolf.UI
 
 		public void DisableConfirmButton()
 		{
-			_SkipButton.onClick.RemoveAllListeners();
-			_SkipButton.interactable = false;
+			_confirmButton.onClick.RemoveAllListeners();
+			_confirmButton.interactable = false;
 		}
 
 		public void StopCountdown()
