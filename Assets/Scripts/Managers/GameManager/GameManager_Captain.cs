@@ -2,9 +2,10 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Werewolf.GameHistoryManager;
+using Werewolf.Gameplay;
+using static Werewolf.Managers.GameHistoryManager;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{

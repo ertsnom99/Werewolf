@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using Werewolf.Data;
 using Werewolf.Network.Configs;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public class LaunchManager : MonoBehaviour
 	{

@@ -6,8 +6,9 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
+using Werewolf.Managers;
 using Werewolf.Network;
-using static Werewolf.GameHistoryManager;
+using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.UI
 {

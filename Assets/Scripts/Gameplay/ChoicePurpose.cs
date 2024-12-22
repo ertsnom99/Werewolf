@@ -1,4 +1,4 @@
-namespace Werewolf
+namespace Werewolf.Gameplay
 {
 	public enum ChoicePurpose
 	{

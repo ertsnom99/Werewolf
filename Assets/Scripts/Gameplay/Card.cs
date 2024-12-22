@@ -7,7 +7,7 @@ using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using Werewolf.Data;
 
-namespace Werewolf
+namespace Werewolf.Gameplay
 {
 	public class Card : MonoBehaviour, MouseDetectionListener
 	{

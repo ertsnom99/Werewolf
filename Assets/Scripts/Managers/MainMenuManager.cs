@@ -9,7 +9,7 @@ using Werewolf.Data;
 using Werewolf.UI;
 using UnityEngine.Localization;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public class MainMenuManager : MonoBehaviour, INetworkRunnerCallbacks
 	{

@@ -6,7 +6,7 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using Werewolf.Data;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{

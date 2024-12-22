@@ -10,12 +10,14 @@ using UnityEngine;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.SceneManagement;
 using Werewolf.Data;
+using Werewolf.Gameplay;
+using Werewolf.Gameplay.Role;
 using Werewolf.Network;
 using Werewolf.Network.Configs;
 using Werewolf.UI;
-using static Werewolf.GameHistoryManager;
+using static Werewolf.Managers.GameHistoryManager;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public partial class GameManager : NetworkBehaviourSingleton<GameManager>, INetworkRunnerCallbacks
 	{

@@ -2,10 +2,11 @@ using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Gameplay;
 using Werewolf.Network;
 using Werewolf.UI;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public class EmotesManager : NetworkBehaviourSingleton<EmotesManager>
 	{

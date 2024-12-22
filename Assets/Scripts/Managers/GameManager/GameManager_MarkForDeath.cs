@@ -2,9 +2,8 @@ using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections.Generic;
-using static Werewolf.GameManager;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{

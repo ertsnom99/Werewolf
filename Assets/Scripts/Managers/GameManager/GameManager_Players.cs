@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
-using static Werewolf.GameHistoryManager;
+using Werewolf.Gameplay;
+using Werewolf.Gameplay.Role;
+using static Werewolf.Managers.GameHistoryManager;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public class PlayerGameInfo
 	{

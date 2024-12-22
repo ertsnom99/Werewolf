@@ -4,7 +4,7 @@ using System;
 using Werewolf.Data;
 using Werewolf.UI;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{

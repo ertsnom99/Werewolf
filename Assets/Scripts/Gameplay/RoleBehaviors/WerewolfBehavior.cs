@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Managers;
 using Werewolf.Network;
-using static Werewolf.GameHistoryManager;
+using static Werewolf.Managers.GameHistoryManager;
 
-namespace Werewolf
+namespace Werewolf.Gameplay.Role
 {
 	public class WerewolfBehavior : RoleBehavior
 	{

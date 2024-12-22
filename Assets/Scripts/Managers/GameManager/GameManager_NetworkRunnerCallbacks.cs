@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{

@@ -5,7 +5,7 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.UI;
 using Werewolf.Data;
-using static Werewolf.GameHistoryManager;
+using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.UI
 {
