@@ -71,9 +71,9 @@ namespace Werewolf
 			_voteManager = VoteManager.Instance;
 
 			_gameManager.PreSelectPlayers += OnPreChoosePlayers;
+			_voteManager.VoteStarting += OnVoteStarting;
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
-			_voteManager.VoteStarting += OnVoteStarting;
 
 			if (PlayerGroups.Count < 2)
 			{
