@@ -153,7 +153,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9378331394048
-    m_Localized: No potion left to use
+    m_Localized: Can't use any potion
     m_Metadata:
       m_Items: []
   - m_Id: 9500591161344
