@@ -159,7 +159,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9378331394048
-    m_Localized: "Aucune potion \xE0 utiliser"
+    m_Localized: "Aucune potion ne peu \xEAtre utilis\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 9500591161344
