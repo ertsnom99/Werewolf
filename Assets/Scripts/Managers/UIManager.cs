@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.UI;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public class UIManager : MonoSingleton<UIManager>
 	{

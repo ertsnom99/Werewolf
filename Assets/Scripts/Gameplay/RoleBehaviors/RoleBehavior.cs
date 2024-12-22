@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
 
-namespace Werewolf
+namespace Werewolf.Gameplay.Role
 {
 	public abstract class RoleBehavior : MonoBehaviour
 	{

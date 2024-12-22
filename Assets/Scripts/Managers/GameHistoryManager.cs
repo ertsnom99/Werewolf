@@ -8,7 +8,7 @@ using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public class GameHistoryManager : MonoSingleton<GameHistoryManager>
 	{

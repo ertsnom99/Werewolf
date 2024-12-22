@@ -3,6 +3,7 @@ using Assets.Scripts.Data.Tags;
 using System;
 using UnityEngine;
 using UnityEngine.Localization;
+using Werewolf.Gameplay.Role;
 
 namespace Werewolf.Data
 {

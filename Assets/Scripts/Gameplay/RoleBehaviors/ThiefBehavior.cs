@@ -4,10 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Managers;
 using Werewolf.Network;
-using static Werewolf.GameHistoryManager;
+using static Werewolf.Managers.GameHistoryManager;
+using static Werewolf.Managers.GameManager;
 
-namespace Werewolf
+namespace Werewolf.Gameplay.Role
 {
 	public class ThiefBehavior : RoleBehavior
 	{
@@ -31,7 +33,7 @@ namespace Werewolf
 		[SerializeField]
 		private GameplayTag _tookRoleGameHistoryEntry;
 
-		private GameManager.IndexedReservedRoles _reservedRoles;
+		private IndexedReservedRoles _reservedRoles;
 		private bool _reservedOnlyWerewolfs;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;

@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Gameplay;
+using Werewolf.Gameplay.Role;
 using Werewolf.UI;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{

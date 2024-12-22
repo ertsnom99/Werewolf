@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
+using Werewolf.Gameplay;
 using Werewolf.Network;
-using static Werewolf.GameHistoryManager;
+using static Werewolf.Managers.GameHistoryManager;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public class VoteManager : NetworkBehaviourSingleton<VoteManager>
 	{

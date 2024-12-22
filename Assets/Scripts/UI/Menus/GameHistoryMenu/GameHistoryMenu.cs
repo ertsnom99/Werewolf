@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static Werewolf.GameHistoryManager;
+using Werewolf.Managers;
+using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.UI
 {

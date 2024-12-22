@@ -2,9 +2,9 @@ using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using UnityEngine;
-using static Werewolf.GameHistoryManager;
+using static Werewolf.Managers.GameHistoryManager;
 
-namespace Werewolf
+namespace Werewolf.Gameplay.Role
 {
 	public class WhiteWerewolfBehavior : WerewolfBehavior
 	{

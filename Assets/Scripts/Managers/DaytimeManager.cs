@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Werewolf.Data;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public enum Daytime
 	{

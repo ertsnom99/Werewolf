@@ -8,6 +8,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using Werewolf.UI;
 using UnityEngine.Localization;
+using Werewolf.Managers;
 
 namespace Werewolf.Network
 {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Werewolf.Managers;
 using Werewolf.Network.Configs;
 
 namespace Werewolf.Network

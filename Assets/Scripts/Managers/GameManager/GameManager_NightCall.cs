@@ -2,7 +2,7 @@ using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{

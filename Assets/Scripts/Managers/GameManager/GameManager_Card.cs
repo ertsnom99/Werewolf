@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Splines;
 using Werewolf.Data;
+using Werewolf.Gameplay;
+using Werewolf.Gameplay.Role;
 
-namespace Werewolf
+namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{
