@@ -22,6 +22,13 @@ namespace Werewolf.Managers
 		private readonly List<PlayerRef> _spectators = new();
 		private readonly Dictionary<PlayerRef, PlayerRef> _votes = new();
 
+		[Serializable]
+		private struct VoteModifier : INetworkStruct
+		{
+			public PlayerRef Voter;
+			public int VoteValue;
+		}
+
 		private int _titleImageID;
 		private float _maxDuration;
 		private bool _failingToVoteGivesPenalty;
@@ -203,6 +210,27 @@ namespace Werewolf.Managers
 
 			VoteStarting?.Invoke(_purpose);
 
+			VoteModifier[] voteModifiers;
+
+			if (_modifiers != null)
+			{
+				voteModifiers = new VoteModifier[_modifiers.Count];
+
+				int index = 0;
+
+				foreach (KeyValuePair<PlayerRef, int> modifier in _modifiers)
+				{
+					voteModifiers[index].Voter = modifier.Key;
+					voteModifiers[index].VoteValue = modifier.Value;
+
+					index++;
+				}
+			}
+			else
+			{
+				voteModifiers = new VoteModifier[0];
+			}
+
 			float voteDuration;
 
 			if (FillImmuneFromPlayers())
@@ -225,6 +253,7 @@ namespace Werewolf.Managers
 
 				RPC_StartVoting(voter,
 								Voters.ToArray(),
+								voteModifiers,
 								_immune.ToArray(),
 								_immuneFromPlayers[voter].ToArray(),
 								_titleImageID,
@@ -241,6 +270,7 @@ namespace Werewolf.Managers
 
 				RPC_StartSpectating(spectator,
 									Voters.ToArray(),
+									voteModifiers,
 									_immune.ToArray(),
 									_titleImageID,
 									voteDuration);
@@ -292,6 +322,23 @@ namespace Werewolf.Managers
 			}
 
 			return canAtLeastOneVoterVote;
+		}
+
+		private void SetModifiers(VoteModifier[] modifiers)
+		{
+			if (_modifiers == null)
+			{
+				_modifiers = new();
+			}
+			else
+			{
+				_modifiers.Clear();
+			}
+
+			foreach (VoteModifier modifier in modifiers)
+			{
+				_modifiers.Add(modifier.Voter, modifier.VoteValue);
+			}
 		}
 
 		private void SetCardsClickable(bool areClickable)
@@ -378,6 +425,7 @@ namespace Werewolf.Managers
 				playerCard.Value.ResetVoteCount();
 			}
 
+			// Key: the voter | Value: voted for who
 			foreach (KeyValuePair<PlayerRef, PlayerRef> vote in _votes)
 			{
 				if (vote.Value.IsNone)
@@ -386,7 +434,15 @@ namespace Werewolf.Managers
 				}
 				else
 				{
-					_playerCards[vote.Value].IncrementVoteCount();
+					if (_modifiers != null && _modifiers.ContainsKey(vote.Key))
+					{
+						_playerCards[vote.Value].IncrementVoteCount(_modifiers[vote.Key]);
+					}
+					else
+					{
+						_playerCards[vote.Value].IncrementVoteCount(1);
+					}
+
 					_playerCards[vote.Key].DisplayVote(true, _playerCards[vote.Value].transform.position, vote.Key == vote.Value);
 				}
 			}
@@ -576,7 +632,7 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, int titleImageID, bool displayWarning, float maxDuration)
+		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, VoteModifier[] voteModifiers, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, int titleImageID, bool displayWarning, float maxDuration)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -591,6 +647,8 @@ namespace Werewolf.Managers
 			{
 				_votes.Add(voter, new());
 			}
+
+			SetModifiers(voteModifiers);
 
 			_selectedCard = null;
 			_playersImmuneFromLocalPlayer = playersImmuneFromLocalPlayer;
@@ -618,7 +676,7 @@ namespace Werewolf.Managers
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, PlayerRef[] voters, PlayerRef[] immunePlayers, int titleImageID, float maxDuration)
+		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, PlayerRef[] voters, VoteModifier[] voteModifiers, PlayerRef[] immunePlayers, int titleImageID, float maxDuration)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -632,6 +690,8 @@ namespace Werewolf.Managers
 			{
 				_votes.Add(voter, new());
 			}
+
+			SetModifiers(voteModifiers);
 
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{

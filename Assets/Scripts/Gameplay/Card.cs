@@ -186,9 +186,9 @@ namespace Werewolf.Gameplay
 			_voteCountVariable.Value = _voteCount;
 		}
 
-		public void IncrementVoteCount()
+		public void IncrementVoteCount(int increment)
 		{
-			_voteCount++;
+			_voteCount += increment;
 			_voteCountVariable.Value = _voteCount;
 		}
 
