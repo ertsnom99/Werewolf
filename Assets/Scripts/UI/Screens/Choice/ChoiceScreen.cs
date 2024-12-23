@@ -88,13 +88,6 @@ namespace Werewolf.UI
 
 			_mustChooseOne = mustChooseOne;
 
-			_confirmButton.onClick.RemoveAllListeners();
-
-			if (!mustChooseOne)
-			{
-				_confirmButton.onClick.AddListener(OnConfirmChoice);
-			}
-
 			UpdateConfirmButton(hasChoiceSelected: false);
 
 			_countdownCoroutine = Countdown(countdownDuration);
@@ -121,7 +114,7 @@ namespace Werewolf.UI
 			_confirmButtonText.StringReference = !hasChoiceSelected ? (_mustChooseOne ? _config.MustChooseText : _config.SkipChoiceText) : _config.ConfirmChoiceText;
 		}
 
-		private void OnConfirmChoice()
+		public void OnConfirmChoice()
 		{
 			if (_mustChooseOne && _selectedChoice == null)
 			{
@@ -143,7 +136,7 @@ namespace Werewolf.UI
 				Destroy(choice.gameObject);
 			}
 
-			DisableConfirmButton();
+			_confirmButton.interactable = false;
 
 			ConfirmedChoice?.Invoke(_selectedChoice != null ? Array.IndexOf(_choices, _selectedChoice) : -1);
 		}
@@ -163,7 +156,6 @@ namespace Werewolf.UI
 
 		public void DisableConfirmButton()
 		{
-			_confirmButton.onClick.RemoveAllListeners();
 			_confirmButton.interactable = false;
 		}
 
