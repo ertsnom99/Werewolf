@@ -36,17 +36,8 @@ namespace Werewolf.Managers
 		#region Choose Captain
 		private IEnumerator ChooseNextCaptain()
 		{
-			_captainChoices.Clear();
-
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
-			{
-				if (!playerInfo.Value.IsAlive || playerInfo.Key == _captain)
-				{
-					continue;
-				}
-
-				_captainChoices.Add(playerInfo.Key);
-			}
+			_captainChoices = GetAlivePlayers();
+			_captainChoices.Remove(_captain);
 
 			if (_captainChoices.Count <= 0)
 			{
