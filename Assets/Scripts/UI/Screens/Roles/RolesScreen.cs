@@ -33,7 +33,7 @@ namespace Werewolf.UI
 		{
 			List<RoleData> roles = GameplayDatabaseManager.Instance.GetGameplayData<RoleData>();
 
-			foreach(RoleData role in roles)
+			foreach (RoleData role in roles)
 			{
 				RoleButton roleButton = Instantiate(_roleButtonPrefab, _roleButtonContainer);
 

@@ -69,7 +69,7 @@ namespace Werewolf.Managers
 #if UNITY_SERVER
 		private void Update()
 		{
-			foreach(KeyValuePair<PlayerRef, Usage> usage in _playerUsage)
+			foreach (KeyValuePair<PlayerRef, Usage> usage in _playerUsage)
 			{
 				if (usage.Value.amount <= 0)
 				{

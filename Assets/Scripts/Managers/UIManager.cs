@@ -70,7 +70,7 @@ namespace Werewolf.Managers
 				return;
 			}
 
-			foreach(FadingScreen screen in _activeFadingScreens)
+			foreach (FadingScreen screen in _activeFadingScreens)
 			{
 				screen.FadeOut(transitionDuration);
 			}

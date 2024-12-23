@@ -97,7 +97,7 @@ namespace Werewolf.UI
 							List<string> roleNames = SplitData(variable.Data).ToList();
 							List<LocalizedString> localizedRoleNames = new();
 
-							foreach(string roleName in roleNames)
+							foreach (string roleName in roleNames)
 							{
 								localizedRoleNames.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(roleName).NameSingular);
 							}
