@@ -119,7 +119,7 @@ namespace Werewolf.Gameplay.Role
 
 			bool werewolfFound = false;
 
-			foreach(PlayerRef player in playersToCheck)
+			foreach (PlayerRef player in playersToCheck)
 			{
 				if (_gameManager.IsPlayerInPlayerGroups(player, _werewolfPlayerGroups))
 				{

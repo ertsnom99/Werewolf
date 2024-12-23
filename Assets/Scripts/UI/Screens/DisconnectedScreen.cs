@@ -44,7 +44,7 @@ namespace Werewolf.UI
 				}
 			}
 
-			foreach(Transform playerNickname in playerNicknamesToRemove)
+			foreach (Transform playerNickname in playerNicknamesToRemove)
 			{
 				Destroy(playerNickname.gameObject);
 				DisconnectedTextDisplayStartTimes.Remove(playerNickname);

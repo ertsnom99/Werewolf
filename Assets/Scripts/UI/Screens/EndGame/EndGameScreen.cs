@@ -61,7 +61,7 @@ namespace Werewolf.UI
 
 		public void Initialize(PlayerEndGameInfo[] endGamePlayerInfos, float countdownDuration)
 		{
-			foreach(PlayerEndGameInfo endGamePlayerInfo in endGamePlayerInfos)
+			foreach (PlayerEndGameInfo endGamePlayerInfo in endGamePlayerInfos)
 			{
 				RectTransform parent;
 
