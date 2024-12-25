@@ -101,7 +101,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107200
   - m_Id: 1133519254765568
-    m_Localized: The {PlayerGroup:t(PlayerGroupName)} won.
+    m_Localized: '{PlayerGroup:t(PlayerGroupName)} won.'
     m_Metadata:
       m_Items:
       - rid: 7029503930381107200
