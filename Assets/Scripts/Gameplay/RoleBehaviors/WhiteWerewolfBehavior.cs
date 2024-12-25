@@ -22,7 +22,7 @@ namespace Werewolf.Gameplay.Role
 		private float _chooseOtherWerewolfMaximumDuration = 10.0f;
 
 		[SerializeField]
-		private GameplayTag _votedWerewolfGameHistoryEntry;
+		private GameplayTag _choseWerewolfGameHistoryEntry;
 
 		[SerializeField]
 		private GameplayTag _markForDeath ;
@@ -112,7 +112,7 @@ namespace Werewolf.Gameplay.Role
 
 			var selectedWerewolf = players[0];
 
-			_gameHistoryManager.AddEntry(_votedWerewolfGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_choseWerewolfGameHistoryEntry,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{

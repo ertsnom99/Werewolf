@@ -58,7 +58,7 @@ MonoBehaviour:
   _chooseOtherWerewolfImage: {fileID: -7612617093408124056, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _chooseOtherWerewolfMaximumDuration: 10
-  _votedWerewolfGameHistoryEntry: {fileID: -1363357280739271870, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choseWerewolfGameHistoryEntry: {fileID: -1363357280739271870, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _markForDeath: {fileID: 4534347614920964079, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
