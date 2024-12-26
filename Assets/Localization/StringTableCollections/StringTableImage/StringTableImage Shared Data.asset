@@ -203,6 +203,18 @@ MonoBehaviour:
     m_Key: WhiteWerewolf_ChooseOtherWerewolf
     m_Metadata:
       m_Items: []
+  - m_Id: 7688451105611776
+    m_Key: BigBadWolf_NoVillagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688658887237632
+    m_Key: BigBadWolf_ChooseVillager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7696127449489408
+    m_Key: BigBadWolf_LostPower
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

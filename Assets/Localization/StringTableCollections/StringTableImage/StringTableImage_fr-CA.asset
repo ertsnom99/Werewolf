@@ -216,6 +216,19 @@ MonoBehaviour:
     m_Localized: Choisissez un loup-garou a tuer
     m_Metadata:
       m_Items: []
+  - m_Id: 7688451105611776
+    m_Localized: Il n'y a plus de villageois
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688658887237632
+    m_Localized: Choisissez un villageois a tuer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7696127449489408
+    m_Localized: "Impossible d\u2019utiliser votre pouvoir, car vous l\u2019avez
+      perdu!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

@@ -182,11 +182,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 62484989748830208
-    m_Localized: "Ce tr\xE8s malfaisant personage d\xE9teste autant les loups-garous
+    m_Localized: "Ce tr\xE8s malfaisant personage d\xE9teste autant les Loups-Garous
       que les villageois! Il parait qu\u2019une \xE9trange mutation serait survenue
       au sein m\xEAme de la population lycanthropique. \r\n\r\nChaque nuit, il se
-      r\xE9veille et d\xE9vore avec les autres loups-garous. Cependant, une nuit
-      sur deux, il se reveille seul et peut \xE9liminer un loup-garou.\r"
+      r\xE9veille et d\xE9vore avec les autres Loups-Garous. Cependant, une nuit
+      sur deux, il se reveille seul et peut \xE9liminer un Loup-Garou.\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 64645302468337664
+    m_Localized: "Grand-M\xE9chant-Loup"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 64646369176313856
+    m_Localized: "Dans le village, les petits cochons ne sont pas les seuls \xE0
+      redouter le Grand-M\xE9chant-Loup. Il est \xE9norme et son app\xE9tit est gigantesque.
+      A cause de lui, des villages entiers furent ray\xE9s de la carte!\r\n\r\nChaque
+      nuit, il se r\xE9veille et d\xE9vore avec les autres loups-garous. Tant qu\u2019aucun
+      Loup-Garou (incluant un Enfant Sauvage ou Chien-Loup qui se r\xE9veille avec
+      les autres Loups-Garous) n\u2019est \xE9limin\xE9, il se r\xE9veille seul une
+      deuxi\xE8me fois et d\xE9vore une autre victime. Il ne peut pas d\xE9vorer
+      de Loup-Garou.\r"
     m_Metadata:
       m_Items: []
   references:
