@@ -210,6 +210,18 @@ MonoBehaviour:
     m_Localized: Choose a werewolf to kill
     m_Metadata:
       m_Items: []
+  - m_Id: 7688451105611776
+    m_Localized: There isn't any villagers left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688658887237632
+    m_Localized: Choose a villager to kill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7696127449489408
+    m_Localized: Can't use your power, because you lost it!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

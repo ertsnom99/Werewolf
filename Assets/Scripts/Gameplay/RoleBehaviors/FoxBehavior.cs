@@ -40,9 +40,9 @@ namespace Werewolf.Gameplay.Role
 		[SerializeField]
 		private float _resultTitleHoldDuration = 3.0f;
 
-		private IEnumerator _endRoleCallAfterTimeCoroutine;
-
 		private bool _hasPower = true;
+
+		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		private GameManager _gameManager;
 		private GameHistoryManager _gameHistoryManager;

@@ -8,7 +8,7 @@ namespace Werewolf.Gameplay.Role
 {
 	public class WhiteWerewolfBehavior : WerewolfBehavior
 	{
-		[Header("Werewolf Choice")]
+		[Header("White Werewolf")]
 		[SerializeField]
 		private GameplayTag[] _otherWerewolvesPlayerGroups;
 
@@ -25,7 +25,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _choseWerewolfGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _markForDeath ;
+		private GameplayTag _markForDeath;
 
 		[SerializeField]
 		private float _selectedWerewolfHighlightDuration = 3.0f;
@@ -38,7 +38,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (NightPriorities.Count < 2)
 			{
-				Debug.LogError("White werewolf must have two night priorities: the first one to vote with the werewolves and the second one to vote against the werewolves");
+				Debug.LogError("White Werewolf must have two night priorities: the first one to vote with the werewolves and the second one to kill a werewolf");
 			}
 		}
 
@@ -51,20 +51,20 @@ namespace Werewolf.Gameplay.Role
 			}
 			else if (priorityIndex == NightPriorities[1].index && nightCount % 2 == 0)
 			{
-				isWakingUp = ChooseOtherWerewolf();
+				isWakingUp = KillWerewolf();
 				return true;
 			}
 
 			return isWakingUp = false;
 		}
 
-		private bool ChooseOtherWerewolf()
+		private bool KillWerewolf()
 		{
-			var werewolves = _gameManager.GetPlayersFromGroup(_otherWerewolvesPlayerGroups);
+			var werewolves = _gameManager.GetPlayersFromGroups(_otherWerewolvesPlayerGroups);
 
 			if (werewolves.Count <= 0) 
 			{
-				StartCoroutine(ShowNoOtherWerewolf());
+				StartCoroutine(ShowNoOtherWerewolves());
 				return false;
 			}
 
@@ -87,15 +87,9 @@ namespace Werewolf.Gameplay.Role
 			return true;
 		}
 
-		private IEnumerator ShowNoOtherWerewolf()
+		private IEnumerator ShowNoOtherWerewolves()
 		{
 			_gameManager.RPC_DisplayTitle(Player, _noOtherWerewolvesImage.CompactTagId);
-			yield return 0;
-			_gameManager.StopWaintingForPlayer(Player);
-		}
-
-		private IEnumerator WaitToStopWaitingForPlayer()
-		{
 			yield return 0;
 			_gameManager.StopWaintingForPlayer(Player);
 		}
@@ -153,6 +147,12 @@ namespace Werewolf.Gameplay.Role
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayerCardHighlightVisible(selectedWerewolf, false);
 #endif
+			_gameManager.StopWaintingForPlayer(Player);
+		}
+
+		private IEnumerator WaitToStopWaitingForPlayer()
+		{
+			yield return 0;
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 

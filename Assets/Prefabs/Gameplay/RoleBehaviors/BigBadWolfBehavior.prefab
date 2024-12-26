@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8322754569758448257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3330895751418437864}
+  - component: {fileID: 5505260500485482521}
+  m_Layer: 0
+  m_Name: BigBadWolfBehavior
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3330895751418437864
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8322754569758448257}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5505260500485482521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8322754569758448257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e276b22044501146ad1315a60493f2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroups>k__BackingField: []
+  <NightPriorities>k__BackingField: []
+  <IsPrimaryBehavior>k__BackingField: 0
+  _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
+    type: 2}
+  _werewolvesPlayerGroups:
+  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  _lostPowerGameHistoryEntry: {fileID: 5790588324802171811, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _villagersPlayerGroups:
+  - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  _noVillagersImage: {fileID: 6079579002703326466, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _chooseVillagerImage: {fileID: 3856226449680162218, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _chooseVillagerMaximumDuration: 10
+  _choseVillagerGameHistoryEntry: {fileID: 1059487400372109908, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _markForDeath: {fileID: -3388473606968454883, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _selectedVillagerHighlightDuration: 3
+  _lostPowerImage: {fileID: -3692402352692713400, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}

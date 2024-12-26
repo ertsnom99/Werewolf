@@ -14,13 +14,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -5616936199980762825, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <Name>k__BackingField: Big Bad Wolf
-  <Description>k__BackingField: 
+  <DebugName>k__BackingField: 
+  <NameSingular>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 64645302468337664
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <NamePlural>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 64646369176313856
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Image>k__BackingField: {fileID: 1254635199, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
     type: 3}
   <PrimaryType>k__BackingField: 1
   <SecondaryType>k__BackingField: 0
-  <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
@@ -30,5 +55,8 @@ MonoBehaviour:
     alias: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
   - index: 15
     alias: {fileID: 0}
-  <DayPriorities>k__BackingField: []
-  <Behavior>k__BackingField: {fileID: 0}
+  <Behavior>k__BackingField: {fileID: 5505260500485482521, guid: 3c43eb610a2e8c244958629a38949dbc,
+    type: 3}
+  references:
+    version: 2
+    RefIds: []

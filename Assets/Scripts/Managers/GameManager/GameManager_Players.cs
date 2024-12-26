@@ -304,7 +304,7 @@ namespace Werewolf.Managers
 			}
 		}
 
-		public List<PlayerRef> GetPlayersFromGroup(GameplayTag[] inPlayerGroup)
+		public List<PlayerRef> GetPlayersFromGroups(GameplayTag[] inPlayerGroup)
 		{
 			List<PlayerRef> players = new();
 

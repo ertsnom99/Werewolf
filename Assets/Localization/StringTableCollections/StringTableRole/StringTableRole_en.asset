@@ -207,11 +207,24 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 62484989748830208
-    m_Localized: "This evil character hates the werewolves as much as the villagers!
+    m_Localized: "This evil character hates the Werewolves as much as the villagers!
       It is said that a strange mutation happened within the lycanthropic population
-      itself. \r\n\r\nEach night, he wakes up and feast with all the other werewolves.
-      Every other night, he wakes up alone to eliminate a werewolf. He wins only
+      itself. \r\n\r\nEach night, he wakes up and feast with all the other Werewolves.
+      Every other night, he wakes up alone to eliminate a Werewolf. He wins only
       if he is the last one standing (unless he is in a couple).\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 64645302468337664
+    m_Localized: Big Bad Wolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 64646369176313856
+    m_Localized: "In the village, small pigs aren't the only ones to fear the Big
+      Bad Wolf. He is enormous and his appetite is gigantic. Because of him, full
+      villages were destroyed! \r\n\r\nEach night, he wakes up and feast with all
+      the other Werewolves. While no other Werewolf (including a Wild Child or Dog-Wolf
+      that wakes up with the other Werewolves) dies, he wakes up alone a second time
+      to feast on an other victim. He can\u2019t feast on a Werewolf. \r"
     m_Metadata:
       m_Items: []
   references:

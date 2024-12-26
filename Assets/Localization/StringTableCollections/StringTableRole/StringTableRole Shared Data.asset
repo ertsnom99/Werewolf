@@ -131,6 +131,14 @@ MonoBehaviour:
     m_Key: Witch_NameSingular
     m_Metadata:
       m_Items: []
+  - m_Id: 64645302468337664
+    m_Key: BigBadWolf_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 64646369176313856
+    m_Key: BigBadWolf_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
