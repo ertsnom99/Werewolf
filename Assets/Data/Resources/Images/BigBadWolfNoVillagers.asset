@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: 6079579002703326466, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: BigBadWolfNoVillagers
-  <Image>k__BackingField: {fileID: 1254635199, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
+  <Image>k__BackingField: {fileID: 21300000, guid: 653d740cb73f88e428c2aa243569520e,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:
