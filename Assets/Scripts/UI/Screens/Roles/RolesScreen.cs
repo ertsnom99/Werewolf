@@ -80,7 +80,7 @@ namespace Werewolf.UI
 			}
 
 			_areRolesDisplayed = !_areRolesDisplayed;
-			_screen.anchoredPosition = new Vector3(_areRolesDisplayed ? 0 : _screen.rect.width, 0, 0);
+			_screen.anchoredPosition = new Vector3(_areRolesDisplayed ? -_screen.rect.width : 0, 0, 0);
 			_backgroundButton.SetActive(_areRolesDisplayed);
 		}
 	}
