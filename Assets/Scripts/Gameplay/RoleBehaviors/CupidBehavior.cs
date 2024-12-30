@@ -105,7 +105,7 @@ namespace Werewolf.Gameplay.Role
 			}
 			else if (!_showedCouple && _couple[0] != PlayerRef.None && _couple[1] != PlayerRef.None && priorityIndex == NightPriorities[1].index)
 			{
-				 StartCoroutine(ShowCouple());
+				StartCoroutine(ShowCouple());
 				return true;
 			}
 
@@ -219,7 +219,7 @@ namespace Werewolf.Gameplay.Role
 
 			List<PlayerRef> players = choices.ToList();
 
-			while(playerCount < 2)
+			while (playerCount < 2)
 			{
 				PlayerRef player = players[UnityEngine.Random.Range(0, players.Count)];
 				_couple[playerCount] = player;
@@ -365,7 +365,7 @@ namespace Werewolf.Gameplay.Role
 		}
 
 		#region Couple Death
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer)
+		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
 		{
 			if (_couple[0].IsNone || _couple[1].IsNone || !_couple.Contains(deadPlayer))
 			{

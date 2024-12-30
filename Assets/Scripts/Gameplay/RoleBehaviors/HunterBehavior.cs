@@ -67,7 +67,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.MoveMarksForDeathToLast(Player);
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer)
+		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
 		{
 			if (Player != deadPlayer || _gameManager.AlivePlayerCount <= 1)
 			{
