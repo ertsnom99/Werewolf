@@ -176,20 +176,18 @@ namespace Werewolf.Gameplay.Role
 											});
 
 			_gameManager.AddMarkForDeath(players[0], _markForDeath);
-
-			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, selectedVillager, true);
-			_gameManager.RPC_HideUI();
-#if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayerCardHighlightVisible(selectedVillager, true);
-			_gameManager.HideUI();
-#endif
-			StartCoroutine(WaitToRemoveHighlight(selectedVillager));
+			StartCoroutine(HighlightSelectedVillager(selectedVillager));
 		}
 
-		private IEnumerator WaitToRemoveHighlight(PlayerRef selectedVillager)
+		private IEnumerator HighlightSelectedVillager(PlayerRef selectedVillager)
 		{
+			_gameManager.RPC_HideUI(Player);
+			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, selectedVillager, true);
+#if UNITY_SERVER && UNITY_EDITOR
+			_gameManager.HideUI();
+			_gameManager.SetPlayerCardHighlightVisible(selectedVillager, true);
+#endif
 			yield return new WaitForSeconds(_selectedVillagerHighlightDuration * _gameManager.GameSpeedModifier);
-
 			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, selectedVillager, false);
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayerCardHighlightVisible(selectedVillager, false);

@@ -127,6 +127,9 @@ namespace Werewolf.Gameplay.Role
 				}
 
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, player, true);
+#if UNITY_SERVER && UNITY_EDITOR
+				_gameManager.SetPlayerCardHighlightVisible(player, true);
+#endif
 			}
 
 			_gameHistoryManager.AddEntry(werewolfFound ? _sniffedWerewolfGameHistoryEntry : _lostPowerGameHistoryEntry,
@@ -146,7 +149,9 @@ namespace Werewolf.Gameplay.Role
 										});
 
 			_gameManager.RPC_HideUI(Player);
-
+#if UNITY_SERVER && UNITY_EDITOR
+			_gameManager.HideUI();
+#endif
 			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
 
 			if (werewolfFound)
@@ -164,6 +169,9 @@ namespace Werewolf.Gameplay.Role
 			foreach (PlayerRef player in playersToCheck)
 			{
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, player, false);
+#if UNITY_SERVER && UNITY_EDITOR
+				_gameManager.SetPlayerCardHighlightVisible(player, false);
+#endif
 			}
 
 			_gameManager.StopWaintingForPlayer(Player);
