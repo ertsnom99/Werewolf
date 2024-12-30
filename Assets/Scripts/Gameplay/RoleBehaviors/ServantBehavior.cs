@@ -56,12 +56,12 @@ namespace Werewolf.Gameplay.Role
 			return isWakingUp = false;
 		}
 
-		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, List<GameplayTag> marks, float revealDuration)
+		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, GameplayTag mark, float revealDuration)
 		{
 			if (Player.IsNone
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| Player == playerRevealed
-				|| !marks.Contains(_gameManager.Config.ExecutionMarkForDeath)
+				|| mark != _gameManager.Config.ExecutionMarkForDeath
 				|| !_gameManager.PromptPlayer(Player, _takeRoleImage.CompactTagId, revealDuration, OnTakeRole))
 			{
 				return;

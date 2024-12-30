@@ -175,6 +175,10 @@ MonoBehaviour:
     m_Key: BigBadWolf_LostPower
     m_Metadata:
       m_Items: []
+  - m_Id: 68151900604063744
+    m_Key: KnightWithRustySword_GaveTetanus
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

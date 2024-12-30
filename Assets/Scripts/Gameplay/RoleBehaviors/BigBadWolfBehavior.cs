@@ -55,7 +55,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer)
+		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
 		{
 			if (_gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroups))
 			{

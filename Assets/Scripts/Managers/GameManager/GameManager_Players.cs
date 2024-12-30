@@ -123,11 +123,11 @@ namespace Werewolf.Managers
 			return players.ToArray();
 		}
 
-		public List<PlayerRef> FindSurroundingPlayers(PlayerRef player)
+		public List<PlayerRef> FindSurroundingPlayers(PlayerRef relativeTo)
 		{
 			List<PlayerRef> SurroundingPlayers = new();
 
-			int playerIndex = Array.IndexOf(_playersOrder, player);
+			int playerIndex = Array.IndexOf(_playersOrder, relativeTo);
 
 			FindNextSurroundingPlayer(playerIndex, -1, ref SurroundingPlayers);
 			FindNextSurroundingPlayer(playerIndex, 1, ref SurroundingPlayers);
@@ -135,9 +135,9 @@ namespace Werewolf.Managers
 			return SurroundingPlayers;
 		}
 
-		private void FindNextSurroundingPlayer(int playerIndex, int iteration, ref List<PlayerRef> SurroundingPlayers)
+		private void FindNextSurroundingPlayer(int relativeTo, int iteration, ref List<PlayerRef> SurroundingPlayers)
 		{
-			int currentIndex = playerIndex;
+			int currentIndex = relativeTo;
 
 			do
 			{
@@ -160,7 +160,40 @@ namespace Werewolf.Managers
 					break;
 				}
 			}
+			while (currentIndex != relativeTo);
+		}
+
+		public PlayerRef FindNextPlayer(PlayerRef relativeTo, bool searchToLeft, bool mustBeAwake = false, GameplayTag[] payerGroupsFilter = null)
+		{
+			int playerIndex = Array.IndexOf(_playersOrder, relativeTo);
+			int currentIndex = playerIndex;
+			int iteration = searchToLeft ? 1 : -1;
+
+			do
+			{
+				currentIndex += iteration;
+
+				if (currentIndex < 0)
+				{
+					currentIndex = _playersOrder.Length - 1;
+				}
+				else if (currentIndex >= _playersOrder.Length)
+				{
+					currentIndex = 0;
+				}
+
+				PlayerRef currentPlayer = _playersOrder[currentIndex];
+
+				if (PlayerGameInfos[currentPlayer].IsAlive
+					&& (!mustBeAwake || IsPlayerAwake(currentPlayer))
+					&& (payerGroupsFilter == null || IsPlayerInPlayerGroups(currentPlayer, payerGroupsFilter)))
+				{
+					return currentPlayer;
+				}
+			}
 			while (currentIndex != playerIndex);
+
+			return PlayerRef.None;
 		}
 		#endregion
 
@@ -350,6 +383,12 @@ namespace Werewolf.Managers
 			}
 
 			PlayerGameInfos[player].IsAwake = isAwake;
+		}
+
+		public bool IsPlayerAwake(PlayerRef player)
+		{
+			return PlayerGameInfos[player].IsAwake;
+
 		}
 		#endregion
 

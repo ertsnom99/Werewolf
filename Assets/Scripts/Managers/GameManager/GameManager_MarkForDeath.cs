@@ -12,14 +12,14 @@ namespace Werewolf.Managers
 		public struct MarkForDeath
 		{
 			public PlayerRef Player;
-			public List<GameplayTag> MarksForDeath;
+			public GameplayTag Mark;
 		}
 
 		public event Action<PlayerRef, GameplayTag> MarkForDeathAdded;
 
 		public void AddMarkForDeath(PlayerRef player, GameplayTag markForDeath)
 		{
-			_marksForDeath.Add(new() { Player = player, MarksForDeath = new() { markForDeath } });
+			_marksForDeath.Add(new() { Player = player, Mark = markForDeath });
 			MarkForDeathAdded?.Invoke(player, markForDeath);
 		}
 
@@ -27,11 +27,11 @@ namespace Werewolf.Managers
 		{
 			if (_marksForDeath.Count < index)
 			{
-				_marksForDeath.Add(new() { Player = player, MarksForDeath = new() { markForDeath } });
+				_marksForDeath.Add(new() { Player = player, Mark = markForDeath });
 			}
 			else
 			{
-				_marksForDeath.Insert(index, new() { Player = player, MarksForDeath = new() { markForDeath } });
+				_marksForDeath.Insert(index, new() { Player = player, Mark = markForDeath });
 			}
 
 			MarkForDeathAdded?.Invoke(player, markForDeath);
@@ -41,33 +41,10 @@ namespace Werewolf.Managers
 		{
 			for (int i = 0; i < _marksForDeath.Count; i++)
 			{
-				if (_marksForDeath[i].Player != player)
-				{
-					continue;
-				}
-
-				_marksForDeath[i].MarksForDeath.Remove(markForDeath);
-
-				if (_marksForDeath[i].MarksForDeath.Count <= 0)
+				if (_marksForDeath[i].Player == player && _marksForDeath[i].Mark == markForDeath)
 				{
 					_marksForDeath.RemoveAt(i);
 				}
-
-				return;
-			}
-		}
-
-		public void RemoveMarksForDeath(PlayerRef player)
-		{
-			for (int i = 0; i < _marksForDeath.Count; i++)
-			{
-				if (_marksForDeath[i].Player != player)
-				{
-					continue;
-				}
-
-				_marksForDeath.RemoveAt(i);
-				return;
 			}
 		}
 
@@ -82,7 +59,7 @@ namespace Werewolf.Managers
 					MarkForDeath tempMarkForDeath = _marksForDeath[index];
 					_marksForDeath.RemoveAt(index);
 					_marksForDeath.Add(tempMarkForDeath);
-					
+
 					return;
 				}
 
@@ -96,7 +73,7 @@ namespace Werewolf.Managers
 
 			foreach (MarkForDeath markForDeath in _marksForDeath)
 			{
-				if (markForDeath.MarksForDeath.Contains(inMarkForDeath))
+				if (markForDeath.Mark == inMarkForDeath)
 				{
 					players.Add(markForDeath.Player);
 				}

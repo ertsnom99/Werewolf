@@ -227,6 +227,20 @@ MonoBehaviour:
       to feast on an other victim. He can\u2019t feast on a Werewolf. \r"
     m_Metadata:
       m_Items: []
+  - m_Id: 65920755028058112
+    m_Localized: Knight with the Rusty Sword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 65920829212712960
+    m_Localized: "He is an old retired knight. He is tired because of a life of quest
+      throughout the world and doesn\u2019t maintain his tool so well. Rust gradually
+      settled on the dull edge of its faithful protector, but he would never leave
+      her for another. He still sleeps with her every night these days: beware of
+      importunate!\r\n\nIf he is killed by the werewolves, the first one to his left,
+      that was involved in his killing, will get tetanus from his rusty blade. He
+      will still be alive during the day but die at the end of the following night."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

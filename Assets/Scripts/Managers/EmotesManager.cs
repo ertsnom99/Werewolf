@@ -120,7 +120,7 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		private void RPC_ShowEmote(PlayerRef selectedPlayer, int emoteIndex, RpcInfo info = default)
 		{
-			if (_playerUsage[info.Source].amount >= _limit || !_gameManager.PlayerGameInfos[info.Source].IsAwake)
+			if (_playerUsage[info.Source].amount >= _limit || !_gameManager.IsPlayerAwake(info.Source))
 			{
 				return;
 			}

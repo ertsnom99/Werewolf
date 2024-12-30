@@ -138,7 +138,7 @@ MonoBehaviour:
         m_Settings:
           rid: 7029503860835352583
         m_AlphanumericSelectors: 1
-        m_AllowedSelectorChars: "_-\" \xE9\xE8"
+        m_AllowedSelectorChars: "_-\" \xE9\xE8\xC9\xE0'"
         m_Operators: '[]().,'
         m_AlternativeEscaping: 0
         m_AlternativeEscapeChar: 92

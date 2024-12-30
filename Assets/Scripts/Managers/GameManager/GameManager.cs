@@ -84,9 +84,9 @@ namespace Werewolf.Managers
 		public event Action<GameplayLoopStep> GameplayLoopStepStarts;
 		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
-		public event Action<PlayerRef, List<GameplayTag>, float> WaitBeforeDeathRevealStarted;
+		public event Action<PlayerRef, GameplayTag, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
-		public event Action<PlayerRef> PlayerDeathRevealEnded;
+		public event Action<PlayerRef, GameplayTag> PlayerDeathRevealEnded;
 
 		// Client events
 		public event Action PlayerInitialized;
@@ -1030,7 +1030,7 @@ namespace Werewolf.Managers
 
 					if (_networkDataManager.PlayerInfos[deadPlayer].IsConnected)
 					{
-						RPC_DisplayPlayerDiedTitle(deadPlayer, _marksForDeath[0].MarksForDeath.Contains(Config.ExecutionMarkForDeath));
+						RPC_DisplayPlayerDiedTitle(deadPlayer, _marksForDeath[0].Mark == Config.ExecutionMarkForDeath);
 					}
 
 					_isPlayerDeathRevealCompleted = false;
@@ -1038,7 +1038,7 @@ namespace Werewolf.Managers
 					_revealPlayerDeathCoroutine = RevealPlayerDeath(deadPlayer,
 																	GetPlayersExcluding(deadPlayer),
 																	true,
-																	_marksForDeath[0].MarksForDeath,
+																	_marksForDeath[0].Mark,
 																	false,
 																	OnRevealPlayerDeathEnded);
 					StartCoroutine(_revealPlayerDeathCoroutine);
@@ -1054,7 +1054,7 @@ namespace Werewolf.Managers
 #endif
 					yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 
-					PlayerDeathRevealEnded?.Invoke(deadPlayer);
+					PlayerDeathRevealEnded?.Invoke(deadPlayer, _marksForDeath[0].Mark);
 
 					while (PlayersWaitingFor.Count > 0)
 					{
@@ -1107,7 +1107,7 @@ namespace Werewolf.Managers
 			DisplayTitle(wasExecuted ? Config.PlayerExecutedImage.CompactTagId : Config.PlayerDiedImage.CompactTagId);
 		}
 
-		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, List<GameplayTag> marks, bool returnFaceDown, Action RevealPlayerCompleted)
+		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, GameplayTag mark, bool returnFaceDown, Action RevealPlayerCompleted)
 		{
 			foreach (PlayerRef player in revealTo)
 			{
@@ -1133,7 +1133,7 @@ namespace Werewolf.Managers
 
 			if (waitBeforeReveal)
 			{
-				WaitBeforeDeathRevealStarted?.Invoke(playerRevealed, marks, Config.RoleRevealWaitDuration * GameSpeedModifier);
+				WaitBeforeDeathRevealStarted?.Invoke(playerRevealed, mark, Config.RoleRevealWaitDuration * GameSpeedModifier);
 
 				yield return new WaitForSeconds(Config.RoleRevealWaitDuration * GameSpeedModifier);
 

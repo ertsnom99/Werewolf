@@ -204,6 +204,22 @@ MonoBehaviour:
       de Loup-Garou.\r"
     m_Metadata:
       m_Items: []
+  - m_Id: 65920755028058112
+    m_Localized: "Chevalier \xE0 l'\xC9p\xE9e Rouill\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 65920829212712960
+    m_Localized: "Il est un tr\xE8s vieux chevalier \xE0 la retraite. Il est assez
+      \xE9puis\xE9 par une vie de qu\xEAtes \xE0 travers le monde et n\u2019entretient
+      plus tr\xE8s bien son noble outil. La rouille s'est peu \xE0 peu d\xE9pos\xE9e
+      sur le tranchant \xE9mouss\xE9 de sa fid\xE8le protectrice mais jamais il ne
+      la quittera pour une autre. Il dort encore tous les soirs avec elle ces temps-ci
+      : gare aux importuns !\r\n\r\nSi les Loups-Garous le d\xE9vore, le premier
+      a \xE7a gauche, qui \xE9taient impliqu\xE9 dans son meurtre, attrapera le t\xE9tanos
+      \xE0 cause de son \xE9p\xE9e rouill\xE9e. Il sera encore en vie durant le jour,
+      mais mourra \xE0 la fin de la nuit suivante."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
