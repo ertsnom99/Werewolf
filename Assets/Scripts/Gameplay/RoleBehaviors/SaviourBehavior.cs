@@ -2,6 +2,7 @@ using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Managers;
@@ -26,7 +27,7 @@ namespace Werewolf.Gameplay.Role
 		private float _playerHighlightHoldDuration = 3.0f;
 
 		[SerializeField]
-		private GameplayTag _markForDeathRemovedByProtection;
+		private GameplayTag[] _marksForDeathRemovedByProtection;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
@@ -147,12 +148,12 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnMarkForDeathAdded(PlayerRef player, GameplayTag markForDeath)
 		{
-			if (player != _selectedPlayer || markForDeath != _markForDeathRemovedByProtection)
+			if (player != _selectedPlayer || !_marksForDeathRemovedByProtection.Contains(markForDeath))
 			{
 				return;
 			}
 
-			_gameManager.RemoveMarkForDeath(player, _markForDeathRemovedByProtection);
+			_gameManager.RemoveMarkForDeath(player, markForDeath);
 		}
 
 		public override void ReInitialize()

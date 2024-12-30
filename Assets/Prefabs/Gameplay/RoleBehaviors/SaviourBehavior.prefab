@@ -55,5 +55,6 @@ MonoBehaviour:
   _chosePlayerToProtectGameHistoryEntry: {fileID: 7584545385755327515, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _playerHighlightHoldDuration: 3
-  _markForDeathRemovedByProtection: {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _marksForDeathRemovedByProtection:
+  - {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: -3388473606968454883, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
