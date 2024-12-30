@@ -378,11 +378,10 @@ namespace Werewolf.Managers
 
 			for (int i = 0; i < roleDatas.Length; i++)
 			{
-				if (!roleDatas[i])
+				if (roleDatas[i])
 				{
-					continue;
+					roles[i] = roleDatas[i].GameplayTag.CompactTagId;
 				}
-				roles[i] = roleDatas[i].GameplayTag.CompactTagId;
 			}
 
 			_chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
@@ -401,12 +400,10 @@ namespace Werewolf.Managers
 		{
 			_chooseReservedRoleCallbacks.Remove(reservedRoleOwner);
 
-			if (!_networkDataManager.PlayerInfos[reservedRoleOwner].IsConnected)
+			if (_networkDataManager.PlayerInfos[reservedRoleOwner].IsConnected)
 			{
-				return;
+				RPC_StopChoosingReservedRole(reservedRoleOwner);
 			}
-
-			RPC_StopChoosingReservedRole(reservedRoleOwner);
 		}
 
 		#region RPC Calls
@@ -429,12 +426,10 @@ namespace Werewolf.Managers
 
 			for (int i = 0; i < reservedRoles.Length; i++)
 			{
-				if (reservedRoles[i] != 0 || _reservedRolesCards[index].Length <= i || !_reservedRolesCards[index][i])
+				if (reservedRoles[i] == 0 && _reservedRolesCards[index].Length > i && _reservedRolesCards[index][i])
 				{
-					continue;
+					Destroy(_reservedRolesCards[index][i].gameObject);
 				}
-
-				Destroy(_reservedRolesCards[index][i].gameObject);
 			}
 		}
 

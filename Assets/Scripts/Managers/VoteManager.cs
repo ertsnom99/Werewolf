@@ -173,32 +173,26 @@ namespace Werewolf.Managers
 
 		public void AddVoteImmunity(PlayerRef player)
 		{
-			if (_step != Step.Preparing || _immune.Contains(player))
+			if (_step == Step.Preparing && !_immune.Contains(player))
 			{
-				return;
+				_immune.Add(player);
 			}
-
-			_immune.Add(player);
 		}
 
 		public void AddVoteImmunity(PlayerRef immunePlayer, PlayerRef from)
 		{
-			if (_step != Step.Preparing || !_immuneFromPlayers.ContainsKey(from) || _immuneFromPlayers[from].Contains(immunePlayer))
+			if (_step == Step.Preparing && _immuneFromPlayers.ContainsKey(from) && !_immuneFromPlayers[from].Contains(immunePlayer))
 			{
-				return;
+				_immuneFromPlayers[from].Add(immunePlayer);
 			}
-
-			_immuneFromPlayers[from].Add(immunePlayer);
 		}
 
 		public void AddSpectator(PlayerRef spectator)
 		{
-			if (_step != Step.Preparing || _spectators.Contains(spectator) || Voters.Contains(spectator))
+			if (_step == Step.Preparing && !_spectators.Contains(spectator) && !Voters.Contains(spectator))
 			{
-				return;
+				_spectators.Add(spectator);
 			}
-
-			_spectators.Add(spectator);
 		}
 
 		public void StartVote()
@@ -307,12 +301,10 @@ namespace Werewolf.Managers
 			{
 				foreach (PlayerRef player in _immune)
 				{
-					if (_immuneFromPlayers[voter].Contains(player))
+					if (!_immuneFromPlayers[voter].Contains(player))
 					{
-						continue;
+						_immuneFromPlayers[voter].Add(player);
 					}
-
-					_immuneFromPlayers[voter].Add(player);
 				}
 
 				if (_immuneFromPlayers[voter].Count < _gameManager.PlayerGameInfos.Count)
@@ -417,12 +409,10 @@ namespace Werewolf.Managers
 		{
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
-				if (!playerCard.Value)
+				if (playerCard.Value)
 				{
-					continue;
+					playerCard.Value.ResetVoteCount();
 				}
-
-				playerCard.Value.ResetVoteCount();
 			}
 
 			// Key: the voter | Value: voted for who
@@ -457,22 +447,18 @@ namespace Werewolf.Managers
 #endif
 			foreach (PlayerRef voter in Voters)
 			{
-				if (!_networkDataManager.PlayerInfos[voter].IsConnected)
+				if (_networkDataManager.PlayerInfos[voter].IsConnected)
 				{
-					continue;
+					RPC_UpdateClientVote(voter, inVoter, votedFor, _voteCount);
 				}
-
-				RPC_UpdateClientVote(voter, inVoter, votedFor, _voteCount);
 			}
 
 			foreach (PlayerRef spectator in _spectators)
 			{
-				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
+				if (_networkDataManager.PlayerInfos[spectator].IsConnected)
 				{
-					continue;
+					RPC_UpdateClientVote(spectator, inVoter, votedFor, _voteCount);
 				}
-
-				RPC_UpdateClientVote(spectator, inVoter, votedFor, _voteCount);
 			}
 		}
 
@@ -524,22 +510,18 @@ namespace Werewolf.Managers
 
 			foreach (PlayerRef voter in Voters)
 			{
-				if (!_networkDataManager.PlayerInfos[voter].IsConnected)
+				if (_networkDataManager.PlayerInfos[voter].IsConnected)
 				{
-					continue;
+					RPC_VoteEnded(voter);
 				}
-
-				RPC_VoteEnded(voter);
 			}
 
 			foreach (PlayerRef spectator in _spectators)
 			{
-				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
+				if (_networkDataManager.PlayerInfos[spectator].IsConnected)
 				{
-					continue;
+					RPC_VoteEnded(spectator);
 				}
-
-				RPC_VoteEnded(spectator);
 			}
 
 			Dictionary<PlayerRef, int> totalVotes = new();

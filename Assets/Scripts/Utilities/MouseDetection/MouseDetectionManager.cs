@@ -26,12 +26,10 @@ public class MouseDetectionManager : MonoSingleton<MouseDetectionManager>
 	{
 		base.Awake();
 
-		if (!_eventSystem)
+		if (_eventSystem)
 		{
-			return;
+			_pointerEventData = new(_eventSystem);
 		}
-
-		_pointerEventData = new(_eventSystem);
 	}
 
 	private void Start()

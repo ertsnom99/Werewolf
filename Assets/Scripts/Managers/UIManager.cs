@@ -55,12 +55,10 @@ namespace Werewolf.Managers
 
 		public void FadeOut(FadingScreen fadingScreen, float transitionDuration)
 		{
-			if (!_activeFadingScreens.Contains(fadingScreen))
+			if (_activeFadingScreens.Contains(fadingScreen))
 			{
-				return;
+				fadingScreen.FadeOut(transitionDuration);
 			}
-
-			fadingScreen.FadeOut(transitionDuration);
 		}
 
 		public void FadeOutAll(float transitionDuration)

@@ -33,12 +33,10 @@ namespace Werewolf.Managers
 		{
 			_makeChoiceCallbacks.Remove(player);
 
-			if (!_networkDataManager.PlayerInfos[player].IsConnected)
+			if (_networkDataManager.PlayerInfos[player].IsConnected)
 			{
-				return;
+				RPC_StopChoosing(player);
 			}
-
-			RPC_StopChoosing(player);
 		}
 
 		#region RPC Calls
@@ -51,12 +49,10 @@ namespace Werewolf.Managers
 			{
 				ImageData imageData = _gameplayDatabaseManager.GetGameplayData<ImageData>(choiceImageID);
 
-				if (imageData == null)
+				if (imageData != null)
 				{
-					continue;
+					choices.Add(new() { Image = imageData.Image, Text = imageData.Text });
 				}
-
-				choices.Add(new() { Image = imageData.Image, Text = imageData.Text });
 			}
 
 			var choiceScreen = _gameplayDatabaseManager.GetGameplayData<ChoiceScreenData>(choiceScreenID);

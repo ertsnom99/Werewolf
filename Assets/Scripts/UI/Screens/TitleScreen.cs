@@ -90,12 +90,10 @@ namespace Werewolf.UI
 
 		public void StopCountdown()
 		{
-			if (_countdownCoroutine == null)
+			if (_countdownCoroutine != null)
 			{
-				return;
+				StopCoroutine(_countdownCoroutine);
 			}
-
-			StopCoroutine(_countdownCoroutine);
 		}
 
 		private IEnumerator Countdown(float countdownDuration)

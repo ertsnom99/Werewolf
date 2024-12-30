@@ -230,12 +230,10 @@ namespace Werewolf.Gameplay
 
 		public void MouseOver(Vector3 MousePosition)
 		{
-			if (!_inSelectionMode || !_isClickable)
+			if (_inSelectionMode && _isClickable)
 			{
-				return;
+				SetHighlightVisible(true);
 			}
-
-			SetHighlightVisible(true);
 		}
 
 		public void MouseExited()
@@ -246,12 +244,10 @@ namespace Werewolf.Gameplay
 				_waitForLeftClickHoldCoroutine = null;
 			}
 
-			if (!_inSelectionMode || !_isClickable)
+			if (_inSelectionMode && _isClickable)
 			{
-				return;
+				SetHighlightVisible(false);
 			}
-
-			SetHighlightVisible(false);
 		}
 
 		public void LeftMouseButtonPressed(Vector3 MousePosition)

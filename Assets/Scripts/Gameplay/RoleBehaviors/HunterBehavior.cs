@@ -59,12 +59,10 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnGameplayLoopStepStarts(GameplayLoopStep gameplayLoopStep)
 		{
-			if (gameplayLoopStep != GameplayLoopStep.DayDeathReveal)
+			if (gameplayLoopStep == GameplayLoopStep.DayDeathReveal)
 			{
-				return;
+				_gameManager.MoveMarksForDeathToLast(Player);
 			}
-
-			_gameManager.MoveMarksForDeathToLast(Player);
 		}
 
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)

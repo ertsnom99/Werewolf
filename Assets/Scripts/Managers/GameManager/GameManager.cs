@@ -722,12 +722,10 @@ namespace Werewolf.Managers
 
 		private void OnPlayerWantsToBeCaptain(PlayerRef player)
 		{
-			if (_captainCandidates.Contains(player))
+			if (!_captainCandidates.Contains(player))
 			{
-				return;
+				_captainCandidates.Add(player);
 			}
-
-			_captainCandidates.Add(player);
 		}
 
 		private void StartElection()
@@ -1225,12 +1223,10 @@ namespace Werewolf.Managers
 
 			RPC_DisplayPlayerDeadIcon(deadPlayer);
 #if UNITY_SERVER && UNITY_EDITOR
-			if (!_playerCards.ContainsKey(deadPlayer) || !_playerCards[deadPlayer])
+			if (_playerCards.ContainsKey(deadPlayer) && _playerCards[deadPlayer])
 			{
-				return;
+				_playerCards[deadPlayer].DisplayDeadIcon();
 			}
-
-			_playerCards[deadPlayer].DisplayDeadIcon();
 #endif
 		}
 
@@ -1339,12 +1335,10 @@ namespace Werewolf.Managers
 
 			foreach (var player in PlayerGameInfos)
 			{
-				if (!_networkDataManager.PlayerInfos[player.Key].IsConnected || player.Key == _captain)
+				if (_networkDataManager.PlayerInfos[player.Key].IsConnected && player.Key != _captain)
 				{
-					continue;
+					RPC_DisplayTitle(player.Key, Config.ExecutionDrawCaptainChooseImage.CompactTagId);
 				}
-
-				RPC_DisplayTitle(player.Key, Config.ExecutionDrawCaptainChooseImage.CompactTagId);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			DisplayTitle(Config.ExecutionDrawCaptainChooseImage.CompactTagId);
@@ -1367,12 +1361,10 @@ namespace Werewolf.Managers
 
 		private void OnCaptainChooseExecutedPlayer(PlayerRef[] players)
 		{
-			if (_startCaptainExecutionCoroutine == null)
+			if (_startCaptainExecutionCoroutine != null)
 			{
-				return;
+				StartCoroutine(EndCaptainExecution((players == null || players.Length <= 0) ? PlayerRef.None : players[0]));
 			}
-
-			StartCoroutine(EndCaptainExecution((players == null || players.Length <= 0) ? PlayerRef.None : players[0]));
 		}
 
 		private IEnumerator EndCaptainExecution(PlayerRef executedPlayer)
@@ -1558,12 +1550,10 @@ namespace Werewolf.Managers
 					FlipCard(endGamePlayerInfo.Player, endGamePlayerInfo.Role);
 				}
 #endif
-				if (!endGamePlayerInfo.Won)
+				if (endGamePlayerInfo.Won)
 				{
-					continue;
+					SetPlayerCardHighlightVisible(endGamePlayerInfo.Player, true);
 				}
-
-				SetPlayerCardHighlightVisible(endGamePlayerInfo.Player, true);
 			}
 
 			if (winningPlayerGroupID > -1)
@@ -1618,22 +1608,18 @@ namespace Werewolf.Managers
 
 		public void WaitForPlayer(PlayerRef player)
 		{
-			if (PlayersWaitingFor.Contains(player))
+			if (!PlayersWaitingFor.Contains(player))
 			{
-				return;
+				PlayersWaitingFor.Add(player);
 			}
-
-			PlayersWaitingFor.Add(player);
 		}
 
 		public void StopWaintingForPlayer(PlayerRef player)
 		{
-			if (!PlayersWaitingFor.Contains(player))
+			if (PlayersWaitingFor.Contains(player))
 			{
-				return;
+				PlayersWaitingFor.Remove(player);
 			}
-
-			PlayersWaitingFor.Remove(player);
 		}
 #if UNITY_SERVER
 		private void OnDisable()

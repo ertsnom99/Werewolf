@@ -69,12 +69,10 @@ namespace Werewolf.Managers
 
 			foreach (var player in PlayerGameInfos)
 			{
-				if (!_networkDataManager.PlayerInfos[player.Key].IsConnected || player.Key == _captain)
+				if (_networkDataManager.PlayerInfos[player.Key].IsConnected && player.Key != _captain)
 				{
-					continue;
+					RPC_DisplayTitle(player.Key, Config.OldCaptainChoosingImage.CompactTagId);
 				}
-
-				RPC_DisplayTitle(player.Key, Config.OldCaptainChoosingImage.CompactTagId);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			DisplayTitle(Config.OldCaptainChoosingImage.CompactTagId);

@@ -95,12 +95,10 @@ namespace Werewolf.Managers
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
-				if (playerInfo.Key == playerToExclude)
+				if (playerInfo.Key != playerToExclude)
 				{
-					continue;
+					players.Add(playerInfo.Key);
 				}
-
-				players.Add(playerInfo.Key);
 			}
 
 			return players.ToArray();
@@ -112,12 +110,10 @@ namespace Werewolf.Managers
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
-				if (playersToExclude.Contains(playerInfo.Key))
+				if (!playersToExclude.Contains(playerInfo.Key))
 				{
-					continue;
+					players.Add(playerInfo.Key);
 				}
-
-				players.Add(playerInfo.Key);
 			}
 
 			return players.ToArray();
@@ -266,12 +262,10 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_DisplayPlayerDeadIcon(PlayerRef deadPlayer)
 		{
-			if (!_playerCards.ContainsKey(deadPlayer) || !_playerCards[deadPlayer])
+			if (_playerCards.ContainsKey(deadPlayer) && _playerCards[deadPlayer])
 			{
-				return;
+				_playerCards[deadPlayer].DisplayDeadIcon();
 			}
-
-			_playerCards[deadPlayer].DisplayDeadIcon();
 		}
 		#endregion
 		#endregion
@@ -377,12 +371,10 @@ namespace Werewolf.Managers
 
 		public void SetPlayerAwake(PlayerRef player, bool isAwake)
 		{
-			if (!PlayerGameInfos[player].IsAlive)
+			if (PlayerGameInfos[player].IsAlive)
 			{
-				return;
+				PlayerGameInfos[player].IsAwake = isAwake;
 			}
-
-			PlayerGameInfos[player].IsAwake = isAwake;
 		}
 
 		public bool IsPlayerAwake(PlayerRef player)
@@ -439,12 +431,10 @@ namespace Werewolf.Managers
 		{
 			_selectPlayersCallbacks.Remove(player);
 
-			if (!_networkDataManager.PlayerInfos[player].IsConnected)
+			if (_networkDataManager.PlayerInfos[player].IsConnected)
 			{
-				return;
+				RPC_StopSelectingPlayers(player);
 			}
-
-			RPC_StopSelectingPlayers(player);
 		}
 
 		private void StopSelectingPlayers()
@@ -496,12 +486,10 @@ namespace Werewolf.Managers
 
 			DisplayTitle(imageID, variables: null, showConfirmButton: !mustSelect, countdownDuration: maximumDuration);
 
-			if (mustSelect)
+			if (!mustSelect)
 			{
-				return;
+				_UIManager.TitleScreen.ConfirmClicked += SelectNoPlayer;
 			}
-
-			_UIManager.TitleScreen.ConfirmClicked += SelectNoPlayer;
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]

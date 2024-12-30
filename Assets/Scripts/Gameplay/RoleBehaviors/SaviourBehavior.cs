@@ -155,12 +155,10 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnMarkForDeathAdded(PlayerRef player, GameplayTag markForDeath)
 		{
-			if (player != _selectedPlayer || !_marksForDeathRemovedByProtection.Contains(markForDeath))
+			if (player == _selectedPlayer && _marksForDeathRemovedByProtection.Contains(markForDeath))
 			{
-				return;
+				_gameManager.RemoveMarkForDeath(player, markForDeath);
 			}
-
-			_gameManager.RemoveMarkForDeath(player, markForDeath);
 		}
 
 		public override void ReInitialize()
