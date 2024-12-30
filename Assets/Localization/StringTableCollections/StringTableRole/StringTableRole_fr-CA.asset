@@ -199,9 +199,9 @@ MonoBehaviour:
       A cause de lui, des villages entiers furent ray\xE9s de la carte!\r\n\r\nChaque
       nuit, il se r\xE9veille et d\xE9vore avec les autres loups-garous. Tant qu\u2019aucun
       Loup-Garou (incluant un Enfant Sauvage ou Chien-Loup qui se r\xE9veille avec
-      les autres Loups-Garous) n\u2019est \xE9limin\xE9, il se r\xE9veille seul une
-      deuxi\xE8me fois et d\xE9vore une autre victime. Il ne peut pas d\xE9vorer
-      de Loup-Garou.\r"
+      les autres Loups-Garous, mais excluant le Loup-Garou Blanc) n\u2019est \xE9limin\xE9,
+      il se r\xE9veille seul une deuxi\xE8me fois et d\xE9vore une autre victime.
+      Il ne peut pas d\xE9vorer de Loup-Garou.\r"
     m_Metadata:
       m_Items: []
   - m_Id: 65920755028058112

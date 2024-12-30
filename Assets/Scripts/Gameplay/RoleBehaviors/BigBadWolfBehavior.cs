@@ -57,22 +57,27 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
 		{
-			if (_gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroups))
+			if (Player == PlayerRef.None
+				|| Player == deadPlayer
+				|| !_gameManager.PlayerGameInfos[Player].IsAlive
+				|| !_gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroups))
 			{
-				_hasPower = false;
+				return;
+			}
 
-				_gameHistoryManager.AddEntry(_lostPowerGameHistoryEntry,
-											new GameHistorySaveEntryVariable[] {
+			_hasPower = false;
+
+			_gameHistoryManager.AddEntry(_lostPowerGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
 												new()
 												{
 													Name = "BigBadWolfPlayer",
 													Data = _networkDataManager.PlayerInfos[Player].Nickname,
 													Type = GameHistorySaveEntryVariableType.Player
 												}
-											});
+										});
 
-				_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
-			}
+			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
 		}
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)

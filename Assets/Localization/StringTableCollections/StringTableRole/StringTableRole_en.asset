@@ -223,8 +223,9 @@ MonoBehaviour:
       Bad Wolf. He is enormous and his appetite is gigantic. Because of him, full
       villages were destroyed! \r\n\r\nEach night, he wakes up and feast with all
       the other Werewolves. While no other Werewolf (including a Wild Child or Dog-Wolf
-      that wakes up with the other Werewolves) dies, he wakes up alone a second time
-      to feast on an other victim. He can\u2019t feast on a Werewolf. \r"
+      that wakes up with the other Werewolves, but excluding the White Werewolf)
+      dies, he wakes up alone a second time to feast on an other victim. He can\u2019t
+      feast on a Werewolf. \r"
     m_Metadata:
       m_Items: []
   - m_Id: 65920755028058112
