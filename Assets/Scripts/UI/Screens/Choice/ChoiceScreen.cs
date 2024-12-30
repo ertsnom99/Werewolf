@@ -172,12 +172,10 @@ namespace Werewolf.UI
 
 		protected override void OnFadeStarts(float targetOpacity)
 		{
-			if (targetOpacity >= 1)
+			if (targetOpacity <= 0)
 			{
-				return;
+				StopCountdown();
 			}
-
-			StopCountdown();
 		}
 	}
 }

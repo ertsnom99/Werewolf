@@ -438,22 +438,18 @@ namespace Werewolf.Managers
 
 		private void OnDisable()
 		{
-			if (!_networkDataManager)
+			if (_networkDataManager)
 			{
-				return;
+				_networkDataManager.GameSetupReadyChanged -= _roomMenu.UpdatePlayerList;
 			}
-
-			_networkDataManager.GameSetupReadyChanged -= _roomMenu.UpdatePlayerList;
 		}
 
 		private void OnDestroy()
 		{
-			if (!_runner)
+			if (_runner)
 			{
-				return;
+				_runner.RemoveCallbacks(this);
 			}
-
-			_runner.RemoveCallbacks(this);
 		}
 	}
 }

@@ -83,12 +83,10 @@ namespace Werewolf.Managers
 		{
 			DisplayTitle(imageID, variables: null, showConfirmButton: showConfirmButton, countdownDuration: countdownDuration);
 
-			if (!showConfirmButton)
+			if (showConfirmButton)
 			{
-				return;
+				_UIManager.TitleScreen.ConfirmClicked += OnPlayerSkipDebate;
 			}
-
-			_UIManager.TitleScreen.ConfirmClicked += OnPlayerSkipDebate;
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]

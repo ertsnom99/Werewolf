@@ -167,12 +167,10 @@ namespace Werewolf.Network
 
 				foreach (int role in roleSetup.Pool)
 				{
-					if (role <= 0)
+					if (role > 0)
 					{
-						continue;
+						Pool.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(role));
 					}
-
-					Pool.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(role));
 				}
 
 				roleSetupDatas.Add(new()
@@ -188,12 +186,10 @@ namespace Werewolf.Network
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_KickPlayer(PlayerRef kickedPlayer, RpcInfo info = default)
 		{
-			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader)
+			if (PlayerInfos.ContainsKey(info.Source) && PlayerInfos.Get(info.Source).IsLeader)
 			{
-				return;
+				Runner.Disconnect(kickedPlayer);
 			}
-
-			Runner.Disconnect(kickedPlayer);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -213,12 +209,10 @@ namespace Werewolf.Network
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_SetGameSpeed(GameSpeed gameSpeed, RpcInfo info = default)
 		{
-			if (!PlayerInfos[info.Source].IsLeader)
+			if (PlayerInfos[info.Source].IsLeader)
 			{
-				return;
+				GameSpeed = gameSpeed;
 			}
-
-			GameSpeed = gameSpeed;
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]

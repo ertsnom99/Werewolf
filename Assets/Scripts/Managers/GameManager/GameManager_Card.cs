@@ -33,14 +33,12 @@ namespace Werewolf.Managers
 
 				_playerCards.Add(_playersOrder[i], card);
 
-				if (PlayerGameInfos[_playersOrder[i]].Behaviors.Count <= 0)
+				if (PlayerGameInfos[_playersOrder[i]].Behaviors.Count > 0)
 				{
-					continue;
-				}
-
-				foreach (RoleBehavior behavior in PlayerGameInfos[_playersOrder[i]].Behaviors)
-				{
-					behavior.transform.position = card.transform.position;
+					foreach (RoleBehavior behavior in PlayerGameInfos[_playersOrder[i]].Behaviors)
+					{
+						behavior.transform.position = card.transform.position;
+					}
 				}
 			}
 		}

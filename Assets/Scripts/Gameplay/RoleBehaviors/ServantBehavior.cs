@@ -173,12 +173,10 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnWaitBeforeDeathRevealEnded(PlayerRef playerRevealed)
 		{
-			if (!_isWaitingForPromptAnswer)
+			if (_isWaitingForPromptAnswer)
 			{
-				return;
+				_gameManager.StopPromptingPlayer(Player);
 			}
-
-			_gameManager.StopPromptingPlayer(Player);
 		}
 
 		public override void ReInitialize() { }

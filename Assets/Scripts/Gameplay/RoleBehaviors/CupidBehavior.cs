@@ -444,12 +444,10 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnPostPlayerLeft(PlayerRef deadPlayer)
 		{
-			if (deadPlayer != Player || _waitToRemoveDeadCoupleHighlightCoroutine == null)
+			if (deadPlayer == Player && _waitToRemoveDeadCoupleHighlightCoroutine != null)
 			{
-				return;
+				_gameManager.WaitForPlayer(Player);
 			}
-
-			_gameManager.WaitForPlayer(Player);
 		}
 
 		public override void ReInitialize()

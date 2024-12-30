@@ -66,12 +66,10 @@ namespace Werewolf.UI
 		{
 			for (int i = 0; i < _emoteButtons.Length; i++)
 			{
-				if (_emoteButtons[i].Button != button)
+				if (_emoteButtons[i].Button == button)
 				{
-					continue;
+					EmoteSelected?.Invoke(_selectedPlayer, i);
 				}
-
-				EmoteSelected?.Invoke(_selectedPlayer, i);
 			}
 
 			HideEmoteSelection();
