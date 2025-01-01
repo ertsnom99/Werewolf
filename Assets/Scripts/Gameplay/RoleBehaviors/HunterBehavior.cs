@@ -217,10 +217,7 @@ namespace Werewolf.Gameplay.Role
 
 		public override void ReInitialize() { }
 
-		public override void OnRoleCallDisconnected()
-		{
-			StopAllCoroutines();
-		}
+		public override void OnRoleCallDisconnected() { }
 
 		private void OnDestroy()
 		{
