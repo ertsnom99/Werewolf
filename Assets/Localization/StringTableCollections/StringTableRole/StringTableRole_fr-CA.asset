@@ -220,6 +220,22 @@ MonoBehaviour:
       mais mourra \xE0 la fin de la nuit suivante."
     m_Metadata:
       m_Items: []
+  - m_Id: 66778607871451136
+    m_Localized: Montreur d'Ours
+    m_Metadata:
+      m_Items: []
+  - m_Id: 66778713047818240
+    m_Localized: "Qu\u2019il est doux \xE0 ma m\xE9moire, ce bruit de chaine qui
+      ruisselle en glissant sur les pav\xE9s du village, accompagn\xE9 par le grognement
+      d\u2019Ursus. Titan, le Montreur d\u2019Ours, dirigeait avec maestria son compagnon
+      dans un ballet si gracieux qu'on en pleurait chaque \xE9t\xE9 dans le village.
+      Ursus avait en outre ce pouvoir si pr\xE9cieux, de d\xE9tecter les lycanthropes
+      cach\xE9s pr\xE8s de lui.\r\n\nChaque matin, juste apr\xE8s la r\xE9v\xE9lation
+      des villageois morts, si au moins un Loup-Garou est directement voisin de lui
+      (les villageois morts sont ignor\xE9s), ou qu\u2019il devient un Loup-Garou,
+      l\u2019ours grognera.\r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

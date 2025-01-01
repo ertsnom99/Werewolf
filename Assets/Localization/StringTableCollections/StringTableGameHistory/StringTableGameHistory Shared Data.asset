@@ -179,6 +179,10 @@ MonoBehaviour:
     m_Key: KnightWithRustySword_GaveTetanus
     m_Metadata:
       m_Items: []
+  - m_Id: 68866026313736192
+    m_Key: BearTrainer_BearGrowled
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
