@@ -222,6 +222,10 @@ MonoBehaviour:
     m_Localized: Can't use your power, because you lost it!
     m_Metadata:
       m_Items: []
+  - m_Id: 9786050608488448
+    m_Localized: The bear of the  Bear Trainer is growling!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

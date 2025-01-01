@@ -215,6 +215,10 @@ MonoBehaviour:
     m_Key: BigBadWolf_LostPower
     m_Metadata:
       m_Items: []
+  - m_Id: 9786050608488448
+    m_Key: BearTrainer_BearGrowling
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

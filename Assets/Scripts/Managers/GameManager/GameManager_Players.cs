@@ -348,18 +348,28 @@ namespace Werewolf.Managers
 
 		public bool IsPlayerInPlayerGroups(PlayerRef player, GameplayTag[] inPlayerGroups)
 		{
-			bool inPlayerGroup = false;
-
 			foreach (PlayerGroup playerGroup in _playerGroups)
 			{
 				if (inPlayerGroups.Contains(playerGroup.GameplayTag) && playerGroup.Players.Contains(player))
 				{
-					inPlayerGroup = true;
-					break;
+					return true;
 				}
 			}
 
-			return inPlayerGroup;
+			return false;
+		}
+
+		public bool IsAnyPlayersInPlayerGroups(List<PlayerRef> players, GameplayTag[] inPlayerGroups)
+		{
+			foreach (PlayerRef player in players)
+			{
+				if (IsPlayerInPlayerGroups(player, inPlayerGroups))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 		#endregion
 
@@ -590,7 +600,7 @@ namespace Werewolf.Managers
 				AddMarkForDeath(player, Config.PlayerLeftMarkForDeath);
 			}
 
-			if (_currentGameplayLoopStep == GameplayLoopStep.NightCall && PlayersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
+			if (CurrentGameplayLoopStep == GameplayLoopStep.NightCall && PlayersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
 			{
 				for (int i = 0; i < PlayerGameInfos[player].Behaviors.Count; i++)
 				{

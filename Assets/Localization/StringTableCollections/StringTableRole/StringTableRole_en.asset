@@ -242,6 +242,20 @@ MonoBehaviour:
       will still be alive during the day but die at the end of the following night."
     m_Metadata:
       m_Items: []
+  - m_Id: 66778607871451136
+    m_Localized: Bear Trainer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 66778713047818240
+    m_Localized: "How pleasant it is to my memory, this sound of a chain sliding
+      on the cobblestones of the village accompanied by the growl of Ursus. Titan,
+      the bear trainer, masterfully directed his companion in a ballet so graceful
+      that people cried every summer in the village. Ursus also had this precious
+      power of detecting the lycanthropes hidden near him.\r\n\nEach morning, after
+      the dead villagers are revealed, if at least one werewolf is next to him (dead
+      villagers are skipped), or he became a werewolf, the bear will growl. \r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

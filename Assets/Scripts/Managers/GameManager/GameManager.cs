@@ -38,7 +38,7 @@ namespace Werewolf.Managers
 		private bool _startedPlayersInitialization = false;
 		private bool _allPlayersReadyToPlay = false;
 
-		private GameplayLoopStep _currentGameplayLoopStep;
+		public GameplayLoopStep CurrentGameplayLoopStep { get; private set; }
 
 		public enum GameplayLoopStep
 		{
@@ -84,6 +84,7 @@ namespace Werewolf.Managers
 		public event Action<GameplayLoopStep> GameplayLoopStepStarts;
 		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
+		public event Action DeathRevealEnded;
 		public event Action<PlayerRef, GameplayTag, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
 		public event Action<PlayerRef, GameplayTag> PlayerDeathRevealEnded;
@@ -545,20 +546,20 @@ namespace Werewolf.Managers
 		#region Gameplay Loop
 		private void StartGame()
 		{
-			_currentGameplayLoopStep = GameplayLoopStep.RoleGivenReveal;
+			CurrentGameplayLoopStep = GameplayLoopStep.RoleGivenReveal;
 			ExecuteGameplayLoopStep();
 		}
 
 		#region Gameplay Loop Steps
 		private IEnumerator MoveToNextGameplayLoopStep()
 		{
-			if (_currentGameplayLoopStep == GameplayLoopStep.ExecutionDeathReveal)
+			if (CurrentGameplayLoopStep == GameplayLoopStep.ExecutionDeathReveal)
 			{
-				_currentGameplayLoopStep = GameplayLoopStep.NightTransition;
+				CurrentGameplayLoopStep = GameplayLoopStep.NightTransition;
 			}
 			else
 			{
-				_currentGameplayLoopStep++;
+				CurrentGameplayLoopStep++;
 			}
 
 			yield return new WaitForSeconds(Config.GameplayLoopStepDelay);
@@ -568,9 +569,9 @@ namespace Werewolf.Managers
 
 		private void ExecuteGameplayLoopStep()
 		{
-			GameplayLoopStepStarts?.Invoke(_currentGameplayLoopStep);
+			GameplayLoopStepStarts?.Invoke(CurrentGameplayLoopStep);
 
-			switch (_currentGameplayLoopStep)
+			switch (CurrentGameplayLoopStep)
 			{
 				case GameplayLoopStep.RoleGivenReveal:
 					StartCoroutine(RevealGivenRole());
@@ -716,7 +717,7 @@ namespace Werewolf.Managers
 				yield return DisplayTitleForAllPlayers(Config.ElectionNoCandidateImage.CompactTagId, Config.ElectionNoCandidateDuration * GameSpeedModifier);
 			}
 
-			_currentGameplayLoopStep = GameplayLoopStep.Election;
+			CurrentGameplayLoopStep = GameplayLoopStep.Election;
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
@@ -1090,6 +1091,13 @@ namespace Werewolf.Managers
 			if (CheckForWinners())
 			{
 				yield break;
+			}
+
+			DeathRevealEnded?.Invoke();
+
+			while (PlayersWaitingFor.Count > 0)
+			{
+				yield return 0;
 			}
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
