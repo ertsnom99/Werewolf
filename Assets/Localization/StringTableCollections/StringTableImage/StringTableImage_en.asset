@@ -226,6 +226,10 @@ MonoBehaviour:
     m_Localized: The bear of the  Bear Trainer is growling!
     m_Metadata:
       m_Items: []
+  - m_Id: 10433339337334784
+    m_Localized: Choose your model
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

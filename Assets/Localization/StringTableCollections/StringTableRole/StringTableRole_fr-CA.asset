@@ -236,6 +236,14 @@ MonoBehaviour:
       l\u2019ours grognera.\r"
     m_Metadata:
       m_Items: []
+  - m_Id: 67446694559997952
+    m_Localized: Enfant Sauvage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 67446738352726016
+    m_Localized: TODO
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

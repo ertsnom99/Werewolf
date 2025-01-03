@@ -183,6 +183,14 @@ MonoBehaviour:
     m_Key: BearTrainer_BearGrowled
     m_Metadata:
       m_Items: []
+  - m_Id: 69515146019856384
+    m_Key: WildChild_ChoseModel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69526270945648640
+    m_Key: WildChild_ModelDied
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
