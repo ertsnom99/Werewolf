@@ -486,7 +486,6 @@ namespace Werewolf.Gameplay.Role
 		private void OnDestroy()
 		{
 			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
 			_gameManager.PostPlayerDisconnected -= OnPostPlayerLeft;
 			_voteManager.VoteStarting -= OnVoteStarting;
 		}
