@@ -261,7 +261,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 67446738352726016
-    m_Localized: TODO
+    m_Localized: "Abandoned in the forest by his parents in his early childhood,
+      he was raised there by wolves. As soon as he could walk on all fours, the Wild
+      Child began to wander around the outskirts of the village. One day, fascinated
+      by a villager who walked upright with grace and poise, he secretly made him
+      his model. He then decided to join the village community and entered the village,
+      worried. The community was moved by his fragility, adopted him and welcomed
+      him into their midst. What will he become: an honest Villager or a terrible
+      Werewolf?\r\n\nThe Wild Child is a villager. On the first night, he chooses
+      a model. If during the game the model is eliminated, the Wild Child becomes
+      a Werewolf until the end of the game.\r"
     m_Metadata:
       m_Items: []
   references:
