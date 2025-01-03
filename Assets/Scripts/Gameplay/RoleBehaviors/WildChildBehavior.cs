@@ -109,10 +109,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void SelectRandomModel()
 		{
-			if (_choices != null && _choices.Length >= 1)
-			{
-				OnModelSelected(_choices[Random.Range(0, _choices.Length)]);
-			}
+			OnModelSelected(_choices[Random.Range(0, _choices.Length)]);
 		}
 
 		private void OnModelSelected(PlayerRef selectedModel)
