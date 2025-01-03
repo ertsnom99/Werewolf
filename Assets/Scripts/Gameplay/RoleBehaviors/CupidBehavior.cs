@@ -122,6 +122,8 @@ namespace Werewolf.Gameplay.Role
 		{
 			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 
+			_choices = choices.ToArray();
+
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
 											_chooseCoupleImage.CompactTagId,
@@ -133,7 +135,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (choices.Count >= 2)
 				{
-					ChooseRandomCouple(choices.ToArray());
+					ChooseRandomCouple();
 					AddCouplePlayerGroup();
 					AddCoupleSelectedGameHistoryEntry();
 				}
@@ -142,8 +144,6 @@ namespace Werewolf.Gameplay.Role
 
 				return true;
 			}
-
-			_choices = choices.ToArray();
 
 			_endChooseCoupleAfterTimeCoroutine = EndChooseCoupleAfterTime();
 			StartCoroutine(_endChooseCoupleAfterTimeCoroutine);
@@ -173,7 +173,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (players == null || players.Length < 2)
 			{
-				ChooseRandomCouple(_choices);
+				ChooseRandomCouple();
 			}
 			else
 			{
@@ -203,7 +203,7 @@ namespace Werewolf.Gameplay.Role
 			_endChooseCoupleAfterTimeCoroutine = null;
 			_gameManager.StopSelectingPlayers(Player);
 
-			ChooseRandomCouple(_choices);
+			ChooseRandomCouple();
 			AddCouplePlayerGroup();
 			AddCoupleSelectedGameHistoryEntry();
 
@@ -213,11 +213,17 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void ChooseRandomCouple(PlayerRef[] choices)
+		private void ChooseRandomCouple()
 		{
+			if (_choices == null || _choices.Length < 2)
+			{
+				Debug.LogError("Cupid doesn't have enough choices to create a couple");
+				return;
+			}
+
 			int playerCount = 0;
 
-			List<PlayerRef> players = choices.ToList();
+			List<PlayerRef> players = _choices.ToList();
 
 			while (playerCount < 2)
 			{
@@ -478,7 +484,7 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
-			ChooseRandomCouple(_choices);
+			ChooseRandomCouple();
 			AddCouplePlayerGroup();
 			AddCoupleSelectedGameHistoryEntry();
 		}

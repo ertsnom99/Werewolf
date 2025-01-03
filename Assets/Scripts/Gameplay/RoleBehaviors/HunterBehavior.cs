@@ -75,6 +75,8 @@ namespace Werewolf.Gameplay.Role
 			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 			choices.Remove(Player);
 
+			_choices = choices.ToArray();
+
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
 											_choosePlayerImage.CompactTagId,
@@ -84,15 +86,13 @@ namespace Werewolf.Gameplay.Role
 											ChoicePurpose.Kill,
 											OnPlayersSelected))
 			{
-				if (choices.Count >= 1)
+				if (choices.Count > 0)
 				{
-					SelectRandomPlayer(choices.ToArray());
+					SelectRandomPlayer();
 				}
 
 				return;
 			}
-
-			_choices = choices.ToArray();
 
 			_gameManager.WaitForPlayer(Player);
 
@@ -108,11 +108,11 @@ namespace Werewolf.Gameplay.Role
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.DisplayTitle(_choosingPlayerImage.CompactTagId);
 #endif
-			_startChoiceTimerCoroutine = StartChoiceTimer(_choices);
+			_startChoiceTimerCoroutine = StartChoiceTimer();
 			StartCoroutine(_startChoiceTimerCoroutine);
 		}
 
-		private IEnumerator StartChoiceTimer(PlayerRef[] choices)
+		private IEnumerator StartChoiceTimer()
 		{
 			float elapsedTime = .0f;
 
@@ -123,19 +123,19 @@ namespace Werewolf.Gameplay.Role
 			}
 
 			_gameManager.StopSelectingPlayers(Player);
-			SelectRandomPlayer(choices);
+			SelectRandomPlayer();
 		}
 
-		private void SelectRandomPlayer(PlayerRef[] choices)
+		private void SelectRandomPlayer()
 		{
-			OnPlayerSelected(choices[Random.Range(0, choices.Length)]);
+			OnPlayerSelected(_choices[Random.Range(0, _choices.Length)]);
 		}
 
 		private void OnPlayersSelected(PlayerRef[] players)
 		{
 			if (players == null || players.Length <= 0)
 			{
-				SelectRandomPlayer(_choices);
+				SelectRandomPlayer();
 				return;
 			}
 
@@ -212,7 +212,7 @@ namespace Werewolf.Gameplay.Role
 			}
 
 			_gameManager.WaitForPlayer(Player);
-			SelectRandomPlayer(_choices);
+			SelectRandomPlayer();
 		}
 
 		public override void ReInitialize() { }
