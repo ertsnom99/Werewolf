@@ -256,6 +256,14 @@ MonoBehaviour:
       villagers are skipped), or he became a werewolf, the bear will growl. \r"
     m_Metadata:
       m_Items: []
+  - m_Id: 67446694559997952
+    m_Localized: Wild Child
+    m_Metadata:
+      m_Items: []
+  - m_Id: 67446738352726016
+    m_Localized: TODO
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

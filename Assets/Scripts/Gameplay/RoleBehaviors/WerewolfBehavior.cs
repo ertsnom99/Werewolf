@@ -129,7 +129,7 @@ namespace Werewolf.Gameplay.Role
 
 		public override void OnRoleCallDisconnected() { }
 
-		private void OnDestroy()
+		protected virtual void OnDestroy()
 		{
 			_gameManager.StartWaitingForPlayersRollCall -= OnStartWaitingForPlayersRollCall;
 		}

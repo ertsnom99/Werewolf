@@ -233,6 +233,10 @@ MonoBehaviour:
     m_Localized: L'ours du Montreur d'Ours grogne!
     m_Metadata:
       m_Items: []
+  - m_Id: 10433339337334784
+    m_Localized: "Choisi ton mod\xE8le"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
