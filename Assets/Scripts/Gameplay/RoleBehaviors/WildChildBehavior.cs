@@ -213,6 +213,12 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.AddPlayerToPlayerGroup(Player, PlayerGroups[1]);
 		}
 
+		public override void ReInitialize()
+		{
+			_model = PlayerRef.None;
+			_isModelAlive = false;
+		}
+
 		public override void OnRoleCallDisconnected()
 		{
 			if (_endRoleCallAfterTimeCoroutine != null)

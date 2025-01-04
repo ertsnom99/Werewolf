@@ -55,31 +55,6 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
-		{
-			if (Player == PlayerRef.None
-				|| Player == deadPlayer
-				|| !_gameManager.PlayerGameInfos[Player].IsAlive
-				|| !_gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroups))
-			{
-				return;
-			}
-
-			_hasPower = false;
-
-			_gameHistoryManager.AddEntry(_lostPowerGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
-												new()
-												{
-													Name = "BigBadWolfPlayer",
-													Data = _networkDataManager.PlayerInfos[Player].Nickname,
-													Type = GameHistorySaveEntryVariableType.Player
-												}
-										});
-
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
-		}
-
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
 			if (priorityIndex == NightPriorities[0].index)
@@ -220,6 +195,36 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.RPC_DisplayTitle(Player, _lostPowerImage.CompactTagId);
 			yield return 0;
 			_gameManager.StopWaintingForPlayer(Player);
+		}
+
+		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
+		{
+			if (Player == PlayerRef.None
+				|| Player == deadPlayer
+				|| !_gameManager.PlayerGameInfos[Player].IsAlive
+				|| !_gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroups))
+			{
+				return;
+			}
+
+			_hasPower = false;
+
+			_gameHistoryManager.AddEntry(_lostPowerGameHistoryEntry,
+										new GameHistorySaveEntryVariable[] {
+												new()
+												{
+													Name = "BigBadWolfPlayer",
+													Data = _networkDataManager.PlayerInfos[Player].Nickname,
+													Type = GameHistorySaveEntryVariableType.Player
+												}
+										});
+
+			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
+		}
+
+		public override void ReInitialize()
+		{
+			_hasPower = true;
 		}
 
 		public override void OnRoleCallDisconnected()
