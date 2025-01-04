@@ -53,11 +53,9 @@ MonoBehaviour:
     type: 2}
   _notResettedRoles:
   - {fileID: 5771913067030864782, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  - {fileID: 1136116219714361880, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: -5616936199980762825, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   _tookRoleGameHistoryEntry: {fileID: 7828025626779433002, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  _newRoleText: 'Your new role is: {0}'
-  _tookThisRoleText: The servant has decided to take this role!
   _newRoleImage: {fileID: -4329190402335458445, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _tookThisRoleImage: {fileID: -1265311115428382351, guid: 0e7014af8e28a88409bdb3f0abb80632,
