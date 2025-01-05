@@ -83,7 +83,7 @@ namespace Werewolf.Managers
 					if (behavior.IsPrimaryBehavior)
 					{
 						RemoveBehavior(from, behavior);
-						AddBehavior(to, behavior, reInitBehavior: reInitNewBehavior);
+						AddBehavior(to, behavior);
 						break;
 					}
 				}
@@ -119,7 +119,7 @@ namespace Werewolf.Managers
 		#endregion
 
 		#region Behavior Change
-		public void AddBehavior(PlayerRef player, RoleBehavior behavior, bool addPlayerToPlayerGroup = true, bool reInitBehavior = false)
+		public void AddBehavior(PlayerRef player, RoleBehavior behavior, bool addPlayerToPlayerGroup = true)
 		{
 			int[] nightPrioritiesIndexes = behavior.GetNightPrioritiesIndexes();
 
@@ -146,11 +146,6 @@ namespace Werewolf.Managers
 
 			PlayerGameInfos[player].Behaviors.Add(behavior);
 			behavior.SetPlayer(player);
-
-			if (reInitBehavior)
-			{
-				behavior.ReInitialize();
-			}
 
 #if UNITY_SERVER && UNITY_EDITOR
 			behavior.transform.position = _playerCards[player].transform.position;

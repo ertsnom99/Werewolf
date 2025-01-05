@@ -213,7 +213,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.AddPlayerToPlayerGroup(Player, PlayerGroups[1]);
 		}
 
-		public override void ReInitialize()
+		public override void OnPlayerChanged()
 		{
 			_model = PlayerRef.None;
 			_isModelAlive = false;

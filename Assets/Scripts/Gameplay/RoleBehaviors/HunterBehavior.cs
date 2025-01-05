@@ -215,7 +215,7 @@ namespace Werewolf.Gameplay.Role
 			SelectRandomPlayer();
 		}
 
-		public override void ReInitialize() { }
+		public override void OnPlayerChanged() { }
 
 		public override void OnRoleCallDisconnected() { }
 

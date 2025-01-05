@@ -300,7 +300,7 @@ namespace Werewolf.Gameplay.Role
 				counter++;
 			}
 
-			_gameManager.AddBehavior(Player, _currentRoleBehavior, false);
+			_gameManager.AddBehavior(Player, _currentRoleBehavior, addPlayerToPlayerGroup: false);
 			_gameManager.RemoveReservedRoles(this, new int[1] { selectedReservedRoleIndex });
 
 			_gameHistoryManager.AddEntry(_usedRoleGameHistoryEntry,
@@ -322,7 +322,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		public override void ReInitialize() { }
+		public override void OnPlayerChanged() { }
 
 		public override void OnRoleCallDisconnected()
 		{

@@ -369,7 +369,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		public override void ReInitialize()
+		public override void OnPlayerChanged()
 		{
 			_hasLifePotion = true;
 			_hasDeathPotion = true;

@@ -222,10 +222,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
 		}
 
-		public override void ReInitialize()
-		{
-			_hasPower = true;
-		}
+		public override void OnPlayerChanged() { }
 
 		public override void OnRoleCallDisconnected()
 		{

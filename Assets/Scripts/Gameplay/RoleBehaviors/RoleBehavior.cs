@@ -91,6 +91,7 @@ namespace Werewolf.Gameplay.Role
 		public void SetPlayer(PlayerRef player)
 		{
 			Player = player;
+			OnPlayerChanged();
 		}
 
 		public abstract void Initialize();
@@ -101,7 +102,7 @@ namespace Werewolf.Gameplay.Role
 
 		public virtual void GetTitlesOverride(int priorityIndex, ref Dictionary<PlayerRef, int> titlesOverride) { }
 
-		public abstract void ReInitialize();
+		public abstract void OnPlayerChanged();
 
 		public abstract void OnRoleCallDisconnected();
 	}
