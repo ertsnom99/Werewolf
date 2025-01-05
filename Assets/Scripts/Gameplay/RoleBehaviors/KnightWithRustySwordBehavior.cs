@@ -61,7 +61,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
 		{
-			if (deadPlayer == Player && _markForDeathToKillWerewolf.Contains(markForDeath) && _werewolfToKill != PlayerRef.None)
+			if (deadPlayer == Player && _markForDeathToKillWerewolf.Contains(markForDeath) && !_werewolfToKill.IsNone)
 			{
 				_gameHistoryManager.AddEntry(_gaveTetanusGameHistoryEntry,
 											new GameHistorySaveEntryVariable[] {
@@ -91,7 +91,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnGameplayLoopStepStarts(GameplayLoopStep gameplayLoopStep)
 		{
-			if (gameplayLoopStep == GameplayLoopStep.DayTransition && _werewolfToKill != PlayerRef.None && _killWerewolf)
+			if (gameplayLoopStep == GameplayLoopStep.DayTransition && !_werewolfToKill.IsNone && _killWerewolf)
 			{
 				_gameManager.AddMarkForDeath(_werewolfToKill, _markForDeathAddedByStab, 0);
 
