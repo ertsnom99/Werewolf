@@ -199,7 +199,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
 		{
-			if (Player == PlayerRef.None
+			if (Player.IsNone
 				|| Player == deadPlayer
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| !_gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroups))

@@ -47,7 +47,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnDeathRevealEnded()
 		{
-			if (Player == PlayerRef.None
+			if (Player.IsNone
 			|| _gameManager.CurrentGameplayLoopStep != GameManager.GameplayLoopStep.DayDeathReveal
 			|| !_gameManager.PlayerGameInfos[Player].IsAlive)
 			{

@@ -50,17 +50,17 @@ namespace Werewolf.Gameplay.Role
 
 		public override GameplayTag[] GetCurrentPlayerGroups()
 		{
-			return new GameplayTag[1] { PlayerGroups[_model == PlayerRef.None || _isModelAlive ? 0 : 1] };
+			return new GameplayTag[1] { PlayerGroups[_model.IsNone || _isModelAlive ? 0 : 1] };
 		}
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			if (priorityIndex == NightPriorities[0].index && _model == PlayerRef.None)
+			if (priorityIndex == NightPriorities[0].index && _model.IsNone)
 			{
 				ChooseModel();
 				return isWakingUp = true;
 			}
-			else if (priorityIndex == NightPriorities[1].index && _model != PlayerRef.None && !_isModelAlive)
+			else if (priorityIndex == NightPriorities[1].index && !_model.IsNone && !_isModelAlive)
 			{
 				VoteForVillagers();
 				return isWakingUp = true;
@@ -181,7 +181,7 @@ namespace Werewolf.Gameplay.Role
 		}
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
 		{
-			if (Player == PlayerRef.None
+			if (Player.IsNone
 				|| Player == deadPlayer
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| _model.IsNone
