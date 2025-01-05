@@ -161,7 +161,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		public override void ReInitialize()
+		public override void OnPlayerChanged()
 		{
 			_selectedPlayer = PlayerRef.None;
 		}

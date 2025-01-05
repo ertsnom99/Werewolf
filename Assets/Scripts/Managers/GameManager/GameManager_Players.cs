@@ -298,6 +298,22 @@ namespace Werewolf.Managers
 			_playerGroups.Add(new() { GameplayTag = playerGroup, Priority = priority, Players = new() { player } });
 		}
 
+		public void AddPlayersToNewPlayerGroup(PlayerRef[] players, GameplayTag playerGroup)
+		{
+			int priority = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(playerGroup.CompactTagId).Priority;
+
+			for (int i = 0; i < _playerGroups.Count; i++)
+			{
+				if (_playerGroups[i].Priority <= priority)
+				{
+					_playerGroups.Insert(i, new() { GameplayTag = playerGroup, Priority = priority, Players = new(players) });
+					return;
+				}
+			}
+
+			_playerGroups.Add(new() { GameplayTag = playerGroup, Priority = priority, Players = new(players) });
+		}
+
 		public void RemovePlayerFromGroup(PlayerRef player, GameplayTag playerGroup)
 		{
 			for (int i = 0; i < _playerGroups.Count; i++)
@@ -313,8 +329,6 @@ namespace Werewolf.Managers
 				{
 					_playerGroups.RemoveAt(i);
 				}
-
-				break;
 			}
 		}
 

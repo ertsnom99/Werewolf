@@ -52,7 +52,6 @@ MonoBehaviour:
   _takeRoleImage: {fileID: -5594949299689075354, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   _notResettedRoles:
-  - {fileID: 5771913067030864782, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   - {fileID: -5616936199980762825, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   _tookRoleGameHistoryEntry: {fileID: 7828025626779433002, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}

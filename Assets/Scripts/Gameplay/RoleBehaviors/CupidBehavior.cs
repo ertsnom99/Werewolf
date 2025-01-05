@@ -52,11 +52,12 @@ namespace Werewolf.Gameplay.Role
 		private float _coupleDeathHighlightHoldDuration = 3.0f;
 
 		private PlayerRef[] _choices;
-		private PlayerRef[] _couple = new PlayerRef[2];
+		private List<PlayerRef[]> _couples = new();
 		private IEnumerator _endChooseCoupleAfterTimeCoroutine;
 		private IEnumerator _setSelectedCoupleCoroutine;
 		private IEnumerator _highlightCoupleCoroutine;
 		private IEnumerator _waitToRemoveDeadCoupleHighlightCoroutine;
+		private bool _choseCouple;
 		private bool _showedCouple;
 
 		private GameManager _gameManager;
@@ -78,12 +79,12 @@ namespace Werewolf.Gameplay.Role
 
 			if (PlayerGroups.Count < 2)
 			{
-				Debug.LogError("Cupid must have two player groups: the first one for cupid and the second one for the couple");
+				Debug.LogError("Cupid must have two player groups: the first one for cupid and the second one for any couple");
 			}
 
 			if (NightPriorities.Count < 2)
 			{
-				Debug.LogError("Cupid must have two night priorities: the first one to select the couple and the second one to let the couple know each other");
+				Debug.LogError("Cupid must have two night priorities: the first one to select the couple and the second one to let a couple know each other");
 			}
 		}
 
@@ -98,23 +99,18 @@ namespace Werewolf.Gameplay.Role
 		{
 			isWakingUp = false;
 
-			if (!IsCoupleSelected() && priorityIndex == NightPriorities[0].index)
+			if (!_choseCouple && priorityIndex == NightPriorities[0].index)
 			{
 				isWakingUp = true;
 				return ChooseCouple();
 			}
-			else if (!_showedCouple && _couple[0] != PlayerRef.None && _couple[1] != PlayerRef.None && priorityIndex == NightPriorities[1].index)
+			else if (_choseCouple && !_showedCouple && priorityIndex == NightPriorities[1].index)
 			{
 				StartCoroutine(ShowCouple());
 				return true;
 			}
 
 			return false;
-		}
-
-		private bool IsCoupleSelected()
-		{
-			return !_couple[0].IsNone && !_couple[1].IsNone && _couple[0] != _couple[1];
 		}
 
 		#region Choose Couple
@@ -136,8 +132,13 @@ namespace Werewolf.Gameplay.Role
 				if (choices.Count >= 2)
 				{
 					ChooseRandomCouple();
-					AddCouplePlayerGroup();
-					AddCoupleSelectedGameHistoryEntry();
+
+					PlayerRef[] couple = _couples[^1];
+
+					_gameManager.AddPlayersToNewPlayerGroup(couple, PlayerGroups[1]);
+					AddCoupleSelectedGameHistoryEntry(couple);
+
+					_choseCouple = true;
 				}
 
 				StartCoroutine(WaitToStopWaitingForPlayer());
@@ -177,14 +178,17 @@ namespace Werewolf.Gameplay.Role
 			}
 			else
 			{
-				_couple[0] = players[0];
-				_couple[1] = players[1];
+				_couples.Add(new PlayerRef[2] { players[0], players[1] });
 			}
 
-			AddCouplePlayerGroup();
-			AddCoupleSelectedGameHistoryEntry();
+			PlayerRef[] couple = _couples[^1];
 
-			_highlightCoupleCoroutine = HighlightCouple(Player, _choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
+			_gameManager.AddPlayersToNewPlayerGroup(couple, PlayerGroups[1]);
+			AddCoupleSelectedGameHistoryEntry(couple);
+
+			_choseCouple = true;
+
+			_highlightCoupleCoroutine = HighlightCouple(couple, Player, _choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
 			yield return StartCoroutine(_highlightCoupleCoroutine);
 
 			_gameManager.StopWaintingForPlayer(Player);
@@ -204,10 +208,15 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopSelectingPlayers(Player);
 
 			ChooseRandomCouple();
-			AddCouplePlayerGroup();
-			AddCoupleSelectedGameHistoryEntry();
 
-			_highlightCoupleCoroutine = HighlightCouple(Player, _choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
+			PlayerRef[] couple = _couples[^1];
+
+			_gameManager.AddPlayersToNewPlayerGroup(couple, PlayerGroups[1]);
+			AddCoupleSelectedGameHistoryEntry(couple);
+
+			_choseCouple = true;
+
+			_highlightCoupleCoroutine = HighlightCouple(couple, Player, _choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
 			yield return StartCoroutine(_highlightCoupleCoroutine);
 
 			_gameManager.StopWaintingForPlayer(Player);
@@ -221,6 +230,8 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
+			_couples.Add(new PlayerRef[2]);
+
 			int playerCount = 0;
 
 			List<PlayerRef> players = _choices.ToList();
@@ -228,21 +239,13 @@ namespace Werewolf.Gameplay.Role
 			while (playerCount < 2)
 			{
 				PlayerRef player = players[UnityEngine.Random.Range(0, players.Count)];
-				_couple[playerCount] = player;
+				_couples[^1][playerCount] = player;
 				players.Remove(player);
 				playerCount++;
 			}
 		}
 
-		private void AddCouplePlayerGroup()
-		{
-			foreach (PlayerRef player in _couple)
-			{
-				_gameManager.AddPlayerToPlayerGroup(player, PlayerGroups[1]);
-			}
-		}
-
-		private void AddCoupleSelectedGameHistoryEntry()
+		private void AddCoupleSelectedGameHistoryEntry(PlayerRef[] couple)
 		{
 			_gameHistoryManager.AddEntry(_coupleSelectedGameHistoryEntry,
 										new GameHistorySaveEntryVariable[] {
@@ -255,13 +258,13 @@ namespace Werewolf.Gameplay.Role
 											new()
 											{
 												Name = "FirstCouplePlayer",
-												Data = _networkDataManager.PlayerInfos[_couple[0]].Nickname,
+												Data = _networkDataManager.PlayerInfos[couple[0]].Nickname,
 												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "SecondCouplePlayer",
-												Data = _networkDataManager.PlayerInfos[_couple[1]].Nickname,
+												Data = _networkDataManager.PlayerInfos[couple[1]].Nickname,
 												Type = GameHistorySaveEntryVariableType.Player
 											}
 										});
@@ -273,19 +276,21 @@ namespace Werewolf.Gameplay.Role
 		{
 			_gameManager.StartWaitingForPlayersRollCall += OnStartWaitingForPlayersRollCall;
 
-			for (int i = 0; i < _couple.Length; i++)
+			PlayerRef[] couple = _couples[^1];
+
+			for (int i = 0; i < couple.Length; i++)
 			{
-				if (!_networkDataManager.PlayerInfos[_couple[i]].IsConnected)
+				if (!_networkDataManager.PlayerInfos[couple[i]].IsConnected)
 				{
 					continue;
 				}
 
-				StartCoroutine(HighlightCouple(_couple[i], _showCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier));
+				StartCoroutine(HighlightCouple(couple, couple[i], _showCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier));
 			}
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _couple.Contains(Player) ? _inCoupleImage.CompactTagId : _coupleRecognizingEachOtherImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, couple.Contains(Player) ? _inCoupleImage.CompactTagId : _coupleRecognizingEachOtherImage.CompactTagId);
 			}
 
 			_showedCouple = true;
@@ -295,22 +300,30 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.StartWaitingForPlayersRollCall -= OnStartWaitingForPlayersRollCall;
 		}
+
+		private void OnStartWaitingForPlayersRollCall()
+		{
+			PlayerRef[] couple = _couples[^1];
+
+			_gameManager.SetPlayerAwake(couple[0], true);
+			_gameManager.SetPlayerAwake(couple[1], true);
+		}
 		#endregion
 
-		private IEnumerator HighlightCouple(PlayerRef highlightedFor, float duration)
+		private IEnumerator HighlightCouple(PlayerRef[] couple, PlayerRef highlightedFor, float duration)
 		{
-			_gameManager.RPC_SetPlayersCardHighlightVisible(highlightedFor, _couple, true);
+			_gameManager.RPC_SetPlayersCardHighlightVisible(highlightedFor, couple, true);
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayersCardHighlightVisible(_couple, true);
+			_gameManager.SetPlayersCardHighlightVisible(couple, true);
 #endif
 			yield return new WaitForSeconds(duration);
 
 			if (_networkDataManager.PlayerInfos[highlightedFor].IsConnected)
 			{
-				_gameManager.RPC_SetPlayersCardHighlightVisible(highlightedFor, _couple, false);
+				_gameManager.RPC_SetPlayersCardHighlightVisible(highlightedFor, couple, false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayersCardHighlightVisible(_couple, false);
+			_gameManager.SetPlayersCardHighlightVisible(couple, false);
 #endif
 		}
 
@@ -325,7 +338,7 @@ namespace Werewolf.Gameplay.Role
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
-				if (_couple.Contains(playerInfo.Key))
+				if (_couples[^1].Contains(playerInfo.Key))
 				{
 					titlesOverride.Add(playerInfo.Key, _inCoupleImage.CompactTagId);
 				}
@@ -336,61 +349,78 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnStartWaitingForPlayersRollCall()
-		{
-			_gameManager.SetPlayerAwake(_couple[0], true);
-			_gameManager.SetPlayerAwake(_couple[1], true);
-		}
-
 		private void OnPreChoosePlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> immunePlayersForGettingSelected)
 		{
-			if (purpose != ChoicePurpose.Kill || !IsCoupleSelected() || !_couple.Contains(player))
+			if (purpose != ChoicePurpose.Kill || _couples.Count <= 0)
 			{
 				return;
 			}
 
-			PlayerRef otherCouplePlayer = _couple[1 - Array.IndexOf(_couple, player)];
+			IEnumerable<PlayerRef[]> couples = _couples.Where(x => x.Contains(player));
 
-			if (!immunePlayersForGettingSelected.Contains(otherCouplePlayer))
+			if (couples.Count() <= 0)
 			{
 				return;
 			}
 
-			immunePlayersForGettingSelected.Remove(otherCouplePlayer);
+			foreach (PlayerRef[] couple in couples)
+			{
+				PlayerRef otherCouplePlayer = couple[1 - Array.IndexOf(couple, player)];
+
+				if (immunePlayersForGettingSelected.Contains(otherCouplePlayer))
+				{
+					immunePlayersForGettingSelected.Remove(otherCouplePlayer);
+				}
+			}
 		}
 
 		private void OnVoteStarting(ChoicePurpose purpose)
 		{
-			if (purpose != ChoicePurpose.Kill || !IsCoupleSelected())
+			if (purpose != ChoicePurpose.Kill || _couples.Count <= 0)
 			{
 				return;
 			}
 
-			_voteManager.AddVoteImmunity(_couple[0], _couple[1]);
-			_voteManager.AddVoteImmunity(_couple[1], _couple[0]);
+			foreach (PlayerRef[] couple in _couples)
+			{
+				_voteManager.AddVoteImmunity(couple[0], couple[1]);
+				_voteManager.AddVoteImmunity(couple[1], couple[0]);
+			}
 		}
 
 		#region Couple Death
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
 		{
-			if (_couple[0].IsNone || _couple[1].IsNone || !_couple.Contains(deadPlayer))
+			IEnumerable<PlayerRef[]> couples = _couples.Where(x => x.Contains(deadPlayer));
+
+			if (couples.Count() <= 0)
 			{
 				return;
 			}
 
-			PlayerRef otherCouplePlayer = _couple[1 - Array.IndexOf(_couple, deadPlayer)];
+			HashSet<PlayerRef> otherCouplePlayers = new();
 
-			if (!_gameManager.PlayerGameInfos[otherCouplePlayer].IsAlive)
+			foreach (PlayerRef[] couple in couples)
+			{
+				PlayerRef otherCouplePlayer = couple[1 - Array.IndexOf(couple, deadPlayer)];
+
+				if (_gameManager.PlayerGameInfos[otherCouplePlayer].IsAlive)
+				{
+					otherCouplePlayers.Add(otherCouplePlayer);
+				}
+			}
+
+			if (otherCouplePlayers.Count <= 0)
 			{
 				return;
 			}
 
 			_gameManager.WaitForPlayer(Player);
 
-			StartCoroutine(WaitToMarkOtherCouplePlayerForDeath(deadPlayer, otherCouplePlayer));
+			StartCoroutine(WaitToMarkOtherCouplePlayerForDeath(deadPlayer, otherCouplePlayers));
 		}
 
-		private IEnumerator WaitToMarkOtherCouplePlayerForDeath(PlayerRef deadCouplePlayer, PlayerRef otherCouplePlayer)
+		private IEnumerator WaitToMarkOtherCouplePlayerForDeath(PlayerRef deadCouplePlayer, HashSet<PlayerRef> otherCouplePlayers)
 		{
 			yield return 0;
 
@@ -399,10 +429,12 @@ namespace Werewolf.Gameplay.Role
 				yield return 0;
 			}
 
-			_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 1);
+			foreach (PlayerRef otherCouplePlayer in otherCouplePlayers)
+			{
+				_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 1);
 
-			_gameHistoryManager.AddEntry(_coupleDiedGameHistoryEntry,
-										new GameHistorySaveEntryVariable[] {
+				_gameHistoryManager.AddEntry(_coupleDiedGameHistoryEntry,
+											new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "FirstCouplePlayer",
@@ -415,30 +447,33 @@ namespace Werewolf.Gameplay.Role
 												Data = _networkDataManager.PlayerInfos[otherCouplePlayer].Nickname,
 												Type = GameHistorySaveEntryVariableType.Player
 											}
-										});
+											});
+			}
 
-			HighlightDeadCouple();
+			otherCouplePlayers.Add(deadCouplePlayer);
+
+			HighlightDeadPlayers(otherCouplePlayers.ToArray());
 		}
 
-		private void HighlightDeadCouple()
+		private void HighlightDeadPlayers(PlayerRef[] deadPlayers)
 		{
 			_gameManager.RPC_DisplayTitle(_coupleDeathImage.CompactTagId);
-			_gameManager.RPC_SetPlayersCardHighlightVisible(_couple, true);
+			_gameManager.RPC_SetPlayersCardHighlightVisible(deadPlayers, true);
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayersCardHighlightVisible(_couple, true);
+			_gameManager.SetPlayersCardHighlightVisible(deadPlayers, true);
 #endif
-			_waitToRemoveDeadCoupleHighlightCoroutine = WaitToRemoveDeadCoupleHighlight();
+			_waitToRemoveDeadCoupleHighlightCoroutine = WaitToRemoveDeadPlayersHighlight(deadPlayers);
 			StartCoroutine(_waitToRemoveDeadCoupleHighlightCoroutine);
 		}
 
-		private IEnumerator WaitToRemoveDeadCoupleHighlight()
+		private IEnumerator WaitToRemoveDeadPlayersHighlight(PlayerRef[] deadPlayers)
 		{
 			yield return new WaitForSeconds(_coupleDeathHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
-			_gameManager.RPC_SetPlayersCardHighlightVisible(_couple, false);
+			_gameManager.RPC_SetPlayersCardHighlightVisible(deadPlayers, false);
 			_gameManager.RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayersCardHighlightVisible(_couple, false);
+			_gameManager.SetPlayersCardHighlightVisible(deadPlayers, false);
 			_gameManager.HideUI();
 #endif
 			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
@@ -456,9 +491,9 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		public override void ReInitialize()
+		public override void OnPlayerChanged()
 		{
-			_couple = new PlayerRef[2];
+			_choseCouple = false;
 			_showedCouple = false;
 		}
 
@@ -485,8 +520,11 @@ namespace Werewolf.Gameplay.Role
 			}
 
 			ChooseRandomCouple();
-			AddCouplePlayerGroup();
-			AddCoupleSelectedGameHistoryEntry();
+
+			PlayerRef[] couple = _couples[^1];
+
+			_gameManager.AddPlayersToNewPlayerGroup(couple, PlayerGroups[1]);
+			AddCoupleSelectedGameHistoryEntry(couple);
 		}
 
 		private void OnDestroy()
