@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -4144404035216328849, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: WildChildModelDied
-  <Image>k__BackingField: {fileID: 21300000, guid: dc87789f0ad5d4d4ca779797639c344b,
+  <Image>k__BackingField: {fileID: 21300000, guid: ae6769a8ae9f79a4a98bc49cfb0bb6d1,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

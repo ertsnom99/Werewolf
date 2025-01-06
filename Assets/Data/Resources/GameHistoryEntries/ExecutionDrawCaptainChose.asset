@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: 7857262219002472655, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: ExecutionDrawCaptainChose
-  <Image>k__BackingField: {fileID: 21300000, guid: 44fda17073c176a418c51cd857d0bd9d,
+  <Image>k__BackingField: {fileID: 21300000, guid: 412b885112a0cb94a915478c51203b16,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

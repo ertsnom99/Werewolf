@@ -20,6 +20,10 @@ namespace Werewolf.Data
 		[field: PreviewSprite]
 		public Sprite Image { get; private set; }
 
+		[field: SerializeField]
+		[field: PreviewSprite]
+		public Sprite SmallImage { get; private set; }
+
 		[HideInInspector]
 		public GameObject Leader;
 	}

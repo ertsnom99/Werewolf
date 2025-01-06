@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -8735980565207345998, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: CupidCoupleSelected
-  <Image>k__BackingField: {fileID: 21300000, guid: ff5ef4fef58e24d4a9eca5847e4b794a,
+  <Image>k__BackingField: {fileID: 21300000, guid: 892f9a5ad3ffb8a4cb8599437a0018cc,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

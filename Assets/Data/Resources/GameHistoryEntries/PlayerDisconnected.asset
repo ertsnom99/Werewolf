@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: 9004836224527247862, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: PlayerDisconnected
-  <Image>k__BackingField: {fileID: 21300000, guid: a0ca8fbe67a9a26419e741f6079f7f51,
+  <Image>k__BackingField: {fileID: 21300000, guid: e379d73c24078cc48b641fa4923de535,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

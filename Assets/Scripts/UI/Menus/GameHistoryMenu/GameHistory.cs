@@ -69,12 +69,12 @@ namespace Werewolf.UI
 
 					if (GameplayTagType == "Role")
 					{
-						image = _gameplayDatabaseManager.GetGameplayData<RoleData>(entry.ImageOverrideGameplayTagName).Image;
+						image = _gameplayDatabaseManager.GetGameplayData<RoleData>(entry.ImageOverrideGameplayTagName).SmallImage;
 					}
 					else if (GameplayTagType == "PlayerGroup")
 					{
 						PlayerGroupData playerGroupData = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(entry.ImageOverrideGameplayTagName);
-						image = playerGroupData.Image;
+						image = playerGroupData.SmallImage;
 					}
 				}
 

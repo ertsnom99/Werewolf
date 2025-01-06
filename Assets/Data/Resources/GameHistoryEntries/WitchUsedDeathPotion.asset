@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -6783649889304436894, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: WitchUsedDeathPotion
-  <Image>k__BackingField: {fileID: 21300000, guid: 66a14cb42af091740ac50bfce7dea8a7,
+  <Image>k__BackingField: {fileID: 21300000, guid: bae57c012cf6f1444a8f845653d6e3df,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

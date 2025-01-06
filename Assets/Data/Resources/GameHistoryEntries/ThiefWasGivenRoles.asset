@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: 1282424815053823321, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: ThiefWasGivenRoles
-  <Image>k__BackingField: {fileID: 21300000, guid: 0c62427bd7f8a8145984fd9d41a65d2e,
+  <Image>k__BackingField: {fileID: 21300000, guid: 07e7c076c85c1fd4093a00e12c4cf358,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

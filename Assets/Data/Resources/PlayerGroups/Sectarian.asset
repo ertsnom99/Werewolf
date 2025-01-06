@@ -24,9 +24,11 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <HasMultiplePlayers>k__BackingField: 0
+  <HasPluralName>k__BackingField: 0
   <Priority>k__BackingField: 4
   <Image>k__BackingField: {fileID: -1321321227, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
+    type: 3}
+  <SmallImage>k__BackingField: {fileID: -1321321227, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
     type: 3}
   Leader: {fileID: 0}
   references:

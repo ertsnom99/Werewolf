@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -5222993735485238172, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: SunSet
-  <Image>k__BackingField: {fileID: 21300000, guid: 3c53240530db195428644f9d53257d47,
+  <Image>k__BackingField: {fileID: 21300000, guid: 59a3eabb43dfc6a448121fea85cc7053,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

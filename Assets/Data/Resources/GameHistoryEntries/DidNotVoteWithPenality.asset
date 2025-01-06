@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -5852892113263125513, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: DidNotVoteWithPenality
-  <Image>k__BackingField: {fileID: 21300000, guid: 1a85e3271256d3b4eb2b22140de6f7ee,
+  <Image>k__BackingField: {fileID: 21300000, guid: 9424df3e5dde1974b8db9aa924d7fd07,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

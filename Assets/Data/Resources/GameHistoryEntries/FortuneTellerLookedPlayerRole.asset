@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -66247362111012362, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: FortuneTellerLookedPlayerRole
-  <Image>k__BackingField: {fileID: 21300000, guid: 22e5b92d6a0a1da49af3681f5db78b7b,
+  <Image>k__BackingField: {fileID: 21300000, guid: 5b8258ce4f11b314c91be397f18dc6c5,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:
