@@ -211,6 +211,14 @@ MonoBehaviour:
     m_Key: SettingsMenu_Language
     m_Metadata:
       m_Items: []
+  - m_Id: 11211126604161024
+    m_Key: RoomMenu_SaveGameHistory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11212151973076992
+    m_Key: RoomMenu_EnterGameHistoryName
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

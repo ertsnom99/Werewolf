@@ -10,9 +10,7 @@ namespace Werewolf.Managers
 	{
 		void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
 		{
-			string gameHistoryJson = Encoding.ASCII.GetString(data);
-			_gameHistoryManager.SaveGameHistoryToFile(gameHistoryJson);
-			MainMenuManager.GAME_HISTORY = gameHistoryJson;
+			MainMenuManager.GAME_HISTORY = Encoding.ASCII.GetString(data);
 		}
 
 		#region Unused Callbacks

@@ -264,6 +264,14 @@ MonoBehaviour:
     m_Localized: Language
     m_Metadata:
       m_Items: []
+  - m_Id: 11211126604161024
+    m_Localized: Save game history
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11212151973076992
+    m_Localized: Enter game history name
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
