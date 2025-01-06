@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: 4954223030057824743, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: WerewolfFailedToVotePlayer
-  <Image>k__BackingField: {fileID: 21300000, guid: d72c892118090b44bbabea4fbaa77a5d,
+  <Image>k__BackingField: {fileID: 21300000, guid: 261bdf70a1a216047bf5bc665fca1c31,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

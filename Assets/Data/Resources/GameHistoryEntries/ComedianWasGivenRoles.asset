@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: 7785847060838763036, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: ComedianWasGivenRoles
-  <Image>k__BackingField: {fileID: 21300000, guid: 3a7a67ce8ca314645b988be87658689c,
+  <Image>k__BackingField: {fileID: 21300000, guid: de7379e54269a994e97a7466a70e24dc,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

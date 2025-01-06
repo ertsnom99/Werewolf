@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -7311221229780604641, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: CaptainChanged
-  <Image>k__BackingField: {fileID: 21300000, guid: fbb617220e2a3c0419ebb2f28b295932,
+  <Image>k__BackingField: {fileID: 21300000, guid: 8f11b827b5a5e8c4e816d586ab10a07c,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

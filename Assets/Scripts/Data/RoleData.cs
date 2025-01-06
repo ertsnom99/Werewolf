@@ -44,6 +44,10 @@ namespace Werewolf.Data
 		public Sprite Image { get; private set; }
 
 		[field: SerializeField]
+		[field: PreviewSprite]
+		public Sprite SmallImage { get; private set; }
+
+		[field: SerializeField]
 		public PrimaryRoleType PrimaryType { get; private set; }
 
 		[field: SerializeField]

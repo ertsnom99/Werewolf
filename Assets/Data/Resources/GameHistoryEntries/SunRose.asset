@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -330970494665732209, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: SunRose
-  <Image>k__BackingField: {fileID: 21300000, guid: d819dea25ad773c46984ae79969f669e,
+  <Image>k__BackingField: {fileID: 21300000, guid: b5fbfe4d0f89b2740ac191f18babc22d,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

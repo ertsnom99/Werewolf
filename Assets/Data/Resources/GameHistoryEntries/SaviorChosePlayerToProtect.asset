@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: 7584545385755327515, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: SaviorChosePlayerToProtect
-  <Image>k__BackingField: {fileID: 21300000, guid: 8c3a3308d4c6a094faa2e3ed66fd278c,
+  <Image>k__BackingField: {fileID: 21300000, guid: f2c0b7134d0caa34ab5e070a930f0dde,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:

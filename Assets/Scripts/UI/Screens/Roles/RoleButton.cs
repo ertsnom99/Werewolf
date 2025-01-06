@@ -25,7 +25,7 @@ namespace Werewolf.UI
 		public void SetRoleData(RoleData roleData)
 		{
 			RoleData = roleData;
-			_image.sprite = roleData.Image;
+			_image.sprite = roleData.SmallImage;
 		}
 
 		public void Select()

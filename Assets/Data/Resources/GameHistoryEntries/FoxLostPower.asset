@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -1905914086747963203, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: FoxLostPower
-  <Image>k__BackingField: {fileID: 21300000, guid: 5f132090ee0f2e84d959d95cc7337f82,
+  <Image>k__BackingField: {fileID: 21300000, guid: 0c4012e71272aef469c1eee2f5492c3e,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:
