@@ -154,14 +154,14 @@ namespace Werewolf.Managers
 			return JsonUtility.ToJson(_gameHistorySave);
 		}
 
-		public void SaveGameHistoryToFile(string gameHistoryJson)
+		public void SaveGameHistoryToFile(string fileName, string gameHistoryJson)
 		{
 			if (!Directory.Exists($"{_saveDirectoryPath}"))
 			{
 				Directory.CreateDirectory($"{_saveDirectoryPath}");
 			}
 
-			string path = $"{_saveDirectoryPath}/{DateTime.Now:yyyy'_'MM'_'dd'_'HH'_'mm}{SAVE_FILE_EXTENSION}";
+			string path = $"{_saveDirectoryPath}/{fileName}{SAVE_FILE_EXTENSION}";
 
 			if (!File.Exists(path))
 			{

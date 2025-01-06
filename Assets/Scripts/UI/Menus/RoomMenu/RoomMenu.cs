@@ -28,6 +28,12 @@ namespace Werewolf.UI
 		[SerializeField]
 		private GameHistory _gameHistory;
 
+		[SerializeField]
+		private TMP_InputField _gameHistoryNameInputField;
+
+		[SerializeField]
+		private Button _saveGameHistoryButton;
+
 		[Header("UI")]
 		[SerializeField]
 		private TMP_InputField _nicknameInputField;
@@ -54,10 +60,12 @@ namespace Werewolf.UI
 		private Button _leaveSessionBtn;
 
 		private NetworkDataManager _networkDataManager;
+		private GameHistoryManager _gameHistoryManager;
 
 		private PlayerRef _localPlayer;
 		private int _minPlayer = -1;
 		private int _minNicknameCharacterCount;
+		private string _gameHistoryData;
 		private bool _initializedNicknameInputField;
 
 		public event Action<PlayerRef> KickPlayerClicked;
@@ -86,8 +94,12 @@ namespace Werewolf.UI
 			_networkDataManager.GameSpeedChanged += ChangeGameSpeed;
 			_networkDataManager.InvalidRolesSetupReceived += OnInvalidRolesSetupReceived;
 
-			if (!string.IsNullOrEmpty(gameHistory) && GameHistoryManager.Instance.LoadGameHistorySaveFromJson(gameHistory, out GameHistorySave gameHistorySave))
+			_gameHistoryManager = GameHistoryManager.Instance;
+			_gameHistoryData = gameHistory;
+
+			if (!string.IsNullOrEmpty(gameHistory) && _gameHistoryManager.LoadGameHistorySaveFromJson(gameHistory, out GameHistorySave gameHistorySave))
 			{
+				_gameHistoryNameInputField.text = $"{DateTime.Now:yyyy'_'MM'_'dd'_'HH'_'mm}";
 				_gameHistory.DisplayGameHistory(gameHistorySave);
 				_gameHistoryUI.SetActive(true);
 			}
@@ -172,6 +184,15 @@ namespace Werewolf.UI
 		{
 			_gameSpeedDropdown.value = (int)gameSpeed;
 			_gameSpeedText.StringReference = _gameSpeedLocalizeDropdown.GetLocalizedValue();
+		}
+
+		public void OnSaveGameHistory()
+		{
+			if (!string.IsNullOrEmpty(_gameHistoryData))
+			{
+				_gameHistoryManager.SaveGameHistoryToFile(_gameHistoryNameInputField.text, _gameHistoryData);
+				_saveGameHistoryButton.interactable = false;
+			}
 		}
 
 		private void OnInvalidRolesSetupReceived()
