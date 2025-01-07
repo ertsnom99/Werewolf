@@ -400,9 +400,29 @@ namespace Werewolf.Managers
 			PlayerRef selectedPlayer = _selectedCard ? _selectedCard.Player : PlayerRef.None;
 
 			_votes[Runner.LocalPlayer] = selectedPlayer;
-			UpdateVisualFeedback();
-
 			RPC_UpdateServerVote(selectedPlayer);
+		}
+
+		private void UpdateAllClientsVisualFeedback(PlayerRef inVoter, PlayerRef votedFor)
+		{
+#if UNITY_SERVER && UNITY_EDITOR
+			UpdateVisualFeedback();
+#endif
+			foreach (PlayerRef voter in Voters)
+			{
+				if (_networkDataManager.PlayerInfos[voter].IsConnected)
+				{
+					RPC_UpdateClientVote(voter, inVoter, votedFor, _voteCount);
+				}
+			}
+
+			foreach (PlayerRef spectator in _spectators)
+			{
+				if (_networkDataManager.PlayerInfos[spectator].IsConnected)
+				{
+					RPC_UpdateClientVote(spectator, inVoter, votedFor, _voteCount);
+				}
+			}
 		}
 
 		private void UpdateVisualFeedback()
@@ -438,28 +458,6 @@ namespace Werewolf.Managers
 			}
 
 			_UIManager.VoteScreen.SetConfirmVoteDelayActive(_voteCount >= _votes.Count);
-		}
-
-		private void UpdateAllClientsVisualFeedback(PlayerRef inVoter, PlayerRef votedFor)
-		{
-#if UNITY_SERVER && UNITY_EDITOR
-			UpdateVisualFeedback();
-#endif
-			foreach (PlayerRef voter in Voters)
-			{
-				if (_networkDataManager.PlayerInfos[voter].IsConnected)
-				{
-					RPC_UpdateClientVote(voter, inVoter, votedFor, _voteCount);
-				}
-			}
-
-			foreach (PlayerRef spectator in _spectators)
-			{
-				if (_networkDataManager.PlayerInfos[spectator].IsConnected)
-				{
-					RPC_UpdateClientVote(spectator, inVoter, votedFor, _voteCount);
-				}
-			}
 		}
 
 		private void EndVote()
