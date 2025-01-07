@@ -8,7 +8,7 @@ namespace Werewolf.Data
 	[CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/GameConfig")]
 	public class GameConfig : ScriptableObject
 	{
-		public const int MAX_PLAYER_COUNT = 25;
+		public const int MAX_PLAYER_COUNT = 24;
 
 		[field: Header("Loading Screen")]
 		[field: SerializeField]
