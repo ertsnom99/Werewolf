@@ -72,6 +72,8 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
+			_gameManager.WaitForPlayer(Player);
+
 			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 			choices.Remove(Player);
 
