@@ -543,11 +543,6 @@ namespace Werewolf.Managers
 
 				totalVotes.Add(vote.Value, voteValue);
 			}
-
-			VoteCompleted?.Invoke(totalVotes);
-
-			_voteCoroutine = null;
-			VoteCompleted = null;
 #if UNITY_SERVER && UNITY_EDITOR
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
@@ -564,7 +559,12 @@ namespace Werewolf.Managers
 			_UIManager.VoteScreen.SetConfirmVoteDelayActive(false);
 			_UIManager.FadeOut(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 #endif
+			_voteCoroutine = null;
+
 			_step = Step.NotVoting;
+
+			VoteCompleted?.Invoke(totalVotes);
+			VoteCompleted = null;
 		}
 
 		private void OnAllPlayersVoteEnded(Dictionary<PlayerRef, int> votes)
