@@ -280,12 +280,10 @@ namespace Werewolf.Gameplay.Role
 
 			for (int i = 0; i < couple.Length; i++)
 			{
-				if (!_networkDataManager.PlayerInfos[couple[i]].IsConnected)
+				if (_networkDataManager.PlayerInfos[couple[i]].IsConnected)
 				{
-					continue;
+					StartCoroutine(HighlightCouple(couple, couple[i], _showCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier));
 				}
-
-				StartCoroutine(HighlightCouple(couple, couple[i], _showCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier));
 			}
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
