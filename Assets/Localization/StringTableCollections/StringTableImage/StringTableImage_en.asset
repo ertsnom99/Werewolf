@@ -124,10 +124,6 @@ MonoBehaviour:
     m_Localized: There is one or more werewolf in this group!
     m_Metadata:
       m_Items: []
-  - m_Id: 8324776755200
-    m_Localized: Can't use your power, because you lost it!
-    m_Metadata:
-      m_Items: []
   - m_Id: 8656277766144
     m_Localized: Choose a villager to kill
     m_Metadata:
@@ -218,16 +214,28 @@ MonoBehaviour:
     m_Localized: Choose a villager to kill
     m_Metadata:
       m_Items: []
-  - m_Id: 7696127449489408
-    m_Localized: Can't use your power, because you lost it!
-    m_Metadata:
-      m_Items: []
   - m_Id: 9786050608488448
     m_Localized: The bear of the  Bear Trainer is growling!
     m_Metadata:
       m_Items: []
   - m_Id: 10433339337334784
     m_Localized: Choose your model
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073015806222336
+    m_Localized: All of you are charmed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073252616626176
+    m_Localized: Choose up to two villagers to charm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073159595352064
+    m_Localized: The charmed villagers are recognizing each other
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13439811033882624
+    m_Localized: Can't use your power, because you lost it!
     m_Metadata:
       m_Items: []
   references:

@@ -26,22 +26,26 @@ namespace Werewolf.Managers
 
 		private readonly List<PlayerGroup> _playerGroups = new();
 
-		private struct PlayerGroup
+		private class PlayerGroup
 		{
 			public GameplayTag GameplayTag;
 			public int Priority;
 			public List<PlayerRef> Players;
+			public PlayerRef Leader;
 		}
 
 		private PlayerRef[] _playersOrder;
 
 		private readonly Dictionary<PlayerRef, Action<PlayerRef[]>> _selectPlayersCallbacks = new();
-		private List<PlayerRef> _choices;
-		private readonly List<PlayerRef> _selectedPlayers = new();
+		private List<PlayerRef> _serverChoices;
+		private PlayerRef[] _clientChoices;
+		private bool _mustSelectPlayer;
 		private int _playerAmountToSelect;
+		private readonly List<PlayerRef> _selectedPlayers = new();
 
 		private readonly Dictionary<PlayerRef, Action<PlayerRef>> _promptPlayerCallbacks = new();
 
+		public event Action<PlayerRef, GameplayTag> AddedPlayerToPlayerGroup;
 		public event Action<PlayerRef, ChoicePurpose, List<PlayerRef>> PreSelectPlayers;
 		public event Action<PlayerRef> PostPlayerDisconnected;
 
@@ -286,35 +290,48 @@ namespace Werewolf.Managers
 					}
 
 					_playerGroups[i].Players.Add(player);
+					AddedPlayerToPlayerGroup?.Invoke(player, playerGroup);
 					return;
 				}
 				else if (_playerGroups[i].Priority < priority)
 				{
 					_playerGroups.Insert(i, new() { GameplayTag = playerGroup, Priority = priority, Players = new() { player } });
+					AddedPlayerToPlayerGroup?.Invoke(player, playerGroup);
 					return;
 				}
 			}
 
 			_playerGroups.Add(new() { GameplayTag = playerGroup, Priority = priority, Players = new() { player } });
+			AddedPlayerToPlayerGroup?.Invoke(player, playerGroup);
 		}
 
 		public void AddPlayersToNewPlayerGroup(PlayerRef[] players, GameplayTag playerGroup)
 		{
 			int priority = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(playerGroup.CompactTagId).Priority;
+			bool AddedPlayers = false;
 
 			for (int i = 0; i < _playerGroups.Count; i++)
 			{
 				if (_playerGroups[i].Priority <= priority)
 				{
 					_playerGroups.Insert(i, new() { GameplayTag = playerGroup, Priority = priority, Players = new(players) });
-					return;
+					AddedPlayers = true;
+					break;
 				}
 			}
 
-			_playerGroups.Add(new() { GameplayTag = playerGroup, Priority = priority, Players = new(players) });
+			if (!AddedPlayers)
+			{
+				_playerGroups.Add(new() { GameplayTag = playerGroup, Priority = priority, Players = new(players) });
+			}
+
+			foreach (PlayerRef player in players)
+			{
+				AddedPlayerToPlayerGroup?.Invoke(player, playerGroup);
+			}
 		}
 
-		public void RemovePlayerFromGroup(PlayerRef player, GameplayTag playerGroup)
+		public void RemovePlayerFromPlayerGroup(PlayerRef player, GameplayTag playerGroup)
 		{
 			for (int i = 0; i < _playerGroups.Count; i++)
 			{
@@ -345,19 +362,45 @@ namespace Werewolf.Managers
 			}
 		}
 
-		public List<PlayerRef> GetPlayersFromGroups(GameplayTag[] inPlayerGroup)
+		public HashSet<PlayerRef> GetPlayersFromPlayerGroup(GameplayTag inPlayerGroup)
 		{
-			List<PlayerRef> players = new();
+			foreach (PlayerGroup playerGroup in _playerGroups)
+			{
+				if (playerGroup.GameplayTag == inPlayerGroup)
+				{
+					return playerGroup.Players.ToHashSet();
+				}
+			}
+
+			return new();
+		}
+
+		public HashSet<PlayerRef> GetPlayersFromPlayerGroups(GameplayTag[] inPlayerGroups)
+		{
+			HashSet<PlayerRef> players = new();
 
 			foreach (PlayerGroup playerGroup in _playerGroups)
 			{
-				if (inPlayerGroup.Contains(playerGroup.GameplayTag))
+				if (inPlayerGroups.Contains(playerGroup.GameplayTag))
 				{
-					players.AddRange(playerGroup.Players.Except(players));
+					players.UnionWith(playerGroup.Players.ToHashSet());
 				}
 			}
 
 			return players;
+		}
+
+		public bool IsPlayerInPlayerGroup(PlayerRef player, GameplayTag inPlayerGroup)
+		{
+			foreach (PlayerGroup playerGroup in _playerGroups)
+			{
+				if (playerGroup.GameplayTag == inPlayerGroup && playerGroup.Players.Contains(player))
+				{
+ 					return true;
+				}
+			}
+
+			return false;
 		}
 
 		public bool IsPlayerInPlayerGroups(PlayerRef player, GameplayTag[] inPlayerGroups)
@@ -385,6 +428,20 @@ namespace Werewolf.Managers
 
 			return false;
 		}
+
+		public void SetPlayerGroupLeader(GameplayTag inPlayerGroup, PlayerRef player)
+		{
+			foreach (PlayerGroup playerGroup in _playerGroups)
+			{
+				if (playerGroup.GameplayTag == inPlayerGroup && playerGroup.Players.Contains(player))
+				{
+					playerGroup.Leader = player;
+					return;
+				}
+			}
+
+			Debug.LogWarning($"Couldn't set {player} as the leader of {inPlayerGroup}");
+		}
 		#endregion
 
 		#region Player Awake
@@ -411,54 +468,64 @@ namespace Werewolf.Managers
 		#region Select Players
 		public bool SelectPlayers(PlayerRef selectingPlayer, List<PlayerRef> choices, int imageID, float maximumDuration, bool mustSelect, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
 		{
-			_choices = choices;
-			PreSelectPlayers?.Invoke(selectingPlayer, purpose, _choices);
+			_serverChoices = choices;
+			PreSelectPlayers?.Invoke(selectingPlayer, purpose, _serverChoices);
 
-			if (!_networkDataManager.PlayerInfos[selectingPlayer].IsConnected || _selectPlayersCallbacks.ContainsKey(selectingPlayer) || _choices.Count < playerAmount)
+			if (!_networkDataManager.PlayerInfos[selectingPlayer].IsConnected || _selectPlayersCallbacks.ContainsKey(selectingPlayer) || _serverChoices.Count < playerAmount)
 			{
 				return false;
 			}
 
 			_selectPlayersCallbacks.Add(selectingPlayer, callback);
-			RPC_SelectPlayers(selectingPlayer, _choices.ToArray(), imageID, maximumDuration, mustSelect, playerAmount);
+			RPC_SelectPlayers(selectingPlayer, _serverChoices.ToArray(), imageID, maximumDuration, mustSelect, playerAmount);
 
 			return true;
-		}
-
-		private void SelectNoPlayer()
-		{
-			StopSelectingPlayers();
-			RPC_GivePlayerChoices(new PlayerRef[0]);
 		}
 
 		private void SelectCard(Card card)
 		{
 			if (_selectedPlayers.Contains(card.Player))
 			{
+				if (_selectedPlayers.Count == _playerAmountToSelect)
+				{
+					SetCardsClickable(true);
+				}
+
 				_selectedPlayers.Remove(card.Player);
-
-				return;
 			}
-
-			_selectedPlayers.Add(card.Player);
-
-			if (_selectedPlayers.Count < _playerAmountToSelect)
+			else
 			{
-				return;
+				_selectedPlayers.Add(card.Player);
+
+				if (_selectedPlayers.Count == _playerAmountToSelect)
+				{
+					SetCardsClickable(false);
+				}
 			}
 
-			StopSelectingPlayers();
-			RPC_GivePlayerChoices(_selectedPlayers.ToArray());
+			void SetCardsClickable(bool isClickable)
+			{
+				foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+				{
+					if (!playerCard.Value || _selectedPlayers.Contains(playerCard.Key) || Array.IndexOf(_clientChoices, playerCard.Key) < 0)
+					{
+						continue;
+					}
+
+					playerCard.Value.SetClickable(isClickable);
+				}
+			}
+
+			if (_mustSelectPlayer)
+			{
+				_UIManager.TitleScreen.SetConfirmButtonInteractable(_selectedPlayers.Count == _playerAmountToSelect);
+			}
 		}
 
-		public void StopSelectingPlayers(PlayerRef player)
+		private void OnConfirmPlayerSelection()
 		{
-			_selectPlayersCallbacks.Remove(player);
-
-			if (_networkDataManager.PlayerInfos[player].IsConnected)
-			{
-				RPC_StopSelectingPlayers(player);
-			}
+			StopSelectingPlayers();
+			RPC_GivePlayerChoices(_selectedPlayers.ToArray());
 		}
 
 		private void StopSelectingPlayers()
@@ -479,15 +546,27 @@ namespace Werewolf.Managers
 				SetPlayerCardHighlightVisible(selectedPlayer, false);
 			}
 
-			_UIManager.TitleScreen.ConfirmClicked -= SelectNoPlayer;
+			_UIManager.TitleScreen.ConfirmClicked -= OnConfirmPlayerSelection;
 			_UIManager.TitleScreen.SetConfirmButtonInteractable(false);
 			_UIManager.TitleScreen.StopCountdown();
+		}
+
+		public void StopSelectingPlayers(PlayerRef player)
+		{
+			_selectPlayersCallbacks.Remove(player);
+
+			if (_networkDataManager.PlayerInfos[player].IsConnected)
+			{
+				RPC_StopSelectingPlayers(player);
+			}
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		private void RPC_SelectPlayers([RpcTarget] PlayerRef player, PlayerRef[] choices, int imageID, float maximumDuration, bool mustSelect, int playerAmount)
 		{
+			_clientChoices = choices;
+			_mustSelectPlayer = mustSelect;
 			_playerAmountToSelect = playerAmount;
 			_selectedPlayers.Clear();
 
@@ -508,11 +587,12 @@ namespace Werewolf.Managers
 				playerCard.Value.LeftClicked += SelectCard;
 			}
 
-			DisplayTitle(imageID, variables: null, showConfirmButton: !mustSelect, countdownDuration: maximumDuration);
+			DisplayTitle(imageID, variables: null, showConfirmButton: true, countdownDuration: maximumDuration);
+			_UIManager.TitleScreen.ConfirmClicked += OnConfirmPlayerSelection;
 
-			if (!mustSelect)
+			if (mustSelect)
 			{
-				_UIManager.TitleScreen.ConfirmClicked += SelectNoPlayer;
+				_UIManager.TitleScreen.SetConfirmButtonInteractable(false);
 			}
 		}
 
@@ -527,7 +607,7 @@ namespace Werewolf.Managers
 			// Make sure that the client didn't try to cheat by sending invalid choices
 			foreach (PlayerRef player in players)
 			{
-				if (!_choices.Contains(player))
+				if (!_serverChoices.Contains(player))
 				{
 					players = null;
 					break;

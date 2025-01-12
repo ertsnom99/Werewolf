@@ -255,6 +255,20 @@ MonoBehaviour:
       \r"
     m_Metadata:
       m_Items: []
+  - m_Id: 69694821123874816
+    m_Localized: "Joueur de Fl\xFBte"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69694886416605184
+    m_Localized: "Ignominieusement chass\xE9 du village, il est revenu des ann\xE9es
+      plus tard sous le couvert d\u2019une fausse identit\xE9 pour exercer sa terrible
+      vengeance. \r\n\nChaque nuit, il charme deux nouveaux villageois. S\u2019il
+      r\xE9ussit \xE0 charmer tout le village, il gagne. S\u2019il est infect\xE9
+      par l\u2019Infect P\xE8re des Loups, il devient un simple Loup-Garou. Son objectif
+      initial, qui \xE9tait vouloir charmer tout le village, est donc abandonn\xE9.
+      Il va collaborer avec les Loups-Garous pour leur victoire commune.\r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

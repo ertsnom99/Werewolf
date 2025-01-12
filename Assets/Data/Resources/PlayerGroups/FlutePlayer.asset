@@ -17,9 +17,9 @@ MonoBehaviour:
   <DebugName>k__BackingField: FlutePlayer
   <Name>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 69694821123874816
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0

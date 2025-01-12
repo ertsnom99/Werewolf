@@ -129,11 +129,6 @@ MonoBehaviour:
     m_Localized: Il y a un ou plusieurs loup-garou dans ce groupe!
     m_Metadata:
       m_Items: []
-  - m_Id: 8324776755200
-    m_Localized: "Impossible d\u2019utiliser votre pouvoir, car vous l\u2019avez
-      perdu!"
-    m_Metadata:
-      m_Items: []
   - m_Id: 8656277766144
     m_Localized: Choisissez un villageois a tuer
     m_Metadata:
@@ -224,17 +219,29 @@ MonoBehaviour:
     m_Localized: Choisissez un villageois a tuer
     m_Metadata:
       m_Items: []
-  - m_Id: 7696127449489408
-    m_Localized: "Impossible d\u2019utiliser votre pouvoir, car vous l\u2019avez
-      perdu!"
-    m_Metadata:
-      m_Items: []
   - m_Id: 9786050608488448
     m_Localized: L'ours du Montreur d'Ours grogne!
     m_Metadata:
       m_Items: []
   - m_Id: 10433339337334784
     m_Localized: "Choisi ton mod\xE8le"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073252616626176
+    m_Localized: Choisissez jusqu'a deux villageois a charmer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073159595352064
+    m_Localized: "Les villageois charm\xE9s se reconnaissent"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073015806222336
+    m_Localized: "Vous \xEAtes tous charm\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13439811033882624
+    m_Localized: "Impossible d\u2019utiliser votre pouvoir, car vous l\u2019avez
+      perdu!"
     m_Metadata:
       m_Items: []
   references:

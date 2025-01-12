@@ -49,7 +49,7 @@ MonoBehaviour:
   <PlayerGroups>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _werewolfPlayerGroups:
+  _werewolvesPlayerGroups:
   - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   - {fileID: -8573035580249646065, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   _bearGrowlGameHistoryEntry: {fileID: -190435953497311190, guid: 0e7014af8e28a88409bdb3f0abb80632,
