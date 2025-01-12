@@ -125,13 +125,17 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator HighlightSelectedPlayer()
 		{
-			_gameManager.RPC_HideUI(Player);
-			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _selectedPlayer, true);
+			if (_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				_gameManager.RPC_HideUI(Player);
+				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _selectedPlayer, true);
+			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.HideUI();
 			_gameManager.SetPlayerCardHighlightVisible(_selectedPlayer, true);
 #endif
 			yield return new WaitForSeconds(_playerHighlightHoldDuration * _gameManager.GameSpeedModifier);
+
 			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _selectedPlayer, false);
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayerCardHighlightVisible(_selectedPlayer, false);

@@ -99,12 +99,10 @@ namespace Werewolf.Gameplay.Role
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
-				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected || playerInfo.Key == Player)
+				if (_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected && playerInfo.Key != Player)
 				{
-					continue;
+					_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosingPlayerImage.CompactTagId);
 				}
-
-				_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosingPlayerImage.CompactTagId);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.DisplayTitle(_choosingPlayerImage.CompactTagId);

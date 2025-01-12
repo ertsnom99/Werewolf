@@ -910,6 +910,11 @@ namespace Werewolf.Managers
 					RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
 					HideUI();
+
+					foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in PlayerGameInfos)
+					{
+						SetPlayerCardHighlightVisible(playerGameInfo.Key, false);
+					}
 #endif
 					yield return new WaitForSeconds(Config.NightCallChangeDelay);
 				}

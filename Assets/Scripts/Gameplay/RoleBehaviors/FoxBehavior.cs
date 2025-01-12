@@ -43,9 +43,7 @@ namespace Werewolf.Gameplay.Role
 		private bool _hasPower = true;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
-#if UNITY_SERVER && UNITY_EDITOR
-		private bool _isCheckForWerewolfs;
-#endif
+
 		private GameManager _gameManager;
 		private GameHistoryManager _gameHistoryManager;
 		private NetworkDataManager _networkDataManager;
@@ -121,9 +119,6 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator CheckForWerewolfs(PlayerRef middlePlayer)
 		{
-#if UNITY_SERVER && UNITY_EDITOR
-		_isCheckForWerewolfs = true;
-#endif
 			List<PlayerRef> playersToCheck = _gameManager.FindSurroundingPlayers(middlePlayer);
 			playersToCheck.Add(middlePlayer);
 
@@ -136,7 +131,10 @@ namespace Werewolf.Gameplay.Role
 					werewolfFound = true;
 				}
 
-				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, player, true);
+				if (_networkDataManager.PlayerInfos[Player].IsConnected)
+				{
+					_gameManager.RPC_SetPlayerCardHighlightVisible(Player, player, true);
+				}
 #if UNITY_SERVER && UNITY_EDITOR
 				_gameManager.SetPlayerCardHighlightVisible(player, true);
 #endif
@@ -158,7 +156,10 @@ namespace Werewolf.Gameplay.Role
 											}
 										});
 
-			_gameManager.RPC_HideUI(Player);
+			if (_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				_gameManager.RPC_HideUI(Player);
+			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.HideUI();
 #endif
@@ -185,9 +186,6 @@ namespace Werewolf.Gameplay.Role
 			}
 
 			_gameManager.StopWaintingForPlayer(Player);
-#if UNITY_SERVER && UNITY_EDITOR
-			_isCheckForWerewolfs = false;
-#endif
 		}
 
 		private IEnumerator EndRoleCallAfterTime()
@@ -212,18 +210,6 @@ namespace Werewolf.Gameplay.Role
 		public override void OnRoleCallDisconnected()
 		{
 			StopAllCoroutines();
-
-			if (!_isCheckForWerewolfs)
-			{
-				return;
-			}
-
-			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in _gameManager.PlayerGameInfos)
-			{
-#if UNITY_SERVER && UNITY_EDITOR
-				_gameManager.SetPlayerCardHighlightVisible(playerGameInfo.Key, false);
-#endif
-			}
 		}
 	}
 }

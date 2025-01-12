@@ -91,8 +91,13 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator ShowNoOtherWerewolves()
 		{
-			_gameManager.RPC_DisplayTitle(Player, _noOtherWerewolvesImage.CompactTagId);
+			if (_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				_gameManager.RPC_DisplayTitle(Player, _noOtherWerewolvesImage.CompactTagId);
+			}
+
 			yield return 0;
+			
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
@@ -136,13 +141,17 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator HighlightSelectedWerewolf(PlayerRef selectedWerewolf)
 		{
-			_gameManager.RPC_HideUI(Player);
-			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, selectedWerewolf, true);
+			if (_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				_gameManager.RPC_HideUI(Player);
+				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, selectedWerewolf, true);
+			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.HideUI();
 			_gameManager.SetPlayerCardHighlightVisible(selectedWerewolf, true);
 #endif
 			yield return new WaitForSeconds(_selectedWerewolfHighlightDuration * _gameManager.GameSpeedModifier);
+
 			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, selectedWerewolf, false);
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayerCardHighlightVisible(selectedWerewolf, false);

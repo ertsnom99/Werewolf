@@ -310,7 +310,10 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator HighlightCouple(PlayerRef[] couple, PlayerRef highlightedFor, float duration)
 		{
-			_gameManager.RPC_SetPlayersCardHighlightVisible(highlightedFor, couple, true);
+			if (_networkDataManager.PlayerInfos[highlightedFor].IsConnected)
+			{
+				_gameManager.RPC_SetPlayersCardHighlightVisible(highlightedFor, couple, true);
+			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayersCardHighlightVisible(couple, true);
 #endif
