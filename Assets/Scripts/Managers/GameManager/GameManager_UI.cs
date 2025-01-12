@@ -33,7 +33,7 @@ namespace Werewolf.Managers
 		{
 			if (holdDuration < Config.UITransitionNormalDuration)
 			{
-				Debug.LogError("holdDuration most not be smaller than Config.UITransitionNormalDuration");
+				Debug.LogError($"{nameof(holdDuration)} most not be smaller than {Config.UITransitionNormalDuration}");
 			}
 
 			RPC_DisplayTitle(imageID);

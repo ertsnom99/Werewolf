@@ -49,7 +49,7 @@ namespace Werewolf.UI
 
 			if (_countdownVariable == null)
 			{
-				Debug.LogError($"_countdownText must have a local int variable named Time");
+				Debug.LogError($"{nameof(_countdownText)} must have a local int variable named Time");
 			}
 		}
 

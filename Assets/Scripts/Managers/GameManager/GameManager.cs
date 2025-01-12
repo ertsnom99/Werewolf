@@ -106,7 +106,7 @@ namespace Werewolf.Managers
 
 			if (!Config)
 			{
-				Debug.LogError("The GameConfig of the GameManager is not defined");
+				Debug.LogError($"The {nameof(GameConfig)} of the {nameof(GameManager)} is not defined");
 			}
 		}
 

@@ -34,7 +34,7 @@ namespace Werewolf.Managers
 
 			if (_config.DaytimeTransitionDuration < (_config.DaytimeTextFadeInDelay + _config.UITransitionNormalDuration))
 			{
-				Debug.LogError("_config.DaytimeTransitionDuration most not be smaller than _config.DaytimeTextFadeInDelay + _config.UITransitionNormalDuration");
+				Debug.LogError($"{nameof(_config.DaytimeTransitionDuration)} most not be smaller than {_config.DaytimeTextFadeInDelay + _config.UITransitionNormalDuration}");
 			}
 		}
 

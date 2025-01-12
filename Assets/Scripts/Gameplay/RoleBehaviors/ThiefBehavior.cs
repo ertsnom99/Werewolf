@@ -67,7 +67,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (_gameManager.RolesToDistribute.Count <= 0)
 				{
-					Debug.LogError("The thief couldn't find enough roles to set aside!!!");
+					Debug.LogError($"{nameof(ThiefBehavior)} couldn't find enough roles to set aside!!!");
 					return;
 				}
 
