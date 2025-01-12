@@ -186,7 +186,7 @@ namespace Werewolf.Network
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_KickPlayer(PlayerRef kickedPlayer, RpcInfo info = default)
 		{
-			if (PlayerInfos.ContainsKey(info.Source) && PlayerInfos.Get(info.Source).IsLeader)
+			if (PlayerInfos.TryGet(info.Source, out PlayerNetworkInfo playerInfo) && playerInfo.IsLeader)
 			{
 				Runner.Disconnect(kickedPlayer);
 			}
@@ -199,7 +199,7 @@ namespace Werewolf.Network
 			{
 				PlayerRef = playerRef,
 				Nickname = nickname,
-				IsLeader = PlayerInfos.ContainsKey(playerRef) ? PlayerInfos[playerRef].IsLeader : PlayerInfos.Count <= 0,
+				IsLeader = PlayerInfos.TryGet(playerRef, out PlayerNetworkInfo playerInfo) ? playerInfo.IsLeader : PlayerInfos.Count <= 0,
 				IsConnected = true
 			};
 
@@ -218,7 +218,7 @@ namespace Werewolf.Network
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_SetGameSetup(RolesSetup rolesSetup, GameSpeed gameSpeed, int minPlayerCount, RpcInfo info = default)
 		{
-			if (!PlayerInfos.ContainsKey(info.Source) || !PlayerInfos.Get(info.Source).IsLeader
+			if (!PlayerInfos.TryGet(info.Source, out PlayerNetworkInfo playerInfo) || !playerInfo.IsLeader
 				|| GameSetupReady
 				|| PlayerInfos.Count < minPlayerCount)
 			{

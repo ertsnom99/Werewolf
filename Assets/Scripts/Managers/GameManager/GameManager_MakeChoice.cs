@@ -71,12 +71,12 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_GiveChoice(int choice, RpcInfo info = default)
 		{
-			if (!_makeChoiceCallbacks.ContainsKey(info.Source))
+			if (!_makeChoiceCallbacks.TryGetValue(info.Source, out Action<int> callback))
 			{
 				return;
 			}
 
-			_makeChoiceCallbacks[info.Source](choice);
+			callback(choice);
 			_makeChoiceCallbacks.Remove(info.Source);
 		}
 

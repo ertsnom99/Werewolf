@@ -350,7 +350,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPreChoosePlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> immunePlayersForGettingSelected)
+		private void OnPreChoosePlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> choices)
 		{
 			if (purpose != ChoicePurpose.Kill || _couples.Count <= 0)
 			{
@@ -366,12 +366,7 @@ namespace Werewolf.Gameplay.Role
 
 			foreach (PlayerRef[] couple in couples)
 			{
-				PlayerRef otherCouplePlayer = couple[1 - Array.IndexOf(couple, player)];
-
-				if (immunePlayersForGettingSelected.Contains(otherCouplePlayer))
-				{
-					immunePlayersForGettingSelected.Remove(otherCouplePlayer);
-				}
+				choices.Remove(couple[1 - Array.IndexOf(couple, player)]);
 			}
 		}
 

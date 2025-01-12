@@ -444,9 +444,9 @@ namespace Werewolf.Managers
 				}
 				else
 				{
-					if (_modifiers != null && _modifiers.ContainsKey(vote.Key))
+					if (_modifiers != null && _modifiers.TryGetValue(vote.Key, out int modifier))
 					{
-						_playerCards[vote.Value].IncrementVoteCount(_modifiers[vote.Key]);
+						_playerCards[vote.Value].IncrementVoteCount(modifier);
 					}
 					else
 					{
@@ -531,7 +531,7 @@ namespace Werewolf.Managers
 					continue;
 				}
 
-				int voteValue = (_modifiers != null && _modifiers.ContainsKey(vote.Key)) ? _modifiers[vote.Key] : 1;
+				int voteValue = (_modifiers != null && _modifiers.TryGetValue(vote.Key, out int modifier)) ? modifier : 1;
 
 				if (totalVotes.ContainsKey(vote.Value))
 				{
@@ -599,7 +599,7 @@ namespace Werewolf.Managers
 
 		private void OnPlayerDisconnected(PlayerRef player)
 		{
-			if (_step != Step.Voting || _voteCoroutine == null || !_votes.ContainsKey(player) || !_votes[player].IsNone)
+			if (_step != Step.Voting || _voteCoroutine == null || !_votes.TryGetValue(player, out PlayerRef vote) || !vote.IsNone)
 			{
 				return;
 			}

@@ -76,12 +76,10 @@ namespace Werewolf.Managers
 
 		private void OnFadeFinished(FadingScreen fadingScreen, float opacity)
 		{
-			if (!_activeFadingScreens.Contains(fadingScreen) || opacity > 0)
+			if (opacity <= 0)
 			{
-				return;
+				_activeFadingScreens.Remove(fadingScreen);
 			}
-
-			_activeFadingScreens.Remove(fadingScreen);
 		}
 
 		public void SetFade(FadingScreen fadingScreen, float fade)
@@ -90,7 +88,7 @@ namespace Werewolf.Managers
 			{
 				_activeFadingScreens.Add(fadingScreen);
 			}
-			else if (fade <= 0 && _activeFadingScreens.Contains(fadingScreen))
+			else if (fade <= 0)
 			{
 				_activeFadingScreens.Remove(fadingScreen);
 			}

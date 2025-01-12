@@ -59,7 +59,7 @@ namespace Werewolf.UI
 
 		public void SelectRole(RoleData role, bool openMenu)
 		{
-			if (!role || !_roleButtonByRoleData.ContainsKey(role))
+			if (!role || !_roleButtonByRoleData.TryGetValue(role, out RoleButton roleButton))
 			{
 				return;
 			}
@@ -69,7 +69,7 @@ namespace Werewolf.UI
 				ToggleRoles();
 			}
 
-			_roleButtonByRoleData[role].Select();
+			roleButton.Select();
 		}
 
 		public void ToggleRoles()

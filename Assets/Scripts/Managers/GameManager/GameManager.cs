@@ -421,12 +421,10 @@ namespace Werewolf.Managers
 			{
 				foreach (Priority priority in PlayerGameInfos[player].Behaviors[0].NightPriorities)
 				{
-					if (priorities.Contains(priority.index))
+					if (!priorities.Contains(priority.index))
 					{
-						continue;
+						priorities.Add(priority.index);
 					}
-
-					priorities.Add(priority.index);
 				}
 			}
 
@@ -815,7 +813,7 @@ namespace Werewolf.Managers
 			{
 				NightCall nightCall = _nightCalls[_currentNightCallIndex];
 				Dictionary<PlayerRef, RoleBehavior> actifBehaviors = new();
-				Dictionary<PlayerRef, int> titlesOverride = new();
+				Dictionary<PlayerRef, int> titlesOverrides = new();
 
 				// Role call all the roles that must play
 				foreach (PlayerRef player in nightCall.Players)
@@ -859,7 +857,7 @@ namespace Werewolf.Managers
 
 							PlayersWaitingFor.Add(player);
 							actifBehaviors.Add(player, behavior);
-							behavior.GetTitlesOverride(nightCall.PriorityIndex, ref titlesOverride);
+							behavior.GetTitlesOverride(nightCall.PriorityIndex, ref titlesOverrides);
 						}
 					}
 
@@ -882,13 +880,13 @@ namespace Werewolf.Managers
 							continue;
 						}
 
-						if (titlesOverride.Count <= 0 || !titlesOverride.ContainsKey(playerInfo.Key))
+						if (titlesOverrides.Count <= 0 || !titlesOverrides.TryGetValue(playerInfo.Key, out int titlesOverride))
 						{
 							RPC_DisplayRolePlaying(playerInfo.Key, displayRoleGameplayTagID);
 						}
 						else
 						{
-							RPC_DisplayTitle(playerInfo.Key, titlesOverride[playerInfo.Key]);
+							RPC_DisplayTitle(playerInfo.Key, titlesOverride);
 						}
 					}
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1236,9 +1234,9 @@ namespace Werewolf.Managers
 
 			RPC_DisplayPlayerDeadIcon(deadPlayer);
 #if UNITY_SERVER && UNITY_EDITOR
-			if (_playerCards.ContainsKey(deadPlayer) && _playerCards[deadPlayer])
+			if (_playerCards.TryGetValue(deadPlayer, out Card playerCard) && playerCard)
 			{
-				_playerCards[deadPlayer].DisplayDeadIcon();
+				playerCard.DisplayDeadIcon();
 			}
 #endif
 		}
@@ -1631,10 +1629,7 @@ namespace Werewolf.Managers
 
 		public void StopWaintingForPlayer(PlayerRef player)
 		{
-			if (PlayersWaitingFor.Contains(player))
-			{
-				PlayersWaitingFor.Remove(player);
-			}
+			PlayersWaitingFor.Remove(player);
 		}
 #if UNITY_SERVER
 		private void OnDisable()

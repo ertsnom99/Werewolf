@@ -121,7 +121,8 @@ namespace Werewolf.UI
 				return;
 			}
 
-			bool isLocalPlayerLeader = _networkDataManager.PlayerInfos.ContainsKey(_localPlayer) && _networkDataManager.PlayerInfos[_localPlayer].IsLeader;
+			bool localPlayerInfoExist = _networkDataManager.PlayerInfos.TryGet(_localPlayer, out PlayerNetworkInfo localPlayerInfo);
+			bool isLocalPlayerLeader = localPlayerInfoExist && localPlayerInfo.IsLeader;
 
 			// Clear list
 			for (int i = _playerEntries.childCount - 1; i >= 0; i--)
@@ -141,9 +142,9 @@ namespace Werewolf.UI
 				isOdd = !isOdd;
 			}
 
-			if (!_initializedNicknameInputField && _networkDataManager.PlayerInfos.ContainsKey(_localPlayer))
+			if (!_initializedNicknameInputField && localPlayerInfoExist)
 			{
-				_nicknameInputField.text = _networkDataManager.PlayerInfos[_localPlayer].Nickname;
+				_nicknameInputField.text = localPlayerInfo.Nickname;
 				_initializedNicknameInputField = true;
 			}
 
