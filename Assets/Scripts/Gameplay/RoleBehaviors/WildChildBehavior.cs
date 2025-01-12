@@ -145,8 +145,11 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator HighlightModel()
 		{
-			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _model, true);
-			_gameManager.RPC_HideUI(Player);
+			if (_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				_gameManager.RPC_HideUI(Player);
+				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _model, true);
+			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayerCardHighlightVisible(_model, false);
 			_gameManager.HideUI();

@@ -117,11 +117,12 @@ namespace Werewolf.Gameplay.Role
 			if (!_markedForDeathPlayer.IsNone)
 			{
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _markedForDeathPlayer, true);
-
 				_gameManager.RPC_DisplayTitle(Player, _playerDeadTonightImage.CompactTagId);
+
 				yield return new WaitForSeconds(_playerHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
 				_gameManager.RPC_HideUI(Player);
+
 				yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
 
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _markedForDeathPlayer, false);

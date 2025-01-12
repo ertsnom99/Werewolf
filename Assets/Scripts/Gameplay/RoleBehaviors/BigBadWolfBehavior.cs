@@ -113,8 +113,13 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator ShowNoVillagers()
 		{
-			_gameManager.RPC_DisplayTitle(Player, _noVillagersImage.CompactTagId);
+			if (_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				_gameManager.RPC_DisplayTitle(Player, _noVillagersImage.CompactTagId);
+			}
+
 			yield return 0;
+			
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
@@ -158,13 +163,17 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator HighlightSelectedVillager(PlayerRef selectedVillager)
 		{
-			_gameManager.RPC_HideUI(Player);
-			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, selectedVillager, true);
+			if (_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				_gameManager.RPC_HideUI(Player);
+				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, selectedVillager, true);
+			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.HideUI();
 			_gameManager.SetPlayerCardHighlightVisible(selectedVillager, true);
 #endif
 			yield return new WaitForSeconds(_selectedVillagerHighlightDuration * _gameManager.GameSpeedModifier);
+
 			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, selectedVillager, false);
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayerCardHighlightVisible(selectedVillager, false);
@@ -194,8 +203,13 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator ShowLostPower()
 		{
-			_gameManager.RPC_DisplayTitle(Player, _lostPowerImage.CompactTagId);
+			if (_networkDataManager.PlayerInfos[Player].IsConnected)
+			{
+				_gameManager.RPC_DisplayTitle(Player, _lostPowerImage.CompactTagId);
+			}
+
 			yield return 0;
+
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
@@ -228,9 +242,14 @@ namespace Werewolf.Gameplay.Role
 
 		public override void OnRoleCallDisconnected()
 		{
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
-
 			StopAllCoroutines();
+		}
+
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+
+			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
 		}
 	}
 }
