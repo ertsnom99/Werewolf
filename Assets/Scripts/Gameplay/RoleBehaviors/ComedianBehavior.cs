@@ -96,7 +96,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (selectedRoles.Count < NEEDED_ROLE_COUNT)
 			{
-				Debug.LogError("The comedian couldn't find enough roles to set aside!!!");
+				Debug.LogError($"{nameof(ComedianBehavior)} couldn't find enough roles to set aside!!!");
 			}
 
 			if (selectedRoles.Count <= 0)

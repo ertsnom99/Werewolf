@@ -7,6 +7,7 @@ using System.Text;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Network;
+using Werewolf.UI;
 
 namespace Werewolf.Managers
 {
@@ -115,19 +116,19 @@ namespace Werewolf.Managers
 		{
 			if (!entryGameplayTag)
 			{
-				Debug.LogError("Can't add a GameHistoryEntry without an entryGameplayTag");
+				Debug.LogError($"Can't add a {nameof(GameHistoryEntry)} without an {nameof(GameplayTag)}");
 				return;
 			}
 
 			if (!IsGameplayTagAccepted(entryGameplayTag, _acceptedGameplayTagsForEntry))
 			{
-				Debug.LogError($"{entryGameplayTag.name} is not a valid GameplayTag for the entryGameplayTag");
+				Debug.LogError($"{entryGameplayTag.name} is not a valid {nameof(GameplayTag)} to add an entry");
 				return;
 			}
 
 			if (imageOverrideGameplayTag && !IsGameplayTagAccepted(imageOverrideGameplayTag, _acceptedGameplayTagsForImageOverride))
 			{
-				Debug.LogError($"{imageOverrideGameplayTag.name} is not a valid GameplayTag for the imageOverrideGameplayTag");
+				Debug.LogError($"{imageOverrideGameplayTag.name} is not a valid {nameof(GameplayTag)} for the image override");
 				return;
 			}
 
@@ -201,7 +202,7 @@ namespace Werewolf.Managers
 			}
 			catch (Exception)
 			{
-				Debug.LogError($"Couldn't convert the gameHistoryJson to GameHistorySave");
+				Debug.LogError($"Couldn't convert the json to {nameof(GameHistorySave)}");
 
 				gameHistorySave = null;
 				return false;

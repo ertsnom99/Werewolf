@@ -92,14 +92,14 @@ namespace Werewolf.Gameplay
 #if UNITY_EDITOR
 			if (!_roleImage)
 			{
-				Debug.LogError($"_roleImage of the player {gameObject.name} is null");
+				Debug.LogError($"{nameof(_roleImage)} of the player {gameObject.name} is null");
 			}
 #endif
 			_voteCountVariable = (IntVariable)_voteCountText.StringReference["Count"];
 
 			if (_voteCountVariable == null)
 			{
-				Debug.LogError($"_voteCountText must have a local int variable named Count");
+				Debug.LogError($"{nameof(_voteCountText)} must have a local int variable named Count");
 			}
 		}
 

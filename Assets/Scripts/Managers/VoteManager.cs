@@ -616,7 +616,7 @@ namespace Werewolf.Managers
 		{
 			if (_playerCards == null || _config == null)
 			{
-				Debug.LogError("_playerCards and _config must be set!");
+				Debug.LogError($"{nameof(_playerCards)} and {nameof(_config)} must be set!");
 				return;
 			}
 
@@ -660,7 +660,7 @@ namespace Werewolf.Managers
 		{
 			if (_playerCards == null || _config == null)
 			{
-				Debug.LogError("_playerCards and _config must be set!");
+				Debug.LogError($"{nameof(_playerCards)} and {nameof(_config)} must be set!");
 				return;
 			}
 

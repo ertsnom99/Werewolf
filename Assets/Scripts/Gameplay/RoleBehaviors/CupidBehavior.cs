@@ -79,12 +79,12 @@ namespace Werewolf.Gameplay.Role
 
 			if (PlayerGroups.Count < 2)
 			{
-				Debug.LogError("Cupid must have two player groups: the first one for cupid and the second one for any couple");
+				Debug.LogError($"{nameof(CupidBehavior)} must have two player groups: the first one for cupid and the second one for any couple");
 			}
 
 			if (NightPriorities.Count < 2)
 			{
-				Debug.LogError("Cupid must have two night priorities: the first one to select the couple and the second one to let a couple know each other");
+				Debug.LogError($"{nameof(CupidBehavior)} must have two night priorities: the first one to select the couple and the second one to let a couple know each other");
 			}
 		}
 
@@ -226,7 +226,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_choices == null || _choices.Length < 2)
 			{
-				Debug.LogError("Cupid doesn't have enough choices to create a couple");
+				Debug.LogError($"{nameof(CupidBehavior)} doesn't have enough choices to create a couple");
 				return;
 			}
 

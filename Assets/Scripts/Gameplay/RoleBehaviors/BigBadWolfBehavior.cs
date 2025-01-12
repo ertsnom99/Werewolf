@@ -53,7 +53,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (NightPriorities.Count < 2)
 			{
-				Debug.LogError("Big Bad Wolf must have two night priorities: the first one to vote with the werewolves and the second one to kill a villager");
+				Debug.LogError($"{nameof(BigBadWolfBehavior)} must have two night priorities: the first one to vote with the werewolves and the second one to kill a villager");
 			}
 		}
 

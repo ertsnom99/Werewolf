@@ -40,7 +40,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (NightPriorities.Count < 2)
 			{
-				Debug.LogError("White Werewolf must have two night priorities: the first one to vote with the werewolves and the second one to kill a werewolf");
+				Debug.LogError($"{nameof(WhiteWerewolfBehavior)} must have two night priorities: the first one to vote with the werewolves and the second one to kill a werewolf");
 			}
 		}
 

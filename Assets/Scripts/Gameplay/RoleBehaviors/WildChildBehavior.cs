@@ -39,12 +39,12 @@ namespace Werewolf.Gameplay.Role
 
 			if (PlayerGroups.Count < 2)
 			{
-				Debug.LogError("Wild Child must have two player groups: the first one for the villagers and the second one for the werewolves");
+				Debug.LogError($"{nameof(WildChildBehavior)} must have two player groups: the first one for the villagers and the second one for the werewolves");
 			}
 
 			if (NightPriorities.Count < 2)
 			{
-				Debug.LogError("Wild Child must have two night priorities: the first one to choose his model and the second one to vote with the werewolves");
+				Debug.LogError($"{nameof(WildChildBehavior)} must have two night priorities: the first one to choose his model and the second one to vote with the werewolves");
 			}
 		}
 
