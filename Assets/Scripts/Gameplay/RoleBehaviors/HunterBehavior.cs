@@ -72,8 +72,6 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
-			_gameManager.WaitForPlayer(Player);
-
 			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 			choices.Remove(Player);
 
@@ -90,6 +88,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (choices.Count > 0)
 				{
+					_gameManager.WaitForPlayer(Player);
 					SelectRandomPlayer();
 				}
 
