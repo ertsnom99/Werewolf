@@ -158,7 +158,7 @@ namespace Werewolf.Managers
 			{
 				foreach (GameplayTag playerGroup in PlayerGameInfos[player].Role.PlayerGroups)
 				{
-					RemovePlayerFromGroup(player, playerGroup);
+					RemovePlayerFromPlayerGroup(player, playerGroup);
 				}
 			}
 			else
@@ -198,7 +198,7 @@ namespace Werewolf.Managers
 			{
 				foreach (GameplayTag playerGroup in behavior.GetCurrentPlayerGroups())
 				{
-					RemovePlayerFromGroup(player, playerGroup);
+					RemovePlayerFromPlayerGroup(player, playerGroup);
 				}
 			}
 

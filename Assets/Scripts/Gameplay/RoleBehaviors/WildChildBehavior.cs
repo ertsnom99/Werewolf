@@ -209,7 +209,7 @@ namespace Werewolf.Gameplay.Role
 											}
 										});
 
-			_gameManager.RemovePlayerFromGroup(Player, PlayerGroups[0]);
+			_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroups[0]);
 			_gameManager.AddPlayerToPlayerGroup(Player, PlayerGroups[1]);
 		}
 

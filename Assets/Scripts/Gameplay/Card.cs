@@ -146,12 +146,12 @@ namespace Werewolf.Gameplay
 		{
 			_inSelectionMode = inSelectionMode;
 			SetClickable(isClickable);
-			_notClickableCache.SetActive(inSelectionMode && !isClickable);
 		}
 
 		public void SetClickable(bool isClickable)
 		{
 			_isClickable = isClickable;
+			_notClickableCache.SetActive(_inSelectionMode && !isClickable);
 		}
 
 		public void SetSelected(bool isSelected)

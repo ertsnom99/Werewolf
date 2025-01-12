@@ -59,5 +59,3 @@ MonoBehaviour:
   _selectedModelHighlightDuration: 3
   _modelDiedGameHistoryEntry: {fileID: -4144404035216328849, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  _werewolvesPlayerGroup: {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}

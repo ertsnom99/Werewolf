@@ -17,7 +17,7 @@ MonoBehaviour:
   <DebugName>k__BackingField: CupidChooseCouple
   <Image>k__BackingField: {fileID: 21300000, guid: addcc361f610d704a8ca5389ae3159a1,
     type: 3}
-  <TextNew>k__BackingField:
+  <Text>k__BackingField:
     m_TableReference:
       m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
     m_TableEntryReference:
@@ -26,11 +26,11 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <Text>k__BackingField:
+  <PromptButtonText>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+      m_TableCollectionName: GUID:ecf16318bb6cc7d42a507b623f97360d
     m_TableEntryReference:
-      m_KeyId: 1288592719872
+      m_KeyId: 791857740939264
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0

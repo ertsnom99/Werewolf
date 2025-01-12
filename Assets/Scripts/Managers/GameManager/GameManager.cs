@@ -1525,7 +1525,9 @@ namespace Werewolf.Managers
 					Player = playerInfo.Key,
 					Role = role,
 					IsAlive = playerInfo.Value.IsAlive,
-					Won = winningPlayerGroup.GameplayTag != null && winningPlayerGroup.Players.Contains(playerInfo.Key)
+					Won = winningPlayerGroup.GameplayTag != null
+						&& ((winningPlayerGroup.Leader.IsNone && winningPlayerGroup.Players.Contains(playerInfo.Key))
+						|| (!winningPlayerGroup.Leader.IsNone && winningPlayerGroup.Leader == playerInfo.Key))
 				});
 #if UNITY_SERVER && UNITY_EDITOR
 				if (endGamePlayerInfos[^1].Won)

@@ -14,13 +14,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: 1901381684086208853, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <Name>k__BackingField: Flute Player
-  <Description>k__BackingField: 
+  <DebugName>k__BackingField: FlutePlayer
+  <NameSingular>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 69694821123874816
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <NamePlural>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 69694886416605184
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Image>k__BackingField: {fileID: 1803793580, guid: d27adb3f7039d1a45a0389b130f6c9c3,
+    type: 3}
+  <SmallImage>k__BackingField: {fileID: 1803793580, guid: d27adb3f7039d1a45a0389b130f6c9c3,
     type: 3}
   <PrimaryType>k__BackingField: 0
   <SecondaryType>k__BackingField: 2
-  <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
@@ -31,5 +58,8 @@ MonoBehaviour:
     alias: {fileID: 0}
   - index: 19
     alias: {fileID: 0}
-  <DayPriorities>k__BackingField: []
-  <Behavior>k__BackingField: {fileID: 0}
+  <Behavior>k__BackingField: {fileID: 8695646714039296859, guid: 2c217b2b9f0ea744d804393f82e188b3,
+    type: 3}
+  references:
+    version: 2
+    RefIds: []

@@ -1,6 +1,8 @@
 using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Werewolf.Managers.GameHistoryManager;
 
@@ -60,7 +62,7 @@ namespace Werewolf.Gameplay.Role
 
 		private bool KillWerewolf()
 		{
-			var werewolves = _gameManager.GetPlayersFromGroups(_otherWerewolvesPlayerGroups);
+			List<PlayerRef> werewolves = _gameManager.GetPlayersFromPlayerGroups(_otherWerewolvesPlayerGroups).ToList();
 
 			if (werewolves.Count <= 0) 
 			{

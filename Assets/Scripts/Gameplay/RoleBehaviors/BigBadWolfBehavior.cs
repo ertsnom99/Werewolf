@@ -1,6 +1,8 @@
 using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Werewolf.Managers.GameHistoryManager;
 
@@ -82,7 +84,7 @@ namespace Werewolf.Gameplay.Role
 
 		private bool KillVillager()
 		{
-			var villagers = _gameManager.GetPlayersFromGroups(_villagersPlayerGroups);
+			List<PlayerRef> villagers = _gameManager.GetPlayersFromPlayerGroups(_villagersPlayerGroups).ToList();
 
 			if (villagers.Count <= 0)
 			{

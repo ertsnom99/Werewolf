@@ -119,10 +119,6 @@ MonoBehaviour:
     m_Key: Fox_FoundWerewolf
     m_Metadata:
       m_Items: []
-  - m_Id: 8324776755200
-    m_Key: Fox_LostPower
-    m_Metadata:
-      m_Items: []
   - m_Id: 8656277766144
     m_Key: Hunter_ChoosePlayer
     m_Metadata:
@@ -211,16 +207,28 @@ MonoBehaviour:
     m_Key: BigBadWolf_ChooseVillager
     m_Metadata:
       m_Items: []
-  - m_Id: 7696127449489408
-    m_Key: BigBadWolf_LostPower
-    m_Metadata:
-      m_Items: []
   - m_Id: 9786050608488448
     m_Key: BearTrainer_BearGrowling
     m_Metadata:
       m_Items: []
   - m_Id: 10433339337334784
     m_Key: WildChild_ChooseModel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073015806222336
+    m_Key: FlutePlayer_CharmedVillagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073159595352064
+    m_Key: FlutePlayer_CharmedVillagersRecognizingEachOther
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073252616626176
+    m_Key: FlutePlayer_CharmVillagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13439811033882624
+    m_Key: Role_LostPower
     m_Metadata:
       m_Items: []
   m_Metadata:

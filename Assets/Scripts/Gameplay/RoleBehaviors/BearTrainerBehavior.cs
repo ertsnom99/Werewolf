@@ -14,7 +14,7 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Find Werewolfs")]
 		[SerializeField]
-		private GameplayTag[] _werewolfPlayerGroups;
+		private GameplayTag[] _werewolvesPlayerGroups;
 
 		[SerializeField]
 		private GameplayTag _bearGrowlGameHistoryEntry;
@@ -62,7 +62,7 @@ namespace Werewolf.Gameplay.Role
 			List<PlayerRef> playersToCheck = _gameManager.FindSurroundingPlayers(Player);
 			playersToCheck.Add(Player);
 
-			if (!_gameManager.IsAnyPlayersInPlayerGroups(playersToCheck, _werewolfPlayerGroups))
+			if (!_gameManager.IsAnyPlayersInPlayerGroups(playersToCheck, _werewolvesPlayerGroups))
 			{
 				yield break;
 			}

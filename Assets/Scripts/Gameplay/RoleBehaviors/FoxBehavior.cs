@@ -23,7 +23,7 @@ namespace Werewolf.Gameplay.Role
 		private float _choosePlayerMaximumDuration = 10.0f;
 
 		[SerializeField]
-		private GameplayTag[] _werewolfPlayerGroups;
+		private GameplayTag[] _werewolvesPlayerGroups;
 
 		[SerializeField]
 		private GameplayTag _sniffedWerewolfGameHistoryEntry;
@@ -121,7 +121,7 @@ namespace Werewolf.Gameplay.Role
 
 			foreach (PlayerRef player in playersToCheck)
 			{
-				if (_gameManager.IsPlayerInPlayerGroups(player, _werewolfPlayerGroups))
+				if (_gameManager.IsPlayerInPlayerGroups(player, _werewolvesPlayerGroups))
 				{
 					werewolfFound = true;
 				}

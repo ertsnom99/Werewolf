@@ -191,6 +191,14 @@ MonoBehaviour:
     m_Key: WildChild_ModelDied
     m_Metadata:
       m_Items: []
+  - m_Id: 72151173410709504
+    m_Key: FlutePlayer_CharmedVillagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72527194274258944
+    m_Key: FlutePlayer_LostPower
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

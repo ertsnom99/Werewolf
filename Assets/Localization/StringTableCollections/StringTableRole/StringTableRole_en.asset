@@ -273,6 +273,20 @@ MonoBehaviour:
       a Werewolf until the end of the game.\r"
     m_Metadata:
       m_Items: []
+  - m_Id: 69694821123874816
+    m_Localized: Flute Player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69694886416605184
+    m_Localized: "Ignorantly chased out of the village, he returned years later under
+      the cover of a false identity to wreak his terrible vengeance. \r\n\nEvery
+      night, he charms two new villagers. If he succeeds in charming the entire village,
+      he wins. If he is infected by the Foul Father of Wolves, he becomes a simple
+      Werewolf. Its initial objective, which was to charm the entire village, is
+      therefore abandoned. He will collaborate with the Werewolves for their common
+      victory.\r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
