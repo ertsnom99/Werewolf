@@ -260,46 +260,42 @@ namespace Werewolf.Managers
 
 		public IndexedReservedRoles GetReservedRoles(RoleBehavior roleBehavior)
 		{
-			IndexedReservedRoles reservedRoles = new();
-
-			if (_reservedRolesByBehavior.ContainsKey(roleBehavior))
-			{
-				reservedRoles = _reservedRolesByBehavior[roleBehavior];
-			}
-
-			return reservedRoles;
+			_reservedRolesByBehavior.TryGetValue(roleBehavior, out IndexedReservedRoles roles);
+			return roles;
 		}
 
 		public void RemoveReservedRoles(RoleBehavior ReservedRoleOwner, int[] specificIndexes)
 		{
-			if (!_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner))
+			if (!_reservedRolesByBehavior.TryGetValue(ReservedRoleOwner, out IndexedReservedRoles reservedRoles))
 			{
 				return;
 			}
 
-			int reservedRolesIndex = _reservedRolesByBehavior[ReservedRoleOwner].reservedRolesIndex;
+			int reservedRolesIndex = reservedRoles.reservedRolesIndex;
 			bool mustRemoveEntry = true;
 
 			if (specificIndexes.Length > 0)
 			{
 				foreach (int specificIndex in specificIndexes)
 				{
-					RoleBehavior behavior = _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[specificIndex];
+					RoleBehavior behavior = reservedRoles.Behaviors[specificIndex];
 
 					if (behavior && behavior.Player == null)
 					{
 						Destroy(behavior.gameObject);
 					}
 
-					_reservedRolesByBehavior[ReservedRoleOwner].Roles[specificIndex] = null;
-					_reservedRolesByBehavior[ReservedRoleOwner].Behaviors[specificIndex] = null;
+					reservedRoles.Roles[specificIndex] = null;
+					reservedRoles.Behaviors[specificIndex] = null;
 #if UNITY_SERVER && UNITY_EDITOR
-					if (_reservedCardsByBehavior[ReservedRoleOwner][specificIndex])
+					Card[] reservedCards = _reservedCardsByBehavior[ReservedRoleOwner];
+
+					if (reservedCards[specificIndex])
 					{
-						Destroy(_reservedCardsByBehavior[ReservedRoleOwner][specificIndex].gameObject);
+						Destroy(reservedCards[specificIndex].gameObject);
 					}
 
-					_reservedCardsByBehavior[ReservedRoleOwner][specificIndex] = null;
+					reservedCards[specificIndex] = null;
 #endif
 					for (int i = 0; i < ReservedRoles[reservedRolesIndex].Length; i++)
 					{
@@ -318,9 +314,9 @@ namespace Werewolf.Managers
 						continue;
 					}
 
-					for (int i = 0; i < _reservedRolesByBehavior[ReservedRoleOwner].Roles.Length; i++)
+					for (int i = 0; i < reservedRoles.Roles.Length; i++)
 					{
-						if (_reservedRolesByBehavior[ReservedRoleOwner].Roles[i])
+						if (reservedRoles.Roles[i])
 						{
 							mustRemoveEntry = false;
 							break;
@@ -330,18 +326,20 @@ namespace Werewolf.Managers
 			}
 			else
 			{
-				for (int i = 0; i < _reservedRolesByBehavior[ReservedRoleOwner].Roles.Length; i++)
+				for (int i = 0; i < reservedRoles.Roles.Length; i++)
 				{
-					RoleBehavior behavior = _reservedRolesByBehavior[ReservedRoleOwner].Behaviors[i];
+					RoleBehavior behavior = reservedRoles.Behaviors[i];
 
 					if (behavior && behavior.Player == null)
 					{
 						Destroy(behavior.gameObject);
 					}
 #if UNITY_SERVER && UNITY_EDITOR
-					if (_reservedCardsByBehavior[ReservedRoleOwner][i])
+					Card[] reservedCards = _reservedCardsByBehavior[ReservedRoleOwner];
+
+					if (reservedCards[i])
 					{
-						Destroy(_reservedCardsByBehavior[ReservedRoleOwner][i].gameObject);
+						Destroy(reservedCards[i].gameObject);
 					}
 #endif
 				}
@@ -363,13 +361,13 @@ namespace Werewolf.Managers
 		// Returns if there is any reserved roles the player can choose from (will be false if the behavior is already waiting for a callback from this method)
 		public bool ChooseReservedRole(RoleBehavior ReservedRoleOwner, int choiceScreenID, bool mustChoose, float maximumDuration, Action<int> callback)
 		{
-			if (!_networkDataManager.PlayerInfos[ReservedRoleOwner.Player].IsConnected || !_reservedRolesByBehavior.ContainsKey(ReservedRoleOwner) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
+			if (!_networkDataManager.PlayerInfos[ReservedRoleOwner.Player].IsConnected || !_reservedRolesByBehavior.TryGetValue(ReservedRoleOwner, out IndexedReservedRoles reservedRoles) || _chooseReservedRoleCallbacks.ContainsKey(ReservedRoleOwner.Player))
 			{
 				return false;
 			}
 
-			RoleData[] roleDatas = _reservedRolesByBehavior[ReservedRoleOwner].Roles;
-			int[] roles = ReservedRoles[_reservedRolesByBehavior[ReservedRoleOwner].reservedRolesIndex];
+			RoleData[] roleDatas = reservedRoles.Roles;
+			int[] roles = ReservedRoles[reservedRoles.reservedRolesIndex];
 
 			for (int i = 0; i < roleDatas.Length; i++)
 			{
@@ -460,12 +458,12 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_GiveReservedRoleChoice(int roleGameplayTagID, RpcInfo info = default)
 		{
-			if (!_chooseReservedRoleCallbacks.ContainsKey(info.Source))
+			if (!_chooseReservedRoleCallbacks.TryGetValue(info.Source, out Action<int> callback))
 			{
 				return;
 			}
 
-			_chooseReservedRoleCallbacks[info.Source](roleGameplayTagID);
+			callback(roleGameplayTagID);
 			_chooseReservedRoleCallbacks.Remove(info.Source);
 		}
 
@@ -675,12 +673,12 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		private void RPC_RevealPlayerRoleFinished(RpcInfo info = default)
 		{
-			if (!_revealPlayerRoleCallbacks.ContainsKey(info.Source))
+			if (!_revealPlayerRoleCallbacks.TryGetValue(info.Source, out Action<PlayerRef> callback))
 			{
 				return;
 			}
 
-			_revealPlayerRoleCallbacks[info.Source](info.Source);
+			callback(info.Source);
 			_revealPlayerRoleCallbacks.Remove(info.Source);
 		}
 
@@ -699,12 +697,12 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		private void RPC_MoveCardToCameraFinished(RpcInfo info = default)
 		{
-			if (!_moveCardToCameraCallbacks.ContainsKey(info.Source))
+			if (!_moveCardToCameraCallbacks.TryGetValue(info.Source, out Action callback))
 			{
 				return;
 			}
 
-			_moveCardToCameraCallbacks[info.Source]();
+			callback();
 			_moveCardToCameraCallbacks.Remove(info.Source);
 		}
 
@@ -723,12 +721,12 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		private void RPC_FlipCardFinished(RpcInfo info = default)
 		{
-			if (!_flipCardCallbacks.ContainsKey(info.Source))
+			if (!_flipCardCallbacks.TryGetValue(info.Source, out Action callback))
 			{
 				return;
 			}
 
-			_flipCardCallbacks[info.Source]();
+			callback();
 			_flipCardCallbacks.Remove(info.Source);
 		}
 
@@ -762,12 +760,12 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		private void RPC_PutCardBackDownFinished(RpcInfo info = default)
 		{
-			if (!_putCardBackDownCallbacks.ContainsKey(info.Source))
+			if (!_putCardBackDownCallbacks.TryGetValue(info.Source, out var callback))
 			{
 				return;
 			}
 
-			_putCardBackDownCallbacks[info.Source]();
+			callback();
 			_putCardBackDownCallbacks.Remove(info.Source);
 		}
 		#endregion

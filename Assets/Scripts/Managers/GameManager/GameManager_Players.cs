@@ -266,9 +266,9 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_DisplayPlayerDeadIcon(PlayerRef deadPlayer)
 		{
-			if (_playerCards.ContainsKey(deadPlayer) && _playerCards[deadPlayer])
+			if (_playerCards.TryGetValue(deadPlayer, out Card playerCard) && playerCard)
 			{
-				_playerCards[deadPlayer].DisplayDeadIcon();
+				playerCard.DisplayDeadIcon();
 			}
 		}
 		#endregion
@@ -599,7 +599,7 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_GivePlayerChoices(PlayerRef[] players, RpcInfo info = default)
 		{
-			if (!_selectPlayersCallbacks.ContainsKey(info.Source))
+			if (!_selectPlayersCallbacks.TryGetValue(info.Source, out Action<PlayerRef[]> callback))
 			{
 				return;
 			}
@@ -614,7 +614,7 @@ namespace Werewolf.Managers
 				}
 			}
 
-			_selectPlayersCallbacks[info.Source](players);
+			callback(players);
 			_selectPlayersCallbacks.Remove(info.Source);
 		}
 
@@ -668,7 +668,7 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_AcceptPrompt(RpcInfo info = default)
 		{
-			if (!_promptPlayerCallbacks.ContainsKey(info.Source))
+			if (!_promptPlayerCallbacks.TryGetValue(info.Source, out var callback))
 			{
 				return;
 			}
