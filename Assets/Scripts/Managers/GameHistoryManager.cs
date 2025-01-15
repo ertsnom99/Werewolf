@@ -73,16 +73,16 @@ namespace Werewolf.Managers
 			_gameHistorySave.Entries.Clear();
 		}
 
-		public static string ConcatenatePlayersNickname(List<PlayerRef> players, NetworkDataManager networkDataManager)
+		public static string ConcatenatePlayersNickname(PlayerRef[] players, NetworkDataManager networkDataManager)
 		{
-			if (players.Count <= 0)
+			if (players.Length <= 0)
 			{
 				return "";
 			}
 
 			StringBuilder stringBuilder = new(networkDataManager.PlayerInfos[players[0]].Nickname);
 
-			for (int i = 1; i < players.Count; i++)
+			for (int i = 1; i < players.Length; i++)
 			{
 				stringBuilder.Append(VARIABLE_DATA_SEPARATOR + networkDataManager.PlayerInfos[players[i]].Nickname);
 			}

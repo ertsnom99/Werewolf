@@ -28,7 +28,7 @@ namespace Werewolf.Managers
 
 		public float GameSpeedModifier { get; private set; }
 
-		public List<PlayerRef> PlayersWaitingFor { get; private set; }
+		public HashSet<PlayerRef> PlayersWaitingFor { get; private set; }
 
 		public int AlivePlayerCount { get; private set; }
 
@@ -433,7 +433,7 @@ namespace Werewolf.Managers
 			// Loop threw the priorities and store all players with similare priorities together
 			for (int i = 0; i < priorities.Count; i++)
 			{
-				List<PlayerRef> playersToCall = new();
+				HashSet<PlayerRef> playersToCall = new();
 
 				foreach (PlayerRef player in players)
 				{
@@ -689,7 +689,7 @@ namespace Werewolf.Managers
 												new()
 												{
 													Name = "Players",
-													Data = ConcatenatePlayersNickname(_captainCandidates, _networkDataManager),
+													Data = ConcatenatePlayersNickname(_captainCandidates.ToArray(), _networkDataManager),
 													Type = GameHistorySaveEntryVariableType.Players
 												}
 											});
@@ -928,7 +928,7 @@ namespace Werewolf.Managers
 			RoleData alias = null;
 			RoleBehavior behaviorCalled = null;
 
-			foreach (RoleBehavior behavior in PlayerGameInfos[nightCall.Players[0]].Behaviors)
+			foreach (RoleBehavior behavior in PlayerGameInfos[nightCall.Players.First()].Behaviors)
 			{
 				foreach (Priority nightPrioritie in behavior.NightPriorities)
 				{
@@ -1621,10 +1621,7 @@ namespace Werewolf.Managers
 
 		public void WaitForPlayer(PlayerRef player)
 		{
-			if (!PlayersWaitingFor.Contains(player))
-			{
-				PlayersWaitingFor.Add(player);
-			}
+			PlayersWaitingFor.Add(player);
 		}
 
 		public void StopWaintingForPlayer(PlayerRef player)

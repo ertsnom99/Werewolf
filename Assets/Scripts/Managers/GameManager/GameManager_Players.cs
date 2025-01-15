@@ -123,9 +123,9 @@ namespace Werewolf.Managers
 			return players.ToArray();
 		}
 
-		public List<PlayerRef> FindSurroundingPlayers(PlayerRef relativeTo)
+		public HashSet<PlayerRef> FindSurroundingPlayers(PlayerRef relativeTo)
 		{
-			List<PlayerRef> SurroundingPlayers = new();
+			HashSet<PlayerRef> SurroundingPlayers = new();
 
 			int playerIndex = Array.IndexOf(_playersOrder, relativeTo);
 
@@ -135,7 +135,7 @@ namespace Werewolf.Managers
 			return SurroundingPlayers;
 		}
 
-		private void FindNextSurroundingPlayer(int relativeTo, int iteration, ref List<PlayerRef> SurroundingPlayers)
+		private void FindNextSurroundingPlayer(int relativeTo, int iteration, ref HashSet<PlayerRef> SurroundingPlayers)
 		{
 			int currentIndex = relativeTo;
 
@@ -416,7 +416,7 @@ namespace Werewolf.Managers
 			return false;
 		}
 
-		public bool IsAnyPlayersInPlayerGroups(List<PlayerRef> players, GameplayTag[] inPlayerGroups)
+		public bool IsAnyPlayersInPlayerGroups(HashSet<PlayerRef> players, GameplayTag[] inPlayerGroups)
 		{
 			foreach (PlayerRef player in players)
 			{

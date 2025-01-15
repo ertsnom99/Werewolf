@@ -59,7 +59,7 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator CheckForWerewolfs()
 		{
-			List<PlayerRef> playersToCheck = _gameManager.FindSurroundingPlayers(Player);
+			HashSet<PlayerRef> playersToCheck = _gameManager.FindSurroundingPlayers(Player);
 			playersToCheck.Add(Player);
 
 			if (!_gameManager.IsAnyPlayersInPlayerGroups(playersToCheck, _werewolvesPlayerGroups))

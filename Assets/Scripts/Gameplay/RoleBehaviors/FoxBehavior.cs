@@ -2,6 +2,7 @@ using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Managers;
@@ -119,7 +120,7 @@ namespace Werewolf.Gameplay.Role
 
 		private IEnumerator CheckForWerewolfs(PlayerRef middlePlayer)
 		{
-			List<PlayerRef> playersToCheck = _gameManager.FindSurroundingPlayers(middlePlayer);
+			HashSet<PlayerRef> playersToCheck = _gameManager.FindSurroundingPlayers(middlePlayer);
 			playersToCheck.Add(middlePlayer);
 
 			bool werewolfFound = false;
@@ -151,7 +152,7 @@ namespace Werewolf.Gameplay.Role
 											new()
 											{
 												Name = "SniffedPlayers",
-												Data = ConcatenatePlayersNickname(playersToCheck, _networkDataManager),
+												Data = ConcatenatePlayersNickname(playersToCheck.ToArray(), _networkDataManager),
 												Type = GameHistorySaveEntryVariableType.Players
 											}
 										});
