@@ -11,7 +11,7 @@ namespace Werewolf.Managers
 		private struct NightCall
 		{
 			public int PriorityIndex;
-			public List<PlayerRef> Players;
+			public HashSet<PlayerRef> Players;
 		}
 
 		private int _currentNightCallIndex = 0;

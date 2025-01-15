@@ -32,7 +32,7 @@ namespace Werewolf.Managers
 		[field: SerializeField]
 		public DisconnectedScreen DisconnectedScreen { get; private set; }
 
-		private readonly List<FadingScreen> _activeFadingScreens = new();
+		private readonly HashSet<FadingScreen> _activeFadingScreens = new();
 
 		protected override void Awake()
 		{
@@ -45,11 +45,7 @@ namespace Werewolf.Managers
 
 		public void FadeIn(FadingScreen fadingScreen, float transitionDuration)
 		{
-			if (!_activeFadingScreens.Contains(fadingScreen))
-			{
-				_activeFadingScreens.Add(fadingScreen);
-			}
-
+			_activeFadingScreens.Add(fadingScreen);
 			fadingScreen.FadeIn(transitionDuration);
 		}
 
@@ -84,7 +80,7 @@ namespace Werewolf.Managers
 
 		public void SetFade(FadingScreen fadingScreen, float fade)
 		{
-			if (fade > 0 && !_activeFadingScreens.Contains(fadingScreen))
+			if (fade > 0)
 			{
 				_activeFadingScreens.Add(fadingScreen);
 			}

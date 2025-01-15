@@ -16,10 +16,10 @@ namespace Werewolf.Managers
 		private GameConfig _config;
 		private Dictionary<PlayerRef, Card> _playerCards;
 
-		public List<PlayerRef> Voters { get; private set; }
-		private readonly List<PlayerRef> _immune = new();
-		private readonly Dictionary<PlayerRef, List<PlayerRef>> _immuneFromPlayers = new();
-		private readonly List<PlayerRef> _spectators = new();
+		public HashSet<PlayerRef> Voters { get; private set; }
+		private readonly HashSet<PlayerRef> _immune = new();
+		private readonly Dictionary<PlayerRef, HashSet<PlayerRef>> _immuneFromPlayers = new();
+		private readonly HashSet<PlayerRef> _spectators = new();
 		private readonly Dictionary<PlayerRef, PlayerRef> _votes = new();
 
 		[Serializable]
@@ -63,7 +63,7 @@ namespace Werewolf.Managers
 		protected override void Awake()
 		{
 			base.Awake();
-			Voters = new List<PlayerRef>();
+			Voters = new();
 		}
 
 		public void SetPlayerCards(Dictionary<PlayerRef, Card> playerCards)
@@ -173,7 +173,7 @@ namespace Werewolf.Managers
 
 		public void AddVoteImmunity(PlayerRef player)
 		{
-			if (_step == Step.Preparing && !_immune.Contains(player))
+			if (_step == Step.Preparing)
 			{
 				_immune.Add(player);
 			}
@@ -181,7 +181,7 @@ namespace Werewolf.Managers
 
 		public void AddVoteImmunity(PlayerRef immunePlayer, PlayerRef from)
 		{
-			if (_step == Step.Preparing && _immuneFromPlayers.ContainsKey(from) && !_immuneFromPlayers[from].Contains(immunePlayer))
+			if (_step == Step.Preparing && _immuneFromPlayers.ContainsKey(from))
 			{
 				_immuneFromPlayers[from].Add(immunePlayer);
 			}
@@ -189,7 +189,7 @@ namespace Werewolf.Managers
 
 		public void AddSpectator(PlayerRef spectator)
 		{
-			if (_step == Step.Preparing && !_spectators.Contains(spectator) && !Voters.Contains(spectator))
+			if (_step == Step.Preparing && !Voters.Contains(spectator))
 			{
 				_spectators.Add(spectator);
 			}
@@ -301,10 +301,7 @@ namespace Werewolf.Managers
 			{
 				foreach (PlayerRef player in _immune)
 				{
-					if (!_immuneFromPlayers[voter].Contains(player))
-					{
-						_immuneFromPlayers[voter].Add(player);
-					}
+					_immuneFromPlayers[voter].Add(player);
 				}
 
 				if (_immuneFromPlayers[voter].Count < _gameManager.PlayerGameInfos.Count)
@@ -570,7 +567,7 @@ namespace Werewolf.Managers
 			VoteCompleted -= OnAllPlayersVoteEnded;
 
 			int mostVoteCount = 0;
-			List<PlayerRef> mostVotedPlayers = new();
+			HashSet<PlayerRef> mostVotedPlayers = new();
 
 			foreach (KeyValuePair<PlayerRef, int> vote in votes)
 			{

@@ -162,7 +162,7 @@ public class FlutePlayerBehavior : RoleBehavior
 										new()
 										{
 											Name = "CharmedPlayers",
-											Data = ConcatenatePlayersNickname(players.ToList(), _networkDataManager),
+											Data = ConcatenatePlayersNickname(players, _networkDataManager),
 											Type = GameHistorySaveEntryVariableType.Players
 										}
 									});
