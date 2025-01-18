@@ -54,7 +54,7 @@ namespace Werewolf.Managers
 			ExecutionDeathReveal,
 		}
 
-		private int _nightCount = 0;
+		private int _nightCount;
 
 		private readonly List<PlayerRef> _captainCandidates = new();
 

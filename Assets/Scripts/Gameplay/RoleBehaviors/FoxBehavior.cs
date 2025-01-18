@@ -21,7 +21,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _choosePlayerImage;
 
 		[SerializeField]
-		private float _choosePlayerMaximumDuration = 10.0f;
+		private float _choosePlayerMaximumDuration;
 
 		[SerializeField]
 		private GameplayTag[] _werewolvesPlayerGroups;
@@ -39,7 +39,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _foundNoWerewolfImage;
 
 		[SerializeField]
-		private float _resultTitleHoldDuration = 3.0f;
+		private float _resultTitleHoldDuration;
 
 		private bool _hasPower = true;
 

@@ -21,7 +21,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _chooseOtherWerewolfImage;
 
 		[SerializeField]
-		private float _chooseOtherWerewolfMaximumDuration = 10.0f;
+		private float _chooseOtherWerewolfMaximumDuration;
 
 		[SerializeField]
 		private GameplayTag _choseWerewolfGameHistoryEntry;
@@ -30,7 +30,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _markForDeath;
 
 		[SerializeField]
-		private float _selectedWerewolfHighlightDuration = 3.0f;
+		private float _selectedWerewolfHighlightDuration;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 

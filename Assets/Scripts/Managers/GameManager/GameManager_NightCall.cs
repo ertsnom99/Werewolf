@@ -14,7 +14,7 @@ namespace Werewolf.Managers
 			public HashSet<PlayerRef> Players;
 		}
 
-		private int _currentNightCallIndex = 0;
+		private int _currentNightCallIndex;
 
 		private void AddPlayerToNightCall(int priorityIndex, PlayerRef player)
 		{

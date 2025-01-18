@@ -22,7 +22,7 @@ namespace Werewolf.Gameplay.Role
 
 		[Header("Choose Role")]
 		[SerializeField]
-		private float _chooseReservedRoleMaximumDuration = 10.0f;
+		private float _chooseReservedRoleMaximumDuration;
 
 		[SerializeField]
 		private GameplayTag _mayChooseChoiceScreen;
