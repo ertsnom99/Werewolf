@@ -28,9 +28,9 @@ namespace Werewolf.Gameplay
 		[SerializeField]
 		private GameObject _selectedFrame;
 		[SerializeField]
-		private Color _selectedColor = Color.yellow;
+		private Color _selectedColor;
 		[SerializeField]
-		private Color _notSelectedColor = Color.white;
+		private Color _notSelectedColor;
 
 		[Header("Votes")]
 		[SerializeField]

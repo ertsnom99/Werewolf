@@ -18,13 +18,13 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _choosePlayerImage;
 
 		[SerializeField]
-		private float _choosePlayerMaximumDuration = 10.0f;
+		private float _choosePlayerMaximumDuration;
 
 		[SerializeField]
 		private GameplayTag _chosePlayerToProtectGameHistoryEntry;
 
 		[SerializeField]
-		private float _playerHighlightHoldDuration = 3.0f;
+		private float _playerHighlightHoldDuration;
 
 		[SerializeField]
 		private GameplayTag[] _marksForDeathRemovedByProtection;

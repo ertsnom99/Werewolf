@@ -30,7 +30,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _tookThisRoleImage;
 
 		[SerializeField]
-		private float _servantRevealDuration = 3.0f;
+		private float _servantRevealDuration;
 
 		private bool _isWaitingForPromptAnswer;
 		private PlayerRef _playerRevealed;

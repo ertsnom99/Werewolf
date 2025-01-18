@@ -21,17 +21,17 @@ public class FlutePlayerBehavior : RoleBehavior
 	private GameplayTag _charmVillagersImage;
 
 	[SerializeField]
-	private float _charmVillagersMaximumDuration = 10.0f;
+	private float _charmVillagersMaximumDuration;
 
 	[SerializeField]
 	private GameplayTag _charmedVillagersGameHistoryEntry;
 
 	[SerializeField]
-	private float _showCharmedVillagersHighlightHoldDuration = 3.0f;
+	private float _showCharmedVillagersHighlightHoldDuration;
 
 	[Header("Show Charmed Villagers")]
 	[SerializeField]
-	private float _showAllCharmedVillagersHighlightHoldDuration = 5.0f;
+	private float _showAllCharmedVillagersHighlightHoldDuration;
 
 	[SerializeField]
 	private GameplayTag _charmedVillagersImage;

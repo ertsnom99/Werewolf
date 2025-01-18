@@ -17,7 +17,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _choosePlayerImage;
 
 		[SerializeField]
-		private float _choosePlayerMaximumDuration = 10.0f;
+		private float _choosePlayerMaximumDuration;
 
 		[SerializeField]
 		private GameplayTag _lookedPlayerRoleGameHistoryEntry;

@@ -27,7 +27,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _choiceScreen;
 
 		[SerializeField]
-		private float _choosePotionMaximumDuration = 10.0f;
+		private float _choosePotionMaximumDuration;
 
 		[SerializeField]
 		private float _choiceSelectedHoldDuration;

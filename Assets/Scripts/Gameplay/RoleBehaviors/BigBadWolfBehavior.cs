@@ -27,7 +27,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _chooseVillagerImage;
 
 		[SerializeField]
-		private float _chooseVillagerMaximumDuration = 10.0f;
+		private float _chooseVillagerMaximumDuration;
 
 		[SerializeField]
 		private GameplayTag _choseVillagerGameHistoryEntry;
@@ -36,7 +36,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _markForDeath;
 
 		[SerializeField]
-		private float _selectedVillagerHighlightDuration = 3.0f;
+		private float _selectedVillagerHighlightDuration;
 
 		[SerializeField]
 		private GameplayTag _lostPowerImage;

@@ -20,17 +20,17 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _chooseCoupleImage;
 
 		[SerializeField]
-		private float _chooseCoupleMaximumDuration = 10.0f;
+		private float _chooseCoupleMaximumDuration;
 
 		[SerializeField]
 		private GameplayTag _coupleSelectedGameHistoryEntry;
 
 		[SerializeField]
-		private float _choseCoupleHighlightHoldDuration = 3.0f;
+		private float _choseCoupleHighlightHoldDuration;
 
 		[Header("Show Couple")]
 		[SerializeField]
-		private float _showCoupleHighlightHoldDuration = 3.0f;
+		private float _showCoupleHighlightHoldDuration;
 
 		[SerializeField]
 		private GameplayTag _inCoupleImage;
@@ -49,7 +49,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _coupleDeathImage;
 
 		[SerializeField]
-		private float _coupleDeathHighlightHoldDuration = 3.0f;
+		private float _coupleDeathHighlightHoldDuration;
 
 		private PlayerRef[] _choices;
 		private List<PlayerRef[]> _couples = new();

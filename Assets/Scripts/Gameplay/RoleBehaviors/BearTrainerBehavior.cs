@@ -23,7 +23,7 @@ namespace Werewolf.Gameplay.Role
 		private GameplayTag _bearGrowlImage;
 
 		[SerializeField]
-		private float _bearGrowlImageDuration = 5.0f;
+		private float _bearGrowlImageDuration;
 
 		private GameManager _gameManager;
 		private GameHistoryManager _gameHistoryManager;
