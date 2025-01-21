@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -4916039273124537934, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: FlutePlayerCharmedVillagersRecognizingEachOther
-  <Image>k__BackingField: {fileID: 1803793580, guid: d27adb3f7039d1a45a0389b130f6c9c3,
+  <Image>k__BackingField: {fileID: 21300000, guid: 5292c0b841fb0a845a5252cb52a9f0ea,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:
