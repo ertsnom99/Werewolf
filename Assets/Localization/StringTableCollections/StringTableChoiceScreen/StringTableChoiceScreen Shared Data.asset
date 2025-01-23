@@ -43,6 +43,14 @@ MonoBehaviour:
     m_Key: Witch_ChoosedPotion
     m_Metadata:
       m_Items: []
+  - m_Id: 16495093095981056
+    m_Key: DogWolf_ChooseGroup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16495094509461504
+    m_Key: DogWolf_ChoosedGroup
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

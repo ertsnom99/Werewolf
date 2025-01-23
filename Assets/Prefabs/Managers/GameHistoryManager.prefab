@@ -63,7 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _acceptedGameplayTagsForEntry:
-  - {fileID: 2744590352255551238, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: -6763199540646998606, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   _acceptedGameplayTagsForImageOverride:
   - {fileID: 3472346779470064033, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   - {fileID: 2130812115359760485, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}

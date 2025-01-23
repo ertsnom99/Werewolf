@@ -47,6 +47,14 @@ MonoBehaviour:
     m_Localized: Vous avez choisi cette potion
     m_Metadata:
       m_Items: []
+  - m_Id: 16495093095981056
+    m_Localized: "Vous DEVEZ choisir un groupe \xE0 joindre"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16495094509461504
+    m_Localized: Vous avez choisi ce groupe
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

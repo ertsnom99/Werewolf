@@ -199,6 +199,14 @@ MonoBehaviour:
     m_Key: FlutePlayer_LostPower
     m_Metadata:
       m_Items: []
+  - m_Id: 76757296050724864
+    m_Key: DogWolf_ChoseWerewolvesGroup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76757297984299008
+    m_Key: "DogWolf_ChoseVillagersGroup\r"
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

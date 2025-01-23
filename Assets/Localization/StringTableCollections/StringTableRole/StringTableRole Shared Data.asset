@@ -171,6 +171,14 @@ MonoBehaviour:
     m_Key: FlutePlayer_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 74428792986525696
+    m_Key: DogWolf_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74428795301781504
+    m_Key: DogWolf_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

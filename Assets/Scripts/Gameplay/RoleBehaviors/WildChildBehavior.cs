@@ -182,6 +182,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopSelectingPlayers(Player);
 			SelectRandomModel();
 		}
+
 		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
 		{
 			if (Player.IsNone

@@ -244,6 +244,14 @@ MonoBehaviour:
       perdu!"
     m_Metadata:
       m_Items: []
+  - m_Id: 17662799644057600
+    m_Localized: Loups-Garous
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17662861266771968
+    m_Localized: Villageois
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
-  m_Name: Fox
+  m_Name: DogWolf
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 7649568454011052203, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  <GameplayTag>k__BackingField: {fileID: -535318216189129561, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <DebugName>k__BackingField: Fox
+  <DebugName>k__BackingField: DogWolf
   <NameSingular>k__BackingField:
     m_TableReference:
       m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
     m_TableEntryReference:
-      m_KeyId: 4372801437696
+      m_KeyId: 74428792986525696
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -37,25 +37,28 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
     m_TableEntryReference:
-      m_KeyId: 4374936338432
+      m_KeyId: 74428795301781504
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <Image>k__BackingField: {fileID: 21300000, guid: ad211df855aee034998ac2f54bc742be,
+  <Image>k__BackingField: {fileID: -1633122124, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
     type: 3}
-  <SmallImage>k__BackingField: {fileID: 21300000, guid: f9d1e70d2cbb61846b6510d80b2c039a,
+  <SmallImage>k__BackingField: {fileID: -1633122124, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
     type: 3}
   <PrimaryType>k__BackingField: 0
-  <SecondaryType>k__BackingField: 0
+  <SecondaryType>k__BackingField: 1
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
   - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <NightPriorities>k__BackingField:
-  - index: 6
+  - index: 5
     alias: {fileID: 0}
-  <Behavior>k__BackingField: {fileID: 6478022945204151896, guid: a2f614bbc46ff3b47af4ad80fa82ab20,
+  - index: 13
+    alias: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
+  <Behavior>k__BackingField: {fileID: -8544025593532047687, guid: f0d949d46aba5a74f8dd5ef846c7d510,
     type: 3}
   references:
     version: 2
