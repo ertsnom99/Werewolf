@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2949239025012746967
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7909975562313241460}
+  - component: {fileID: -8544025593532047687}
+  m_Layer: 0
+  m_Name: DogWolfBehavior
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7909975562313241460
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2949239025012746967}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8544025593532047687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2949239025012746967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1bbbfb0341aaca489f4f9d4a18d0b02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroups>k__BackingField: []
+  <NightPriorities>k__BackingField: []
+  <IsPrimaryBehavior>k__BackingField: 0
+  _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
+    type: 2}
+  _choiceScreen: {fileID: -8761640116101350222, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _werewolvesImage: {fileID: 293889000524268254, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _choseWerewolvesGroupGameHistoryEntry: {fileID: 2744590352255551238, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _villagersImage: {fileID: 5810233721197495563, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _choseVillagersGroupGameHistoryEntry: {fileID: -1600375867687415392, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  _chooseGroupMaximumDuration: 10

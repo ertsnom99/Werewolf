@@ -99,12 +99,12 @@ namespace Werewolf.Gameplay.Role
 		{
 			isWakingUp = false;
 
-			if (!_choseCouple && priorityIndex == NightPriorities[0].index)
+			if (priorityIndex == NightPriorities[0].index && !_choseCouple)
 			{
 				isWakingUp = true;
 				return ChooseCouple();
 			}
-			else if (_choseCouple && !_showedCouple && priorityIndex == NightPriorities[1].index)
+			else if (priorityIndex == NightPriorities[1].index && _choseCouple && !_showedCouple)
 			{
 				StartCoroutine(ShowCouple());
 				return true;

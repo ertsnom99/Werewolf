@@ -231,6 +231,14 @@ MonoBehaviour:
     m_Key: Role_LostPower
     m_Metadata:
       m_Items: []
+  - m_Id: 17662799644057600
+    m_Key: DogWolf_Werewolves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17662861266771968
+    m_Key: DogWolf_Villagers
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

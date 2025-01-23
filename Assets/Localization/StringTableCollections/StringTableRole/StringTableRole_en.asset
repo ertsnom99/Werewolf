@@ -287,6 +287,19 @@ MonoBehaviour:
       victory.\r"
     m_Metadata:
       m_Items: []
+  - m_Id: 74428792986525696
+    m_Localized: Dog-Wolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74428795301781504
+    m_Localized: "All dogs know deep within themselves that their ancestors were
+      wolves and that it was man who kept them in this state of childish and fearful,
+      but faithful and generous companions. In any case, only the Dog-Wolf can decide
+      if he will obey his human and civilized master or if he will listen to the
+      call of the wild nature buried in his bowels.\r\n\nThe first night, the Dog-Wolf
+      decides whether he wants to be a Villager or a Werewolf.\r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

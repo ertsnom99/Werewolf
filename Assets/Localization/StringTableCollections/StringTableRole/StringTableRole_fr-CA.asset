@@ -269,6 +269,20 @@ MonoBehaviour:
       Il va collaborer avec les Loups-Garous pour leur victoire commune.\r"
     m_Metadata:
       m_Items: []
+  - m_Id: 74428792986525696
+    m_Localized: Chien-Loup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74428795301781504
+    m_Localized: "Tous les chiens savent au tr\xE9fonds d\u2019eux-m\xEAmes que leurs
+      anc\xEAtres \xE9taient loups et que c\u2019est l\u2019homme qui les a maintenus
+      dans cet \xE9tat de compagnons enfantins et craintifs, mais fid\xE8les et g\xE9n\xE9reux.
+      En tout cas, seul le Chien-Loup peut d\xE9cider s\u2019il ob\xE9ira \xE0 son
+      ma\xEEtre humain et civilis\xE9 ou s\u2019il \xE9coutera l\u2019appel de la
+      nature sauvage enfouie dans ses entrailles.\r\n\nLa premi\xE8re nuit, le Chien-Loup
+      d\xE9cide s\u2019il veut \xEAtre un Villageois ou un Loup-Garou.  \r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
