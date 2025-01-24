@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: -1600375867687415392, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: DogWolfChoseVillagersGroup
-  <Image>k__BackingField: {fileID: 21300000, guid: ddb55fc2572245948a2f91aba9aa18ee,
+  <Image>k__BackingField: {fileID: 21300000, guid: 81f402bfcb62c7745b817192f51318ff,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:
