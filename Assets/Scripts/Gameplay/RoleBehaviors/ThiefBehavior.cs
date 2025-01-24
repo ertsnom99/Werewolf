@@ -33,6 +33,8 @@ namespace Werewolf.Gameplay.Role
 		[SerializeField]
 		private GameplayTag _tookRoleGameHistoryEntry;
 
+		private bool _choseRole;
+
 		private IndexedReservedRoles _reservedRoles;
 		private bool _reservedOnlyWerewolfs;
 
@@ -98,6 +100,11 @@ namespace Werewolf.Gameplay.Role
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
+			if (_choseRole)
+			{
+				return isWakingUp = false;
+			}
+
 			_reservedRoles = _gameManager.GetReservedRoles(this);
 
 			if (_reservedRoles.Roles == null)
@@ -174,6 +181,8 @@ namespace Werewolf.Gameplay.Role
 			}
 
 			_gameManager.RemoveReservedRoles(this, new int[0]);
+			_choseRole = true;
+
 			_gameManager.StopWaintingForPlayer(previousPlayer);
 
 			if (choiceIndex > -1 || _reservedOnlyWerewolfs)
