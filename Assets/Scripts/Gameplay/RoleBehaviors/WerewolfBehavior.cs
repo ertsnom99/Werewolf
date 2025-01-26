@@ -1,4 +1,5 @@
 using Fusion;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -34,11 +35,11 @@ namespace Werewolf.Gameplay.Role
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
-			VoteForVillagers();
+			VoteForVillager();
 			return isWakingUp = true;
 		}
 
-		protected void VoteForVillagers()
+		protected void VoteForVillager()
 		{
 			_preparedVote = _voteManager.PrepareVote(_commonWerewolfsData.VotePlayerImage.CompactTagId, _commonWerewolfsData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
 
@@ -79,16 +80,20 @@ namespace Werewolf.Gameplay.Role
 		{
 			_voteManager.VoteCompleted -= OnVoteEnded;
 
-			_gameManager.StopWaintingForPlayer(Player);
-
-			PlayerRef firstPlayerVotedFor = votes.Count == 1 ? votes.Keys.ToArray()[0] : PlayerRef.None;
-
 			if (!_preparedVote)
 			{
+				_gameManager.StopWaintingForPlayer(Player);
 				return;
 			}
 
+			StartCoroutine(EndRoleCall(votes));
+		}
+
+		private IEnumerator EndRoleCall(Dictionary<PlayerRef, int> votes)
+		{
 			SetWerewolfIconsVisible(false);
+
+			PlayerRef firstPlayerVotedFor = votes.Count == 1 ? votes.Keys.ToArray()[0] : PlayerRef.None;
 
 			if (!firstPlayerVotedFor.IsNone && votes[firstPlayerVotedFor] == _voteManager.Voters.Count)
 			{
@@ -103,11 +108,52 @@ namespace Werewolf.Gameplay.Role
 											});
 
 				_gameManager.AddMarkForDeath(firstPlayerVotedFor, _commonWerewolfsData.MarkForDeath);
+
+				foreach (PlayerRef voter in _voteManager.Voters)
+				{
+					if (_networkDataManager.PlayerInfos[voter].IsConnected)
+					{
+						_gameManager.RPC_SetPlayerCardHighlightVisible(voter, firstPlayerVotedFor, true);
+					}
+				}
+
+				foreach (PlayerRef spectators in _voteManager.Spectators)
+				{
+					if (_networkDataManager.PlayerInfos[spectators].IsConnected)
+					{
+						_gameManager.RPC_SetPlayerCardHighlightVisible(spectators, firstPlayerVotedFor, true);
+					}
+				}
+#if UNITY_SERVER && UNITY_EDITOR
+				_gameManager.SetPlayerCardHighlightVisible(firstPlayerVotedFor, true);
+#endif
+				yield return new WaitForSeconds(_commonWerewolfsData.ChoosenVillagerHighlightDuration);
+
+				foreach (PlayerRef voter in _voteManager.Voters)
+				{
+					if (_networkDataManager.PlayerInfos[voter].IsConnected)
+					{
+						_gameManager.RPC_SetPlayerCardHighlightVisible(voter, firstPlayerVotedFor, false);
+					}
+				}
+
+				foreach (PlayerRef spectators in _voteManager.Spectators)
+				{
+					if (_networkDataManager.PlayerInfos[spectators].IsConnected)
+					{
+						_gameManager.RPC_SetPlayerCardHighlightVisible(spectators, firstPlayerVotedFor, false);
+					}
+				}
+#if UNITY_SERVER && UNITY_EDITOR
+				_gameManager.SetPlayerCardHighlightVisible(firstPlayerVotedFor, false);
+#endif
 			}
 			else
 			{
 				_gameHistoryManager.AddEntry(_commonWerewolfsData.FailedToVotePlayerGameHistoryEntry, null);
 			}
+
+			_gameManager.StopWaintingForPlayer(Player);
 		}
 
 		private void SetWerewolfIconsVisible(bool isVisible)

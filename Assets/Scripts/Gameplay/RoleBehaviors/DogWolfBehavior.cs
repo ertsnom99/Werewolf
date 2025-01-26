@@ -62,7 +62,7 @@ namespace Werewolf.Gameplay.Role
 			}
 			else if (priorityIndex == NightPriorities[1].index && _choseGroup && _isWerewolf)
 			{
-				VoteForVillagers();
+				VoteForVillager();
 				return isWakingUp = true;
 			}
 
