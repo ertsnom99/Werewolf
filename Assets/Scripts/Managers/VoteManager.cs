@@ -19,7 +19,7 @@ namespace Werewolf.Managers
 		public HashSet<PlayerRef> Voters { get; private set; }
 		private readonly HashSet<PlayerRef> _immune = new();
 		private readonly Dictionary<PlayerRef, HashSet<PlayerRef>> _immuneFromPlayers = new();
-		private readonly HashSet<PlayerRef> _spectators = new();
+		public HashSet<PlayerRef> Spectators { get; private set; }
 		private readonly Dictionary<PlayerRef, PlayerRef> _votes = new();
 
 		[Serializable]
@@ -64,6 +64,7 @@ namespace Werewolf.Managers
 		{
 			base.Awake();
 			Voters = new();
+			Spectators = new();
 		}
 
 		public void SetPlayerCards(Dictionary<PlayerRef, Card> playerCards)
@@ -145,7 +146,7 @@ namespace Werewolf.Managers
 			Voters.Clear();
 			_immune.Clear();
 			_immuneFromPlayers.Clear();
-			_spectators.Clear();
+			Spectators.Clear();
 			_votes.Clear();
 
 			_titleImageID = titleImageID;
@@ -191,7 +192,7 @@ namespace Werewolf.Managers
 		{
 			if (_step == Step.Preparing && !Voters.Contains(spectator))
 			{
-				_spectators.Add(spectator);
+				Spectators.Add(spectator);
 			}
 		}
 
@@ -255,7 +256,7 @@ namespace Werewolf.Managers
 								voteDuration);
 			}
 
-			foreach (PlayerRef spectator in _spectators)
+			foreach (PlayerRef spectator in Spectators)
 			{
 				if (!_networkDataManager.PlayerInfos[spectator].IsConnected)
 				{
@@ -413,7 +414,7 @@ namespace Werewolf.Managers
 				}
 			}
 
-			foreach (PlayerRef spectator in _spectators)
+			foreach (PlayerRef spectator in Spectators)
 			{
 				if (_networkDataManager.PlayerInfos[spectator].IsConnected)
 				{
@@ -511,7 +512,7 @@ namespace Werewolf.Managers
 				}
 			}
 
-			foreach (PlayerRef spectator in _spectators)
+			foreach (PlayerRef spectator in Spectators)
 			{
 				if (_networkDataManager.PlayerInfos[spectator].IsConnected)
 				{

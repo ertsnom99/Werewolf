@@ -62,7 +62,7 @@ namespace Werewolf.Gameplay.Role
 			}
 			else if (priorityIndex == NightPriorities[1].index && !_model.IsNone && !_isModelAlive)
 			{
-				VoteForVillagers();
+				VoteForVillager();
 				return isWakingUp = true;
 			}
 

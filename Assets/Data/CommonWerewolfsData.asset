@@ -21,3 +21,4 @@ MonoBehaviour:
     type: 2}
   <FailedToVotePlayerGameHistoryEntry>k__BackingField: {fileID: 4954223030057824743,
     guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <ChoosenVillagerHighlightDuration>k__BackingField: 3

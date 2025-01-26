@@ -20,5 +20,8 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public GameplayTag FailedToVotePlayerGameHistoryEntry { get; private set; }
+
+		[field: SerializeField]
+		public float ChoosenVillagerHighlightDuration { get; private set; }
 	}
 }

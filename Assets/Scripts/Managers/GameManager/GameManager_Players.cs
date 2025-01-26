@@ -198,7 +198,7 @@ namespace Werewolf.Managers
 		#endregion
 
 		#region Highlight Players
-		private IEnumerator HighlightPlayerToggle(PlayerRef player, float duration)
+		public IEnumerator HighlightPlayerToggle(PlayerRef player, float duration)
 		{
 			RPC_SetPlayerCardHighlightVisible(player, true);
 #if UNITY_SERVER && UNITY_EDITOR
