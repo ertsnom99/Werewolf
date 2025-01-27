@@ -283,6 +283,24 @@ MonoBehaviour:
       d\xE9cide s\u2019il veut \xEAtre un Villageois ou un Loup-Garou.  \r"
     m_Metadata:
       m_Items: []
+  - m_Id: 75435867946475520
+    m_Localized: "Le tout premier Loup-Garou de nos contr\xE9es, le p\xE8re de tous
+      leurs p\xE8res, avait deux pouvoirs : le premier \xE9tait de propager son engeance
+      par une morsure sp\xE9ciale et le second de fuir ce monde en s\u2019endormant
+      pour quelques si\xE8cles. Heureusement pour nos anc\xEAtres r\xE9cents, il
+      s\u2019\xE9tait depuis longtemps assoupi. Cependant, l\u2019Infect P\xE8re
+      des Loups vient juste de se r\xE9veiller d\u2019un long sommeil et il a tr\xE8s
+      faim!\r\n\nChaque nuit, il se r\xE9veille et d\xE9vore avec les autres loups-garous.
+      Une fois durant la partie, au moment o\xF9 les Loups-Garous ont choisi leur
+      victime, l\u2019Infect P\xE8re des Loups peut infect\xE9e la victime au lieu
+      de la d\xE9vorer. La victime gardera son pouvoir, se r\xE9veillera toujours
+      avec les Loups-Garous et devra aussi gagner avec eux. \r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 75435865786408960
+    m_Localized: "Infect P\xE8re des Loups"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

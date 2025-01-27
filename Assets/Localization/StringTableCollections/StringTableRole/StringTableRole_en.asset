@@ -221,7 +221,7 @@ MonoBehaviour:
   - m_Id: 64646369176313856
     m_Localized: "In the village, small pigs aren't the only ones to fear the Big
       Bad Wolf. He is enormous and his appetite is gigantic. Because of him, full
-      villages were destroyed! \r\n\r\nEach night, he wakes up and feast with all
+      villages were destroyed! \r\n\r\nEach night, he wakes up and feasts with all
       the other Werewolves. While no other Werewolf (including a Wild Child or Dog-Wolf
       that wakes up with the other Werewolves, but excluding the White Werewolf)
       dies, he wakes up alone a second time to feast on an other victim. He can\u2019t
@@ -298,6 +298,22 @@ MonoBehaviour:
       if he will obey his human and civilized master or if he will listen to the
       call of the wild nature buried in his bowels.\r\n\nThe first night, the Dog-Wolf
       decides whether he wants to be a Villager or a Werewolf.\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 75435867946475520
+    m_Localized: "The very first Werewolf of our lands, the father of all their fathers,
+      had two powers: the first was to propagate his breed through a special bite
+      and the second to flee this world by falling asleep for a few centuries. Fortunately
+      for our recent ancestors, it had long since fallen asleep. However, the Infect
+      Father of Wolves has just woken up from a long sleep and he is very hungry!\r\n\nEach
+      night, he wakes up and feasts with all the other Werewolves. Once during the
+      game, when the Werewolves have chosen their victim, the Infect Father of Wolves
+      can infect the victim instead of devouring them. The victim will keep their
+      power, will always wake up with the Werewolves and must also win with them.\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 75435865786408960
+    m_Localized: Infect Father of Wolves
     m_Metadata:
       m_Items: []
   references:

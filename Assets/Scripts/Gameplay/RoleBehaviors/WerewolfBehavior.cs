@@ -76,7 +76,7 @@ namespace Werewolf.Gameplay.Role
 			_voteManager.StartVote();
 		}
 
-		private void OnVoteEnded(Dictionary<PlayerRef, int> votes)
+		protected virtual void OnVoteEnded(Dictionary<PlayerRef, int> votes)
 		{
 			_voteManager.VoteCompleted -= OnVoteEnded;
 

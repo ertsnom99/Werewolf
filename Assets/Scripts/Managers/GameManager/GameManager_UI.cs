@@ -55,7 +55,7 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayTitle(int imageID, int roleVariable = -1)
+		public void RPC_DisplayTitle(int imageID, int roleVariable = -1, bool fastFade = false)
 		{
 			Dictionary<string, IVariable> variables = null;
 
@@ -67,11 +67,11 @@ namespace Werewolf.Managers
 				};
 			}
 
-			DisplayTitle(imageID, variables);
+			DisplayTitle(imageID, variables, fastFade: fastFade);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int imageID, int roleVariable = -1)
+		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int imageID, int roleVariable = -1, bool fastFade = false)
 		{
 			Dictionary<string, IVariable> variables = null;
 
@@ -83,7 +83,7 @@ namespace Werewolf.Managers
 				};
 			}
 
-			DisplayTitle(imageID, variables);
+			DisplayTitle(imageID, variables, fastFade: fastFade);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]

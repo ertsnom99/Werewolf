@@ -207,6 +207,10 @@ MonoBehaviour:
     m_Key: "DogWolf_ChoseVillagersGroup\r"
     m_Metadata:
       m_Items: []
+  - m_Id: 78274363933450240
+    m_Key: InfectFatherWolves_InfectedVillager
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

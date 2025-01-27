@@ -179,6 +179,14 @@ MonoBehaviour:
     m_Key: DogWolf_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 75435865786408960
+    m_Key: InfectFatherWolves_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 75435867946475520
+    m_Key: InfectFatherWolves_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

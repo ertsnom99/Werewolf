@@ -246,6 +246,18 @@ MonoBehaviour:
     m_Localized: Villagers
     m_Metadata:
       m_Items: []
+  - m_Id: 19117748072603648
+    m_Localized: Infect this villager?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19117829932834816
+    m_Localized: Infect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19142170410082304
+    m_Localized: You are now a Werewolf!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

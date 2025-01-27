@@ -252,6 +252,18 @@ MonoBehaviour:
     m_Localized: Villageois
     m_Metadata:
       m_Items: []
+  - m_Id: 19117829932834816
+    m_Localized: Infecter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19117748072603648
+    m_Localized: Infecter ce villageois?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19142170410082304
+    m_Localized: "Vous \xEAtes maintenant un Loup-Garou!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
