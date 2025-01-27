@@ -4,6 +4,7 @@ using Fusion.Sockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -84,6 +85,7 @@ namespace Werewolf.Managers
 		public event Action<GameplayLoopStep> GameplayLoopStepStarts;
 		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
+		public event Action StartNightCallChangeDelay;
 		public event Action DeathRevealEnded;
 		public event Action<PlayerRef, GameplayTag, float> WaitBeforeDeathRevealStarted;
 		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
@@ -294,7 +296,14 @@ namespace Werewolf.Managers
 				return;
 			}
 
-			// Temporairy store the behaviors, because they must be attributed to specific players later
+			RoleBehavior roleBehavior = InstanciateRoleBehavior(role);
+
+			_unassignedRoleBehaviors.Add(roleBehavior, role);
+			roleBehavior.OnSelectedToDistribute(mandatoryRoles, availableRoles, rolesToDistribute);
+		}
+
+		public RoleBehavior InstanciateRoleBehavior(RoleData role)
+		{
 			RoleBehavior roleBehavior = Instantiate(role.Behavior, transform);
 
 			roleBehavior.SetRoleGameplayTag(role.GameplayTag);
@@ -311,11 +320,9 @@ namespace Werewolf.Managers
 			}
 
 			roleBehavior.SetIsPrimaryBehavior(true);
-
-			_unassignedRoleBehaviors.Add(roleBehavior, role);
-
 			roleBehavior.Initialize();
-			roleBehavior.OnSelectedToDistribute(mandatoryRoles, availableRoles, rolesToDistribute);
+
+			return roleBehavior;
 		}
 		#endregion
 
@@ -914,6 +921,9 @@ namespace Werewolf.Managers
 						SetPlayerCardHighlightVisible(playerGameInfo.Key, false);
 					}
 #endif
+					yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+
+					StartNightCallChangeDelay?.Invoke();
 					yield return new WaitForSeconds(Config.NightCallChangeDelay);
 				}
 

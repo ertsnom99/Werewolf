@@ -239,6 +239,18 @@ MonoBehaviour:
     m_Key: DogWolf_Villagers
     m_Metadata:
       m_Items: []
+  - m_Id: 19117748072603648
+    m_Key: InfectFatherWolves_InfectText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19117829932834816
+    m_Key: InfectFatherWolves_InfectPrompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19142170410082304
+    m_Key: InfectFatherWolves_InfectedText
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
