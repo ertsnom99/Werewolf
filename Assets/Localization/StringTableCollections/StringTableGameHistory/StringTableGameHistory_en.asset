@@ -260,13 +260,13 @@ MonoBehaviour:
       m_Items:
       - rid: 7029503930381107200
   - m_Id: 72151173410709504
-    m_Localized: The {"Flute Player":t(RoleName)} ({FlutePlayerPlayer:t(PlayerName)})
+    m_Localized: The {"Pied Piper":t(RoleName)} ({PiedPiperPlayer:t(PlayerName)})
       charmed {CharmedPlayers:list:{:t(PlayerName)}|, | and }.
     m_Metadata:
       m_Items:
       - rid: 7029503930381107200
   - m_Id: 72527194274258944
-    m_Localized: The {"Flute Player":t(RoleName)} ({FlutePlayerPlayer:t(PlayerName)})
+    m_Localized: The {"Pied Piper":t(RoleName)} ({PiedPiperPlayer:t(PlayerName)})
       lost his power.
     m_Metadata:
       m_Items:

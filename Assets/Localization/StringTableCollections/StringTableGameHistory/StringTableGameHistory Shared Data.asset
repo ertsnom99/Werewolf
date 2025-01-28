@@ -192,11 +192,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72151173410709504
-    m_Key: FlutePlayer_CharmedVillagers
+    m_Key: PiedPiper_CharmedVillagers
     m_Metadata:
       m_Items: []
   - m_Id: 72527194274258944
-    m_Key: FlutePlayer_LostPower
+    m_Key: PiedPiper_LostPower
     m_Metadata:
       m_Items: []
   - m_Id: 76757296050724864

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7777061524619190493}
   - component: {fileID: 8695646714039296859}
   m_Layer: 0
-  m_Name: FlutePlayerBehavior
+  m_Name: PiedPiperBehavior
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
