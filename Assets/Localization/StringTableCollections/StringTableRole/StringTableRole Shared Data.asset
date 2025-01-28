@@ -164,11 +164,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 69694821123874816
-    m_Key: FlutePlayer_NameSingular
+    m_Key: PiedPiper_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 69694886416605184
-    m_Key: FlutePlayer_Description
+    m_Key: PiedPiper_Description
     m_Metadata:
       m_Items: []
   - m_Id: 74428792986525696

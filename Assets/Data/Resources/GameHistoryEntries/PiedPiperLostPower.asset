@@ -10,38 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67d1eacae6feb964fb2367c2a8b1e95b, type: 3}
-  m_Name: FlutePlayerCharmedVillagers
+  m_Name: PiedPiperLostPower
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 6439317914236560567, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  <GameplayTag>k__BackingField: {fileID: 4014721135967537556, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <DebugName>k__BackingField: FlutePlayerCharmedVillagers
-  <Image>k__BackingField: {fileID: 21300000, guid: 356edb8ec09d26045978262bb761d656,
+  <DebugName>k__BackingField: PiedPiperLostPower
+  <Image>k__BackingField: {fileID: 21300000, guid: 39e5843a98e04fb4d8b7f4447c3f73f0,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:
       m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
     m_TableEntryReference:
-      m_KeyId: 72151173410709504
+      m_KeyId: 72527194274258944
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables:
-    - name: FlutePlayerPlayer
+    - name: PiedPiperPlayer
       variable:
-        rid: 9054344368870129773
-    - name: CharmedPlayers
-      variable:
-        rid: 9054344368870129774
+        rid: 9054344368870129717
   references:
     version: 2
     RefIds:
-    - rid: 9054344368870129773
+    - rid: 9054344368870129717
       type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
         asm: Unity.Localization}
       data:
         m_Value: 
-    - rid: 9054344368870129774
-      type: {class: StringListVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
-        asm: Assembly-CSharp}
-      data:
-        Values: []

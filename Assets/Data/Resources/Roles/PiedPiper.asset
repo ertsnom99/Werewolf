@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
-  m_Name: FlutePlayer
+  m_Name: PiedPiper
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: 1901381684086208853, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <DebugName>k__BackingField: FlutePlayer
+  <DebugName>k__BackingField: PiedPiper
   <NameSingular>k__BackingField:
     m_TableReference:
       m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10

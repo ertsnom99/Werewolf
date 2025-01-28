@@ -261,13 +261,13 @@ MonoBehaviour:
       m_Items:
       - rid: 4972454835144097792
   - m_Id: 72151173410709504
-    m_Localized: "Le {\"Joueur de Fl\xFBte\":t(RoleName)} ({FlutePlayerPlayer:t(PlayerName)})
+    m_Localized: "Le {\"Joueur de Fl\xFBte\":t(RoleName)} ({PiedPiperPlayer:t(PlayerName)})
       a charm\xE9 {CharmedPlayers:list:{:t(PlayerName)}|, | et }."
     m_Metadata:
       m_Items:
       - rid: 4972454835144097792
   - m_Id: 72527194274258944
-    m_Localized: "Le {\"Joueur de Fl\xFBte\":t(RoleName)} ({FlutePlayerPlayer:t(PlayerName)})
+    m_Localized: "Le {\"Joueur de Fl\xFBte\":t(RoleName)} ({PiedPiperPlayer:t(PlayerName)})
       perdit son pouvoir."
     m_Metadata:
       m_Items:

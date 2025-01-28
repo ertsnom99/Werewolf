@@ -11,7 +11,7 @@ using Werewolf.Managers;
 using Werewolf.Network;
 using static Werewolf.Managers.GameHistoryManager;
 
-public class FlutePlayerBehavior : RoleBehavior
+public class PiedPiperBehavior : RoleBehavior
 {
 	[Header("Charm Villagers")]
 	[SerializeField]
@@ -65,12 +65,12 @@ public class FlutePlayerBehavior : RoleBehavior
 
 		if (PlayerGroups.Count < 2)
 		{
-			Debug.LogError($"{nameof(FlutePlayerBehavior)} must have two player groups: the first one for the villager and the second one for himself and the charmed villagers");
+			Debug.LogError($"{nameof(PiedPiperBehavior)} must have two player groups: the first one for the villager and the second one for himself and the charmed villagers");
 		}
 
 		if (NightPriorities.Count < 2)
 		{
-			Debug.LogError($"{nameof(FlutePlayerBehavior)} must have two night priorities: the first one to charm villagers and the second one to let charmed villagers know each other");
+			Debug.LogError($"{nameof(PiedPiperBehavior)} must have two night priorities: the first one to charm villagers and the second one to let charmed villagers know each other");
 		}
 	}
 
@@ -155,7 +155,7 @@ public class FlutePlayerBehavior : RoleBehavior
 									new GameHistorySaveEntryVariable[] {
 										new()
 										{
-											Name = "FlutePlayerPlayer",
+											Name = "PiedPiperPlayer",
 											Data = _networkDataManager.PlayerInfos[Player].Nickname,
 											Type = GameHistorySaveEntryVariableType.Player
 										},
@@ -291,7 +291,7 @@ public class FlutePlayerBehavior : RoleBehavior
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
-												Name = "FlutePlayerPlayer",
+												Name = "PiedPiperPlayer",
 												Data = _networkDataManager.PlayerInfos[Player].Nickname,
 												Type = GameHistorySaveEntryVariableType.Player
 											}
