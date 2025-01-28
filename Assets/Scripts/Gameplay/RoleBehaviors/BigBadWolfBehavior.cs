@@ -101,7 +101,15 @@ namespace Werewolf.Gameplay.Role
 											ChoicePurpose.Kill,
 											OnVillagerSelected))
 			{
-				StartCoroutine(WaitToStopWaitingForPlayer());
+				if (villagers.Count <= 0)
+				{
+					StartCoroutine(ShowNoVillagers());
+				}
+				else
+				{
+					StartCoroutine(WaitToStopWaitingForPlayer());
+				}
+
 				return false;
 			}
 
