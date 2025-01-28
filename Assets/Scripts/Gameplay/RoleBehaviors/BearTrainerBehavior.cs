@@ -80,16 +80,18 @@ namespace Werewolf.Gameplay.Role
 										});
 
 			_gameManager.RPC_DisplayTitle(_bearGrowlImage.CompactTagId);
+
+			GameConfig gameConfig = _gameManager.Config;
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.DisplayTitle(_bearGrowlImage.CompactTagId);
 #endif
-			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration + _bearGrowlImageDuration * _gameManager.GameSpeedModifier);
+			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration + _bearGrowlImageDuration * _gameManager.GameSpeedModifier);
 			
 			_gameManager.RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.HideUI();
 #endif
-			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration);
 
 			_gameManager.StopWaintingForPlayer(Player);
 		}
