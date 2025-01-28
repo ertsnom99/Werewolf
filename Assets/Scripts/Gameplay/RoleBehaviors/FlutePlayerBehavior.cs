@@ -306,7 +306,33 @@ public class FlutePlayerBehavior : RoleBehavior
 
 	public override void OnPlayerChanged()
 	{
+		if (Player.IsNone)
+		{
+			return;
+		}
+
+		bool hadPower = _hasPower;
+
 		_hasPower = !_gameManager.IsPlayerInPlayerGroup(Player, _werewolvesPlayerGroup);
+
+		if (!hadPower && _hasPower)
+		{
+			_gameManager.AddedPlayerToPlayerGroup += OnAddedPlayerToPlayerGroup;
+		}
+		else if (!_hasPower)
+		{
+			_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroups[1]);
+
+			if (hadPower)
+			{
+				_gameManager.AddedPlayerToPlayerGroup -= OnAddedPlayerToPlayerGroup;
+			}
+		}
+
+		if (_gameManager.IsPlayerInPlayerGroup(Player, PlayerGroups[1]))
+		{
+			_gameManager.SetPlayerGroupLeader(PlayerGroups[1], Player);
+		}
 	}
 
 	public override void OnRoleCallDisconnected() { }

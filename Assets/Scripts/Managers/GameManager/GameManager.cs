@@ -1483,7 +1483,7 @@ namespace Werewolf.Managers
 
 			foreach (PlayerGroup playerGroup in _playerGroups)
 			{
-				if (playerGroup.Players.Count < AlivePlayerCount)
+				if (playerGroup.Players.Count < AlivePlayerCount || (!playerGroup.Leader.IsNone && !PlayerGameInfos[playerGroup.Leader].IsAlive))
 				{
 					continue;
 				}
