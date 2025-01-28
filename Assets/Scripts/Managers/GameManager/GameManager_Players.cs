@@ -285,7 +285,6 @@ namespace Werewolf.Managers
 				{
 					if (_playerGroups[i].Players.Contains(player))
 					{
-						Debug.LogError("Tried to add duplicated player to a player group");
 						return;
 					}
 
