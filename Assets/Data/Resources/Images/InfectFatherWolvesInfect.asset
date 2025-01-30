@@ -15,7 +15,7 @@ MonoBehaviour:
   <GameplayTag>k__BackingField: {fileID: 1087213571649592309, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
   <DebugName>k__BackingField: InfectFatherWolvesInfect
-  <Image>k__BackingField: {fileID: 2052815809, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
+  <Image>k__BackingField: {fileID: 21300000, guid: 5701758f46cfedf47a16ab0c6782d4ba,
     type: 3}
   <Text>k__BackingField:
     m_TableReference:
