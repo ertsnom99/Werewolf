@@ -61,4 +61,7 @@ MonoBehaviour:
   - Pool:
     - {fileID: 11400000, guid: a3e967485adaba141aaac27d5d1a0b7a, type: 2}
     UseCount: 1
+  - Pool:
+    - {fileID: 11400000, guid: ee7234f8af68730449300332fd198326, type: 2}
+    UseCount: 1
   <MinPlayerCount>k__BackingField: 5
