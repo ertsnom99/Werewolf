@@ -335,6 +335,22 @@ MonoBehaviour:
     m_Localized: Sister
     m_Metadata:
       m_Items: []
+  - m_Id: 78451447016316928
+    m_Localized: Three Brothers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78451445313429504
+    m_Localized: Brother
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78451454616395776
+    m_Localized: "The whole village resonates with their joyful verbal outbursts
+      when they return home after working in the fields. During the debates, a simple
+      glance between them allows them to make a good decision about the future of
+      the village.\n\nEvery other night, they wake up together and can consult each
+      other (using emotes) on the decisions to make to save the village.\r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

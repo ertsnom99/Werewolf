@@ -199,6 +199,18 @@ MonoBehaviour:
     m_Key: TwoSisters_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 78451445313429504
+    m_Key: ThreeBrothers_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78451447016316928
+    m_Key: ThreeBrothers_NamePlural
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78451454616395776
+    m_Key: ThreeBrothers_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

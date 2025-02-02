@@ -265,7 +265,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 21377029073395712
-    m_Localized: "Vous \xEAtes les soeurs"
+    m_Localized: "Vous \xEAtes les Soeurs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21429176750170112
+    m_Localized: "Vous \xEAtes les Fr\xE8res"
     m_Metadata:
       m_Items: []
   references:
