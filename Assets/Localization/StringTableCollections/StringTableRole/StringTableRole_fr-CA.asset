@@ -301,6 +301,27 @@ MonoBehaviour:
     m_Localized: "Infect P\xE8re des Loups"
     m_Metadata:
       m_Items: []
+  - m_Id: 77948391115841536
+    m_Localized: Deux Soeurs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77951072211427328
+    m_Localized: "Certains les confondent quand ils croisent une des Deux S\u0153urs
+      au d\xE9tour d\u2019un chemin creux. Le sourire qui s\u2019affiche sur le visage
+      de la jeune fille apr\xE8s qu\u2019on a tent\xE9 sa chance au jeu du pr\xE9nom
+      est difficile \xE0 interpr\xE9ter : la jeune nubile est-elle heureuse d\u2019avoir
+      \xE9t\xE9 identifi\xE9e, ou s\u2019amuse-t-elle de la m\xE9prise ? En tout
+      cas, les Deux S\u0153urs s\u2019entendent comme les doigts de la main ou les
+      cheveux d\u2019une m\xEAme m\xE8che. C\u2019est certes encourageant d\u2019avoir
+      un proche sur qui compter dans ces moments incertains !\r\n\nUne nuit sur deux,
+      elles se r\xE9veillent ensemble et peuvent se concerter (en utilisant les emotes)
+      sur les d\xE9cisions \xE0 prendre pour sauver le village. \r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77948389408759808
+    m_Localized: Soeur
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

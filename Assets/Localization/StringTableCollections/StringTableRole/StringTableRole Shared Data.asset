@@ -187,6 +187,18 @@ MonoBehaviour:
     m_Key: InfectFatherWolves_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 77948389408759808
+    m_Key: TwoSisters_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77948391115841536
+    m_Key: TwoSisters_NamePlural
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77951072211427328
+    m_Key: TwoSisters_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

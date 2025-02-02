@@ -128,25 +128,6 @@ namespace Werewolf.Gameplay.Role
 				_gameManager.SetPlayerCardHighlightVisible(firstPlayerVotedFor, true);
 #endif
 				yield return new WaitForSeconds(_commonWerewolfsData.ChoosenVillagerHighlightDuration);
-
-				foreach (PlayerRef voter in _voteManager.Voters)
-				{
-					if (_networkDataManager.PlayerInfos[voter].IsConnected)
-					{
-						_gameManager.RPC_SetPlayerCardHighlightVisible(voter, firstPlayerVotedFor, false);
-					}
-				}
-
-				foreach (PlayerRef spectators in _voteManager.Spectators)
-				{
-					if (_networkDataManager.PlayerInfos[spectators].IsConnected)
-					{
-						_gameManager.RPC_SetPlayerCardHighlightVisible(spectators, firstPlayerVotedFor, false);
-					}
-				}
-#if UNITY_SERVER && UNITY_EDITOR
-				_gameManager.SetPlayerCardHighlightVisible(firstPlayerVotedFor, false);
-#endif
 			}
 			else
 			{

@@ -588,10 +588,10 @@ namespace Werewolf.Managers
 					StartElection();
 					break;
 				case GameplayLoopStep.NightTransition:
-					_nightCount++;
 					StartCoroutine(ChangeDaytime(Daytime.Night));
 					break;
 				case GameplayLoopStep.NightCall:
+					_nightCount++;
 					StartCoroutine(CallRoles());
 					break;
 				case GameplayLoopStep.DayTransition:
@@ -816,11 +816,14 @@ namespace Werewolf.Managers
 
 			_currentNightCallIndex = 0;
 
+			Dictionary<PlayerRef, RoleBehavior> actifBehaviors = new();
+			Dictionary<PlayerRef, int> titlesOverrides = new();
+
 			while (_currentNightCallIndex < _nightCalls.Count)
 			{
 				NightCall nightCall = _nightCalls[_currentNightCallIndex];
-				Dictionary<PlayerRef, RoleBehavior> actifBehaviors = new();
-				Dictionary<PlayerRef, int> titlesOverrides = new();
+				actifBehaviors.Clear();
+				titlesOverrides.Clear();
 
 				// Role call all the roles that must play
 				foreach (PlayerRef player in nightCall.Players)
@@ -911,15 +914,11 @@ namespace Werewolf.Managers
 					}
 
 					SetAllPlayersAwake(false);
-
 					RPC_HideUI();
+					RPC_SetAllPlayersCardHighlightVisible(false);
 #if UNITY_SERVER && UNITY_EDITOR
 					HideUI();
-
-					foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfo in PlayerGameInfos)
-					{
-						SetPlayerCardHighlightVisible(playerGameInfo.Key, false);
-					}
+					SetAllPlayersCardHighlightVisible(false);
 #endif
 					yield return new WaitForSeconds(Config.UITransitionNormalDuration);
 

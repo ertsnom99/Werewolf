@@ -52,10 +52,9 @@ namespace Werewolf.Gameplay.Role
 		private float _coupleDeathHighlightHoldDuration;
 
 		private PlayerRef[] _choices;
-		private List<PlayerRef[]> _couples = new();
+		private readonly List<PlayerRef[]> _couples = new();
 		private IEnumerator _endChooseCoupleAfterTimeCoroutine;
 		private IEnumerator _setSelectedCoupleCoroutine;
-		private IEnumerator _highlightCoupleCoroutine;
 		private IEnumerator _waitToRemoveDeadCoupleHighlightCoroutine;
 		private bool _choseCouple;
 		private bool _showedCouple;
@@ -188,8 +187,8 @@ namespace Werewolf.Gameplay.Role
 
 			_choseCouple = true;
 
-			_highlightCoupleCoroutine = HighlightCouple(couple, Player, _choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
-			yield return StartCoroutine(_highlightCoupleCoroutine);
+			HighlightCouple(couple, Player);
+			yield return new WaitForSeconds(_choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.StopWaintingForPlayer(Player);
 		}
@@ -216,8 +215,8 @@ namespace Werewolf.Gameplay.Role
 
 			_choseCouple = true;
 
-			_highlightCoupleCoroutine = HighlightCouple(couple, Player, _choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
-			yield return StartCoroutine(_highlightCoupleCoroutine);
+			HighlightCouple(couple, Player);
+			yield return new WaitForSeconds(_choseCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.StopWaintingForPlayer(Player);
 		}
@@ -282,7 +281,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (_networkDataManager.PlayerInfos[couple[i]].IsConnected)
 				{
-					StartCoroutine(HighlightCouple(couple, couple[i], _showCoupleHighlightHoldDuration * _gameManager.GameSpeedModifier));
+					HighlightCouple(couple, couple[i]);
 				}
 			}
 
@@ -308,7 +307,7 @@ namespace Werewolf.Gameplay.Role
 		}
 		#endregion
 
-		private IEnumerator HighlightCouple(PlayerRef[] couple, PlayerRef highlightedFor, float duration)
+		private void HighlightCouple(PlayerRef[] couple, PlayerRef highlightedFor)
 		{
 			if (_networkDataManager.PlayerInfos[highlightedFor].IsConnected)
 			{
@@ -316,15 +315,6 @@ namespace Werewolf.Gameplay.Role
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayersCardHighlightVisible(couple, true);
-#endif
-			yield return new WaitForSeconds(duration);
-
-			if (_networkDataManager.PlayerInfos[highlightedFor].IsConnected)
-			{
-				_gameManager.RPC_SetPlayersCardHighlightVisible(highlightedFor, couple, false);
-			}
-#if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayersCardHighlightVisible(couple, false);
 #endif
 		}
 
@@ -503,11 +493,6 @@ namespace Werewolf.Gameplay.Role
 			if (_setSelectedCoupleCoroutine != null)
 			{
 				StopCoroutine(_setSelectedCoupleCoroutine);
-			}
-
-			if (_highlightCoupleCoroutine != null)
-			{
-				StopCoroutine(_highlightCoupleCoroutine);
 			}
 
 			if (_endChooseCoupleAfterTimeCoroutine == null)

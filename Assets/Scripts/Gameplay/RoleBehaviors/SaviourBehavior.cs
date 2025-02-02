@@ -136,10 +136,6 @@ namespace Werewolf.Gameplay.Role
 #endif
 			yield return new WaitForSeconds(_playerHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
-			_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _selectedPlayer, false);
-#if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayerCardHighlightVisible(_selectedPlayer, false);
-#endif
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 

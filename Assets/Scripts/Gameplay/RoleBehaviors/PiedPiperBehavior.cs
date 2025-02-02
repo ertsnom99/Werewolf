@@ -244,16 +244,6 @@ namespace Werewolf.Gameplay.Role
 #endif
 			yield return new WaitForSeconds(duration);
 
-			foreach (PlayerRef player in highlightedFor)
-			{
-				if (_networkDataManager.PlayerInfos[player].IsConnected)
-				{
-					_gameManager.RPC_SetPlayersCardHighlightVisible(player, charmedVillagers, false);
-				}
-			}
-#if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayersCardHighlightVisible(charmedVillagers, false);
-#endif
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 

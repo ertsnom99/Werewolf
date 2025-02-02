@@ -178,14 +178,6 @@ namespace Werewolf.Gameplay.Role
 
 			yield return new WaitForSeconds(_resultTitleHoldDuration * _gameManager.GameSpeedModifier);
 
-			foreach (PlayerRef player in playersToCheck)
-			{
-				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, player, false);
-#if UNITY_SERVER && UNITY_EDITOR
-				_gameManager.SetPlayerCardHighlightVisible(player, false);
-#endif
-			}
-
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
