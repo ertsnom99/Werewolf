@@ -10,16 +10,16 @@ using Werewolf.Network;
 
 namespace Werewolf.Gameplay.Role
 {
-	public class TwoSisters : RoleBehavior
+	public class SiblingsBehavior : RoleBehavior
 	{
-		[Header("Show Sisters")]
+		[Header("Show Siblings")]
 		[SerializeField]
-		private float _showSistersDuration;
+		private float _showSiblingsDuration;
 
 		[SerializeField]
-		private GameplayTag _sistersImage;
+		private GameplayTag _siblingsImage;
 
-		private readonly HashSet<PlayerRef> _sisters = new();
+		private readonly HashSet<PlayerRef> _siblings = new();
 
 		private GameManager _gameManager;
 		private NetworkDataManager _networkDataManager;
@@ -48,30 +48,30 @@ namespace Werewolf.Gameplay.Role
 		{
 			_gameManager.StartWaitingForPlayersRollCall -= OnStartWaitingForPlayersRollCall;
 
-			StartCoroutine(ShowSisters());
+			StartCoroutine(ShowSiblings());
 		}
 
-		private IEnumerator ShowSisters()
+		private IEnumerator ShowSiblings()
 		{
-			_sisters.Clear();
+			_siblings.Clear();
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerGameInfos in _gameManager.PlayerGameInfos)
 			{
 				if (playerGameInfos.Value.IsAwake)
 				{
-					_sisters.Add(playerGameInfos.Key);
+					_siblings.Add(playerGameInfos.Key);
 				}
 			}
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_SetPlayersCardHighlightVisible(Player, _sisters.ToArray(), true);
-				_gameManager.RPC_DisplayTitle(Player, _sistersImage.CompactTagId);
+				_gameManager.RPC_SetPlayersCardHighlightVisible(Player, _siblings.ToArray(), true);
+				_gameManager.RPC_DisplayTitle(Player, _siblingsImage.CompactTagId);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayersCardHighlightVisible(_sisters.ToArray(), true);
+			_gameManager.SetPlayersCardHighlightVisible(_siblings.ToArray(), true);
 #endif
-			yield return new WaitForSeconds(_showSistersDuration * _gameManager.GameSpeedModifier);
+			yield return new WaitForSeconds(_showSiblingsDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.StopWaintingForPlayer(Player);
 		}

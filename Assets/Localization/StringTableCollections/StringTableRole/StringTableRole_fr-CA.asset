@@ -322,6 +322,23 @@ MonoBehaviour:
     m_Localized: Soeur
     m_Metadata:
       m_Items: []
+  - m_Id: 78451447016316928
+    m_Localized: "Trois Fr\xE8res"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78451445313429504
+    m_Localized: "Fr\xE8re"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78451454616395776
+    m_Localized: "Tout le village r\xE9sonne de leurs joyeux \xE9clats verbaux quand
+      ils regagnent la maison apr\xE8s le travail des champs. Pendant les d\xE9bats,
+      un simple coup d\u2019\u0153il entre eux leur permet de prendre une bonne d\xE9cision
+      quant \xE0 l\u2019avenir du village.\n\nUne nuit sur deux, ils se r\xE9veillent
+      ensemble et peuvent se concerter (en utilisant les emotes) sur les d\xE9cisions
+      \xE0 prendre pour sauver le village. \r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

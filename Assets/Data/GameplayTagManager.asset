@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.Save
   m_EditorClassIdentifier: 
-  _compactTagId: 334339
+  _compactTagId: 334595
 --- !u!114 &-8923106137533346033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +129,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.NoPotionToUse
   m_EditorClassIdentifier: 
-  _compactTagId: 203267
+  _compactTagId: 203523
+--- !u!114 &-8702438236098228066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Image
+  m_EditorClassIdentifier: 
+  _compactTagId: 3
 --- !u!114 &-8573035580249646065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.TwoSisters.Sisters
   m_EditorClassIdentifier: 
-  _compactTagId: 71171
+  _compactTagId: 71427
 --- !u!114 &-8317505650940187213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Werewolf.Vote
   m_EditorClassIdentifier: 
-  _compactTagId: 71427
+  _compactTagId: 71683
 --- !u!114 &-7901825537252314547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,7 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.WhiteWerewolf.ChooseOtherWerewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 71683
+  _compactTagId: 71939
 --- !u!114 &-7602664661658529974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,7 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.WhiteWerewolf.NoOtherWerewolves
   m_EditorClassIdentifier: 
-  _compactTagId: 137219
+  _compactTagId: 137475
 --- !u!114 &-7474750659307109584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,7 +558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch
   m_EditorClassIdentifier: 
-  _compactTagId: 6659
+  _compactTagId: 6915
 --- !u!114 &-6653758457213997753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,6 +663,19 @@ MonoBehaviour:
   m_Name: GameHistoryEntry.Captain.Died
   m_EditorClassIdentifier: 
   _compactTagId: 131842
+--- !u!114 &-6279745160175906008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
+  m_Name: Image.ThreeBrothers
+  m_EditorClassIdentifier: 
+  _compactTagId: 5635
 --- !u!114 &-6186687672928004612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -790,9 +816,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
-  m_Name: Image
+  m_Name: Image.ThreeBrothers.Brothers
   m_EditorClassIdentifier: 
-  _compactTagId: 3
+  _compactTagId: 71171
 --- !u!114 &-5375341707992204064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -857,7 +883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.WildChild
   m_EditorClassIdentifier: 
-  _compactTagId: 6403
+  _compactTagId: 6659
 --- !u!114 &-4916039273124537934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -883,7 +909,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.Kill
   m_EditorClassIdentifier: 
-  _compactTagId: 137731
+  _compactTagId: 137987
 --- !u!114 &-4676981004224442684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1589,7 +1615,7 @@ MonoBehaviour:
   - {fileID: -6783649889304436894}
   - {fileID: -6404904665649978227}
   - {fileID: -7307408572042871932}
-  - {fileID: -5380123629795287566}
+  - {fileID: -8702438236098228066}
   - {fileID: 176298503287745199}
   - {fileID: 2317633596934678565}
   - {fileID: 650455178895577524}
@@ -1664,6 +1690,8 @@ MonoBehaviour:
   - {fileID: -4329190402335458445}
   - {fileID: -5594949299689075354}
   - {fileID: -1265311115428382351}
+  - {fileID: -6279745160175906008}
+  - {fileID: -5380123629795287566}
   - {fileID: 7645218766821731784}
   - {fileID: -8411044993407871370}
   - {fileID: 2980123648864115323}
@@ -1787,7 +1815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.WhiteWerewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 6147
+  _compactTagId: 6403
 --- !u!114 &385745502131665813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2034,7 +2062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.WildChild.ChooseModel
   m_EditorClassIdentifier: 
-  _compactTagId: 71939
+  _compactTagId: 72195
 --- !u!114 &1534591760579037349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2268,7 +2296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Werewolf
   m_EditorClassIdentifier: 
-  _compactTagId: 5891
+  _compactTagId: 6147
 --- !u!114 &3146112165964210076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2905,7 +2933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.ChoosePlayer
   m_EditorClassIdentifier: 
-  _compactTagId: 72195
+  _compactTagId: 72451
 --- !u!114 &7583335992150841462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2957,7 +2985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.TwoSisters
   m_EditorClassIdentifier: 
-  _compactTagId: 5635
+  _compactTagId: 5891
 --- !u!114 &7649568454011052203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3035,7 +3063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c588c38af9864b279feae113e09e6eb0, type: 3}
   m_Name: Image.Witch.PlayerDeadTonight
   m_EditorClassIdentifier: 
-  _compactTagId: 268803
+  _compactTagId: 269059
 --- !u!114 &7857262219002472655
 MonoBehaviour:
   m_ObjectHideFlags: 0

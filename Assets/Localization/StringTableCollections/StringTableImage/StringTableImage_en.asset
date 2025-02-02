@@ -259,7 +259,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 21377029073395712
-    m_Localized: You are the sisters
+    m_Localized: You are the Sisters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21429176750170112
+    m_Localized: You are the Brothers
     m_Metadata:
       m_Items: []
   references:
