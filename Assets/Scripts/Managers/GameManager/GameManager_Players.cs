@@ -225,6 +225,14 @@ namespace Werewolf.Managers
 			}
 		}
 
+		public void SetAllPlayersCardHighlightVisible(bool isVisible)
+		{
+			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+			{
+				playerCard.Value.SetHighlightVisible(isVisible);
+			}
+		}
+
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_SetPlayerCardHighlightVisible([RpcTarget] PlayerRef player, PlayerRef highlightedPlayer, bool isVisible)
@@ -248,6 +256,12 @@ namespace Werewolf.Managers
 		public void RPC_SetPlayersCardHighlightVisible(PlayerRef[] highlightedPlayers, bool isVisible)
 		{
 			SetPlayersCardHighlightVisible(highlightedPlayers, isVisible);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_SetAllPlayersCardHighlightVisible(bool isVisible)
+		{
+			SetAllPlayersCardHighlightVisible(isVisible);
 		}
 		#endregion
 		#endregion

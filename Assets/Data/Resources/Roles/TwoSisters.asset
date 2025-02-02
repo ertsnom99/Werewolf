@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
-  m_Name: Fox
+  m_Name: TwoSisters
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 7649568454011052203, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  <GameplayTag>k__BackingField: {fileID: 6540031303376373709, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
-  <DebugName>k__BackingField: Fox
+  <DebugName>k__BackingField: TwoSisters
   <NameSingular>k__BackingField:
     m_TableReference:
       m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
     m_TableEntryReference:
-      m_KeyId: 4372801437696
+      m_KeyId: 77948389408759808
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   <NamePlural>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 77948391115841536
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -37,25 +37,25 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
     m_TableEntryReference:
-      m_KeyId: 4374936338432
+      m_KeyId: 77951072211427328
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <Image>k__BackingField: {fileID: 21300000, guid: ad211df855aee034998ac2f54bc742be,
+  <Image>k__BackingField: {fileID: 1642371001, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
     type: 3}
-  <SmallImage>k__BackingField: {fileID: 21300000, guid: f9d1e70d2cbb61846b6510d80b2c039a,
+  <SmallImage>k__BackingField: {fileID: 1642371001, guid: 3d30fb8bbb0a2d84cb9281e8bbab364b,
     type: 3}
   <PrimaryType>k__BackingField: 0
   <SecondaryType>k__BackingField: 0
-  <CanHaveMultiples>k__BackingField: 0
-  <MandatoryCount>k__BackingField: 1
+  <CanHaveMultiples>k__BackingField: 1
+  <MandatoryCount>k__BackingField: 2
   <PlayerGroups>k__BackingField:
   - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
   <NightPriorities>k__BackingField:
-  - index: 5
+  - index: 7
     alias: {fileID: 0}
-  <Behavior>k__BackingField: {fileID: 6478022945204151896, guid: a2f614bbc46ff3b47af4ad80fa82ab20,
+  <Behavior>k__BackingField: {fileID: 4567283665199380316, guid: 1a5825d6fb5b52c41a02add7981f0870,
     type: 3}
   references:
     version: 2

@@ -316,6 +316,25 @@ MonoBehaviour:
     m_Localized: Infect Father of Wolves
     m_Metadata:
       m_Items: []
+  - m_Id: 77948391115841536
+    m_Localized: Two Sisters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77951072211427328
+    m_Localized: "Some people confuse them when they come across one of the Two Sisters
+      at the bend of a sunken path. The smile that appears on the young girl's face
+      after trying her luck at the name game is difficult to interpret: is the young
+      nubile happy to have been identified, or is she having fun? In any case, the
+      Two Sisters get along like the fingers of a hand or the hairs of the same lock.
+      It\u2019s certainly encouraging to have someone close to you to count on in
+      these uncertain times!\r\n\nEvery other night, they wake up together and can
+      consult each other (using emotes) on the decisions to make to save the village.\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77948389408759808
+    m_Localized: Sister
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

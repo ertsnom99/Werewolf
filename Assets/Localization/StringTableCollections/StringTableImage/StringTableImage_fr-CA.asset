@@ -264,6 +264,10 @@ MonoBehaviour:
     m_Localized: "Vous \xEAtes maintenant un Loup-Garou!"
     m_Metadata:
       m_Items: []
+  - m_Id: 21377029073395712
+    m_Localized: "Vous \xEAtes les soeurs"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
