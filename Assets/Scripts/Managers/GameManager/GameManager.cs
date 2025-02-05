@@ -215,6 +215,11 @@ namespace Werewolf.Managers
 				RoleData[] addedRoles = SelectRolesFromRoleSetup(mandatoryRoles[0], rolesToDistribute);
 				mandatoryRoles.Remove(mandatoryRoles[0]);
 
+				if (addedRoles == null)
+				{
+					continue;
+				}
+
 				PrepareRoleBehaviors(addedRoles, rolesToDistribute, mandatoryRoles, availableRoles);
 			}
 
@@ -267,6 +272,12 @@ namespace Werewolf.Managers
 
 		private RoleData[] SelectRolesFromRoleSetup(RoleSetupData roleSetup, List<RoleData> rolesToDistribute)
 		{
+			if (roleSetup.UseCount <= 0 || roleSetup.UseCount > roleSetup.Pool.Length)
+			{
+				Debug.LogError($"Invalid role setup: UseCount of {roleSetup.UseCount} for a pool of {roleSetup.Pool.Length}");
+				return null;
+			}
+
 			List<RoleData> rolePool = new(roleSetup.Pool);
 			RoleData[] addedRoles = new RoleData[roleSetup.UseCount];
 
