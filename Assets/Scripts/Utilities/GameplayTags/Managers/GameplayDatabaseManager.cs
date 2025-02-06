@@ -26,6 +26,11 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 		_IDtoGameplayData.Clear();
 		_gameplayTagNametoGameplayData.Clear();
 
+		if (_foldersToLoad == null)
+		{
+			return;
+		}
+
 		foreach (string folder in _foldersToLoad)
 		{
 			LoadGameplayDatas(folder);
