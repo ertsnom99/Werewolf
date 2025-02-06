@@ -50,12 +50,13 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 		{
 			if (!loadedGameplayData.GameplayTag)
 			{
+				Debug.LogError("The GameplayData " + loadedGameplayData.name + " has no ID!!!");
 				continue;
 			}
 
 			if (_IDtoGameplayData.ContainsKey(loadedGameplayData.GameplayTag.CompactTagId))
 			{
-				Debug.LogError("The GameplayData " + loadedGameplayData.DebugName + " has a duplicated ID!!!");
+				Debug.LogError("The GameplayData " + loadedGameplayData.name + " has a duplicated ID!!!");
 				continue;
 			}
 
@@ -63,7 +64,7 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 
 			if (_gameplayTagNametoGameplayData.ContainsKey(loadedGameplayData.GameplayTag.name))
 			{
-				Debug.LogError("The GameplayData " + loadedGameplayData.DebugName + " has a duplicated GameplayTag name!!!");
+				Debug.LogError("The GameplayData " + loadedGameplayData.name + " has a duplicated GameplayTag name!!!");
 				continue;
 			}
 
