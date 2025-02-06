@@ -33,7 +33,7 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 
 		foreach (string folder in _foldersToLoad)
 		{
-			LoadGameplayDatas(folder);
+			LoadGameplayData(folder);
 		}
 
 		IsReady = true;
@@ -47,7 +47,7 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 #endif
 	}
 
-	private void LoadGameplayDatas(string path)
+	private void LoadGameplayData(string path)
 	{
 		GameplayData[] loadedGameplayDatas = Resources.LoadAll(path, typeof(GameplayData)).Cast<GameplayData>().ToArray();
 
@@ -112,7 +112,7 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 
 	public List<T> GetGameplayData<T>() where T : GameplayData
 	{
-		List<T> gameplayDatas = new List<T>();
+		List<T> gameplayDatas = new();
 
 		foreach (KeyValuePair<int, GameplayData> gameplayData in _IDtoGameplayData)
 		{
