@@ -42,20 +42,6 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 #endif
 	}
 
-#if UNITY_EDITOR
-	private void LogDatabase()
-	{
-		Debug.Log("------------------GameplayData Database------------------");
-
-		foreach (KeyValuePair<int, GameplayData> GameplayData in _IDtoGameplayData)
-		{
-			Debug.Log(GameplayData.Key + " :: " + GameplayData.Value.name);
-		}
-
-		Debug.Log("---------------------------------------------------------");
-	}
-#endif
-
 	private void LoadGameplayDatas(string path)
 	{
 		GameplayData[] loadedGameplayDatas = Resources.LoadAll(path, typeof(GameplayData)).Cast<GameplayData>().ToArray();
@@ -84,7 +70,19 @@ public class GameplayDatabaseManager : KeptMonoSingleton<GameplayDatabaseManager
 			_gameplayTagNametoGameplayData.Add(loadedGameplayData.GameplayTag.name, loadedGameplayData);
 		}
 	}
+#if UNITY_EDITOR
+	private void LogDatabase()
+	{
+		Debug.Log("------------------GameplayData Database------------------");
 
+		foreach (KeyValuePair<int, GameplayData> GameplayData in _IDtoGameplayData)
+		{
+			Debug.Log(GameplayData.Key + " :: " + GameplayData.Value.name);
+		}
+
+		Debug.Log("---------------------------------------------------------");
+	}
+#endif
 	public T GetGameplayData<T>(int ID) where T : GameplayData
 	{
 		if (!_IDtoGameplayData.ContainsKey(ID))
