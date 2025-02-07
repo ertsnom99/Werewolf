@@ -12,40 +12,63 @@ namespace Utilities.GameplayData.Editor
 		private const float GENERATE_BUTTON_WIDTH = 62;
 		private const float COPY_BUTTON_WIDTH = 40;
 
+		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+		{
+			return EditorGUI.GetPropertyHeight(property, label, true) * 2;
+		}
+
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			EditorGUI.BeginProperty(position, label, property);
 
-			// Draw label
 			position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
 			GUI.enabled = false;
-			Rect valueRect = position;
-			valueRect.width -= PADDING * 2 + GENERATE_BUTTON_WIDTH + COPY_BUTTON_WIDTH;
-			SerializedProperty idProperty = property.FindPropertyRelative("Value");
-			EditorGUI.PropertyField(valueRect, idProperty, GUIContent.none);
-			
+
+			Rect rect = position;
+			rect.width -= PADDING * 2 + GENERATE_BUTTON_WIDTH + COPY_BUTTON_WIDTH;
+			rect.height /= 2;
+
+			SerializedProperty guidProperty = property.FindPropertyRelative("Guid");
+			EditorGUI.PropertyField(rect, guidProperty, GUIContent.none);
+
+			rect.position += Vector2.up * rect.height;
+
+			SerializedProperty hashCodeProperty = property.FindPropertyRelative("HashCode");
+			EditorGUI.PropertyField(rect, hashCodeProperty, GUIContent.none);
+
 			GUI.enabled = true;
 
-			Rect buttonRect = position;
-			buttonRect.x += position.width - GENERATE_BUTTON_WIDTH - PADDING - COPY_BUTTON_WIDTH;
-			buttonRect.width = GENERATE_BUTTON_WIDTH;
-			if (GUI.Button(buttonRect, "Generate"))
+			rect = position;
+			rect.x += position.width - GENERATE_BUTTON_WIDTH - PADDING - COPY_BUTTON_WIDTH;
+			rect.width = GENERATE_BUTTON_WIDTH;
+
+			if (GUI.Button(rect, "Generate"))
 			{
-				if (string.IsNullOrEmpty(idProperty.stringValue) || EditorUtility.DisplayDialog("Generate a new ID?",
+				if (string.IsNullOrEmpty(guidProperty.stringValue) || EditorUtility.DisplayDialog("Generate a new ID?",
 																								"An ID already exist. It is dangerous to generate a new one if this ID is not suppose to change.",
 																								"Generate",
 																								"Cancel"))
 				{
-					idProperty.stringValue = Guid.NewGuid().ToString();
+					guidProperty.stringValue = Guid.NewGuid().ToString();
+					hashCodeProperty.intValue = guidProperty.stringValue.GetHashCode();
 				}
 			}
 
-			buttonRect.x += GENERATE_BUTTON_WIDTH + PADDING;
-			buttonRect.width = COPY_BUTTON_WIDTH;
-			if (GUI.Button(buttonRect, "Copy"))
+			rect.x += GENERATE_BUTTON_WIDTH + PADDING;
+			rect.width = COPY_BUTTON_WIDTH;
+			rect.height = rect.height / 2;
+
+			if (GUI.Button(rect, "Copy"))
 			{
-				EditorGUIUtility.systemCopyBuffer = idProperty.stringValue;
+				EditorGUIUtility.systemCopyBuffer = guidProperty.stringValue;
+			}
+
+			rect.y += rect.height;
+
+			if (GUI.Button(rect, "Copy"))
+			{
+				EditorGUIUtility.systemCopyBuffer = hashCodeProperty.intValue.ToString();
 			}
 
 			EditorGUI.EndProperty();

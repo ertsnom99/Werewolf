@@ -6,7 +6,8 @@ namespace Utilities.GameplayData
 	[Serializable]
 	public struct UniqueID
 	{
-		public string Value;
+		public string Guid;
+		public int HashCode;
 	}
 
 	public class GameplayData : ScriptableObject
