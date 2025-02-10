@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9074827076772631246}
-  - component: {fileID: 4323486370862976953}
+  - component: {fileID: 4175925366647570956}
   m_Layer: 0
-  m_Name: GameplayDatabaseManager
+  m_Name: GameplayDataManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4323486370862976953
+--- !u!114 &4175925366647570956
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,14 +41,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 6905939984331869741}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d544889340510384db7ec10c5b41c9a1, type: 3}
+  m_Script: {fileID: 11500000, guid: 122d1c69c7c56a844bb71a653a015b14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _foldersToLoad:
   - Roles
   - GameHistoryEntries
   - PlayerGroups
-  - Images
+  - Titles
   - ChoiceScreens
+  _prohibitedHashCodes: ffffffff
+  _buildGuidDictionary: 0
+  _buildHashCodeDictionary: 1
   <IsReady>k__BackingField: 0
-  _logDatabase: 0
+  _logGameplayData: 0

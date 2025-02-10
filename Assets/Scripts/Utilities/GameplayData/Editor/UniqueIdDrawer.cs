@@ -57,7 +57,7 @@ namespace Utilities.GameplayData.Editor
 
 			rect.x += GENERATE_BUTTON_WIDTH + PADDING;
 			rect.width = COPY_BUTTON_WIDTH;
-			rect.height = rect.height / 2;
+			rect.height /= 2;
 
 			if (GUI.Button(rect, "Copy"))
 			{

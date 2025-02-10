@@ -309,7 +309,7 @@ PrefabInstance:
     - target: {fileID: 6905939984331869741, guid: 758615bb9f982cb4ea57f10ef89fd728,
         type: 3}
       propertyPath: m_Name
-      value: GameplayDatabaseManager
+      value: GameplayDataManager
       objectReference: {fileID: 0}
     - target: {fileID: 9074827076772631246, guid: 758615bb9f982cb4ea57f10ef89fd728,
         type: 3}
