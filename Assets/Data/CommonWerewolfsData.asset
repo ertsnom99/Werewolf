@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06123f5dc56c2e046a3decfb101634b1, type: 3}
   m_Name: CommonWerewolfsData
   m_EditorClassIdentifier: 
-  <VotePlayerImage>k__BackingField: {fileID: -7926231009157707299, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  <VotePlayerTitle>k__BackingField: {fileID: 11400000, guid: f30f1dc237666814cb5c4c38da4073ea,
     type: 2}
   <VoteMaxDuration>k__BackingField: 30
-  <VotedPlayerGameHistoryEntry>k__BackingField: {fileID: -4676981004224442684, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  <VotedPlayerGameHistoryEntry>k__BackingField: {fileID: 11400000, guid: 42600a2f4fe788e4eadbd53d0532ecc8,
     type: 2}
-  <MarkForDeath>k__BackingField: {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  <VotedPlayerGameHistoryEntryNEW>k__BackingField: {fileID: 11400000, guid: 42600a2f4fe788e4eadbd53d0532ecc8,
     type: 2}
-  <FailedToVotePlayerGameHistoryEntry>k__BackingField: {fileID: 4954223030057824743,
-    guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  <MarkForDeath>k__BackingField: {fileID: 11400000, guid: 8b7f8d1bd78a65d4eb3e9967492c239e,
+    type: 2}
+  <FailedToVotePlayerGameHistoryEntry>k__BackingField: {fileID: 11400000, guid: 263ccf07dbc4b0c499baf84a1e5f363e,
+    type: 2}
+  <FailedToVotePlayerGameHistoryEntryNEW>k__BackingField: {fileID: 11400000, guid: 263ccf07dbc4b0c499baf84a1e5f363e,
+    type: 2}
   <ChoosenVillagerHighlightDuration>k__BackingField: 3

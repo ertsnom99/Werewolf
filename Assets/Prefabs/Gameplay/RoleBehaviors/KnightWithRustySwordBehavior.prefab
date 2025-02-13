@@ -44,19 +44,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a65e723439833e24eb456e205a6e1a79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _markForDeathToKillWerewolf:
-  - {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  - {fileID: -3388473606968454883, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  - {fileID: 4534347614920964079, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 11400000, guid: 8b7f8d1bd78a65d4eb3e9967492c239e, type: 2}
+  - {fileID: 11400000, guid: 6b3db20462b9f694b8d3b68f9c0d6579, type: 2}
+  - {fileID: 11400000, guid: 9f9cb76a127b8d14ea3076138c48d8a2, type: 2}
   _werewolvesPlayerGroups:
-  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  - {fileID: -8573035580249646065, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  _gaveTetanusGameHistoryEntry: {fileID: 1119157262261062875, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
+  - {fileID: 11400000, guid: 4518bd88add254f4f900e3d3ef8d90d5, type: 2}
+  _gaveTetanusGameHistoryEntry: {fileID: 11400000, guid: 984e29b649aad12408274f630499105b,
     type: 2}
-  _markForDeathAddedByStab: {fileID: -5653845306715671720, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _gaveTetanusGameHistoryEntryNEW: {fileID: 11400000, guid: 984e29b649aad12408274f630499105b,
+    type: 2}
+  _markForDeathAddedByStab: {fileID: 11400000, guid: 507fc855819f2fb4bbb83f8966a45197,
     type: 2}

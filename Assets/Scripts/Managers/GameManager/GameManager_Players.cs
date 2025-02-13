@@ -1,10 +1,10 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Gameplay;
 using Werewolf.Gameplay.Role;
@@ -28,7 +28,7 @@ namespace Werewolf.Managers
 
 		private class PlayerGroup
 		{
-			public GameplayTag GameplayTag;
+			public UniqueID ID;
 			public int Priority;
 			public List<PlayerRef> Players;
 			public PlayerRef Leader;
@@ -45,7 +45,7 @@ namespace Werewolf.Managers
 
 		private readonly Dictionary<PlayerRef, Action<PlayerRef>> _promptPlayerCallbacks = new();
 
-		public event Action<PlayerRef, GameplayTag> AddedPlayerToPlayerGroup;
+		public event Action<PlayerRef, UniqueID> AddedPlayerToPlayerGroup;
 		public event Action<PlayerRef, ChoicePurpose, List<PlayerRef>> PreSelectPlayers;
 		public event Action<PlayerRef> PostPlayerDisconnected;
 
@@ -163,7 +163,7 @@ namespace Werewolf.Managers
 			while (currentIndex != relativeTo);
 		}
 
-		public PlayerRef FindNextPlayer(PlayerRef relativeTo, bool searchToLeft, bool mustBeAwake = false, GameplayTag[] payerGroupsFilter = null)
+		public PlayerRef FindNextPlayer(PlayerRef relativeTo, bool searchToLeft, bool mustBeAwake = false, UniqueID[] playerGroupIDsFilter = null)
 		{
 			int playerIndex = Array.IndexOf(_playersOrder, relativeTo);
 			int currentIndex = playerIndex;
@@ -186,7 +186,7 @@ namespace Werewolf.Managers
 
 				if (PlayerGameInfos[currentPlayer].IsAlive
 					&& (!mustBeAwake || IsPlayerAwake(currentPlayer))
-					&& (payerGroupsFilter == null || IsPlayerInPlayerGroups(currentPlayer, payerGroupsFilter)))
+					&& (playerGroupIDsFilter == null || IsPlayerInPlayerGroups(currentPlayer, playerGroupIDsFilter)))
 				{
 					return currentPlayer;
 				}
@@ -289,13 +289,19 @@ namespace Werewolf.Managers
 		#endregion
 
 		#region Player Groups
-		public void AddPlayerToPlayerGroup(PlayerRef player, GameplayTag playerGroup)
+		public void AddPlayerToPlayerGroup(PlayerRef player, UniqueID playerGroupID)
 		{
-			int priority = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(playerGroup.CompactTagId).Priority;
+			if (!_gameplayDataManager.TryGetGameplayData(playerGroupID.HashCode, out PlayerGroupData playerGroupData))
+			{
+				Debug.LogError($"Could not find the player group {playerGroupID.HashCode}");
+				return;
+			}
+
+			int priority = playerGroupData.Priority;
 
 			for (int i = 0; i < _playerGroups.Count; i++)
 			{
-				if (_playerGroups[i].GameplayTag == playerGroup)
+				if (_playerGroups[i].ID.HashCode == playerGroupID.HashCode)
 				{
 					if (_playerGroups[i].Players.Contains(player))
 					{
@@ -303,31 +309,37 @@ namespace Werewolf.Managers
 					}
 
 					_playerGroups[i].Players.Add(player);
-					AddedPlayerToPlayerGroup?.Invoke(player, playerGroup);
+					AddedPlayerToPlayerGroup?.Invoke(player, playerGroupID);
 					return;
 				}
 				else if (_playerGroups[i].Priority < priority)
 				{
-					_playerGroups.Insert(i, new() { GameplayTag = playerGroup, Priority = priority, Players = new() { player } });
-					AddedPlayerToPlayerGroup?.Invoke(player, playerGroup);
+					_playerGroups.Insert(i, new() { ID = playerGroupID, Priority = priority, Players = new() { player } });
+					AddedPlayerToPlayerGroup?.Invoke(player, playerGroupID);
 					return;
 				}
 			}
 
-			_playerGroups.Add(new() { GameplayTag = playerGroup, Priority = priority, Players = new() { player } });
-			AddedPlayerToPlayerGroup?.Invoke(player, playerGroup);
+			_playerGroups.Add(new() { ID = playerGroupID, Priority = priority, Players = new() { player } });
+			AddedPlayerToPlayerGroup?.Invoke(player, playerGroupID);
 		}
 
-		public void AddPlayersToNewPlayerGroup(PlayerRef[] players, GameplayTag playerGroup)
+		public void AddPlayersToNewPlayerGroup(PlayerRef[] players, UniqueID playerGroupID)
 		{
-			int priority = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(playerGroup.CompactTagId).Priority;
+			if (!_gameplayDataManager.TryGetGameplayData(playerGroupID.HashCode, out PlayerGroupData playerGroupData))
+			{
+				Debug.LogError($"Could not find the player group {playerGroupID.HashCode}");
+				return;
+			}
+
+			int priority = playerGroupData.Priority;
 			bool AddedPlayers = false;
 
 			for (int i = 0; i < _playerGroups.Count; i++)
 			{
 				if (_playerGroups[i].Priority <= priority)
 				{
-					_playerGroups.Insert(i, new() { GameplayTag = playerGroup, Priority = priority, Players = new(players) });
+					_playerGroups.Insert(i, new() { ID = playerGroupID, Priority = priority, Players = new(players) });
 					AddedPlayers = true;
 					break;
 				}
@@ -335,20 +347,20 @@ namespace Werewolf.Managers
 
 			if (!AddedPlayers)
 			{
-				_playerGroups.Add(new() { GameplayTag = playerGroup, Priority = priority, Players = new(players) });
+				_playerGroups.Add(new() { ID = playerGroupID, Priority = priority, Players = new(players) });
 			}
 
 			foreach (PlayerRef player in players)
 			{
-				AddedPlayerToPlayerGroup?.Invoke(player, playerGroup);
+				AddedPlayerToPlayerGroup?.Invoke(player, playerGroupID);
 			}
 		}
 
-		public void RemovePlayerFromPlayerGroup(PlayerRef player, GameplayTag playerGroup)
+		public void RemovePlayerFromPlayerGroup(PlayerRef player, UniqueID playerGroupID)
 		{
 			for (int i = 0; i < _playerGroups.Count; i++)
 			{
-				if (_playerGroups[i].GameplayTag != playerGroup)
+				if (_playerGroups[i].ID != playerGroupID)
 				{
 					continue;
 				}
@@ -375,11 +387,11 @@ namespace Werewolf.Managers
 			}
 		}
 
-		public HashSet<PlayerRef> GetPlayersFromPlayerGroup(GameplayTag inPlayerGroup)
+		public HashSet<PlayerRef> GetPlayersFromPlayerGroup(UniqueID playerGroupID)
 		{
 			foreach (PlayerGroup playerGroup in _playerGroups)
 			{
-				if (playerGroup.GameplayTag == inPlayerGroup)
+				if (playerGroup.ID == playerGroupID)
 				{
 					return playerGroup.Players.ToHashSet();
 				}
@@ -388,13 +400,13 @@ namespace Werewolf.Managers
 			return new();
 		}
 
-		public HashSet<PlayerRef> GetPlayersFromPlayerGroups(GameplayTag[] inPlayerGroups)
+		public HashSet<PlayerRef> GetPlayersFromPlayerGroups(UniqueID[] playerGroupIDs)
 		{
 			HashSet<PlayerRef> players = new();
 
 			foreach (PlayerGroup playerGroup in _playerGroups)
 			{
-				if (inPlayerGroups.Contains(playerGroup.GameplayTag))
+				if (playerGroupIDs.Contains(playerGroup.ID))
 				{
 					players.UnionWith(playerGroup.Players.ToHashSet());
 				}
@@ -403,11 +415,11 @@ namespace Werewolf.Managers
 			return players;
 		}
 
-		public bool IsPlayerInPlayerGroup(PlayerRef player, GameplayTag inPlayerGroup)
+		public bool IsPlayerInPlayerGroup(PlayerRef player, UniqueID playerGroupID)
 		{
 			foreach (PlayerGroup playerGroup in _playerGroups)
 			{
-				if (playerGroup.GameplayTag == inPlayerGroup && playerGroup.Players.Contains(player))
+				if (playerGroup.ID == playerGroupID && playerGroup.Players.Contains(player))
 				{
  					return true;
 				}
@@ -416,11 +428,11 @@ namespace Werewolf.Managers
 			return false;
 		}
 
-		public bool IsPlayerInPlayerGroups(PlayerRef player, GameplayTag[] inPlayerGroups)
+		public bool IsPlayerInPlayerGroups(PlayerRef player, UniqueID[] playerGroupIDs)
 		{
 			foreach (PlayerGroup playerGroup in _playerGroups)
 			{
-				if (inPlayerGroups.Contains(playerGroup.GameplayTag) && playerGroup.Players.Contains(player))
+				if (playerGroupIDs.Contains(playerGroup.ID) && playerGroup.Players.Contains(player))
 				{
 					return true;
 				}
@@ -429,11 +441,11 @@ namespace Werewolf.Managers
 			return false;
 		}
 
-		public bool IsAnyPlayersInPlayerGroups(HashSet<PlayerRef> players, GameplayTag[] inPlayerGroups)
+		public bool IsAnyPlayersInPlayerGroups(HashSet<PlayerRef> players, UniqueID[] playerGroupIDs)
 		{
 			foreach (PlayerRef player in players)
 			{
-				if (IsPlayerInPlayerGroups(player, inPlayerGroups))
+				if (IsPlayerInPlayerGroups(player, playerGroupIDs))
 				{
 					return true;
 				}
@@ -442,18 +454,23 @@ namespace Werewolf.Managers
 			return false;
 		}
 
-		public void SetPlayerGroupLeader(GameplayTag inPlayerGroup, PlayerRef player)
+		public void SetPlayerGroupLeader(UniqueID playerGroupID, PlayerRef player)
 		{
 			foreach (PlayerGroup playerGroup in _playerGroups)
 			{
-				if (playerGroup.GameplayTag == inPlayerGroup && playerGroup.Players.Contains(player))
+				if (playerGroup.ID == playerGroupID && playerGroup.Players.Contains(player))
 				{
 					playerGroup.Leader = player;
 					return;
 				}
 			}
 
-			Debug.LogWarning($"Couldn't set {player} as the leader of {inPlayerGroup}");
+			if (!_gameplayDataManager.TryGetGameplayData(playerGroupID.HashCode, out PlayerGroupData playerGroupData))
+			{
+				Debug.LogError($"Could not find the player group {playerGroupID.HashCode}");
+			}
+
+			Debug.LogWarning($"Couldn't set {player} as the leader of {playerGroupData.name}");
 		}
 		#endregion
 
@@ -479,7 +496,7 @@ namespace Werewolf.Managers
 		#endregion
 
 		#region Select Players
-		public bool SelectPlayers(PlayerRef selectingPlayer, List<PlayerRef> choices, int imageID, float maximumDuration, bool mustSelect, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
+		public bool SelectPlayers(PlayerRef selectingPlayer, List<PlayerRef> choices, int titleID, float maximumDuration, bool mustSelect, int playerAmount, ChoicePurpose purpose, Action<PlayerRef[]> callback)
 		{
 			_serverChoices = choices;
 			PreSelectPlayers?.Invoke(selectingPlayer, purpose, _serverChoices);
@@ -490,7 +507,7 @@ namespace Werewolf.Managers
 			}
 
 			_selectPlayersCallbacks.Add(selectingPlayer, callback);
-			RPC_SelectPlayers(selectingPlayer, _serverChoices.ToArray(), imageID, maximumDuration, mustSelect, playerAmount);
+			RPC_SelectPlayers(selectingPlayer, _serverChoices.ToArray(), titleID, maximumDuration, mustSelect, playerAmount);
 
 			return true;
 		}
@@ -576,7 +593,7 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_SelectPlayers([RpcTarget] PlayerRef player, PlayerRef[] choices, int imageID, float maximumDuration, bool mustSelect, int playerAmount)
+		private void RPC_SelectPlayers([RpcTarget] PlayerRef player, PlayerRef[] choices, int titleID, float maximumDuration, bool mustSelect, int playerAmount)
 		{
 			_clientChoices = choices;
 			_mustSelectPlayer = mustSelect;
@@ -600,7 +617,7 @@ namespace Werewolf.Managers
 				playerCard.Value.LeftClicked += SelectCard;
 			}
 
-			DisplayTitle(imageID, variables: null, showConfirmButton: true, countdownDuration: maximumDuration);
+			DisplayTitle(titleID, variables: null, showConfirmButton: true, countdownDuration: maximumDuration);
 			_UIManager.TitleScreen.ConfirmClicked += OnConfirmPlayerSelection;
 
 			if (mustSelect)
@@ -640,7 +657,7 @@ namespace Werewolf.Managers
 		#endregion
 
 		#region Prompt Player
-		public bool PromptPlayer(PlayerRef promptedPlayer, int imageID, float duration, Action<PlayerRef> callback, bool fastFade = true)
+		public bool PromptPlayer(PlayerRef promptedPlayer, int titleID, float duration, Action<PlayerRef> callback, bool fastFade = true)
 		{
 			if (!_networkDataManager.PlayerInfos[promptedPlayer].IsConnected || _promptPlayerCallbacks.ContainsKey(promptedPlayer))
 			{
@@ -648,7 +665,7 @@ namespace Werewolf.Managers
 			}
 
 			_promptPlayerCallbacks.Add(promptedPlayer, callback);
-			RPC_PromptPlayer(promptedPlayer, imageID, duration, fastFade);
+			RPC_PromptPlayer(promptedPlayer, titleID, duration, fastFade);
 
 			return true;
 		}
@@ -672,10 +689,10 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, int imageID, float duration, bool fastFade)
+		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, int titleID, float duration, bool fastFade)
 		{
 			_UIManager.TitleScreen.ConfirmClicked += OnPromptAccepted;
-			DisplayTitle(imageID, showConfirmButton: true, countdownDuration: duration, fastFade: fastFade);
+			DisplayTitle(titleID, showConfirmButton: true, countdownDuration: duration, fastFade: fastFade);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -727,7 +744,7 @@ namespace Werewolf.Managers
 
 			PostPlayerDisconnected?.Invoke(player);
 
-			_gameHistoryManager.AddEntry(Config.PlayerDisconnectedGameHistoryEntry,
+			_gameHistoryManager.AddEntry(Config.PlayerDisconnectedGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{

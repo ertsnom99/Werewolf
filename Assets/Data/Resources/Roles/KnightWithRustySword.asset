@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -526955281746026370, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: 61840e28-394c-4c81-ae06-102bf91c3cca
+    HashCode: -1769778809
   <DebugName>k__BackingField: KnightWithRustySword
   <NameSingular>k__BackingField:
     m_TableReference:
@@ -51,7 +54,9 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
+  <PlayerGroupsNEW>k__BackingField:
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
   <NightPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 2565441013300086619, guid: 50cc0a50f673f8f40aae8b66a3c5ad55,
     type: 3}

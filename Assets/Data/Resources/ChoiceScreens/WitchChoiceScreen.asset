@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: 5184849998100429465, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: 12d29e07-636e-4d3d-af80-f5c43c98f19e
+    HashCode: 1180172654
   <DebugName>k__BackingField: WitchChoiceScreen
   <ChooseText>k__BackingField:
     m_TableReference:

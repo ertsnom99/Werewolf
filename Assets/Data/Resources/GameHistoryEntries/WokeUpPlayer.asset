@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -7307408572042871932, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: fda98968-69f3-4104-8661-b36a10082e0d
+    HashCode: -1161199089
   <DebugName>k__BackingField: WokeUpPlayer
   <Image>k__BackingField: {fileID: 0}
   <Text>k__BackingField:

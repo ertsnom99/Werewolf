@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: InfectFatherWolves
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -1852563882059163371, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  <ID>k__BackingField:
+    Guid: 87a714fb-591d-477c-8f1f-18cad929a5c7
+    HashCode: -272302264
   <DebugName>k__BackingField: InfectFatherWolves
   <NameSingular>k__BackingField:
     m_TableReference:
@@ -51,10 +52,9 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
   <NightPriorities>k__BackingField:
-  - index: 13
+  - index: 14
     alias: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
   <Behavior>k__BackingField: {fileID: 8248321117910690903, guid: 4076a6f93d30e5b409903f77c646f55d,
     type: 3}

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: WhiteWerewolf
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 3558111247057105200, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  <ID>k__BackingField:
+    Guid: f5bd4356-6b04-42ac-81d1-c714ee6082db
+    HashCode: -2116847798
   <DebugName>k__BackingField: White Werewolf
   <NameSingular>k__BackingField:
     m_TableReference:
@@ -51,11 +52,11 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: -8573035580249646065, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 11400000, guid: 4518bd88add254f4f900e3d3ef8d90d5, type: 2}
   <NightPriorities>k__BackingField:
-  - index: 13
-    alias: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
   - index: 14
+    alias: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
+  - index: 15
     alias: {fileID: 0}
   <Behavior>k__BackingField: {fileID: 1981575086992350424, guid: 99c1e4869d261e648a1dd5a06a2958c3,
     type: 3}

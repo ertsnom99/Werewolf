@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using Werewolf.Data;
 using Werewolf.UI;
+using UnityEngine;
 
 namespace Werewolf.Managers
 {
@@ -10,7 +11,7 @@ namespace Werewolf.Managers
 	{
 		private readonly Dictionary<PlayerRef, Action<int>> _makeChoiceCallbacks = new();
 
-		public bool MakeChoice(PlayerRef choosingPlayer, int[] choiceImageIDs, int choiceScreenID, bool mustChoose, float maximumDuration, Action<int> callback)
+		public bool MakeChoice(PlayerRef choosingPlayer, int[] choiceTitleIDs, int choiceScreenID, bool mustChoose, float maximumDuration, Action<int> callback)
 		{
 			if (!_networkDataManager.PlayerInfos[choosingPlayer].IsConnected || _makeChoiceCallbacks.ContainsKey(choosingPlayer))
 			{
@@ -18,7 +19,7 @@ namespace Werewolf.Managers
 			}
 
 			_makeChoiceCallbacks.Add(choosingPlayer, callback);
-			RPC_MakeChoice(choosingPlayer, choiceImageIDs, choiceScreenID, mustChoose, maximumDuration);
+			RPC_MakeChoice(choosingPlayer, choiceTitleIDs, choiceScreenID, mustChoose, maximumDuration);
 
 			return true;
 		}
@@ -41,24 +42,26 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_MakeChoice([RpcTarget] PlayerRef player, int[] choiceImageIDs, int choiceScreenID, bool mustChoose, float maximumDuration)
+		public void RPC_MakeChoice([RpcTarget] PlayerRef player, int[] choiceTitleIDs, int choiceScreenID, bool mustChoose, float maximumDuration)
 		{
 			List<Choice.ChoiceData> choices = new();
 
-			foreach (int choiceImageID in choiceImageIDs)
+			foreach (int choiceTitleID in choiceTitleIDs)
 			{
-				ImageData imageData = _gameplayDatabaseManager.GetGameplayData<ImageData>(choiceImageID);
-
-				if (imageData != null)
+				if (!_gameplayDataManager.TryGetGameplayData(choiceTitleID, out ImageData titleData))
 				{
-					choices.Add(new() { Image = imageData.Image, Text = imageData.Text });
+					Debug.LogError($"Could not find the title {choiceTitleID}");
+				}
+
+				if (titleData != null)
+				{
+					choices.Add(new() { Image = titleData.Image, Text = titleData.Text });
 				}
 			}
 
-			var choiceScreen = _gameplayDatabaseManager.GetGameplayData<ChoiceScreenData>(choiceScreenID);
-
-			if (choiceScreen == null)
+			if (!_gameplayDataManager.TryGetGameplayData(choiceScreenID, out ChoiceScreenData choiceScreen))
 			{
+				Debug.LogError($"Could not find the choice screen {choiceScreenID}");
 				return;
 			}
 

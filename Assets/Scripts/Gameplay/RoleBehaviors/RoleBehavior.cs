@@ -1,7 +1,7 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 
 namespace Werewolf.Gameplay.Role
@@ -10,7 +10,7 @@ namespace Werewolf.Gameplay.Role
 	{
 		[field: SerializeField]
 		[field: ReadOnly]
-		public GameplayTag RoleGameplayTag { get; protected set; }
+		public UniqueID RoleID { get; protected set; }
 
 		[field: SerializeField]
 		[field: ReadOnly]
@@ -18,7 +18,7 @@ namespace Werewolf.Gameplay.Role
 
 		[field: SerializeField]
 		[field: ReadOnly]
-		public List<GameplayTag> PlayerGroups { get; private set; }
+		public List<UniqueID> PlayerGroupIDs { get; private set; }
 
 		[field: SerializeField]
 		[field: ReadOnly]
@@ -32,9 +32,9 @@ namespace Werewolf.Gameplay.Role
 		[field: ReadOnly]
 		public PlayerRef Player { get; private set; }
 
-		public void SetRoleGameplayTag(GameplayTag roleGameplayTag)
+		public void SetRoleID(UniqueID roleID)
 		{
-			RoleGameplayTag = roleGameplayTag;
+			RoleID = roleID;
 		}
 
 		public void SetPrimaryRoleType(PrimaryRoleType primaryRoleType)
@@ -42,21 +42,21 @@ namespace Werewolf.Gameplay.Role
 			PrimaryRoleType = primaryRoleType;
 		}
 
-		public void AddPlayerGroup(GameplayTag playerGroup)
+		public void AddPlayerGroup(UniqueID playerGroupID)
 		{
-			if (PlayerGroups == null)
+			if (PlayerGroupIDs == null)
 			{
-				PlayerGroups = new() { playerGroup };
+				PlayerGroupIDs = new() { playerGroupID };
 			}
 			else
 			{
-				PlayerGroups.Add(playerGroup);
+				PlayerGroupIDs.Add(playerGroupID);
 			}
 		}
 
-		public virtual GameplayTag[] GetCurrentPlayerGroups()
+		public virtual UniqueID[] GetCurrentPlayerGroupIDs()
 		{
-			return PlayerGroups.ToArray();
+			return PlayerGroupIDs.ToArray();
 		}
 
 		public void AddNightPriority(Priority nightPriority)

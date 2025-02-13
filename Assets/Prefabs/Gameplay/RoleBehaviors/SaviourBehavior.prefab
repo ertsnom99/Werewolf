@@ -44,17 +44,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 282184f3714d3a14c86d803b64eba8aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _choosePlayerImage: {fileID: 7494298166840074912, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _choosePlayerTitle: {fileID: 11400000, guid: 86354a4833e6ac743a5b0117ecd163e5, type: 2}
   _choosePlayerMaximumDuration: 10
-  _chosePlayerToProtectGameHistoryEntry: {fileID: 7584545385755327515, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _chosePlayerToProtectGameHistoryEntry: {fileID: 11400000, guid: 3c74fab139d7eae44827cdd1f937d390,
+    type: 2}
+  _chosePlayerToProtectGameHistoryEntryNEW: {fileID: 11400000, guid: 3c74fab139d7eae44827cdd1f937d390,
     type: 2}
   _playerHighlightHoldDuration: 3
   _marksForDeathRemovedByProtection:
-  - {fileID: 1012340808859986049, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  - {fileID: -3388473606968454883, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 11400000, guid: 8b7f8d1bd78a65d4eb3e9967492c239e, type: 2}
+  - {fileID: 11400000, guid: 6b3db20462b9f694b8d3b68f9c0d6579, type: 2}

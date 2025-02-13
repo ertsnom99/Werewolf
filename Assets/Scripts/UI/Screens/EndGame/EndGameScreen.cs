@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Network;
 
@@ -13,7 +14,7 @@ namespace Werewolf.UI
 	public struct PlayerEndGameInfo : INetworkStruct
 	{
 		public PlayerRef Player;
-		public int Role;
+		public int RoleID;
 		public bool IsAlive;
 		public bool Won;
 	}
@@ -39,7 +40,7 @@ namespace Werewolf.UI
 		private IntVariable _countdownVariable;
 
 		private NetworkDataManager _networkDataManager;
-		private GameplayDatabaseManager _gameplayDatabaseManager;
+		private GameplayDataManager _gameplayDataManager;
 
 		protected override void Awake()
 		{
@@ -56,7 +57,7 @@ namespace Werewolf.UI
 		private void Start()
 		{
 			_networkDataManager = NetworkDataManager.Instance;
-			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
+			_gameplayDataManager = GameplayDataManager.Instance;
 		}
 
 		public void Initialize(PlayerEndGameInfo[] endGamePlayerInfos, float countdownDuration)
@@ -76,10 +77,16 @@ namespace Werewolf.UI
 
 				EndGamePlayer endGamePlayer = Instantiate(_endGamePlayerPrefab, parent);
 
-				if (endGamePlayerInfo.Role > -1)
+				if (endGamePlayerInfo.RoleID != -1)
 				{
-					RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(endGamePlayerInfo.Role);
-					endGamePlayer.Initialize(roleData.SmallImage, _networkDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname, roleData.NameSingular);
+					if (_gameplayDataManager.TryGetGameplayData(endGamePlayerInfo.RoleID, out RoleData roleData))
+					{
+						endGamePlayer.Initialize(roleData.SmallImage, _networkDataManager.PlayerInfos[endGamePlayerInfo.Player].Nickname, roleData.NameSingular);
+					}
+					else
+					{
+						Debug.LogError($"Could not find the role {endGamePlayerInfo.RoleID}");
+					}
 				}
 				else
 				{

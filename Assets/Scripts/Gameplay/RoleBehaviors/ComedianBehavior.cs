@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,21 +16,20 @@ namespace Werewolf.Gameplay.Role
 		private RoleData[] _prohibitedRoles;
 
 		[SerializeField]
-		private GameplayTag _wasGivenRolesGameHistoryEntry;
+		private GameHistoryEntryData _wasGivenRolesGameHistoryEntry;
 
 		[Header("Use Role")]
 		[SerializeField]
-		private GameplayTag _choiceScreen;
+		private ChoiceScreenData _choiceScreen;
 
 		[SerializeField]
 		private float _chooseReservedRoleMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _usedRoleGameHistoryEntry;
+		private GameHistoryEntryData _usedRoleGameHistoryEntry;
 
 		private GameManager.IndexedReservedRoles _reservedRoles;
 		private RoleBehavior _currentRoleBehavior;
-
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		private GameManager _gameManager;
@@ -107,7 +105,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.PrepareRoleBehaviors(rolesRequiringBehaviorPreparation.ToArray(), rolesToDistribute, mandatoryRoles, availableRoles);
 			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), true, false);
 
-			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -233,7 +231,7 @@ namespace Werewolf.Gameplay.Role
 			}
 
 			if (!_gameManager.ChooseReservedRole(this,
-												_choiceScreen.CompactTagId,
+												_choiceScreen.ID.HashCode,
 												false,
 												_chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier,
 												OnRoleSelected))
@@ -303,7 +301,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.AddBehavior(Player, _currentRoleBehavior, addPlayerToPlayerGroup: false);
 			_gameManager.RemoveReservedRoles(this, new int[1] { selectedReservedRoleIndex });
 
-			_gameHistoryManager.AddEntry(_usedRoleGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_usedRoleGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -314,7 +312,7 @@ namespace Werewolf.Gameplay.Role
 											new()
 											{
 												Name = "RoleName",
-												Data = _currentRoleBehavior.RoleGameplayTag.name,
+												Data = _currentRoleBehavior.RoleID.HashCode.ToString(),
 												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});

@@ -1,10 +1,10 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Network;
 using Werewolf.UI;
@@ -13,12 +13,6 @@ namespace Werewolf.Managers
 {
 	public class GameHistoryManager : MonoSingleton<GameHistoryManager>
 	{
-		[SerializeField]
-		private GameplayTag[] _acceptedGameplayTagsForEntry;
-
-		[SerializeField]
-		private GameplayTag[] _acceptedGameplayTagsForImageOverride;
-
 		private string _saveDirectoryPath;
 
 		private readonly GameHistorySave _gameHistorySave = new();
@@ -32,8 +26,8 @@ namespace Werewolf.Managers
 		[Serializable]
 		public struct GameHistorySaveEntry
 		{
-			public string EntryGameplayTagName;
-			public string ImageOverrideGameplayTagName;
+			public int EntryID;
+			public string ImageOverrideID;
 			public GameHistorySaveEntryVariable[] Variables;
 		}
 
@@ -97,11 +91,11 @@ namespace Werewolf.Managers
 				return "";
 			}
 
-			StringBuilder stringBuilder = new(roles[0].GameplayTag.name);
+			StringBuilder stringBuilder = new(roles[0].ID.HashCode.ToString());
 
 			for (int i = 1; i < roles.Count; i++)
 			{
-				stringBuilder.Append(VARIABLE_DATA_SEPARATOR + roles[i].GameplayTag.name);
+				stringBuilder.Append(VARIABLE_DATA_SEPARATOR + roles[i].ID.HashCode.ToString());
 			}
 
 			return stringBuilder.ToString();
@@ -112,42 +106,17 @@ namespace Werewolf.Managers
 			return data.Split(VARIABLE_DATA_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
 		}
 
-		public void AddEntry(GameplayTag entryGameplayTag, GameHistorySaveEntryVariable[] variables, GameplayTag imageOverrideGameplayTag = null)
+		public void AddEntry(UniqueID entryID, GameHistorySaveEntryVariable[] variables, UniqueID imageOverrideID = default)
 		{
-			if (!entryGameplayTag)
+			if (string.IsNullOrEmpty(entryID.Guid))
 			{
-				Debug.LogError($"Can't add a {nameof(GameHistoryEntry)} without an {nameof(GameplayTag)}");
+				Debug.LogError($"Can't add a {nameof(GameHistoryEntry)} with an invalid {nameof(UniqueID)}");
 				return;
 			}
 
-			if (!IsGameplayTagAccepted(entryGameplayTag, _acceptedGameplayTagsForEntry))
-			{
-				Debug.LogError($"{entryGameplayTag.name} is not a valid {nameof(GameplayTag)} to add an entry");
-				return;
-			}
-
-			if (imageOverrideGameplayTag && !IsGameplayTagAccepted(imageOverrideGameplayTag, _acceptedGameplayTagsForImageOverride))
-			{
-				Debug.LogError($"{imageOverrideGameplayTag.name} is not a valid {nameof(GameplayTag)} for the image override");
-				return;
-			}
-
-			_gameHistorySave.Entries.Add(new() { EntryGameplayTagName = entryGameplayTag.name,
-																ImageOverrideGameplayTagName = imageOverrideGameplayTag ? imageOverrideGameplayTag.name : "",
-																Variables = variables });
-		}
-
-		private bool IsGameplayTagAccepted(GameplayTag gameplayTag, GameplayTag[] acceptedGameplayTags)
-		{
-			foreach (GameplayTag acceptedGameplayTag in acceptedGameplayTags)
-			{
-				if (gameplayTag.IsInCategory(acceptedGameplayTag))
-				{
-					return true;
-				}
-			}
-
-			return false;
+			_gameHistorySave.Entries.Add(new() { EntryID = entryID.HashCode,
+												ImageOverrideID = string.IsNullOrEmpty(imageOverrideID.Guid) ? "" : imageOverrideID.HashCode.ToString(),
+												Variables = variables });
 		}
 
 		public string GetGameHistoryJson()

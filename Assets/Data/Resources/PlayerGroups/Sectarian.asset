@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: 1363378225548369814, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: 58bdaa38-f605-4967-8d17-3854a1134aaa
+    HashCode: 448303948
   <DebugName>k__BackingField: Sectarian
   <Name>k__BackingField:
     m_TableReference:

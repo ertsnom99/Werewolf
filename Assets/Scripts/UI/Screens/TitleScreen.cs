@@ -6,7 +6,6 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.UI;
-using Werewolf.Data;
 
 namespace Werewolf.UI
 {

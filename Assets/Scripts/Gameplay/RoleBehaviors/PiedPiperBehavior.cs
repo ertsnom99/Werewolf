@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Managers;
 using Werewolf.Network;
@@ -15,16 +15,16 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Charm Villagers")]
 		[SerializeField]
-		private GameplayTag _lostPowerImage;
+		private ImageData _lostPowerTitle;
 
 		[SerializeField]
-		private GameplayTag _charmVillagersImage;
+		private ImageData _charmVillagersTitle;
 
 		[SerializeField]
 		private float _charmVillagersMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _charmedVillagersGameHistoryEntry;
+		private GameHistoryEntryData _charmedVillagersGameHistoryEntry;
 
 		[SerializeField]
 		private float _showCharmedVillagersHighlightHoldDuration;
@@ -34,20 +34,19 @@ namespace Werewolf.Gameplay.Role
 		private float _showAllCharmedVillagersHighlightHoldDuration;
 
 		[SerializeField]
-		private GameplayTag _charmedVillagersImage;
+		private ImageData _charmedVillagersTitle;
 
 		[SerializeField]
-		private GameplayTag _charmedVillagersRecognizingEachOtherImage;
+		private ImageData _charmedVillagersRecognizingEachOtherTitle;
 
 		[Header("Power Lost")]
 		[SerializeField]
-		private GameplayTag _werewolvesPlayerGroup;
+		private PlayerGroupData _werewolvesPlayerGroup;
 
 		[SerializeField]
-		private GameplayTag _lostPowerGameHistoryEntry;
+		private GameHistoryEntryData _lostPowerGameHistoryEntry;
 
 		private bool _hasPower = true;
-
 		private IEnumerator _endCharmVillagersAfterTimeCoroutine;
 		private IEnumerator _highlightCharmedVillagersCoroutine;
 
@@ -63,7 +62,7 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.AddedPlayerToPlayerGroup += OnAddedPlayerToPlayerGroup;
 
-			if (PlayerGroups.Count < 2)
+			if (PlayerGroupIDs.Count < 2)
 			{
 				Debug.LogError($"{nameof(PiedPiperBehavior)} must have two player groups: the first one for the villager and the second one for himself and the charmed villagers");
 			}
@@ -106,7 +105,7 @@ namespace Werewolf.Gameplay.Role
 		private bool CharmVillagers()
 		{
 			List<PlayerRef> notCharmedVillagers = _gameManager.GetAlivePlayers();
-			HashSet<PlayerRef> charmedVillagers = _gameManager.GetPlayersFromPlayerGroup(PlayerGroups[1]);
+			HashSet<PlayerRef> charmedVillagers = _gameManager.GetPlayersFromPlayerGroup(PlayerGroupIDs[1]);
 
 			foreach (PlayerRef villager in charmedVillagers)
 			{
@@ -115,7 +114,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											notCharmedVillagers,
-											_charmVillagersImage.CompactTagId,
+											_charmVillagersTitle.ID.HashCode,
 											_charmVillagersMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											2,
@@ -148,10 +147,10 @@ namespace Werewolf.Gameplay.Role
 
 			foreach (PlayerRef player in players)
 			{
-				_gameManager.AddPlayerToPlayerGroup(player, PlayerGroups[1]);
+				_gameManager.AddPlayerToPlayerGroup(player, PlayerGroupIDs[1]);
 			}
 
-			_gameHistoryManager.AddEntry(_charmedVillagersGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_charmedVillagersGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 										new()
 										{
@@ -191,7 +190,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _lostPowerImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _lostPowerTitle.ID.HashCode);
 			}
 
 			yield return 0;
@@ -205,10 +204,10 @@ namespace Werewolf.Gameplay.Role
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _charmedVillagersRecognizingEachOtherImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _charmedVillagersRecognizingEachOtherTitle.ID.HashCode);
 			}
 
-			HashSet<PlayerRef> charmedVillagers = _gameManager.GetPlayersFromPlayerGroup(PlayerGroups[1]);
+			HashSet<PlayerRef> charmedVillagers = _gameManager.GetPlayersFromPlayerGroup(PlayerGroupIDs[1]);
 			charmedVillagers.Remove(Player);
 			PlayerRef[] charmedVillagersArray = charmedVillagers.ToArray();
 
@@ -219,7 +218,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnStartWaitingForPlayersRollCall()
 		{
-			HashSet<PlayerRef> charmedVillagers = _gameManager.GetPlayersFromPlayerGroup(PlayerGroups[1]);
+			HashSet<PlayerRef> charmedVillagers = _gameManager.GetPlayersFromPlayerGroup(PlayerGroupIDs[1]);
 
 			foreach (PlayerRef charmedVillager in charmedVillagers)
 			{
@@ -258,26 +257,26 @@ namespace Werewolf.Gameplay.Role
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
-				if (_gameManager.IsPlayerInPlayerGroup(playerInfo.Key, PlayerGroups[1]))
+				if (_gameManager.IsPlayerInPlayerGroup(playerInfo.Key, PlayerGroupIDs[1]))
 				{
-					titlesOverride.Add(playerInfo.Key, _charmedVillagersImage.CompactTagId);
+					titlesOverride.Add(playerInfo.Key, _charmedVillagersTitle.ID.HashCode);
 				}
 				else
 				{
-					titlesOverride.Add(playerInfo.Key, _charmedVillagersRecognizingEachOtherImage.CompactTagId);
+					titlesOverride.Add(playerInfo.Key, _charmedVillagersRecognizingEachOtherTitle.ID.HashCode);
 				}
 			}
 		}
 
-		private void OnAddedPlayerToPlayerGroup(PlayerRef player, GameplayTag playerGroup)
+		private void OnAddedPlayerToPlayerGroup(PlayerRef player, UniqueID playerGroupID)
 		{
-			if (Player == player && playerGroup == PlayerGroups[1])
+			if (Player == player && playerGroupID == PlayerGroupIDs[1])
 			{
-				_gameManager.SetPlayerGroupLeader(playerGroup, Player);
+				_gameManager.SetPlayerGroupLeader(playerGroupID, Player);
 			}
-			else if (_hasPower && Player == player && playerGroup == _werewolvesPlayerGroup)
+			else if (_hasPower && Player == player && playerGroupID == _werewolvesPlayerGroup.ID)
 			{
-				_gameHistoryManager.AddEntry(_lostPowerGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_lostPowerGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -288,7 +287,7 @@ namespace Werewolf.Gameplay.Role
 											});
 
 				_hasPower = false;
-				_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroups[1]);
+				_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroupIDs[1]);
 
 				_gameManager.AddedPlayerToPlayerGroup -= OnAddedPlayerToPlayerGroup;
 			}
@@ -303,7 +302,7 @@ namespace Werewolf.Gameplay.Role
 
 			bool hadPower = _hasPower;
 
-			_hasPower = !_gameManager.IsPlayerInPlayerGroup(Player, _werewolvesPlayerGroup);
+			_hasPower = !_gameManager.IsPlayerInPlayerGroup(Player, _werewolvesPlayerGroup.ID);
 
 			if (!hadPower && _hasPower)
 			{
@@ -311,7 +310,7 @@ namespace Werewolf.Gameplay.Role
 			}
 			else if (!_hasPower)
 			{
-				_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroups[1]);
+				_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroupIDs[1]);
 
 				if (hadPower)
 				{
@@ -319,9 +318,9 @@ namespace Werewolf.Gameplay.Role
 				}
 			}
 
-			if (_gameManager.IsPlayerInPlayerGroup(Player, PlayerGroups[1]))
+			if (_gameManager.IsPlayerInPlayerGroup(Player, PlayerGroupIDs[1]))
 			{
-				_gameManager.SetPlayerGroupLeader(PlayerGroups[1], Player);
+				_gameManager.SetPlayerGroupLeader(PlayerGroupIDs[1], Player);
 			}
 		}
 

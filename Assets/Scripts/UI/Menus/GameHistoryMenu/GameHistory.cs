@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.UI;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using static Werewolf.Managers.GameHistoryManager;
 
@@ -22,11 +23,11 @@ namespace Werewolf.UI
 
 		private ScrollRect _scrollRect;
 
-		private GameplayDatabaseManager _gameplayDatabaseManager;
+		private GameplayDataManager _gameplayDataManager;
 
 		private void Start()
 		{
-			if (!_gameplayDatabaseManager)
+			if (!_gameplayDataManager)
 			{
 				Initialize();
 			}
@@ -34,14 +35,14 @@ namespace Werewolf.UI
 
 		private void Initialize()
 		{
-			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
+			_gameplayDataManager = GameplayDataManager.Instance;
 
 			_scrollRect = GetComponent<ScrollRect>();
 		}
 
 		public void DisplayGameHistory(GameHistorySave gameHistorySave)
 		{
-			if(!_gameplayDatabaseManager)
+			if(!_gameplayDataManager)
 			{
 				Initialize();
 			}
@@ -55,9 +56,13 @@ namespace Werewolf.UI
 
 			foreach (GameHistorySaveEntry entry in gameHistorySave.Entries)
 			{
-				GameHistoryEntryData gameHistoryEntryData = _gameplayDatabaseManager.GetGameplayData<GameHistoryEntryData>(entry.EntryGameplayTagName);
+				if (!_gameplayDataManager.TryGetGameplayData(entry.EntryID, out GameHistoryEntryData gameHistoryEntryData))
+				{
+					Debug.LogError($"Could not find the game history entry {entry.EntryID}");
+					continue;
+				}
 
-				if (string.IsNullOrEmpty(entry.ImageOverrideGameplayTagName))
+				if (string.IsNullOrEmpty(entry.ImageOverrideID))
 				{
 					image = gameHistoryEntryData.Image;
 				}
@@ -65,16 +70,20 @@ namespace Werewolf.UI
 				{
 					image = null;
 
-					string GameplayTagType = entry.ImageOverrideGameplayTagName.Split(new[] { '.' }, 2)[0];
+					int imageOverrideID = int.Parse(entry.ImageOverrideID);
 
-					if (GameplayTagType == "Role")
+					if (_gameplayDataManager.TryGetGameplayData(imageOverrideID, out RoleData roleData))
 					{
-						image = _gameplayDatabaseManager.GetGameplayData<RoleData>(entry.ImageOverrideGameplayTagName).SmallImage;
+						image = roleData.SmallImage;
 					}
-					else if (GameplayTagType == "PlayerGroup")
+					else if (_gameplayDataManager.TryGetGameplayData(imageOverrideID, out PlayerGroupData playerGroupData))
 					{
-						PlayerGroupData playerGroupData = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(entry.ImageOverrideGameplayTagName);
 						image = playerGroupData.SmallImage;
+					}
+					else
+					{
+						Debug.LogError($"imageOverrideID {imageOverrideID} of history entry {entry.EntryID} was neither a valid {nameof(RoleData)} or a {nameof(PlayerGroupData)}");
+						continue;
 					}
 				}
 
@@ -85,29 +94,55 @@ namespace Werewolf.UI
 					switch(variable.Type)
 					{
 						case GameHistorySaveEntryVariableType.Player:
-							text.Add(variable.Name, new StringVariable() { Value = variable.Data });
+							text.Add(variable.Name, new StringVariable() { Value = variable.Data });//TEMP<---Make it without creating new variables(might not work)
 							break;
 						case GameHistorySaveEntryVariableType.Players:
 							text.Add(variable.Name, new StringListVariable() { Values = SplitData(variable.Data).ToList() });
 							break;
 						case GameHistorySaveEntryVariableType.RoleName:
-							text.Add(variable.Name, _gameplayDatabaseManager.GetGameplayData<RoleData>(variable.Data).NameSingular);
+						{
+							if (_gameplayDataManager.TryGetGameplayData(int.Parse(variable.Data), out RoleData roleData))
+							{
+								text.Add(variable.Name, roleData.NameSingular);
+							}
+							else
+							{
+								Debug.LogError($"variable.Data {variable.Data} of history entry {entry.EntryID} was not a valid {nameof(RoleData)}");
+							}
 							break;
+						}
 						case GameHistorySaveEntryVariableType.RoleNames:
+						{
 							List<string> roleNames = SplitData(variable.Data).ToList();
 							List<LocalizedString> localizedRoleNames = new();
 
 							foreach (string roleName in roleNames)
 							{
-								localizedRoleNames.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(roleName).NameSingular);
+								if (_gameplayDataManager.TryGetGameplayData(int.Parse(roleName), out RoleData roleData))
+								{
+									localizedRoleNames.Add(roleData.NameSingular);
+								}
+								else
+								{
+									Debug.LogError($"variable.Data {roleName} of history entry {entry.EntryID} was not a valid {nameof(RoleData)}");
+								}
 							}
 
 							text.Add(variable.Name, new LocalizedStringListVariable() { Values = localizedRoleNames });
 							break;
+						}
 						case GameHistorySaveEntryVariableType.PlayerGroupeName:
-							PlayerGroupData playerGroupData = _gameplayDatabaseManager.GetGameplayData<PlayerGroupData>(variable.Data);
-							text.Add(variable.Name, playerGroupData.Name);
+						{
+							if (_gameplayDataManager.TryGetGameplayData(int.Parse(variable.Data), out PlayerGroupData playerGroupData))
+							{
+								text.Add(variable.Name, playerGroupData.Name);
+							}
+							else
+							{
+								Debug.LogError($"variable.Data {variable.Data} of history entry {entry.EntryID} was not a valid {nameof(PlayerGroupData)}");
+							}
 							break;
+						}
 						case GameHistorySaveEntryVariableType.Bool:
 							text.Add(variable.Name, new BoolVariable() { Value = bool.Parse(variable.Data) });
 							break;

@@ -1,10 +1,10 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Gameplay;
 using Werewolf.Gameplay.Role;
@@ -43,9 +43,9 @@ namespace Werewolf.Managers
 
 			if (!roleBehavior)
 			{
-				foreach (GameplayTag playerGroup in roleData.PlayerGroups)
+				foreach (PlayerGroupData playerGroup in roleData.PlayerGroups)
 				{
-					AddPlayerToPlayerGroup(player, playerGroup);
+					AddPlayerToPlayerGroup(player, playerGroup.ID);
 				}
 			}
 			else
@@ -58,7 +58,7 @@ namespace Werewolf.Managers
 
 			if (_networkDataManager.PlayerInfos[player].IsConnected)
 			{
-				RPC_ChangePlayerCardRole(player, roleData.GameplayTag.CompactTagId);
+				RPC_ChangePlayerCardRole(player, roleData.ID.HashCode);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			ChangePlayerCardRole(player, roleData);
@@ -71,9 +71,9 @@ namespace Werewolf.Managers
 
 			if (PlayerGameInfos[from].Behaviors.Count <= 0)
 			{
-				foreach (GameplayTag villageGroup in PlayerGameInfos[from].Role.PlayerGroups)
+				foreach (PlayerGroupData playerGroup in PlayerGameInfos[from].Role.PlayerGroups)
 				{
-					AddPlayerToPlayerGroup(to, villageGroup);
+					AddPlayerToPlayerGroup(to, playerGroup.ID);
 				}
 			}
 			else
@@ -94,7 +94,7 @@ namespace Werewolf.Managers
 
 			if (_networkDataManager.PlayerInfos[to].IsConnected)
 			{
-				RPC_ChangePlayerCardRole(to, PlayerGameInfos[to].Role.GameplayTag.CompactTagId);
+				RPC_ChangePlayerCardRole(to, PlayerGameInfos[to].Role.ID.HashCode);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			ChangePlayerCardRole(to, PlayerGameInfos[to].Role);
@@ -108,9 +108,12 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_ChangePlayerCardRole([RpcTarget] PlayerRef player, int roleGameplayTagID)
+		private void RPC_ChangePlayerCardRole([RpcTarget] PlayerRef player, int roleID)
 		{
-			RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
+			if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+			{
+				Debug.LogError($"Could not find the role {roleID}");
+			}
 
 			ChangePlayerCardRole(player, roleData);
 			_UIManager.RolesScreen.SelectRole(roleData, false);
@@ -138,9 +141,9 @@ namespace Werewolf.Managers
 
 			if (addPlayerToPlayerGroup)
 			{
-				foreach (GameplayTag playerGroup in behavior.GetCurrentPlayerGroups())
+				foreach (UniqueID playerGroupID in behavior.GetCurrentPlayerGroupIDs())
 				{
-					AddPlayerToPlayerGroup(player, playerGroup);
+					AddPlayerToPlayerGroup(player, playerGroupID);
 				}
 			}
 
@@ -156,9 +159,9 @@ namespace Werewolf.Managers
 		{
 			if (PlayerGameInfos[player].Behaviors.Count <= 0)
 			{
-				foreach (GameplayTag playerGroup in PlayerGameInfos[player].Role.PlayerGroups)
+				foreach (PlayerGroupData playerGroup in PlayerGameInfos[player].Role.PlayerGroups)
 				{
-					RemovePlayerFromPlayerGroup(player, playerGroup);
+					RemovePlayerFromPlayerGroup(player, playerGroup.ID);
 				}
 			}
 			else
@@ -196,9 +199,9 @@ namespace Werewolf.Managers
 
 			if (removePlayerFromGroup)
 			{
-				foreach (GameplayTag playerGroup in behavior.GetCurrentPlayerGroups())
+				foreach (UniqueID playerGroupID in behavior.GetCurrentPlayerGroupIDs())
 				{
-					RemovePlayerFromPlayerGroup(player, playerGroup);
+					RemovePlayerFromPlayerGroup(player, playerGroupID);
 				}
 			}
 
@@ -231,12 +234,12 @@ namespace Werewolf.Managers
 		#region Role Reservation
 		public void ReserveRoles(RoleBehavior roleBehavior, RoleData[] rolesData, bool areFaceUp, bool arePrimaryBehavior)
 		{
-			int[] roles = new int[rolesData.Length];
+			int[] roleIDs = new int[rolesData.Length];
 			RoleBehavior[] behaviors = new RoleBehavior[rolesData.Length];
 
 			for (int i = 0; i < rolesData.Length; i++)
 			{
-				roles[i] = areFaceUp ? rolesData[i].GameplayTag.CompactTagId : -1;
+				roleIDs[i] = areFaceUp ? rolesData[i].ID.HashCode : -1;
 
 				foreach (KeyValuePair<RoleBehavior, RoleData> unassignedRoleBehavior in _unassignedRoleBehaviors)
 				{
@@ -252,10 +255,10 @@ namespace Werewolf.Managers
 
 			int index = _reservedRolesByBehavior.Count;
 
-			ReservedRoles.Add(index, roles);
+			ReservedRoles.Add(index, roleIDs);
 			_reservedRolesByBehavior.Add(roleBehavior, new() { Roles = rolesData, Behaviors = behaviors, reservedRolesIndex = index });
 
-			RPC_SetReservedRoles(index, roles);
+			RPC_SetReservedRoles(index, roleIDs);
 		}
 
 		public IndexedReservedRoles GetReservedRoles(RoleBehavior roleBehavior)
@@ -367,18 +370,18 @@ namespace Werewolf.Managers
 			}
 
 			RoleData[] roleDatas = reservedRoles.Roles;
-			int[] roles = ReservedRoles[reservedRoles.reservedRolesIndex];
+			int[] roleIDs = ReservedRoles[reservedRoles.reservedRolesIndex];
 
 			for (int i = 0; i < roleDatas.Length; i++)
 			{
 				if (roleDatas[i])
 				{
-					roles[i] = roleDatas[i].GameplayTag.CompactTagId;
+					roleIDs[i] = roleDatas[i].ID.HashCode;
 				}
 			}
 
 			_chooseReservedRoleCallbacks.Add(ReservedRoleOwner.Player, callback);
-			RPC_ChooseReservedRole(ReservedRoleOwner.Player, roles, choiceScreenID, mustChoose, maximumDuration);
+			RPC_ChooseReservedRole(ReservedRoleOwner.Player, roleIDs, choiceScreenID, mustChoose, maximumDuration);
 
 			return true;
 		}
@@ -427,25 +430,28 @@ namespace Werewolf.Managers
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_ChooseReservedRole([RpcTarget] PlayerRef player, int[] roles, int choiceScreenID, bool mustChoose, float maximumDuration)
+		public void RPC_ChooseReservedRole([RpcTarget] PlayerRef player, int[] roleIDs, int choiceScreenID, bool mustChoose, float maximumDuration)
 		{
 			List<Choice.ChoiceData> choices = new();
 
-			foreach (int roleGameplayTag in roles)
+			foreach (int roleID in roleIDs)
 			{
-				if (roleGameplayTag == 0)
+				if (roleID == 0)
 				{
 					continue;
 				}
 
-				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTag);
+				if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+				{
+					Debug.LogError($"Could not find the role {roleID}");
+				}
+
 				choices.Add(new() { Image = roleData.Image, Text = roleData.NameSingular });
 			}
 
-			var choiceScreen = _gameplayDatabaseManager.GetGameplayData<ChoiceScreenData>(choiceScreenID);
-
-			if (choiceScreen == null)
+			if (!_gameplayDataManager.TryGetGameplayData(choiceScreenID, out ChoiceScreenData choiceScreen))
 			{
+				Debug.LogError($"Could not find the choice screen {choiceScreenID}");
 				return;
 			}
 
@@ -456,14 +462,14 @@ namespace Werewolf.Managers
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_GiveReservedRoleChoice(int roleGameplayTagID, RpcInfo info = default)
+		public void RPC_GiveReservedRoleChoice(int choiceIndex, RpcInfo info = default)
 		{
 			if (!_chooseReservedRoleCallbacks.TryGetValue(info.Source, out Action<int> callback))
 			{
 				return;
 			}
 
-			callback(roleGameplayTagID);
+			callback(choiceIndex);
 			_chooseReservedRoleCallbacks.Remove(info.Source);
 		}
 
@@ -486,7 +492,7 @@ namespace Werewolf.Managers
 			}
 
 			_revealPlayerRoleCallbacks.Add(revealTo, callback);
-			RPC_RevealPlayerRole(revealTo, playerRevealed, PlayerGameInfos[playerRevealed].Role.GameplayTag.CompactTagId, waitBeforeReveal, returnFaceDown);
+			RPC_RevealPlayerRole(revealTo, playerRevealed, PlayerGameInfos[playerRevealed].Role.ID.HashCode, waitBeforeReveal, returnFaceDown);
 
 			return true;
 		}
@@ -546,7 +552,7 @@ namespace Werewolf.Managers
 			MovementCompleted?.Invoke();
 		}
 
-		private bool MoveCardToCamera(PlayerRef movedFor, PlayerRef cardPlayer, bool showRevealed, int gameplayDataID, Action movementCompleted)
+		private bool MoveCardToCamera(PlayerRef movedFor, PlayerRef cardPlayer, bool showRevealed, int roleID, Action movementCompleted)
 		{
 			if (!_networkDataManager.PlayerInfos[movedFor].IsConnected || _moveCardToCameraCallbacks.ContainsKey(movedFor))
 			{
@@ -554,20 +560,25 @@ namespace Werewolf.Managers
 			}
 
 			_moveCardToCameraCallbacks.Add(movedFor, movementCompleted);
-			RPC_MoveCardToCamera(movedFor, cardPlayer, showRevealed, gameplayDataID);
+			RPC_MoveCardToCamera(movedFor, cardPlayer, showRevealed, roleID);
 
 			return true;
 		}
 
-		public void FlipCard(PlayerRef cardPlayer, int gameplayDataID = -1, Action FlipCompleted = null)
+		public void FlipCard(PlayerRef cardPlayer, int roleID = -1, Action FlipCompleted = null)
 		{
-			if (gameplayDataID == -1)
+			if (roleID == -1)
 			{
 				_playerCards[cardPlayer].SetRole(null);
 			}
 			else
 			{
-				_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
+				if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+				{
+					Debug.LogError($"Could not find the role {roleID}");
+				}
+
+				_playerCards[cardPlayer].SetRole(roleData);
 			}
 
 			StartCoroutine(FlipCard(_playerCards[cardPlayer].transform, Config.RoleRevealFlipDuration, FlipCompleted));
@@ -593,7 +604,7 @@ namespace Werewolf.Managers
 			FlipCompleted?.Invoke();
 		}
 
-		private bool FlipCard(PlayerRef flipFor, PlayerRef cardPlayer, Action flipCompleted, int gameplayDataID = -1)
+		private bool FlipCard(PlayerRef flipFor, PlayerRef cardPlayer, Action flipCompleted, int roleID = -1)
 		{
 			if (!_networkDataManager.PlayerInfos[flipFor].IsConnected || _flipCardCallbacks.ContainsKey(flipFor))
 			{
@@ -601,7 +612,7 @@ namespace Werewolf.Managers
 			}
 
 			_flipCardCallbacks.Add(flipFor, flipCompleted);
-			RPC_FlipCard(flipFor, cardPlayer, gameplayDataID);
+			RPC_FlipCard(flipFor, cardPlayer, roleID);
 
 			return true;
 		}
@@ -615,9 +626,7 @@ namespace Werewolf.Managers
 		{
 			float elapsedTime = .0f;
 
-			Vector3 startingPosition = card.transform.position;
-
-			Quaternion startingRotation = card.transform.rotation;
+			card.transform.GetPositionAndRotation(out Vector3 startingPosition, out Quaternion startingRotation);
 			Quaternion targetRotation;
 
 			if (returnFaceDown)
@@ -662,10 +671,15 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_RevealPlayerRole([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int gameplayDataID, bool waitBeforeReveal, bool returnFaceDown)
+		private void RPC_RevealPlayerRole([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int roleID, bool waitBeforeReveal, bool returnFaceDown)
 		{
+			if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+			{
+				Debug.LogError($"Could not find the role {roleID}");
+			}
+
 			Card card = _playerCards[playerRevealed];
-			card.SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
+			card.SetRole(roleData);
 
 			StartCoroutine(RevealPlayerRole(card, waitBeforeReveal, returnFaceDown));
 		}
@@ -683,11 +697,15 @@ namespace Werewolf.Managers
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_MoveCardToCamera([RpcTarget] PlayerRef player, PlayerRef cardPlayer, bool showRevealed, int gameplayDataID = -1)
+		public void RPC_MoveCardToCamera([RpcTarget] PlayerRef player, PlayerRef cardPlayer, bool showRevealed, int roleID = -1)
 		{
 			if (showRevealed)
 			{
-				RoleData roleData = _gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID);
+				if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+				{
+					Debug.LogError($"Could not find the role {roleID}");
+				}
+
 				_playerCards[cardPlayer].SetRole(roleData);
 			}
 
@@ -707,15 +725,15 @@ namespace Werewolf.Managers
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_FlipCard([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int gameplayDataID = -1)
+		public void RPC_FlipCard([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int roleID = -1)
 		{
-			FlipCard(cardPlayer, gameplayDataID, () => RPC_FlipCardFinished());
+			FlipCard(cardPlayer, roleID, () => RPC_FlipCardFinished());
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_FlipCard(PlayerRef cardPlayer, int gameplayDataID = -1)
+		public void RPC_FlipCard(PlayerRef cardPlayer, int roleID = -1)
 		{
-			FlipCard(cardPlayer, gameplayDataID);
+			FlipCard(cardPlayer, roleID);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -731,15 +749,20 @@ namespace Werewolf.Managers
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_SetRole([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int gameplayDataID)
+		public void RPC_SetRole([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int roleID)
 		{
-			if (gameplayDataID == -1)
+			if (roleID == -1)
 			{
 				_playerCards[cardPlayer].SetRole(null);
 			}
 			else
 			{
-				_playerCards[cardPlayer].SetRole(_gameplayDatabaseManager.GetGameplayData<RoleData>(gameplayDataID));
+				if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+				{
+					Debug.LogError($"Could not find the role {roleID}");
+				}
+
+				_playerCards[cardPlayer].SetRole(roleData);
 			}
 		}
 

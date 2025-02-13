@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
+  m_Name: WitchKill
+  m_EditorClassIdentifier: 
+  <GameplayTag>k__BackingField: {fileID: -4830026793023973320, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  <ID>k__BackingField:
+    Guid: 5a8499cd-0896-407d-b1fb-f92bcbf36648
+    HashCode: 771058223
+  <DebugName>k__BackingField: WitchKill
+  <Image>k__BackingField: {fileID: 21300000, guid: 66a14cb42af091740ac50bfce7dea8a7,
+    type: 3}
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 9296928342016
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <PromptButtonText>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

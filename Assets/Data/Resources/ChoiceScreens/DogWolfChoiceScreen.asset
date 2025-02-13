@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -8761640116101350222, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: 956dbf9a-0c0e-4b98-9f68-9c04906410f2
+    HashCode: -750959448
   <DebugName>k__BackingField: DogWolfChoiceScreen
   <ChooseText>k__BackingField:
     m_TableReference:

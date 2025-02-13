@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,13 +13,13 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Choose Player")]
 		[SerializeField]
-		private GameplayTag _choosePlayerImage;
+		private ImageData _choosePlayerTitle;
 
 		[SerializeField]
 		private float _choosePlayerMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _lookedPlayerRoleGameHistoryEntry;
+		private GameHistoryEntryData _lookedPlayerRoleGameHistoryEntry;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
@@ -44,7 +43,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
-											_choosePlayerImage.CompactTagId,
+											_choosePlayerTitle.ID.HashCode,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
@@ -80,7 +79,7 @@ namespace Werewolf.Gameplay.Role
 
 			PlayerRef playerLookedAt = players[0];
 
-			_gameHistoryManager.AddEntry(_lookedPlayerRoleGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_lookedPlayerRoleGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -97,7 +96,7 @@ namespace Werewolf.Gameplay.Role
 											new()
 											{
 												Name = "RoleName",
-												Data = _gameManager.PlayerGameInfos[playerLookedAt].Role.GameplayTag.name,
+												Data = _gameManager.PlayerGameInfos[playerLookedAt].Role.ID.HashCode.ToString(),
 												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});

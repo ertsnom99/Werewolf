@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: 7333759835446194136, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: d0f7d490-20d6-4216-a9ae-2ca4eb0fde38
+    HashCode: 70513942
   <DebugName>k__BackingField: Couple
   <Name>k__BackingField:
     m_TableReference:

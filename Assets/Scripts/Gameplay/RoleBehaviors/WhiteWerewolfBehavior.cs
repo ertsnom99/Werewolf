@@ -1,9 +1,10 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utilities.GameplayData;
+using Werewolf.Data;
 using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Gameplay.Role
@@ -12,31 +13,34 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("White Werewolf")]
 		[SerializeField]
-		private GameplayTag[] _otherWerewolvesPlayerGroups;
+		private PlayerGroupData[] _otherWerewolvesPlayerGroups;
 
 		[SerializeField]
-		private GameplayTag _noOtherWerewolvesImage;
+		private ImageData _noOtherWerewolvesTitle;
 
 		[SerializeField]
-		private GameplayTag _chooseOtherWerewolfImage;
+		private ImageData _chooseOtherWerewolfTitle;
 
 		[SerializeField]
 		private float _chooseOtherWerewolfMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _choseWerewolfGameHistoryEntry;
+		private GameHistoryEntryData _choseWerewolfGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _markForDeath;
+		private MarkForDeathData _markForDeath;
 
 		[SerializeField]
 		private float _selectedWerewolfHighlightDuration;
 
+		private UniqueID[] _otherWerewolvesPlayerGroupIDs;
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		public override void Initialize()
 		{
-			base.Initialize();	
+			base.Initialize();
+
+			_otherWerewolvesPlayerGroupIDs = GameplayData.GetIDs(_otherWerewolvesPlayerGroups);
 
 			if (NightPriorities.Count < 2)
 			{
@@ -62,7 +66,7 @@ namespace Werewolf.Gameplay.Role
 
 		private bool KillWerewolf()
 		{
-			List<PlayerRef> werewolves = _gameManager.GetPlayersFromPlayerGroups(_otherWerewolvesPlayerGroups).ToList();
+			List<PlayerRef> werewolves = _gameManager.GetPlayersFromPlayerGroups(_otherWerewolvesPlayerGroupIDs).ToList();
 
 			if (werewolves.Count <= 0) 
 			{
@@ -72,7 +76,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											werewolves,
-											_chooseOtherWerewolfImage.CompactTagId,
+											_chooseOtherWerewolfTitle.ID.HashCode,
 											_chooseOtherWerewolfMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
@@ -93,7 +97,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _noOtherWerewolvesImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _noOtherWerewolvesTitle.ID.HashCode);
 			}
 
 			yield return 0;
@@ -113,7 +117,7 @@ namespace Werewolf.Gameplay.Role
 
 			var selectedWerewolf = players[0];
 
-			_gameHistoryManager.AddEntry(_choseWerewolfGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_choseWerewolfGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -130,7 +134,7 @@ namespace Werewolf.Gameplay.Role
 												new()
 												{
 													Name = "RoleName",
-													Data = _gameManager.PlayerGameInfos[selectedWerewolf].Role.GameplayTag.name,
+													Data = _gameManager.PlayerGameInfos[selectedWerewolf].Role.ID.HashCode.ToString(),
 													Type = GameHistorySaveEntryVariableType.RoleName
 												}
 											});

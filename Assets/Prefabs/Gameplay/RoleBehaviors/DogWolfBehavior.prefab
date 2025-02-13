@@ -44,21 +44,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1bbbfb0341aaca489f4f9d4a18d0b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
-  _choiceScreen: {fileID: -8761640116101350222, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choiceScreen: {fileID: 11400000, guid: 7afacb0577bd08b4fb13bfbdc22f2bca, type: 2}
+  _werewolvesTitle: {fileID: 11400000, guid: bc325030c0aa83847a01b126357ad88f, type: 2}
+  _choseWerewolvesGroupGameHistoryEntry: {fileID: 11400000, guid: 70c79237543fe4c4a938d74547f6598e,
     type: 2}
-  _werewolvesImage: {fileID: 293889000524268254, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choseWerewolvesGroupGameHistoryEntryNEW: {fileID: 11400000, guid: 70c79237543fe4c4a938d74547f6598e,
     type: 2}
-  _choseWerewolvesGroupGameHistoryEntry: {fileID: 2744590352255551238, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _villagersTitle: {fileID: 11400000, guid: 047c606bd01c660439ca03bb902cc59c, type: 2}
+  _choseVillagersGroupGameHistoryEntry: {fileID: 11400000, guid: 3a14ccb8c0f3a73428dcd0e98246e1f4,
     type: 2}
-  _villagersImage: {fileID: 5810233721197495563, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
-  _choseVillagersGroupGameHistoryEntry: {fileID: -1600375867687415392, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choseVillagersGroupGameHistoryEntryNEW: {fileID: 11400000, guid: 3a14ccb8c0f3a73428dcd0e98246e1f4,
     type: 2}
   _chooseGroupMaximumDuration: 10

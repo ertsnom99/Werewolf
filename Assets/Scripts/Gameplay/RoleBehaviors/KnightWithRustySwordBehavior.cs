@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Managers;
 using Werewolf.Network;
@@ -15,17 +15,18 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Kill Werewolf")]
 		[SerializeField]
-		private GameplayTag[] _markForDeathToKillWerewolf;
+		private MarkForDeathData[] _markForDeathToKillWerewolf;
 
 		[SerializeField]
-		private GameplayTag[] _werewolvesPlayerGroups;
+		private PlayerGroupData[] _werewolvesPlayerGroups;
 
 		[SerializeField]
-		private GameplayTag _gaveTetanusGameHistoryEntry;
+		private GameHistoryEntryData _gaveTetanusGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _markForDeathAddedByStab;
+		private MarkForDeathData _markForDeathAddedByStab;
 
+		private UniqueID[] _werewolvesPlayerGroupIDs;
 		private PlayerRef _werewolfToKill;
 		private bool _killWerewolf;
 
@@ -35,6 +36,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			_werewolvesPlayerGroupIDs = GameplayData.GetIDs(_werewolvesPlayerGroups);
+
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
@@ -51,19 +54,19 @@ namespace Werewolf.Gameplay.Role
 			return isWakingUp = false;
 		}
 
-		private void OnMarkForDeathAdded(PlayerRef player, GameplayTag markForDeath)
+		private void OnMarkForDeathAdded(PlayerRef player, MarkForDeathData markForDeath)
 		{
 			if (player == Player && _markForDeathToKillWerewolf.Contains(markForDeath))
 			{
-				_werewolfToKill = _gameManager.FindNextPlayer(Player, searchToLeft: true, mustBeAwake: true, _werewolvesPlayerGroups);
+				_werewolfToKill = _gameManager.FindNextPlayer(Player, searchToLeft: true, mustBeAwake: true, _werewolvesPlayerGroupIDs);
 			}
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
+		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (deadPlayer == Player && _markForDeathToKillWerewolf.Contains(markForDeath) && !_werewolfToKill.IsNone)
 			{
-				_gameHistoryManager.AddEntry(_gaveTetanusGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_gaveTetanusGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -80,7 +83,7 @@ namespace Werewolf.Gameplay.Role
 												new()
 												{
 													Name = "RoleName",
-													Data = _gameManager.PlayerGameInfos[_werewolfToKill].Role.GameplayTag.name,
+													Data = _gameManager.PlayerGameInfos[_werewolfToKill].Role.ID.HashCode.ToString(),
 													Type = GameHistorySaveEntryVariableType.RoleName
 												}
 											});

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Network.Configs;
 
@@ -30,7 +31,7 @@ namespace Werewolf.Network
 	[Serializable]
 	public struct RolesSetup : INetworkStruct
 	{
-		public int DefaultRole;
+		public int DefaultRoleID;
 		[Networked, Capacity(100)]
 		public NetworkArray<RoleSetup> MandatoryRoles { get; }
 		[Networked, Capacity(100)]
@@ -120,7 +121,7 @@ namespace Werewolf.Network
 		{
 			RolesSetup rolesSetup = new()
 			{
-				DefaultRole = gameSetupData.DefaultRole.GameplayTag.CompactTagId,
+				DefaultRoleID = gameSetupData.DefaultRole.ID.HashCode,
 			};
 
 			for (int i = 0; i < gameSetupData.MandatoryRoles.Length; i++)
@@ -142,7 +143,7 @@ namespace Werewolf.Network
 
 			for (int i = 0; i < roleSetupData.Pool.Length; i++)
 			{
-				roleSetup.Pool.Set(i, roleSetupData.Pool[i].GameplayTag.CompactTagId);
+				roleSetup.Pool.Set(i, roleSetupData.Pool[i].ID.HashCode);
 			}
 
 			roleSetup.UseCount = roleSetupData.UseCount;
@@ -152,7 +153,7 @@ namespace Werewolf.Network
 
 		public static void ConvertToRoleSetupDatas(NetworkArray<RoleSetup> roleSetups, out List<RoleSetupData> roleSetupDatas)
 		{
-			GameplayDatabaseManager _gameplayDatabaseManager = GameplayDatabaseManager.Instance;
+			GameplayDataManager _gameplayDataManager = GameplayDataManager.Instance;
 
 			roleSetupDatas = new();
 
@@ -165,11 +166,18 @@ namespace Werewolf.Network
 
 				List<RoleData> Pool = new();
 
-				foreach (int role in roleSetup.Pool)
+				foreach (int roleID in roleSetup.Pool)
 				{
-					if (role > 0)
+					if (roleID != 0)
 					{
-						Pool.Add(_gameplayDatabaseManager.GetGameplayData<RoleData>(role));
+						if (_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+						{
+							Pool.Add(roleData);
+						}
+						else
+						{
+							Debug.LogError($"Could not find the role {roleID}");
+						}
 					}
 				}
 

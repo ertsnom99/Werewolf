@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,19 +14,19 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Take Role")]
 		[SerializeField]
-		private GameplayTag _takeRoleImage;
+		private ImageData _takeRoleTitle;
 
 		[SerializeField]
-		private GameplayTag[] _notResettedRoles;
+		private RoleData[] _notResettedRoles;
 
 		[SerializeField]
-		private GameplayTag _tookRoleGameHistoryEntry;
+		private GameHistoryEntryData _tookRoleGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _newRoleImage;
+		private ImageData _newRoleTitle;
 
 		[SerializeField]
-		private GameplayTag _tookThisRoleImage;
+		private ImageData _tookThisRoleTitle;
 
 		[SerializeField]
 		private float _servantRevealDuration;
@@ -56,13 +55,13 @@ namespace Werewolf.Gameplay.Role
 			return isWakingUp = false;
 		}
 
-		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, GameplayTag mark, float revealDuration)
+		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, MarkForDeathData mark, float revealDuration)
 		{
 			if (Player.IsNone
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| Player == playerRevealed
 				|| mark != _gameManager.Config.ExecutionMarkForDeath
-				|| !_gameManager.PromptPlayer(Player, _takeRoleImage.CompactTagId, revealDuration, OnTakeRole))
+				|| !_gameManager.PromptPlayer(Player, _takeRoleTitle.ID.HashCode, revealDuration, OnTakeRole))
 			{
 				return;
 			}
@@ -85,9 +84,9 @@ namespace Werewolf.Gameplay.Role
 			RoleData servantRole = _gameManager.PlayerGameInfos[Player].Role;
 			PlayerRef previousPlayer = Player;
 
-			_gameManager.TransferRole(_playerRevealed, Player, !_notResettedRoles.Contains(RoleToTake.GameplayTag));
+			_gameManager.TransferRole(_playerRevealed, Player, !_notResettedRoles.Contains(RoleToTake));
 
-			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -104,7 +103,7 @@ namespace Werewolf.Gameplay.Role
 											new()
 											{
 												Name = "RoleName",
-												Data = RoleToTake.GameplayTag.name,
+												Data = RoleToTake.ID.HashCode.ToString(),
 												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});
@@ -118,8 +117,8 @@ namespace Werewolf.Gameplay.Role
 
 				if (playerInfo.Key == previousPlayer)
 				{
-					_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.GameplayTag.CompactTagId);
-					_gameManager.RPC_DisplayTitle(playerInfo.Key, _newRoleImage.CompactTagId, RoleToTake.GameplayTag.CompactTagId);
+					_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.ID.HashCode);
+					_gameManager.RPC_DisplayTitle(playerInfo.Key, _newRoleTitle.ID.HashCode, RoleToTake.ID.HashCode);
 					continue;
 				}
 
@@ -131,8 +130,8 @@ namespace Werewolf.Gameplay.Role
 				_gameManager.RPC_SetRole(playerInfo.Key, _playerRevealed, -1);
 				_gameManager.RPC_PutCardBackDown(playerInfo.Key, _playerRevealed, false);
 
-				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, previousPlayer, true, servantRole.GameplayTag.CompactTagId);
-				_gameManager.RPC_DisplayTitle(playerInfo.Key, _tookThisRoleImage.CompactTagId);
+				_gameManager.RPC_MoveCardToCamera(playerInfo.Key, previousPlayer, true, servantRole.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(playerInfo.Key, _tookThisRoleTitle.ID.HashCode);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.ChangePlayerCardRole(_playerRevealed, null);
@@ -140,7 +139,7 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.ChangePlayerCardRole(previousPlayer, servantRole);
 			_gameManager.MoveCardToCamera(previousPlayer, true);
-			_gameManager.DisplayTitle(_tookThisRoleImage.CompactTagId);
+			_gameManager.DisplayTitle(_tookThisRoleTitle.ID.HashCode);
 #endif
 			yield return new WaitForSeconds(_servantRevealDuration * _gameManager.GameSpeedModifier);
 

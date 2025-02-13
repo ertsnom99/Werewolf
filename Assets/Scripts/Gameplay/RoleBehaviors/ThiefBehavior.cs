@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,20 +17,20 @@ namespace Werewolf.Gameplay.Role
 		private RoleData[] _rolesToAdd;
 
 		[SerializeField]
-		private GameplayTag _wasGivenRolesGameHistoryEntry;
+		private GameHistoryEntryData _wasGivenRolesGameHistoryEntry;
 
 		[Header("Choose Role")]
 		[SerializeField]
 		private float _chooseReservedRoleMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _mayChooseChoiceScreen;
+		private ChoiceScreenData _mayChooseChoiceScreen;
 
 		[SerializeField]
-		private GameplayTag _mustChooseChoiceScreen;
+		private ChoiceScreenData _mustChooseChoiceScreen;
 
 		[SerializeField]
-		private GameplayTag _tookRoleGameHistoryEntry;
+		private GameHistoryEntryData _tookRoleGameHistoryEntry;
 
 		private bool _choseRole;
 
@@ -81,18 +80,18 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.ReserveRoles(this, selectedRoles.ToArray(), false, true);
 
-			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_wasGivenRolesGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "FirstRoleName",
-												Data = selectedRoles[0].GameplayTag.name,
+												Data = selectedRoles[0].ID.HashCode.ToString(),
 												Type = GameHistorySaveEntryVariableType.RoleName
 											},
 											new()
 											{
 												Name = "SecondRoleName",
-												Data = selectedRoles[1].GameplayTag.name,
+												Data = selectedRoles[1].ID.HashCode.ToString(),
 												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});
@@ -124,7 +123,7 @@ namespace Werewolf.Gameplay.Role
 			}
 
 			if (!_gameManager.ChooseReservedRole(this,
-												_reservedOnlyWerewolfs ? _mustChooseChoiceScreen.CompactTagId : _mayChooseChoiceScreen.CompactTagId,
+												_reservedOnlyWerewolfs ? _mustChooseChoiceScreen.ID.HashCode : _mayChooseChoiceScreen.ID.HashCode,
 												_reservedOnlyWerewolfs,
 												_chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier,
 												OnRoleSelected))
@@ -193,7 +192,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void AddTookRoleGameHistoryEntry(RoleData role)
 		{
-			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -204,7 +203,7 @@ namespace Werewolf.Gameplay.Role
 											new()
 											{
 												Name = "RoleName",
-												Data = role.GameplayTag.name,
+												Data = role.ID.HashCode.ToString(),
 												Type = GameHistorySaveEntryVariableType.RoleName
 											}
 										});

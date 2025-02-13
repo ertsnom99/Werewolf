@@ -44,17 +44,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86936aa0ee7f1f84a9374d2c9fb40017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
-  _infectImage: {fileID: 1087213571649592309, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _infectTitle: {fileID: 11400000, guid: ce1db1a0f903c28479efc30a8f36edbe, type: 2}
+  _villagersPlayerGroup: {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce,
     type: 2}
   _werewolfRoleData: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
-  _infectedVillagerGameHistoryEntry: {fileID: -6763199540646998606, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _infectedVillagerGameHistoryEntry: {fileID: 11400000, guid: 0b01df0204fa4924e87644b00ad745dd,
     type: 2}
-  _infectedImage: {fileID: -7417052888226706271, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _infectedVillagerGameHistoryEntryNEW: {fileID: 11400000, guid: 0b01df0204fa4924e87644b00ad745dd,
     type: 2}
+  _infectedTitle: {fileID: 11400000, guid: 95d73786d87a74842aa32aa5b9b3db18, type: 2}

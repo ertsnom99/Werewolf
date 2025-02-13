@@ -41,7 +41,7 @@ namespace Werewolf.Gameplay.Role
 
 		protected void VoteForVillager()
 		{
-			_preparedVote = _voteManager.PrepareVote(_commonWerewolfsData.VotePlayerImage.CompactTagId, _commonWerewolfsData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
+			_preparedVote = _voteManager.PrepareVote(_commonWerewolfsData.VotePlayerTitle.ID.HashCode, _commonWerewolfsData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
@@ -97,7 +97,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!firstPlayerVotedFor.IsNone && votes[firstPlayerVotedFor] == _voteManager.Voters.Count)
 			{
-				_gameHistoryManager.AddEntry(_commonWerewolfsData.VotedPlayerGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_commonWerewolfsData.VotedPlayerGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -131,7 +131,7 @@ namespace Werewolf.Gameplay.Role
 			}
 			else
 			{
-				_gameHistoryManager.AddEntry(_commonWerewolfsData.FailedToVotePlayerGameHistoryEntry, null);
+				_gameHistoryManager.AddEntry(_commonWerewolfsData.FailedToVotePlayerGameHistoryEntry.ID, null);
 			}
 
 			_gameManager.StopWaintingForPlayer(Player);

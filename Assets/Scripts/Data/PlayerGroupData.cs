@@ -1,4 +1,4 @@
-using Assets.Scripts.Data;
+using Utilities.GameplayData;
 using UnityEngine;
 using UnityEngine.Localization;
 

@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: 3819728793310299203, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: 85d2b130-257e-4f13-8174-4c7f29f85f06
+    HashCode: -329311630
   <DebugName>k__BackingField: ThiefMustChooseChoiceScreen
   <ChooseText>k__BackingField:
     m_TableReference:

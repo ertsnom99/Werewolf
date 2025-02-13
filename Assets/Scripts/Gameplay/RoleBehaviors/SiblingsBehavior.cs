@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using UnityEngine;
 using Werewolf.Data;
@@ -17,7 +16,7 @@ namespace Werewolf.Gameplay.Role
 		private float _showSiblingsDuration;
 
 		[SerializeField]
-		private GameplayTag _siblingsImage;
+		private ImageData _siblingsTitle;
 
 		private readonly HashSet<PlayerRef> _siblings = new();
 
@@ -66,7 +65,7 @@ namespace Werewolf.Gameplay.Role
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
 				_gameManager.RPC_SetPlayersCardHighlightVisible(Player, _siblings.ToArray(), true);
-				_gameManager.RPC_DisplayTitle(Player, _siblingsImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _siblingsTitle.ID.HashCode);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayersCardHighlightVisible(_siblings.ToArray(), true);

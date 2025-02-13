@@ -44,19 +44,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4678afe46769f4089d9e4298f44212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _takeRoleImage: {fileID: -5594949299689075354, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _takeRoleTitle: {fileID: 11400000, guid: 5f2fd8eedef526a478b9dca2db3d30c6, type: 2}
   _notResettedRoles:
-  - {fileID: -5616936199980762825, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  _tookRoleGameHistoryEntry: {fileID: 7828025626779433002, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  - {fileID: 11400000, guid: 05239335259f3b44aa386de01ec5d91a, type: 2}
+  _tookRoleGameHistoryEntry: {fileID: 11400000, guid: ed6dec1ba698f084f85c66d3202384d3,
     type: 2}
-  _newRoleImage: {fileID: -4329190402335458445, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _tookRoleGameHistoryEntryNEW: {fileID: 11400000, guid: ed6dec1ba698f084f85c66d3202384d3,
     type: 2}
-  _tookThisRoleImage: {fileID: -1265311115428382351, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _newRoleTitle: {fileID: 11400000, guid: 7abef82faf5f5894189f71857fb29d82, type: 2}
+  _tookThisRoleTitle: {fileID: 11400000, guid: da11e340e54072b40a824cc94454f29e, type: 2}
   _servantRevealDuration: 3

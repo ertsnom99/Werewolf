@@ -44,22 +44,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4016ecb210e150b4f87a58ced9e99bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
   _otherWerewolvesPlayerGroups:
-  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  _noOtherWerewolvesImage: {fileID: -7538681175632383403, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
+  _noOtherWerewolvesTitle: {fileID: 11400000, guid: df56e83c3482af2418aa962c5022ce11,
     type: 2}
-  _chooseOtherWerewolfImage: {fileID: -7612617093408124056, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _chooseOtherWerewolfTitle: {fileID: 11400000, guid: 67ebb5503cdcaff44a41cedaca771b05,
     type: 2}
   _chooseOtherWerewolfMaximumDuration: 10
-  _choseWerewolfGameHistoryEntry: {fileID: -1363357280739271870, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choseWerewolfGameHistoryEntry: {fileID: 11400000, guid: 1a5661e1c5a2e74458f84914db62db80,
     type: 2}
-  _markForDeath: {fileID: 4534347614920964079, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choseWerewolfGameHistoryEntryNEW: {fileID: 11400000, guid: 1a5661e1c5a2e74458f84914db62db80,
     type: 2}
+  _markForDeath: {fileID: 11400000, guid: 9f9cb76a127b8d14ea3076138c48d8a2, type: 2}
   _selectedWerewolfHighlightDuration: 3

@@ -1,4 +1,4 @@
-using Assets.Scripts.Editor.Tags;
+using Utilities.GameplayData.Editor.Tags;
 using System;
 using UnityEngine;
 

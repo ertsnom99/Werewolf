@@ -1,5 +1,4 @@
-using Assets.Scripts.Data;
-using Assets.Scripts.Data.Tags;
+using Utilities.GameplayData;
 using System;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -62,7 +61,7 @@ namespace Werewolf.Data
 		public int MandatoryCount { get; private set; }
 
 		[field: SerializeField]
-		public GameplayTag[] PlayerGroups { get; private set; }
+		public PlayerGroupData[] PlayerGroups { get; private set; }
 
 		[field: SerializeField]
 		public Priority[] NightPriorities { get; private set; }

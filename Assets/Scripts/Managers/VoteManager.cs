@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Gameplay;
 using Werewolf.Network;
@@ -29,7 +30,7 @@ namespace Werewolf.Managers
 			public int VoteValue;
 		}
 
-		private int _titleImageID;
+		private int _titleID;
 		private float _maxDuration;
 		private bool _failingToVoteGivesPenalty;
 		private Dictionary<PlayerRef, int> _modifiers;
@@ -54,7 +55,7 @@ namespace Werewolf.Managers
 		private GameManager _gameManager;
 		private UIManager _UIManager;
 		private NetworkDataManager _networkDataManager;
-		private GameplayDatabaseManager _gameplayDatabaseManager;
+		private GameplayDataManager _gameplayDataManager;
 		private GameHistoryManager _gameHistoryManager;
 
 		public event Action<ChoicePurpose> VoteStarting;
@@ -79,7 +80,7 @@ namespace Werewolf.Managers
 			_gameManager = GameManager.Instance;
 			_UIManager = UIManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
-			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
+			_gameplayDataManager = GameplayDataManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 
 			_UIManager.VoteScreen.SetConfirmVoteDelayDuration(_config.AllVotedDelayToEndVote * _gameManager.GameSpeedModifier);
@@ -88,7 +89,7 @@ namespace Werewolf.Managers
 		}
 
 		public bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
-											int titleImageID,
+											int titleID,
 											float maxDuration,
 											bool failingToVoteGivesPenalty,
 											ChoicePurpose purpose,
@@ -104,7 +105,7 @@ namespace Werewolf.Managers
 
 			_votesCountedCallback = votesCountedCallback;
 
-			PrepareVote(titleImageID, maxDuration, failingToVoteGivesPenalty, purpose, modifiers);
+			PrepareVote(titleID, maxDuration, failingToVoteGivesPenalty, purpose, modifiers);
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
@@ -136,7 +137,7 @@ namespace Werewolf.Managers
 			return true;
 		}
 
-		public bool PrepareVote(int titleImageID, float maxDuration, bool failingToVoteGivesPenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
+		public bool PrepareVote(int titleID, float maxDuration, bool failingToVoteGivesPenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
 		{
 			if (_step != Step.NotVoting)
 			{
@@ -149,7 +150,7 @@ namespace Werewolf.Managers
 			Spectators.Clear();
 			_votes.Clear();
 
-			_titleImageID = titleImageID;
+			_titleID = titleID;
 			_maxDuration = maxDuration;
 			_failingToVoteGivesPenalty = failingToVoteGivesPenalty;
 			_modifiers = modifiers;
@@ -251,7 +252,7 @@ namespace Werewolf.Managers
 								voteModifiers,
 								_immune.ToArray(),
 								_immuneFromPlayers[voter].ToArray(),
-								_titleImageID,
+								_titleID,
 								_immuneFromPlayers[voter].Count >= _gameManager.PlayerGameInfos.Count,
 								voteDuration);
 			}
@@ -267,7 +268,7 @@ namespace Werewolf.Managers
 									Voters.ToArray(),
 									voteModifiers,
 									_immune.ToArray(),
-									_titleImageID,
+									_titleID,
 									voteDuration);
 			}
 
@@ -289,7 +290,13 @@ namespace Werewolf.Managers
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
-			_UIManager.VoteScreen.Initialize(_gameplayDatabaseManager.GetGameplayData<ImageData>(_titleImageID).Text, false, voteDuration);
+
+			if (!_gameplayDataManager.TryGetGameplayData(_titleID, out ImageData titleData))
+			{
+				Debug.LogError($"Could not find the title {_titleID}");
+			}
+
+			_UIManager.VoteScreen.Initialize(titleData.Text, false, voteDuration);
 #endif
 			_step = Step.Voting;
 		}
@@ -469,7 +476,7 @@ namespace Werewolf.Managers
 			{
 				if (!_votes[voter].IsNone)
 				{
-					_gameHistoryManager.AddEntry(_config.VoteVotedForGameHistoryEntry,
+					_gameHistoryManager.AddEntry(_config.VoteVotedForGameHistoryEntry.ID,
 												new GameHistorySaveEntryVariable[] {
 													new()
 													{
@@ -493,7 +500,7 @@ namespace Werewolf.Managers
 					_votes[voter] = voter;
 				}
 
-				_gameHistoryManager.AddEntry(_failingToVoteGivesPenalty ? _config.VoteDidNotVoteWithPenalityGameHistoryEntry : _config.VoteDidNotVoteGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_failingToVoteGivesPenalty ? _config.VoteDidNotVoteWithPenalityGameHistoryEntry.ID : _config.VoteDidNotVoteGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 													new()
 													{
@@ -610,7 +617,7 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, VoteModifier[] voteModifiers, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, int titleImageID, bool displayWarning, float maxDuration)
+		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, VoteModifier[] voteModifiers, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, int titleID, bool displayWarning, float maxDuration)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -650,11 +657,17 @@ namespace Werewolf.Managers
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
-			_UIManager.VoteScreen.Initialize(_gameplayDatabaseManager.GetGameplayData<ImageData>(titleImageID).Text, displayWarning, maxDuration);
+			
+			if (!_gameplayDataManager.TryGetGameplayData(titleID, out ImageData titleData))
+			{
+				Debug.LogError($"Could not find the title {titleID}");
+			}
+
+			_UIManager.VoteScreen.Initialize(titleData.Text, displayWarning, maxDuration);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, PlayerRef[] voters, VoteModifier[] voteModifiers, PlayerRef[] immunePlayers, int titleImageID, float maxDuration)
+		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, PlayerRef[] voters, VoteModifier[] voteModifiers, PlayerRef[] immunePlayers, int titleID, float maxDuration)
 		{
 			if (_playerCards == null || _config == null)
 			{
@@ -686,7 +699,13 @@ namespace Werewolf.Managers
 			}
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
-			_UIManager.VoteScreen.Initialize(_gameplayDatabaseManager.GetGameplayData<ImageData>(titleImageID).Text, false, maxDuration);
+
+			if (!_gameplayDataManager.TryGetGameplayData(titleID, out ImageData titleData))
+			{
+				Debug.LogError($"Could not find the title {titleID}");
+			}
+
+			_UIManager.VoteScreen.Initialize(titleData.Text, false, maxDuration);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]

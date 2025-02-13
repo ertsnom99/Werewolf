@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,35 +12,23 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Infect")]
 		[SerializeField]
-		private GameplayTag _infectImage;
+		private ImageData _infectTitle;
+
+		[SerializeField]
+		private PlayerGroupData _villagersPlayerGroup;
 
 		[SerializeField]
 		private RoleData _werewolfRoleData;
 
 		[SerializeField]
-		private GameplayTag _infectedVillagerGameHistoryEntry;
+		private GameHistoryEntryData _infectedVillagerGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _infectedImage;
+		private ImageData _infectedTitle;
 
 		private PlayerRef _choosenVillager;
 		private IEnumerator _endInfectPromptCoroutine;
 		private PlayerRef _infected;
-
-		public override void Initialize()
-		{
-			base.Initialize();
-
-			if (PlayerGroups.Count < 2)
-			{
-				Debug.LogError($"{nameof(CupidBehavior)} must have two player groups: the first one for the werewolves and the second one for the villagers");
-			}
-		}
-
-		public override GameplayTag[] GetCurrentPlayerGroups()
-		{
-			return new GameplayTag[1] { PlayerGroups[0] };
-		}
 
 		protected override void OnVoteEnded(Dictionary<PlayerRef, int> votes)
 		{
@@ -59,7 +46,7 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
-			_gameManager.PromptPlayer(Player, _infectImage.CompactTagId, _commonWerewolfsData.ChoosenVillagerHighlightDuration, OnInfectVillager);
+			_gameManager.PromptPlayer(Player, _infectTitle.ID.HashCode, _commonWerewolfsData.ChoosenVillagerHighlightDuration, OnInfectVillager);
 
 			_endInfectPromptCoroutine = EndInfectPrompt();
 			StartCoroutine(_endInfectPromptCoroutine);
@@ -82,11 +69,11 @@ namespace Werewolf.Gameplay.Role
 			_infected = _choosenVillager;
 
 			_gameManager.RemoveMarkForDeath(_choosenVillager, _commonWerewolfsData.MarkForDeath);
-			_gameManager.RemovePlayerFromPlayerGroup(_choosenVillager, PlayerGroups[1]);
+			_gameManager.RemovePlayerFromPlayerGroup(_choosenVillager, _villagersPlayerGroup.ID);
 			RoleBehavior behavior = _gameManager.InstanciateRoleBehavior(_werewolfRoleData);
 			_gameManager.AddBehavior(_choosenVillager, behavior);
 
-			_gameHistoryManager.AddEntry(_infectedVillagerGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_infectedVillagerGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -118,7 +105,7 @@ namespace Werewolf.Gameplay.Role
 				yield break;
 			}
 
-			_gameManager.RPC_DisplayTitle(_choosenVillager, _infectedImage.CompactTagId, fastFade: true);
+			_gameManager.RPC_DisplayTitle(_choosenVillager, _infectedTitle.ID.HashCode, fastFade: true);
 
 			Data.GameConfig config = _gameManager.Config;
 			yield return new WaitForSeconds(config.NightCallChangeDelay - config.UITransitionFastDuration - config.UITransitionNormalDuration);
