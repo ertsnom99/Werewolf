@@ -28,16 +28,16 @@ namespace Werewolf.Managers
 			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionNormalDuration);
 		}
 
-		private IEnumerator DisplayTitleForAllPlayers(int titleID, float holdDuration)
+		private IEnumerator DisplayTitleForAllPlayers(int titleID, float holdDuration, int roleID = -1, string playerNickname = "")
 		{
 			if (holdDuration < Config.UITransitionNormalDuration)
 			{
 				Debug.LogError($"{nameof(holdDuration)} most not be smaller than {Config.UITransitionNormalDuration}");
 			}
 
-			RPC_DisplayTitle(titleID);
+			RPC_DisplayTitle(titleID, roleID, playerNickname);
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(titleID);
+			DisplayTitle(titleID, CreateTitleVariables(roleID, playerNickname));
 #endif
 			yield return new WaitForSeconds(holdDuration - Config.UITransitionNormalDuration);
 			RPC_HideUI();
@@ -52,47 +52,46 @@ namespace Werewolf.Managers
 			_UIManager.FadeOutAll(Config.UITransitionNormalDuration);
 		}
 
-		#region RPC Calls
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayTitle(int titleID, int roleID = -1, bool fastFade = false)
+		private Dictionary<string, IVariable> CreateTitleVariables(int roleID = -1, string playerNickname = "")
 		{
-			Dictionary<string, IVariable> variables = null;
-
-			if (roleID != -1)
+			if (roleID == -1 && string.IsNullOrEmpty(playerNickname))
 			{
-				if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+				return null;
+			}
+			else
+			{
+				Dictionary<string, IVariable> variables = new();
+
+				if (roleID != -1)
 				{
-					Debug.LogError($"Could not find the role {roleID}");
+					if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+					{
+						Debug.LogError($"Could not find the role {roleID}");
+					}
+
+					variables.Add("Role", roleData.NameSingular);
 				}
 
-				variables = new()
+				if (!string.IsNullOrEmpty(playerNickname))
 				{
-					{ "Role", roleData.NameSingular }
-				};
-			}
+					variables.Add("Player", new StringVariable() { Value = playerNickname });
+				}
 
-			DisplayTitle(titleID, variables, fastFade: fastFade);
+				return variables;
+			}
+		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayTitle(int titleID, int roleID = -1, string playerNickname = "", bool fastFade = false)
+		{
+			DisplayTitle(titleID, CreateTitleVariables(roleID, playerNickname), fastFade: fastFade);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int titleID, int roleID = -1, bool fastFade = false)
+		public void RPC_DisplayTitle([RpcTarget] PlayerRef player, int titleID, int roleID = -1, string playerNickname = "", bool fastFade = false)
 		{
-			Dictionary<string, IVariable> variables = null;
-
-			if (roleID != -1)
-			{
-				if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
-				{
-					Debug.LogError($"Could not find the role {roleID}");
-				}
-
-				variables = new()
-				{
-					{ "Role", roleData.NameSingular }
-				};
-			}
-
-			DisplayTitle(titleID, variables, fastFade: fastFade);
+			DisplayTitle(titleID, CreateTitleVariables(roleID, playerNickname), fastFade: fastFade);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]

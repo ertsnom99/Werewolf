@@ -148,7 +148,7 @@ namespace Werewolf.Managers
 
 			float titleDuration = Config.CaptainRevealDuration * GameSpeedModifier;
 			StartCoroutine(HighlightPlayerToggle(_captain, titleDuration));
-			yield return DisplayTitleForAllPlayers(Config.CaptainRevealTitleScreen.ID.HashCode, titleDuration);
+			yield return DisplayTitleForAllPlayers(Config.CaptainRevealTitleScreen.ID.HashCode, titleDuration, playerNickname: _networkDataManager.PlayerInfos[_captain].Nickname);
 		}
 
 		private IEnumerator MoveCaptainCard(Vector3 newPosition)

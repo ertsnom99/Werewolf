@@ -28,9 +28,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1129129476096
-    m_Localized: Voici le capitaine!
+    m_Localized: '{Player} est le capitaine!'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 4972454835144097793
   - m_Id: 1288592719872
     m_Localized: Choisissez le couple
     m_Metadata:
@@ -278,4 +279,4 @@ MonoBehaviour:
     - rid: 4972454835144097793
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00805cffefc2030000809c15513e0400
+        m_Entries: 00805cffefc2030000809c15513e040000805ce506010000
