@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: BigBadWolf
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -5616936199980762825, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  <ID>k__BackingField:
+    Guid: 07e49988-4b41-4f43-b4d3-1705cf602b25
+    HashCode: -948345436
   <DebugName>k__BackingField: BigBadWolf
   <NameSingular>k__BackingField:
     m_TableReference:
@@ -51,11 +52,11 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
   <NightPriorities>k__BackingField:
-  - index: 13
+  - index: 14
     alias: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
-  - index: 15
+  - index: 16
     alias: {fileID: 0}
   <Behavior>k__BackingField: {fileID: 5505260500485482521, guid: 3c43eb610a2e8c244958629a38949dbc,
     type: 3}

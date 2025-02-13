@@ -1,7 +1,7 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections.Generic;
+using Werewolf.Data;
 
 namespace Werewolf.Managers
 {
@@ -12,18 +12,18 @@ namespace Werewolf.Managers
 		public struct MarkForDeath
 		{
 			public PlayerRef Player;
-			public GameplayTag Mark;
+			public MarkForDeathData Mark;
 		}
 
-		public event Action<PlayerRef, GameplayTag> MarkForDeathAdded;
+		public event Action<PlayerRef, MarkForDeathData> MarkForDeathAdded;
 
-		public void AddMarkForDeath(PlayerRef player, GameplayTag markForDeath)
+		public void AddMarkForDeath(PlayerRef player, MarkForDeathData markForDeath)
 		{
 			_marksForDeath.Add(new() { Player = player, Mark = markForDeath });
 			MarkForDeathAdded?.Invoke(player, markForDeath);
 		}
 
-		public void AddMarkForDeath(PlayerRef player, GameplayTag markForDeath, int index)
+		public void AddMarkForDeath(PlayerRef player, MarkForDeathData markForDeath, int index)
 		{
 			if (_marksForDeath.Count < index)
 			{
@@ -37,7 +37,7 @@ namespace Werewolf.Managers
 			MarkForDeathAdded?.Invoke(player, markForDeath);
 		}
 
-		public void RemoveMarkForDeath(PlayerRef player, GameplayTag markForDeath)
+		public void RemoveMarkForDeath(PlayerRef player, MarkForDeathData markForDeath)
 		{
 			for (int i = 0; i < _marksForDeath.Count; i++)
 			{
@@ -67,7 +67,7 @@ namespace Werewolf.Managers
 			}
 		}
 
-		public PlayerRef[] GetPlayersWithMarkForDeath(GameplayTag inMarkForDeath)
+		public PlayerRef[] GetPlayersWithMarkForDeath(MarkForDeathData inMarkForDeath)
 		{
 			List<PlayerRef> players = new();
 

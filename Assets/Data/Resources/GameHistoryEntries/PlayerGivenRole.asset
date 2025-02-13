@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67d1eacae6feb964fb2367c2a8b1e95b, type: 3}
   m_Name: PlayerGivenRole
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 7225922598962193451, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  <ID>k__BackingField:
+    Guid: 49aed3d8-8fe1-492d-800a-53f838d27658
+    HashCode: 1253783423
   <DebugName>k__BackingField: PlayerGivenRole
   <Image>k__BackingField: {fileID: 0}
   <Text>k__BackingField:
@@ -27,7 +28,7 @@ MonoBehaviour:
     m_LocalVariables:
     - name: Player
       variable:
-        rid: -2
+        rid: 5699302323740213505
     - name: RoleName
       variable:
         rid: -2
@@ -36,3 +37,8 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 5699302323740213505
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 

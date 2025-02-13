@@ -3,10 +3,10 @@ using Fusion;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Managers;
-using Assets.Scripts.Data.Tags;
 using System.Collections;
 using static Werewolf.Managers.GameHistoryManager;
 using Werewolf.Network;
+using Utilities.GameplayData;
 
 namespace Werewolf.Gameplay.Role
 {
@@ -14,16 +14,18 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Find Werewolfs")]
 		[SerializeField]
-		private GameplayTag[] _werewolvesPlayerGroups;
+		private PlayerGroupData[] _werewolvesPlayerGroups;
 
 		[SerializeField]
-		private GameplayTag _bearGrowlGameHistoryEntry;
+		private GameHistoryEntryData _bearGrowlGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _bearGrowlImage;
+		private ImageData _bearGrowlTitle;
 
 		[SerializeField]
-		private float _bearGrowlImageDuration;
+		private float _bearGrowlTitleDuration;
+
+		private UniqueID[] _werewolvesPlayerGroupIDs;
 
 		private GameManager _gameManager;
 		private GameHistoryManager _gameHistoryManager;
@@ -31,6 +33,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			_werewolvesPlayerGroupIDs = GameplayData.GetIDs(_werewolvesPlayerGroups);
+
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
@@ -62,14 +66,14 @@ namespace Werewolf.Gameplay.Role
 			HashSet<PlayerRef> playersToCheck = _gameManager.FindSurroundingPlayers(Player);
 			playersToCheck.Add(Player);
 
-			if (!_gameManager.IsAnyPlayersInPlayerGroups(playersToCheck, _werewolvesPlayerGroups))
+			if (!_gameManager.IsAnyPlayersInPlayerGroups(playersToCheck, _werewolvesPlayerGroupIDs))
 			{
 				yield break;
 			}
 
 			_gameManager.WaitForPlayer(Player);
 
-			_gameHistoryManager.AddEntry(_bearGrowlGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_bearGrowlGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -79,13 +83,13 @@ namespace Werewolf.Gameplay.Role
 											}
 										});
 
-			_gameManager.RPC_DisplayTitle(_bearGrowlImage.CompactTagId);
+			_gameManager.RPC_DisplayTitle(_bearGrowlTitle.ID.HashCode);
 
 			GameConfig gameConfig = _gameManager.Config;
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.DisplayTitle(_bearGrowlImage.CompactTagId);
+			_gameManager.DisplayTitle(_bearGrowlTitle.ID.HashCode);
 #endif
-			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration + _bearGrowlImageDuration * _gameManager.GameSpeedModifier);
+			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration + _bearGrowlTitleDuration * _gameManager.GameSpeedModifier);
 			
 			_gameManager.RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR

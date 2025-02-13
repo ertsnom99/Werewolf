@@ -1,6 +1,7 @@
 using System.Collections;
-using Assets.Scripts.Data.Tags;
 using UnityEngine;
+using Utilities.GameplayData;
+using Werewolf.Data;
 using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Gameplay.Role
@@ -9,35 +10,33 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Group Choice")]
 		[SerializeField]
-		private GameplayTag _choiceScreen;
+		private ChoiceScreenData _choiceScreen;
 
 		[SerializeField]
-		private GameplayTag _werewolvesImage;
+		private ImageData _werewolvesTitle;
 
 		[SerializeField]
-		private GameplayTag _choseWerewolvesGroupGameHistoryEntry;
+		private GameHistoryEntryData _choseWerewolvesGroupGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _villagersImage;
+		private ImageData _villagersTitle;
 
 		[SerializeField]
-		private GameplayTag _choseVillagersGroupGameHistoryEntry;
+		private GameHistoryEntryData _choseVillagersGroupGameHistoryEntry;
 
 		[SerializeField]
 		private float _chooseGroupMaximumDuration;
 
 		private bool _choseGroup;
 		private bool _isWerewolf;
-
-		private int[] _choices;
-
+		private int[] _choiceTitleIDs;
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		public override void Initialize()
 		{
 			base.Initialize();
 
-			if (PlayerGroups.Count < 2)
+			if (PlayerGroupIDs.Count < 2)
 			{
 				Debug.LogError($"{nameof(DogWolfBehavior)} must have two player groups: the first one for the villagers and the second one for the werewolves");
 			}
@@ -48,9 +47,9 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		public override GameplayTag[] GetCurrentPlayerGroups()
+		public override UniqueID[] GetCurrentPlayerGroupIDs()
 		{
-			return new GameplayTag[1] { PlayerGroups[_choseGroup && _isWerewolf ? 1 : 0] };
+			return new UniqueID[1] { PlayerGroupIDs[_choseGroup && _isWerewolf ? 1 : 0] };
 		}
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
@@ -71,11 +70,11 @@ namespace Werewolf.Gameplay.Role
 
 		private bool ChooseGroup()
 		{
-			_choices = new int[] { _werewolvesImage.CompactTagId, _villagersImage.CompactTagId };
+			_choiceTitleIDs = new int[] { _werewolvesTitle.ID.HashCode, _villagersTitle.ID.HashCode };
 
 			if (!_gameManager.MakeChoice(Player,
-										_choices,
-										_choiceScreen.CompactTagId,
+										_choiceTitleIDs,
+										_choiceScreen.ID.HashCode,
 										true,
 										_chooseGroupMaximumDuration * _gameManager.GameSpeedModifier,
 										OnGroupSelected))
@@ -131,16 +130,16 @@ namespace Werewolf.Gameplay.Role
 		{
 			_choseGroup = true;
 
-			int choice = _choices[choiceIndex <= -1 ? Random.Range(0, _choices.Length) : choiceIndex];
+			int choiceTitleID = _choiceTitleIDs[choiceIndex <= -1 ? Random.Range(0, _choiceTitleIDs.Length) : choiceIndex];
 
-			if (choice == _werewolvesImage.CompactTagId)
+			if (choiceTitleID == _werewolvesTitle.ID.HashCode)
 			{
 				_isWerewolf = true;
 
-				_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroups[0]);
-				_gameManager.AddPlayerToPlayerGroup(Player, PlayerGroups[1]);
+				_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroupIDs[0]);
+				_gameManager.AddPlayerToPlayerGroup(Player, PlayerGroupIDs[1]);
 
-				_gameHistoryManager.AddEntry(_choseWerewolvesGroupGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_choseWerewolvesGroupGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -150,9 +149,9 @@ namespace Werewolf.Gameplay.Role
 												}
 											});
 			}
-			else if (choice == _villagersImage.CompactTagId)
+			else if (choiceTitleID == _villagersTitle.ID.HashCode)
 			{
-				_gameHistoryManager.AddEntry(_choseVillagersGroupGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_choseVillagersGroupGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{

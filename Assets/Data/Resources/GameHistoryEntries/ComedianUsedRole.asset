@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -5309287748526777260, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: 3bdad099-c1cb-4e8c-8701-d2fa7d7823c7
+    HashCode: 1240624311
   <DebugName>k__BackingField: ComedianUsedRole
   <Image>k__BackingField: {fileID: 21300000, guid: e432462bafd8f7e4cbc8b7c7e685d60f,
     type: 3}

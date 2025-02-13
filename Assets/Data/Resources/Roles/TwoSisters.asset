@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: TwoSisters
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 6540031303376373709, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  <ID>k__BackingField:
+    Guid: 63fcf15d-eea6-416b-8ccf-7854fb6683cc
+    HashCode: 267740815
   <DebugName>k__BackingField: TwoSisters
   <NameSingular>k__BackingField:
     m_TableReference:
@@ -51,9 +52,9 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 1
   <MandatoryCount>k__BackingField: 2
   <PlayerGroups>k__BackingField:
-  - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
   <NightPriorities>k__BackingField:
-  - index: 7
+  - index: 8
     alias: {fileID: 0}
   <Behavior>k__BackingField: {fileID: 4567283665199380316, guid: 1a5825d6fb5b52c41a02add7981f0870,
     type: 3}

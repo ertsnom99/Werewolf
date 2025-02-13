@@ -12,21 +12,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: Pyromaniac
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 8467833512799127069, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
-  <Name>k__BackingField: Pyromaniac
-  <Description>k__BackingField: 
+  <ID>k__BackingField:
+    Guid: 
+    HashCode: 0
+  <DebugName>k__BackingField: 
+  <NameSingular>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <NamePlural>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Image>k__BackingField: {fileID: 981100187, guid: 57e5fee1eb9618343bcdb98861e6b594,
     type: 3}
+  <SmallImage>k__BackingField: {fileID: 0}
   <PrimaryType>k__BackingField: 0
   <SecondaryType>k__BackingField: 0
-  <Instruction>k__BackingField: 
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 0}
   <NightPriorities>k__BackingField:
-  - index: 11
+  - index: 12
     alias: {fileID: 0}
-  <DayPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

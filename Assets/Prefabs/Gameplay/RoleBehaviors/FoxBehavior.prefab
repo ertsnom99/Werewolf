@@ -44,25 +44,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900fbc72482c26241a9e8d13dda7b5a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _lostPowerImage: {fileID: -3897550941697366323, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
-  _choosePlayerImage: {fileID: 1290680065302481199, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _lostPowerTitle: {fileID: 11400000, guid: ad979f65a673e7640bd8dae1d18c9972, type: 2}
+  _choosePlayerTitle: {fileID: 11400000, guid: 7a3da9a420873a24391102abc955986b, type: 2}
   _choosePlayerMaximumDuration: 10
   _werewolvesPlayerGroups:
-  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  - {fileID: -8573035580249646065, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  _sniffedWerewolfGameHistoryEntry: {fileID: -3411198247075154456, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
+  - {fileID: 11400000, guid: 4518bd88add254f4f900e3d3ef8d90d5, type: 2}
+  _sniffedWerewolfGameHistoryEntry: {fileID: 11400000, guid: 2f89e303c089f0f41a2de455319151a5,
     type: 2}
-  _foundWerewolfImage: {fileID: 3146112165964210076, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _sniffedWerewolfGameHistoryEntryNEW: {fileID: 11400000, guid: 2f89e303c089f0f41a2de455319151a5,
     type: 2}
-  _lostPowerGameHistoryEntry: {fileID: -1905914086747963203, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _foundWerewolfTitle: {fileID: 11400000, guid: 7496e02db9f007f4ba33345e411c1d6a,
     type: 2}
-  _foundNoWerewolfImage: {fileID: 4838366214633630053, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _lostPowerGameHistoryEntry: {fileID: 11400000, guid: 2922e559d2e5b3c44a30ed6a146fe2f0,
+    type: 2}
+  _lostPowerGameHistoryEntryNEW: {fileID: 11400000, guid: 2922e559d2e5b3c44a30ed6a146fe2f0,
+    type: 2}
+  _foundNoWerewolfTitle: {fileID: 11400000, guid: 77d12cdc635c0824ea7547e20efb4693,
     type: 2}
   _resultTitleHoldDuration: 3

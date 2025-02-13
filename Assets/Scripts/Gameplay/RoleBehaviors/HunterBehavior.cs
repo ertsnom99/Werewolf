@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,19 +14,19 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Shoot Player")]
 		[SerializeField]
-		private GameplayTag _choosePlayerImage;
+		private ImageData _choosePlayerTitle;
 
 		[SerializeField]
 		private float _choosePlayerMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _choosingPlayerImage;
+		private ImageData _choosingPlayerTitle;
 
 		[SerializeField]
-		private GameplayTag _killedPlayerGameHistoryEntry;
+		private GameHistoryEntryData _killedPlayerGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _markForDeathAddedByShot;
+		private MarkForDeathData _markForDeathAddedByShot;
 
 		[SerializeField]
 		private float _selectedPlayerHighlightDuration;
@@ -65,7 +64,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
+		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player != deadPlayer || _gameManager.AlivePlayerCount <= 1)
 			{
@@ -79,7 +78,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
-											_choosePlayerImage.CompactTagId,
+											_choosePlayerTitle.ID.HashCode,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											true,
 											1,
@@ -101,11 +100,11 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected && playerInfo.Key != Player)
 				{
-					_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosingPlayerImage.CompactTagId);
+					_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosingPlayerTitle.ID.HashCode);
 				}
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.DisplayTitle(_choosingPlayerImage.CompactTagId);
+			_gameManager.DisplayTitle(_choosingPlayerTitle.ID.HashCode);
 #endif
 			_startChoiceTimerCoroutine = StartChoiceTimer();
 			StartCoroutine(_startChoiceTimerCoroutine);
@@ -151,7 +150,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!selectedPlayer.IsNone)
 			{
-				_gameHistoryManager.AddEntry(_killedPlayerGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_killedPlayerGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{

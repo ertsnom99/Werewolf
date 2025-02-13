@@ -44,16 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acc4f6f0c14bf6641aa309d22e843ad6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _werewolvesPlayerGroups:
-  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  - {fileID: -8573035580249646065, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  _bearGrowlGameHistoryEntry: {fileID: -190435953497311190, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
+  - {fileID: 11400000, guid: 4518bd88add254f4f900e3d3ef8d90d5, type: 2}
+  _bearGrowlGameHistoryEntry: {fileID: 11400000, guid: 5c651e9636bef5347a26aeed00a30b85,
     type: 2}
-  _bearGrowlImage: {fileID: 2317633596934678565, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _bearGrowlGameHistoryEntryNEW: {fileID: 11400000, guid: 5c651e9636bef5347a26aeed00a30b85,
     type: 2}
-  _bearGrowlImageDuration: 5
+  _bearGrowlTitle: {fileID: 11400000, guid: 0df66829df13fc6488fc84b90caf6a90, type: 2}
+  _bearGrowlTitleDuration: 5

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
+  m_Name: WhiteWerewolfNoOtherWerewolves
+  m_EditorClassIdentifier: 
+  <GameplayTag>k__BackingField: {fileID: -7538681175632383403, guid: 0e7014af8e28a88409bdb3f0abb80632,
+    type: 2}
+  <ID>k__BackingField:
+    Guid: a36fd367-a6f7-4cca-a924-49e9fdd7f575
+    HashCode: -1975284850
+  <DebugName>k__BackingField: WhiteWerewolfNoOtherWerewolves
+  <Image>k__BackingField: {fileID: 21300000, guid: de5a85fdc36bce842a957f84f3e0de38,
+    type: 3}
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 6123585257463808
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <PromptButtonText>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

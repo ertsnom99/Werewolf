@@ -44,28 +44,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e276b22044501146ad1315a60493f2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
-  _werewolvesPlayerGroups:
-  - {fileID: 3751353400061193602, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  _lostPowerGameHistoryEntry: {fileID: 5790588324802171811, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _lostPowerGameHistoryEntry: {fileID: 11400000, guid: 5481ebadf709b684cb8324eabbbb93ae,
     type: 2}
-  _villagersPlayerGroups:
-  - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  _noVillagersImage: {fileID: 6079579002703326466, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _lostPowerGameHistoryEntryNEW: {fileID: 11400000, guid: 5481ebadf709b684cb8324eabbbb93ae,
     type: 2}
-  _chooseVillagerImage: {fileID: 3856226449680162218, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _villagersPlayerGroup: {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce,
+    type: 2}
+  _noVillagersTitle: {fileID: 11400000, guid: 379f018d12dd6244f84683e6056e1443, type: 2}
+  _chooseVillagerTitle: {fileID: 11400000, guid: 29cd07d23117b6d498960ecfc065b1cf,
     type: 2}
   _chooseVillagerMaximumDuration: 10
-  _choseVillagerGameHistoryEntry: {fileID: 1059487400372109908, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choseVillagerGameHistoryEntry: {fileID: 11400000, guid: bb1a83c1d84a61345959f5f327fe73af,
     type: 2}
-  _markForDeath: {fileID: -3388473606968454883, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choseVillagerGameHistoryEntryNEW: {fileID: 11400000, guid: bb1a83c1d84a61345959f5f327fe73af,
     type: 2}
+  _markForDeath: {fileID: 11400000, guid: 6b3db20462b9f694b8d3b68f9c0d6579, type: 2}
   _selectedVillagerHighlightDuration: 3
-  _lostPowerImage: {fileID: -3692402352692713400, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _lostPowerTitle: {fileID: 11400000, guid: 5cdbf8ef6dc92c7489c66780fbc44883, type: 2}

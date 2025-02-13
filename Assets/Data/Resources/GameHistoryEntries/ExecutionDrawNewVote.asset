@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -951212456345614295, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: 791af5b9-9a2b-4a53-a193-e6659b981ebd
+    HashCode: -2007654993
   <DebugName>k__BackingField: ExecutionDrawNewVote
   <Image>k__BackingField: {fileID: 21300000, guid: 8beb7ab002b71fc4aaf2f8df469c6a89,
     type: 3}

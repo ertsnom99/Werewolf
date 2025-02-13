@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GameplayTag>k__BackingField: {fileID: -7311221229780604641, guid: 0e7014af8e28a88409bdb3f0abb80632,
     type: 2}
+  <ID>k__BackingField:
+    Guid: 8dbf6b9d-783a-4e59-970d-5800e1901364
+    HashCode: -713897893
   <DebugName>k__BackingField: CaptainChanged
   <Image>k__BackingField: {fileID: 21300000, guid: 8f11b827b5a5e8c4e816d586ab10a07c,
     type: 3}

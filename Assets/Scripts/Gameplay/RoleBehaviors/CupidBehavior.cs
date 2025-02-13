@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System;
 using System.Collections;
@@ -6,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Managers;
 using Werewolf.Network;
@@ -17,13 +17,16 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Choose Couple")]
 		[SerializeField]
-		private GameplayTag _chooseCoupleImage;
+		private ImageData _chooseCoupleTitle;
 
 		[SerializeField]
 		private float _chooseCoupleMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _coupleSelectedGameHistoryEntry;
+		private PlayerGroupData _couplePlayerGroup;
+
+		[SerializeField]
+		private GameHistoryEntryData _coupleSelectedGameHistoryEntry;
 
 		[SerializeField]
 		private float _choseCoupleHighlightHoldDuration;
@@ -33,20 +36,20 @@ namespace Werewolf.Gameplay.Role
 		private float _showCoupleHighlightHoldDuration;
 
 		[SerializeField]
-		private GameplayTag _inCoupleImage;
+		private ImageData _inCoupleTitle;
 
 		[SerializeField]
-		private GameplayTag _coupleRecognizingEachOtherImage;
+		private ImageData _coupleRecognizingEachOtherTitle;
 
 		[Header("Couple Death")]
 		[SerializeField]
-		private GameplayTag _markForDeathAddedByCoupleDeath;
+		private MarkForDeathData _markForDeathAddedByCoupleDeath;
 
 		[SerializeField]
-		private GameplayTag _coupleDiedGameHistoryEntry;
+		private GameHistoryEntryData _coupleDiedGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _coupleDeathImage;
+		private ImageData _coupleDeathTitle;
 
 		[SerializeField]
 		private float _coupleDeathHighlightHoldDuration;
@@ -76,11 +79,6 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
 
-			if (PlayerGroups.Count < 2)
-			{
-				Debug.LogError($"{nameof(CupidBehavior)} must have two player groups: the first one for cupid and the second one for any couple");
-			}
-
 			if (NightPriorities.Count < 2)
 			{
 				Debug.LogError($"{nameof(CupidBehavior)} must have two night priorities: the first one to select the couple and the second one to let a couple know each other");
@@ -89,9 +87,9 @@ namespace Werewolf.Gameplay.Role
 
 		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
 
-		public override GameplayTag[] GetCurrentPlayerGroups()
+		public override UniqueID[] GetCurrentPlayerGroupIDs()
 		{
-			return new GameplayTag[1] { PlayerGroups[0] };
+			return new UniqueID[1] { PlayerGroupIDs[0] };
 		}
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
@@ -121,7 +119,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
-											_chooseCoupleImage.CompactTagId,
+											_chooseCoupleTitle.ID.HashCode,
 											_chooseCoupleMaximumDuration * _gameManager.GameSpeedModifier,
 											true,
 											2,
@@ -134,7 +132,7 @@ namespace Werewolf.Gameplay.Role
 
 					PlayerRef[] couple = _couples[^1];
 
-					_gameManager.AddPlayersToNewPlayerGroup(couple, PlayerGroups[1]);
+					_gameManager.AddPlayersToNewPlayerGroup(couple, _couplePlayerGroup.ID);
 					AddCoupleSelectedGameHistoryEntry(couple);
 
 					_choseCouple = true;
@@ -182,7 +180,7 @@ namespace Werewolf.Gameplay.Role
 
 			PlayerRef[] couple = _couples[^1];
 
-			_gameManager.AddPlayersToNewPlayerGroup(couple, PlayerGroups[1]);
+			_gameManager.AddPlayersToNewPlayerGroup(couple, _couplePlayerGroup.ID);
 			AddCoupleSelectedGameHistoryEntry(couple);
 
 			_choseCouple = true;
@@ -210,7 +208,7 @@ namespace Werewolf.Gameplay.Role
 
 			PlayerRef[] couple = _couples[^1];
 
-			_gameManager.AddPlayersToNewPlayerGroup(couple, PlayerGroups[1]);
+			_gameManager.AddPlayersToNewPlayerGroup(couple, _couplePlayerGroup.ID);
 			AddCoupleSelectedGameHistoryEntry(couple);
 
 			_choseCouple = true;
@@ -246,7 +244,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void AddCoupleSelectedGameHistoryEntry(PlayerRef[] couple)
 		{
-			_gameHistoryManager.AddEntry(_coupleSelectedGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_coupleSelectedGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -287,7 +285,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, couple.Contains(Player) ? _inCoupleImage.CompactTagId : _coupleRecognizingEachOtherImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, couple.Contains(Player) ? _inCoupleTitle.ID.HashCode : _coupleRecognizingEachOtherTitle.ID.HashCode);
 			}
 
 			_showedCouple = true;
@@ -331,11 +329,11 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (_couples[^1].Contains(playerInfo.Key))
 				{
-					titlesOverride.Add(playerInfo.Key, _inCoupleImage.CompactTagId);
+					titlesOverride.Add(playerInfo.Key, _inCoupleTitle.ID.HashCode);
 				}
 				else
 				{
-					titlesOverride.Add(playerInfo.Key, _coupleRecognizingEachOtherImage.CompactTagId);
+					titlesOverride.Add(playerInfo.Key, _coupleRecognizingEachOtherTitle.ID.HashCode);
 				}
 			}
 		}
@@ -375,7 +373,7 @@ namespace Werewolf.Gameplay.Role
 		}
 
 		#region Couple Death
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
+		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			IEnumerable<PlayerRef[]> couples = _couples.Where(x => x.Contains(deadPlayer));
 
@@ -419,7 +417,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 1);
 
-				_gameHistoryManager.AddEntry(_coupleDiedGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_coupleDiedGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -443,7 +441,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void HighlightDeadPlayers(PlayerRef[] deadPlayers)
 		{
-			_gameManager.RPC_DisplayTitle(_coupleDeathImage.CompactTagId);
+			_gameManager.RPC_DisplayTitle(_coupleDeathTitle.ID.HashCode);
 			_gameManager.RPC_SetPlayersCardHighlightVisible(deadPlayers, true);
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayersCardHighlightVisible(deadPlayers, true);
@@ -504,7 +502,7 @@ namespace Werewolf.Gameplay.Role
 
 			PlayerRef[] couple = _couples[^1];
 
-			_gameManager.AddPlayersToNewPlayerGroup(couple, PlayerGroups[1]);
+			_gameManager.AddPlayersToNewPlayerGroup(couple, _couplePlayerGroup.ID);
 			AddCoupleSelectedGameHistoryEntry(couple);
 		}
 

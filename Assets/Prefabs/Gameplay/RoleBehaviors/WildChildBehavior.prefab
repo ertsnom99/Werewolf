@@ -44,18 +44,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f7a5dc4619def41acb024f2032cf5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
-  _chooseModelImage: {fileID: 1460092710510734173, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _chooseModelTitle: {fileID: 11400000, guid: 689fd2b5b29eaa841ab7f8bae9390278, type: 2}
   _chooseModelMaximumDuration: 10
-  _choseModelGameHistoryEntry: {fileID: 3937998768518954316, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choseModelGameHistoryEntry: {fileID: 11400000, guid: 8da07ebea7707ab47adc991781de310d,
+    type: 2}
+  _choseModelGameHistoryEntryNEW: {fileID: 11400000, guid: 8da07ebea7707ab47adc991781de310d,
     type: 2}
   _selectedModelHighlightDuration: 3
-  _modelDiedGameHistoryEntry: {fileID: -4144404035216328849, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _modelDiedGameHistoryEntry: {fileID: 11400000, guid: a5931a091dae63543896577e5ce793b2,
+    type: 2}
+  _modelDiedGameHistoryEntryNEW: {fileID: 11400000, guid: a5931a091dae63543896577e5ce793b2,
     type: 2}

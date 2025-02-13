@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 
 namespace Werewolf.Managers
@@ -21,13 +22,13 @@ namespace Werewolf.Managers
 
 		private GameConfig _config;
 
-		private GameplayDatabaseManager _gameplayDatabaseManager;
+		private GameplayDataManager _gameplayDataManager;
 		private UIManager _UIManager;
 
 		public void Initialize(GameConfig config)
 		{
 			_config = config;
-			_gameplayDatabaseManager = GameplayDatabaseManager.Instance;
+			_gameplayDataManager = GameplayDataManager.Instance;
 			_UIManager = UIManager.Instance;
 
 			SetDaytime(CurrentDaytime);
@@ -65,7 +66,7 @@ namespace Werewolf.Managers
 			CurrentDaytime = daytime;
 			_inTransition = true;
 
-			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _config.DayTransitionImage.CompactTagId : _config.NightTransitionImage.CompactTagId));
+			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _config.DayTransitionTitle.ID.HashCode : _config.NightTransitionTitle.ID.HashCode));
 			StartCoroutine(TransitionDaytime());
 		}
 
@@ -90,16 +91,14 @@ namespace Werewolf.Managers
 			}
 		}
 
-		private IEnumerator TransitionTitle(int imageID)
+		private IEnumerator TransitionTitle(int titleID)
 		{
-			ImageData imageData = _gameplayDatabaseManager.GetGameplayData<ImageData>(imageID);
-
-			if (imageData == null)
+			if (!_gameplayDataManager.TryGetGameplayData(titleID, out ImageData titleData))
 			{
 				yield break;
 			}
 
-			_UIManager.TitleScreen.Initialize(imageData.Image, imageData.Text);
+			_UIManager.TitleScreen.Initialize(titleData.Image, titleData.Text);
 
 			yield return new WaitForSeconds(_config.DaytimeTextFadeInDelay);
 

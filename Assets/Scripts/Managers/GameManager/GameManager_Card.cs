@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEngine.Splines;
 using Werewolf.Data;
 using Werewolf.Gameplay;
+#if UNITY_SERVER && UNITY_EDITOR
 using Werewolf.Gameplay.Role;
-
+#endif
 namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{
 		[SerializeField]
-		public SplineContainer _cardPlacementSpline;
+		private SplineContainer _cardPlacementSpline;
 
 		private readonly Dictionary<PlayerRef, Card> _playerCards = new();
 
@@ -150,7 +151,7 @@ namespace Werewolf.Managers
 
 				int columnCounter = 0;
 
-				foreach (int roleGameplayTagID in roles.Value)
+				foreach (int roleID in roles.Value)
 				{
 					Vector3 columnPosition = (columnCounter * Config.ReservedRolesSpacing * Vector3.right) + ((roles.Value.Length - 1) * Config.ReservedRolesSpacing * Vector3.left / 2.0f);
 
@@ -159,9 +160,13 @@ namespace Werewolf.Managers
 
 					card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role, true); };
 
-					if (roleGameplayTagID > 0)
+					if (roleID != -1)
 					{
-						RoleData role = _gameplayDatabaseManager.GetGameplayData<RoleData>(roleGameplayTagID);
+						if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData role))
+						{
+							Debug.LogError($"Could not find the role {roleID}");
+						}
+
 						card.SetRole(role);
 						card.Flip();
 					}

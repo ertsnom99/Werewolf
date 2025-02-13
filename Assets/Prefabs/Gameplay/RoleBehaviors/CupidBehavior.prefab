@@ -44,26 +44,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c84873d15c5cd48b63654ac978fb2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _chooseCoupleImage: {fileID: 8209229256807389745, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _chooseCoupleTitle: {fileID: 11400000, guid: 78a99d4d6fce82348979eb3ea548b005, type: 2}
   _chooseCoupleMaximumDuration: 10
-  _coupleSelectedGameHistoryEntry: {fileID: -8735980565207345998, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _couplePlayerGroup: {fileID: 11400000, guid: 1fa249ae223de304db0906931bc218a8, type: 2}
+  _coupleSelectedGameHistoryEntry: {fileID: 11400000, guid: f493a5a116339ac48be8365de11977ce,
+    type: 2}
+  _coupleSelectedGameHistoryEntryNEW: {fileID: 11400000, guid: f493a5a116339ac48be8365de11977ce,
     type: 2}
   _choseCoupleHighlightHoldDuration: 3
   _showCoupleHighlightHoldDuration: 5
-  _inCoupleImage: {fileID: 5075221199770472978, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _inCoupleTitle: {fileID: 11400000, guid: 06a57fad7c2f9f6488581414fb462317, type: 2}
+  _coupleRecognizingEachOtherTitle: {fileID: 11400000, guid: 7318397f152997642bb9172992ab61db,
     type: 2}
-  _coupleRecognizingEachOtherImage: {fileID: 7700595151910905832, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _markForDeathAddedByCoupleDeath: {fileID: 11400000, guid: dd61f74423fdda344b1f318fd613f5d2,
     type: 2}
-  _markForDeathAddedByCoupleDeath: {fileID: -6186687672928004612, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _coupleDiedGameHistoryEntry: {fileID: 11400000, guid: 00ff1836dea5c9d44b40fd8ba7cf1bdd,
     type: 2}
-  _coupleDiedGameHistoryEntry: {fileID: -9005755218631088943, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _coupleDiedGameHistoryEntryNEW: {fileID: 11400000, guid: 00ff1836dea5c9d44b40fd8ba7cf1bdd,
     type: 2}
-  _coupleDeathImage: {fileID: 7456238396284510153, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _coupleDeathTitle: {fileID: 11400000, guid: 64eacde16cb980e4aa235617a706c082, type: 2}
   _coupleDeathHighlightHoldDuration: 5

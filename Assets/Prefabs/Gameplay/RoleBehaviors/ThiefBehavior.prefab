@@ -44,20 +44,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f8c050ee340830428ad42a17135ac0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _rolesToAdd:
   - {fileID: 11400000, guid: 9225c604e9fe4664eb919866d085078f, type: 2}
   - {fileID: 11400000, guid: 9225c604e9fe4664eb919866d085078f, type: 2}
-  _wasGivenRolesGameHistoryEntry: {fileID: 1282424815053823321, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _wasGivenRolesGameHistoryEntry: {fileID: 11400000, guid: 3013f79b80d1c8b4ea6afcf03b1cb2ea,
+    type: 2}
+  _wasGivenRolesGameHistoryEntryNEW: {fileID: 11400000, guid: 3013f79b80d1c8b4ea6afcf03b1cb2ea,
     type: 2}
   _chooseReservedRoleMaximumDuration: 10
-  _mayChooseChoiceScreen: {fileID: 2863830419304168545, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _mayChooseChoiceScreen: {fileID: 11400000, guid: 737f333c8db552249a23edbc92f72eb9,
     type: 2}
-  _mustChooseChoiceScreen: {fileID: 3819728793310299203, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _mustChooseChoiceScreen: {fileID: 11400000, guid: a48f73275a5787f47be5f10cbcc33b8b,
     type: 2}
-  _tookRoleGameHistoryEntry: {fileID: -9191084100418705152, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _tookRoleGameHistoryEntry: {fileID: 11400000, guid: 07c8d9fe899f16b42973beba58ef0316,
+    type: 2}
+  _tookRoleGameHistoryEntryNEW: {fileID: 11400000, guid: 07c8d9fe899f16b42973beba58ef0316,
     type: 2}

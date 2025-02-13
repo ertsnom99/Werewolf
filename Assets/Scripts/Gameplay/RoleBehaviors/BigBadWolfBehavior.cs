@@ -1,9 +1,9 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Werewolf.Data;
 using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Gameplay.Role
@@ -12,37 +12,33 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Big Bad Wolf")]
 		[SerializeField]
-		private GameplayTag[] _werewolvesPlayerGroups;
+		private GameHistoryEntryData _lostPowerGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _lostPowerGameHistoryEntry;
+		private PlayerGroupData _villagersPlayerGroup;
 
 		[SerializeField]
-		private GameplayTag[] _villagersPlayerGroups;
+		private ImageData _noVillagersTitle;
 
 		[SerializeField]
-		private GameplayTag _noVillagersImage;
-
-		[SerializeField]
-		private GameplayTag _chooseVillagerImage;
+		private ImageData _chooseVillagerTitle;
 
 		[SerializeField]
 		private float _chooseVillagerMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _choseVillagerGameHistoryEntry;
+		private GameHistoryEntryData _choseVillagerGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _markForDeath;
+		private MarkForDeathData _markForDeath;
 
 		[SerializeField]
 		private float _selectedVillagerHighlightDuration;
 
 		[SerializeField]
-		private GameplayTag _lostPowerImage;
+		private ImageData _lostPowerTitle;
 
 		private bool _hasPower = true;
-
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		public override void Initialize()
@@ -84,7 +80,7 @@ namespace Werewolf.Gameplay.Role
 
 		private bool KillVillager()
 		{
-			List<PlayerRef> villagers = _gameManager.GetPlayersFromPlayerGroups(_villagersPlayerGroups).ToList();
+			List<PlayerRef> villagers = _gameManager.GetPlayersFromPlayerGroup(_villagersPlayerGroup.ID).ToList();
 
 			if (villagers.Count <= 0)
 			{
@@ -94,7 +90,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											villagers,
-											_chooseVillagerImage.CompactTagId,
+											_chooseVillagerTitle.ID.HashCode,
 											_chooseVillagerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
@@ -123,7 +119,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _noVillagersImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _noVillagersTitle.ID.HashCode);
 			}
 
 			yield return 0;
@@ -143,7 +139,7 @@ namespace Werewolf.Gameplay.Role
 
 			var selectedVillager = players[0];
 
-			_gameHistoryManager.AddEntry(_choseVillagerGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_choseVillagerGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -160,7 +156,7 @@ namespace Werewolf.Gameplay.Role
 												new()
 												{
 													Name = "RoleName",
-													Data = _gameManager.PlayerGameInfos[selectedVillager].Role.GameplayTag.name,
+													Data = _gameManager.PlayerGameInfos[selectedVillager].Role.ID.HashCode.ToString(),
 													Type = GameHistorySaveEntryVariableType.RoleName
 												}
 											});
@@ -209,7 +205,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _lostPowerImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _lostPowerTitle.ID.HashCode);
 			}
 
 			yield return 0;
@@ -217,19 +213,19 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
+		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player.IsNone
 				|| Player == deadPlayer
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
-				|| !_gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroups))
+				|| !_gameManager.IsPlayerInPlayerGroup(deadPlayer, _villagersPlayerGroup.ID))
 			{
 				return;
 			}
 
 			_hasPower = false;
 
-			_gameHistoryManager.AddEntry(_lostPowerGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_lostPowerGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 												new()
 												{

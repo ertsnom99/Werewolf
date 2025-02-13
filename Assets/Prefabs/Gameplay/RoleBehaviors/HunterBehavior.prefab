@@ -44,18 +44,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68976ebb767492478cf1845e61035a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
+  <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _choosePlayerImage: {fileID: 3817651400509371634, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  _choosePlayerTitle: {fileID: 11400000, guid: 882ee08e63e3dbf4ab51319d76a850bf, type: 2}
   _choosePlayerMaximumDuration: 10
-  _choosingPlayerImage: {fileID: -2521136356514112087, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _choosingPlayerTitle: {fileID: 11400000, guid: 6430c5423d58783479867029fe2583a6,
     type: 2}
-  _killedPlayerGameHistoryEntry: {fileID: 5372081958531811781, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _killedPlayerGameHistoryEntry: {fileID: 11400000, guid: f0df03933bd2a2d44a2c747410a9ef7e,
     type: 2}
-  _markForDeathAddedByShot: {fileID: 4377652059447732450, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _killedPlayerGameHistoryEntryNEW: {fileID: 11400000, guid: f0df03933bd2a2d44a2c747410a9ef7e,
+    type: 2}
+  _markForDeathAddedByShot: {fileID: 11400000, guid: fcf4c925b51d47f42a233534b1afdd2a,
     type: 2}
   _selectedPlayerHighlightDuration: 3

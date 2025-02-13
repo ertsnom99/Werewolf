@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: Cupid
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 5771913067030864782, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  <ID>k__BackingField:
+    Guid: a204c849-a9c1-4cbe-9bf0-60a9b8a71cfd
+    HashCode: -2025637276
   <DebugName>k__BackingField: Cupid
   <NameSingular>k__BackingField:
     m_TableReference:
@@ -51,12 +52,11 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
-  - {fileID: 7333759835446194136, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
   <NightPriorities>k__BackingField:
-  - index: 3
+  - index: 4
     alias: {fileID: 0}
-  - index: 6
+  - index: 7
     alias: {fileID: 0}
   <Behavior>k__BackingField: {fileID: 8869479663152555829, guid: 51da5f8739628804585e6a18e10a5b29,
     type: 3}

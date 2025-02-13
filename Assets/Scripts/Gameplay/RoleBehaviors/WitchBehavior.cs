@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,17 +13,17 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Player Dead Tonight")]
 		[SerializeField]
-		private GameplayTag _playerDeadTonightImage;
+		private ImageData _playerDeadTonightTitle;
 
 		[SerializeField]
 		private float _playerHighlightHoldDuration;
 
 		[Header("Potion Choice")]
 		[SerializeField]
-		private GameplayTag _noPotionToUseImage;
+		private ImageData _noPotionToUseTitle;
 
 		[SerializeField]
-		private GameplayTag _choiceScreen;
+		private ChoiceScreenData _choiceScreen;
 
 		[SerializeField]
 		private float _choosePotionMaximumDuration;
@@ -34,38 +33,35 @@ namespace Werewolf.Gameplay.Role
 
 		[Header("Life Potion")]
 		[SerializeField]
-		private GameplayTag _saveImage;
+		private ImageData _saveTitle;
 
 		[SerializeField]
-		private GameplayTag _markForDeathRemovedByLifePotion;
+		private MarkForDeathData _markForDeathRemovedByLifePotion;
 
 		[SerializeField]
-		private GameplayTag _usedLifePotionGameHistoryEntry;
+		private GameHistoryEntryData _usedLifePotionGameHistoryEntry;
 
 		[Header("Death Potion")]
 		[SerializeField]
-		private GameplayTag _killImage;
+		private ImageData _killTitle;
 
 		[SerializeField]
-		private GameplayTag _choosePlayerImage;
+		private ImageData _choosePlayerTitle;
 
 		[SerializeField]
 		private float _choosePlayerDuration;
 
 		[SerializeField]
-		private GameplayTag _markForDeathAddedByDeathPotion;
+		private MarkForDeathData _markForDeathAddedByDeathPotion;
 
 		[SerializeField]
-		private GameplayTag _usedDeathPotionGameHistoryEntry;
+		private GameHistoryEntryData _usedDeathPotionGameHistoryEntry;
 
 		private bool _hasLifePotion = true;
 		private bool _hasDeathPotion = true;
-
 		private PlayerRef _markedForDeathPlayer;
-		private int[] _choices;
-
+		private int[] _choiceIDs;
 		private IEnumerator _endChoosePlayerCoroutine;
-
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 		private float _choosePotionTimeLeft;
 
@@ -88,7 +84,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected && !hasPotions)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitle.ID.HashCode);
 			}
 
 			if (!_networkDataManager.PlayerInfos[Player].IsConnected || !hasPotions)
@@ -117,7 +113,7 @@ namespace Werewolf.Gameplay.Role
 			if (!_markedForDeathPlayer.IsNone)
 			{
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _markedForDeathPlayer, true);
-				_gameManager.RPC_DisplayTitle(Player, _playerDeadTonightImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _playerDeadTonightTitle.ID.HashCode);
 
 				yield return new WaitForSeconds(_playerHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
@@ -154,7 +150,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (showTitles)
 				{
-					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImage.CompactTagId);
+					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitle.ID.HashCode);
 				}
 
 				return false;
@@ -173,7 +169,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (showTitles)
 				{
-					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseImage.CompactTagId);
+					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitle.ID.HashCode);
 				}
 
 				return false;
@@ -181,20 +177,20 @@ namespace Werewolf.Gameplay.Role
 
 			if (!canSavePlayer)
 			{
-				_choices = new int[] { _killImage.CompactTagId };
+				_choiceIDs = new int[] { _killTitle.ID.HashCode };
 			}
 			else if (!_hasDeathPotion)
 			{
-				_choices = new int[] { _saveImage.CompactTagId };
+				_choiceIDs = new int[] { _saveTitle.ID.HashCode };
 			}
 			else
 			{
-				_choices = new int[] { _saveImage.CompactTagId, _killImage.CompactTagId };
+				_choiceIDs = new int[] { _saveTitle.ID.HashCode, _killTitle.ID.HashCode };
 			}
 
 			return _gameManager.MakeChoice(Player,
-											_choices,
-											_choiceScreen.CompactTagId,
+											_choiceIDs,
+											_choiceScreen.ID.HashCode,
 											false,
 											_choosePotionTimeLeft,
 											OnPotionSelected);
@@ -211,14 +207,14 @@ namespace Werewolf.Gameplay.Role
 			StopCoroutine(_endRoleCallAfterTimeCoroutine);
 			_gameManager.StopChoosing(Player);
 
-			int choice = choiceIndex >= 0 ? _choices[choiceIndex] : -1;
+			int choiceID = choiceIndex > -1 ? _choiceIDs[choiceIndex] : -1;
 
-			if (choice == _saveImage.CompactTagId)
+			if (choiceID == _saveTitle.ID.HashCode)
 			{
 				_gameManager.RemoveMarkForDeath(_markedForDeathPlayer, _markForDeathRemovedByLifePotion);
 				_hasLifePotion = false;
 
-				_gameHistoryManager.AddEntry(_usedLifePotionGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_usedLifePotionGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -237,7 +233,7 @@ namespace Werewolf.Gameplay.Role
 				StartCoroutine(RefreshPotions(_choiceSelectedHoldDuration * _gameManager.GameSpeedModifier, true));
 				return;
 			}
-			else if (choice == _killImage.CompactTagId)
+			else if (choiceID == _killTitle.ID.HashCode)
 			{
 				StartCoroutine(ChoosePlayerToKill());
 				return;
@@ -258,7 +254,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (_gameManager.SelectPlayers(Player,
 											choices,
-											_choosePlayerImage.CompactTagId,
+											_choosePlayerTitle.ID.HashCode,
 											_choosePlayerDuration * _gameManager.GameSpeedModifier,
 											true,
 											1,
@@ -298,7 +294,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				_gameManager.AddMarkForDeath(player, _markForDeathAddedByDeathPotion);
 
-				_gameHistoryManager.AddEntry(_usedDeathPotionGameHistoryEntry,
+				_gameHistoryManager.AddEntry(_usedDeathPotionGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{

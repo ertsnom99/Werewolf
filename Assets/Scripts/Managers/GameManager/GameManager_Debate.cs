@@ -8,7 +8,7 @@ namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{
-		private IEnumerator StartDebate(PlayerRef[] highlightedPlayers, int imageID, float duration)
+		private IEnumerator StartDebate(PlayerRef[] highlightedPlayers, int titleID, float duration)
 		{
 			RPC_SetPlayersCardHighlightVisible(highlightedPlayers, true);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -21,7 +21,7 @@ namespace Werewolf.Managers
 					continue;
 				}
 
-				RPC_OnDebateStarted(playerInfo.Key, imageID, showConfirmButton: playerInfo.Value.IsAlive, duration);
+				RPC_OnDebateStarted(playerInfo.Key, titleID, showConfirmButton: playerInfo.Value.IsAlive, duration);
 
 				if (!playerInfo.Value.IsAlive)
 				{
@@ -31,7 +31,7 @@ namespace Werewolf.Managers
 				WaitForPlayer(playerInfo.Key);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(imageID, variables: null, countdownDuration: duration);
+			DisplayTitle(titleID, variables: null, countdownDuration: duration);
 #endif
 			float elapsedTime = .0f;
 
@@ -79,9 +79,9 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, int imageID, bool showConfirmButton, float countdownDuration)
+		public void RPC_OnDebateStarted([RpcTarget] PlayerRef player, int titleID, bool showConfirmButton, float countdownDuration)
 		{
-			DisplayTitle(imageID, variables: null, showConfirmButton: showConfirmButton, countdownDuration: countdownDuration);
+			DisplayTitle(titleID, variables: null, showConfirmButton: showConfirmButton, countdownDuration: countdownDuration);
 
 			if (showConfirmButton)
 			{

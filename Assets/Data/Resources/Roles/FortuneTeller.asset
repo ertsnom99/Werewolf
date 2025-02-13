@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: FortuneTeller
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -8001139337927534559, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
+  <ID>k__BackingField:
+    Guid: acb9a113-1dd3-43c6-8d78-1d93e49fb0fc
+    HashCode: -623113026
   <DebugName>k__BackingField: Fortune Teller
   <NameSingular>k__BackingField:
     m_TableReference:
@@ -51,9 +52,9 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 1988124086213005264, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
   <NightPriorities>k__BackingField:
-  - index: 4
+  - index: 5
     alias: {fileID: 0}
   <Behavior>k__BackingField: {fileID: 5133153626610196457, guid: 030342fe4f869014786aae11310c91c7,
     type: 3}

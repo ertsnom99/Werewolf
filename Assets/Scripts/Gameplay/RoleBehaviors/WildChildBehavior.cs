@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using UnityEngine;
+using Utilities.GameplayData;
+using Werewolf.Data;
 using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Gameplay.Role
@@ -11,23 +12,22 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Wild Child")]
 		[SerializeField]
-		private GameplayTag _chooseModelImage;
+		private ImageData _chooseModelTitle;
 
 		[SerializeField]
 		private float _chooseModelMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _choseModelGameHistoryEntry;
+		private GameHistoryEntryData _choseModelGameHistoryEntry;
 
 		[SerializeField]
 		private float _selectedModelHighlightDuration;
 
 		[SerializeField]
-		private GameplayTag _modelDiedGameHistoryEntry;
+		private GameHistoryEntryData _modelDiedGameHistoryEntry;
 
 		private PlayerRef[] _choices;
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
-
 		private PlayerRef _model;
 		private bool _isModelAlive;
 
@@ -37,7 +37,7 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 
-			if (PlayerGroups.Count < 2)
+			if (PlayerGroupIDs.Count < 2)
 			{
 				Debug.LogError($"{nameof(WildChildBehavior)} must have two player groups: the first one for the villagers and the second one for the werewolves");
 			}
@@ -48,9 +48,9 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		public override GameplayTag[] GetCurrentPlayerGroups()
+		public override UniqueID[] GetCurrentPlayerGroupIDs()
 		{
-			return new GameplayTag[1] { PlayerGroups[_model.IsNone || _isModelAlive ? 0 : 1] };
+			return new UniqueID[1] { PlayerGroupIDs[_model.IsNone || _isModelAlive ? 0 : 1] };
 		}
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
@@ -78,7 +78,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
-											_chooseModelImage.CompactTagId,
+											_chooseModelTitle.ID.HashCode,
 											_chooseModelMaximumDuration * _gameManager.GameSpeedModifier,
 											true,
 											1,
@@ -117,7 +117,7 @@ namespace Werewolf.Gameplay.Role
 			_model = selectedModel;
 			_isModelAlive = true;
 
-			_gameHistoryManager.AddEntry(_choseModelGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_choseModelGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -179,7 +179,7 @@ namespace Werewolf.Gameplay.Role
 			SelectRandomModel();
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, GameplayTag markForDeath)
+		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player.IsNone
 				|| Player == deadPlayer
@@ -193,7 +193,7 @@ namespace Werewolf.Gameplay.Role
 
 			_isModelAlive = false;
 
-			_gameHistoryManager.AddEntry(_modelDiedGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_modelDiedGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -209,8 +209,8 @@ namespace Werewolf.Gameplay.Role
 											}
 										});
 
-			_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroups[0]);
-			_gameManager.AddPlayerToPlayerGroup(Player, PlayerGroups[1]);
+			_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroupIDs[0]);
+			_gameManager.AddPlayerToPlayerGroup(Player, PlayerGroupIDs[1]);
 		}
 
 		public override void OnPlayerChanged()

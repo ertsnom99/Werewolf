@@ -1,9 +1,9 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Managers;
 using Werewolf.Network;
@@ -15,34 +15,34 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Find Werewolfs")]
 		[SerializeField]
-		private GameplayTag _lostPowerImage;
+		private ImageData _lostPowerTitle;
 
 		[SerializeField]
-		private GameplayTag _choosePlayerImage;
+		private ImageData _choosePlayerTitle;
 
 		[SerializeField]
 		private float _choosePlayerMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag[] _werewolvesPlayerGroups;
+		private PlayerGroupData[] _werewolvesPlayerGroups;
 
 		[SerializeField]
-		private GameplayTag _sniffedWerewolfGameHistoryEntry;
+		private GameHistoryEntryData _sniffedWerewolfGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _foundWerewolfImage;
+		private ImageData _foundWerewolfTitle;
 
 		[SerializeField]
-		private GameplayTag _lostPowerGameHistoryEntry;
+		private GameHistoryEntryData _lostPowerGameHistoryEntry;
 
 		[SerializeField]
-		private GameplayTag _foundNoWerewolfImage;
+		private ImageData _foundNoWerewolfTitle;
 
 		[SerializeField]
 		private float _resultTitleHoldDuration;
 
+		private UniqueID[] _werewolvesPlayerGroupIDs;
 		private bool _hasPower = true;
-
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		private GameManager _gameManager;
@@ -51,6 +51,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			_werewolvesPlayerGroupIDs = GameplayData.GetIDs(_werewolvesPlayerGroups);
+
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
@@ -70,7 +72,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											_gameManager.GetAlivePlayers(),
-											_choosePlayerImage.CompactTagId,
+											_choosePlayerTitle.ID.HashCode,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
@@ -91,7 +93,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _lostPowerImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _lostPowerTitle.ID.HashCode);
 			}
 
 			yield return 0;
@@ -127,7 +129,7 @@ namespace Werewolf.Gameplay.Role
 
 			foreach (PlayerRef player in playersToCheck)
 			{
-				if (_gameManager.IsPlayerInPlayerGroups(player, _werewolvesPlayerGroups))
+				if (_gameManager.IsPlayerInPlayerGroups(player, _werewolvesPlayerGroupIDs))
 				{
 					werewolfFound = true;
 				}
@@ -141,7 +143,7 @@ namespace Werewolf.Gameplay.Role
 #endif
 			}
 
-			_gameHistoryManager.AddEntry(werewolfFound ? _sniffedWerewolfGameHistoryEntry : _lostPowerGameHistoryEntry,
+			_gameHistoryManager.AddEntry(werewolfFound ? _sniffedWerewolfGameHistoryEntry.ID : _lostPowerGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -168,11 +170,11 @@ namespace Werewolf.Gameplay.Role
 
 			if (werewolfFound)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _foundWerewolfImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _foundWerewolfTitle.ID.HashCode);
 			}
 			else
 			{
-				_gameManager.RPC_DisplayTitle(Player, _foundNoWerewolfImage.CompactTagId);
+				_gameManager.RPC_DisplayTitle(Player, _foundNoWerewolfTitle.ID.HashCode);
 				_hasPower = false;
 			}
 

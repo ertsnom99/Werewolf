@@ -1,4 +1,3 @@
-using Assets.Scripts.Data.Tags;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,22 +14,21 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Save Player")]
 		[SerializeField]
-		private GameplayTag _choosePlayerImage;
+		private ImageData _choosePlayerTitle;
 
 		[SerializeField]
 		private float _choosePlayerMaximumDuration;
 
 		[SerializeField]
-		private GameplayTag _chosePlayerToProtectGameHistoryEntry;
+		private GameHistoryEntryData _chosePlayerToProtectGameHistoryEntry;
 
 		[SerializeField]
 		private float _playerHighlightHoldDuration;
 
 		[SerializeField]
-		private GameplayTag[] _marksForDeathRemovedByProtection;
+		private MarkForDeathData[] _marksForDeathRemovedByProtection;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
-
 		private int _lastSelectionNightCount;
 		private PlayerRef _selectedPlayer;
 
@@ -68,7 +66,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
-											_choosePlayerImage.CompactTagId,
+											_choosePlayerTitle.ID.HashCode,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
@@ -104,7 +102,7 @@ namespace Werewolf.Gameplay.Role
 
 			_selectedPlayer = players[0];
 
-			_gameHistoryManager.AddEntry(_chosePlayerToProtectGameHistoryEntry,
+			_gameHistoryManager.AddEntry(_chosePlayerToProtectGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -153,7 +151,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnMarkForDeathAdded(PlayerRef player, GameplayTag markForDeath)
+		private void OnMarkForDeathAdded(PlayerRef player, MarkForDeathData markForDeath)
 		{
 			if (player == _selectedPlayer && _marksForDeathRemovedByProtection.Contains(markForDeath))
 			{

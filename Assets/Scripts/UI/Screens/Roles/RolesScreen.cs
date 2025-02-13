@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization.Components;
+using Utilities.GameplayData;
 using Werewolf.Data;
 
 namespace Werewolf.UI
@@ -31,7 +32,7 @@ namespace Werewolf.UI
 
 		private void Start()
 		{
-			List<RoleData> roles = GameplayDatabaseManager.Instance.GetGameplayData<RoleData>();
+			List<RoleData> roles = GameplayDataManager.Instance.TryGetGameplayData<RoleData>();
 
 			foreach (RoleData role in roles)
 			{
