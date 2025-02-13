@@ -13,14 +13,14 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Player Dead Tonight")]
 		[SerializeField]
-		private ImageData _playerDeadTonightTitle;
+		private TitleScreenData _playerDeadTonightTitleScreen;
 
 		[SerializeField]
 		private float _playerHighlightHoldDuration;
 
 		[Header("Potion Choice")]
 		[SerializeField]
-		private ImageData _noPotionToUseTitle;
+		private TitleScreenData _noPotionToUseTitleScreen;
 
 		[SerializeField]
 		private ChoiceScreenData _choiceScreen;
@@ -33,7 +33,7 @@ namespace Werewolf.Gameplay.Role
 
 		[Header("Life Potion")]
 		[SerializeField]
-		private ImageData _saveTitle;
+		private TitleScreenData _saveTitleScreen;
 
 		[SerializeField]
 		private MarkForDeathData _markForDeathRemovedByLifePotion;
@@ -43,10 +43,10 @@ namespace Werewolf.Gameplay.Role
 
 		[Header("Death Potion")]
 		[SerializeField]
-		private ImageData _killTitle;
+		private TitleScreenData _killTitleScreen;
 
 		[SerializeField]
-		private ImageData _choosePlayerTitle;
+		private TitleScreenData _choosePlayerTitleScreen;
 
 		[SerializeField]
 		private float _choosePlayerDuration;
@@ -84,7 +84,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected && !hasPotions)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitleScreen.ID.HashCode);
 			}
 
 			if (!_networkDataManager.PlayerInfos[Player].IsConnected || !hasPotions)
@@ -113,7 +113,7 @@ namespace Werewolf.Gameplay.Role
 			if (!_markedForDeathPlayer.IsNone)
 			{
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _markedForDeathPlayer, true);
-				_gameManager.RPC_DisplayTitle(Player, _playerDeadTonightTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _playerDeadTonightTitleScreen.ID.HashCode);
 
 				yield return new WaitForSeconds(_playerHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
@@ -150,7 +150,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (showTitles)
 				{
-					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitle.ID.HashCode);
+					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitleScreen.ID.HashCode);
 				}
 
 				return false;
@@ -169,7 +169,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (showTitles)
 				{
-					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitle.ID.HashCode);
+					_gameManager.RPC_DisplayTitle(Player, _noPotionToUseTitleScreen.ID.HashCode);
 				}
 
 				return false;
@@ -177,15 +177,15 @@ namespace Werewolf.Gameplay.Role
 
 			if (!canSavePlayer)
 			{
-				_choiceIDs = new int[] { _killTitle.ID.HashCode };
+				_choiceIDs = new int[] { _killTitleScreen.ID.HashCode };
 			}
 			else if (!_hasDeathPotion)
 			{
-				_choiceIDs = new int[] { _saveTitle.ID.HashCode };
+				_choiceIDs = new int[] { _saveTitleScreen.ID.HashCode };
 			}
 			else
 			{
-				_choiceIDs = new int[] { _saveTitle.ID.HashCode, _killTitle.ID.HashCode };
+				_choiceIDs = new int[] { _saveTitleScreen.ID.HashCode, _killTitleScreen.ID.HashCode };
 			}
 
 			return _gameManager.MakeChoice(Player,
@@ -209,7 +209,7 @@ namespace Werewolf.Gameplay.Role
 
 			int choiceID = choiceIndex > -1 ? _choiceIDs[choiceIndex] : -1;
 
-			if (choiceID == _saveTitle.ID.HashCode)
+			if (choiceID == _saveTitleScreen.ID.HashCode)
 			{
 				_gameManager.RemoveMarkForDeath(_markedForDeathPlayer, _markForDeathRemovedByLifePotion);
 				_hasLifePotion = false;
@@ -233,7 +233,7 @@ namespace Werewolf.Gameplay.Role
 				StartCoroutine(RefreshPotions(_choiceSelectedHoldDuration * _gameManager.GameSpeedModifier, true));
 				return;
 			}
-			else if (choiceID == _killTitle.ID.HashCode)
+			else if (choiceID == _killTitleScreen.ID.HashCode)
 			{
 				StartCoroutine(ChoosePlayerToKill());
 				return;
@@ -254,7 +254,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (_gameManager.SelectPlayers(Player,
 											choices,
-											_choosePlayerTitle.ID.HashCode,
+											_choosePlayerTitleScreen.ID.HashCode,
 											_choosePlayerDuration * _gameManager.GameSpeedModifier,
 											true,
 											1,

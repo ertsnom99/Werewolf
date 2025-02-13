@@ -51,27 +51,24 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _playerDeadTonightTitle: {fileID: 11400000, guid: f65b758d312d2c847baf051d10a3e785,
+  _playerDeadTonightTitleScreen: {fileID: 11400000, guid: f65b758d312d2c847baf051d10a3e785,
     type: 2}
   _playerHighlightHoldDuration: 3
-  _noPotionToUseTitle: {fileID: 11400000, guid: 747fb9197c3a93844b3b665cd666f1be,
+  _noPotionToUseTitleScreen: {fileID: 11400000, guid: 747fb9197c3a93844b3b665cd666f1be,
     type: 2}
   _choiceScreen: {fileID: 11400000, guid: c30518af216ab01458c78ac13c311ef8, type: 2}
   _choosePotionMaximumDuration: 10
   _choiceSelectedHoldDuration: 2
-  _saveTitle: {fileID: 11400000, guid: ea27c5b998fc4cc41a87859758431451, type: 2}
+  _saveTitleScreen: {fileID: 11400000, guid: ea27c5b998fc4cc41a87859758431451, type: 2}
   _markForDeathRemovedByLifePotion: {fileID: 11400000, guid: 8b7f8d1bd78a65d4eb3e9967492c239e,
     type: 2}
   _usedLifePotionGameHistoryEntry: {fileID: 11400000, guid: 43d4925658242094bb3824520d765ea3,
     type: 2}
-  _usedLifePotionGameHistoryEntryNEW: {fileID: 11400000, guid: 43d4925658242094bb3824520d765ea3,
+  _killTitleScreen: {fileID: 11400000, guid: af87a315e221c4d4fa8a7fa6d8a8809c, type: 2}
+  _choosePlayerTitleScreen: {fileID: 11400000, guid: 3fb2ecaa377f51c4b8422bd06ea7bb95,
     type: 2}
-  _killTitle: {fileID: 11400000, guid: af87a315e221c4d4fa8a7fa6d8a8809c, type: 2}
-  _choosePlayerTitle: {fileID: 11400000, guid: 3fb2ecaa377f51c4b8422bd06ea7bb95, type: 2}
   _choosePlayerDuration: 5
   _markForDeathAddedByDeathPotion: {fileID: 11400000, guid: c15ff9d4da01cac44bed08e5c1197f1d,
     type: 2}
   _usedDeathPotionGameHistoryEntry: {fileID: 11400000, guid: 6d496ee45279b4441ae296bcbf3f0d91,
-    type: 2}
-  _usedDeathPotionGameHistoryEntryNEW: {fileID: 11400000, guid: 6d496ee45279b4441ae296bcbf3f0d91,
     type: 2}

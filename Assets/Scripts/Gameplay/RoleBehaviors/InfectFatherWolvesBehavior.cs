@@ -12,7 +12,7 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Infect")]
 		[SerializeField]
-		private ImageData _infectTitle;
+		private TitleScreenData _infectTitleScreen;
 
 		[SerializeField]
 		private PlayerGroupData _villagersPlayerGroup;
@@ -24,7 +24,7 @@ namespace Werewolf.Gameplay.Role
 		private GameHistoryEntryData _infectedVillagerGameHistoryEntry;
 
 		[SerializeField]
-		private ImageData _infectedTitle;
+		private TitleScreenData _infectedTitleScreen;
 
 		private PlayerRef _choosenVillager;
 		private IEnumerator _endInfectPromptCoroutine;
@@ -46,7 +46,7 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
-			_gameManager.PromptPlayer(Player, _infectTitle.ID.HashCode, _commonWerewolfsData.ChoosenVillagerHighlightDuration, OnInfectVillager);
+			_gameManager.PromptPlayer(Player, _infectTitleScreen.ID.HashCode, _commonWerewolfsData.ChoosenVillagerHighlightDuration, OnInfectVillager);
 
 			_endInfectPromptCoroutine = EndInfectPrompt();
 			StartCoroutine(_endInfectPromptCoroutine);
@@ -105,7 +105,7 @@ namespace Werewolf.Gameplay.Role
 				yield break;
 			}
 
-			_gameManager.RPC_DisplayTitle(_choosenVillager, _infectedTitle.ID.HashCode, fastFade: true);
+			_gameManager.RPC_DisplayTitle(_choosenVillager, _infectedTitleScreen.ID.HashCode, fastFade: true);
 
 			Data.GameConfig config = _gameManager.Config;
 			yield return new WaitForSeconds(config.NightCallChangeDelay - config.UITransitionFastDuration - config.UITransitionNormalDuration);

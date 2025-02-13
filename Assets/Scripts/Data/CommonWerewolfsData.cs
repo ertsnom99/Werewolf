@@ -6,7 +6,7 @@ namespace Werewolf.Data
 	public class CommonWerewolfsData : ScriptableObject
 	{
 		[field: SerializeField]
-		public ImageData VotePlayerTitle { get; private set; }
+		public TitleScreenData VotePlayerTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float VoteMaxDuration { get; private set; }

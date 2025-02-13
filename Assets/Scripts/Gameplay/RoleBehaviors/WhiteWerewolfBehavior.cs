@@ -16,10 +16,10 @@ namespace Werewolf.Gameplay.Role
 		private PlayerGroupData[] _otherWerewolvesPlayerGroups;
 
 		[SerializeField]
-		private ImageData _noOtherWerewolvesTitle;
+		private TitleScreenData _noOtherWerewolvesTitleScreen;
 
 		[SerializeField]
-		private ImageData _chooseOtherWerewolfTitle;
+		private TitleScreenData _chooseOtherWerewolfTitleScreen;
 
 		[SerializeField]
 		private float _chooseOtherWerewolfMaximumDuration;
@@ -76,7 +76,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											werewolves,
-											_chooseOtherWerewolfTitle.ID.HashCode,
+											_chooseOtherWerewolfTitleScreen.ID.HashCode,
 											_chooseOtherWerewolfMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
@@ -97,7 +97,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _noOtherWerewolvesTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _noOtherWerewolvesTitleScreen.ID.HashCode);
 			}
 
 			yield return 0;

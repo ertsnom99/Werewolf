@@ -15,10 +15,10 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Charm Villagers")]
 		[SerializeField]
-		private ImageData _lostPowerTitle;
+		private TitleScreenData _lostPowerTitleScreen;
 
 		[SerializeField]
-		private ImageData _charmVillagersTitle;
+		private TitleScreenData _charmVillagersTitleScreen;
 
 		[SerializeField]
 		private float _charmVillagersMaximumDuration;
@@ -34,10 +34,10 @@ namespace Werewolf.Gameplay.Role
 		private float _showAllCharmedVillagersHighlightHoldDuration;
 
 		[SerializeField]
-		private ImageData _charmedVillagersTitle;
+		private TitleScreenData _charmedVillagersTitleScreen;
 
 		[SerializeField]
-		private ImageData _charmedVillagersRecognizingEachOtherTitle;
+		private TitleScreenData _charmedVillagersRecognizingEachOtherTitleScreen;
 
 		[Header("Power Lost")]
 		[SerializeField]
@@ -114,7 +114,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											notCharmedVillagers,
-											_charmVillagersTitle.ID.HashCode,
+											_charmVillagersTitleScreen.ID.HashCode,
 											_charmVillagersMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											2,
@@ -190,7 +190,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _lostPowerTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _lostPowerTitleScreen.ID.HashCode);
 			}
 
 			yield return 0;
@@ -204,7 +204,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _charmedVillagersRecognizingEachOtherTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _charmedVillagersRecognizingEachOtherTitleScreen.ID.HashCode);
 			}
 
 			HashSet<PlayerRef> charmedVillagers = _gameManager.GetPlayersFromPlayerGroup(PlayerGroupIDs[1]);
@@ -259,11 +259,11 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (_gameManager.IsPlayerInPlayerGroup(playerInfo.Key, PlayerGroupIDs[1]))
 				{
-					titlesOverride.Add(playerInfo.Key, _charmedVillagersTitle.ID.HashCode);
+					titlesOverride.Add(playerInfo.Key, _charmedVillagersTitleScreen.ID.HashCode);
 				}
 				else
 				{
-					titlesOverride.Add(playerInfo.Key, _charmedVillagersRecognizingEachOtherTitle.ID.HashCode);
+					titlesOverride.Add(playerInfo.Key, _charmedVillagersRecognizingEachOtherTitleScreen.ID.HashCode);
 				}
 			}
 		}

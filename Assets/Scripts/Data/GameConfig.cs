@@ -50,7 +50,7 @@ namespace Werewolf.Data
 
 		[field: Header("Election")]
 		[field: SerializeField]
-		public ImageData ElectionPromptTitle { get; private set; }
+		public TitleScreenData ElectionPromptTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ElectionPromptDuration { get; private set; }
@@ -59,13 +59,13 @@ namespace Werewolf.Data
 		public GameHistoryEntryData ElectionMultipleCandidatesGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ElectionMultipleCandidatesTitle { get; private set; }
+		public TitleScreenData ElectionMultipleCandidatesTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ElectionMultipleCandidatesDuration { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ElectionDebateTitle { get; private set; }
+		public TitleScreenData ElectionDebateTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ElectionDebateDuration { get; private set; }
@@ -74,13 +74,13 @@ namespace Werewolf.Data
 		public GameHistoryEntryData ElectionNoCandidateGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ElectionNoCandidateTitle { get; private set; }
+		public TitleScreenData ElectionNoCandidateTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ElectionNoCandidateDuration { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ElectionVoteTitle { get; private set; }
+		public TitleScreenData ElectionVoteTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ElectionVoteDuration { get; private set; }
@@ -108,7 +108,7 @@ namespace Werewolf.Data
 		public float DayTemperature { get; private set; }
 
 		[field: SerializeField]
-		public ImageData DayTransitionTitle { get; private set; }
+		public TitleScreenData DayTransitionTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public Color NightColor { get; private set; }
@@ -117,7 +117,7 @@ namespace Werewolf.Data
 		public float NightTemperature { get; private set; }
 
 		[field: SerializeField]
-		public ImageData NightTransitionTitle { get; private set; }
+		public TitleScreenData NightTransitionTitleScreen { get; private set; }
 
 		[field: Header("NightCall")]
 		[field: SerializeField]
@@ -134,10 +134,10 @@ namespace Werewolf.Data
 
 		[field: Header("Death Reveal")]
 		[field: SerializeField]
-		public ImageData DeathRevealSomeoneDiedTitle { get; private set; }
+		public TitleScreenData DeathRevealSomeoneDiedTitleScreen { get; private set; }
 
 		[field: SerializeField]
-		public ImageData DeathRevealNoOneDiedTitle { get; private set; }
+		public TitleScreenData DeathRevealNoOneDiedTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float DeathRevealHoldDuration { get; private set; }
@@ -146,23 +146,23 @@ namespace Werewolf.Data
 		public float DelayBeforeRevealingDeadPlayer { get; private set; }
 
 		[field: SerializeField]
-		public ImageData PlayerDiedTitle { get; private set; }
+		public TitleScreenData PlayerDiedTitleScreen { get; private set; }
 
 		[field: SerializeField]
-		public ImageData PlayerExecutedTitle { get; private set; }
+		public TitleScreenData PlayerExecutedTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public GameHistoryEntryData PlayerDiedGameHistoryEntry { get; private set; }
 
 		[field: Header("Execution")]
 		[field: SerializeField]
-		public ImageData ExecutionDebateTitle { get; private set; }
+		public TitleScreenData ExecutionDebateTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionDebateDuration { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ExecutionVoteTitle { get; private set; }
+		public TitleScreenData ExecutionVoteTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionVoteDuration { get; private set; }
@@ -171,7 +171,7 @@ namespace Werewolf.Data
 		public GameHistoryEntryData ExecutionVoteStartedGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ExecutionDrawNewVoteTitle { get; private set; }
+		public TitleScreenData ExecutionDrawNewVoteTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionHoldDuration { get; private set; }
@@ -183,13 +183,13 @@ namespace Werewolf.Data
 		public GameHistoryEntryData ExecutionDrawAgainGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ExecutionDrawAgainTitle { get; private set; }
+		public TitleScreenData ExecutionDrawAgainTitleScreen { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ExecutionDrawYouChooseTitle { get; private set; }
+		public TitleScreenData ExecutionDrawYouChooseTitleScreen { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ExecutionDrawCaptainChooseTitle { get; private set; }
+		public TitleScreenData ExecutionDrawCaptainChooseTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionCaptainChoiceDuration { get; private set; }
@@ -220,7 +220,7 @@ namespace Werewolf.Data
 		public GameHistoryEntryData EndGameNobodyWonGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
-		public ImageData NoWinnerTitle { get; private set; }
+		public TitleScreenData NoWinnerTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float EndGameHoldDuration { get; private set; }
@@ -236,19 +236,19 @@ namespace Werewolf.Data
 		public float CaptainRevealDuration { get; private set; }
 
 		[field: SerializeField]
-		public ImageData CaptainRevealTitle { get; private set; }
+		public TitleScreenData CaptainRevealTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public GameHistoryEntryData CaptainDiedGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
-		public ImageData ChooseNextCaptainTitle { get; private set; }
+		public TitleScreenData ChooseNextCaptainTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float CaptainChoiceDuration { get; private set; }
 
 		[field: SerializeField]
-		public ImageData OldCaptainChoosingTitle { get; private set; }
+		public TitleScreenData OldCaptainChoosingTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float CaptainCardMovementDuration { get; private set; }

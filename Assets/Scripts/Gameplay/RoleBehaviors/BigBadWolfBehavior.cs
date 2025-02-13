@@ -18,10 +18,10 @@ namespace Werewolf.Gameplay.Role
 		private PlayerGroupData _villagersPlayerGroup;
 
 		[SerializeField]
-		private ImageData _noVillagersTitle;
+		private TitleScreenData _noVillagersTitleScreen;
 
 		[SerializeField]
-		private ImageData _chooseVillagerTitle;
+		private TitleScreenData _chooseVillagerTitleScreen;
 
 		[SerializeField]
 		private float _chooseVillagerMaximumDuration;
@@ -36,7 +36,7 @@ namespace Werewolf.Gameplay.Role
 		private float _selectedVillagerHighlightDuration;
 
 		[SerializeField]
-		private ImageData _lostPowerTitle;
+		private TitleScreenData _lostPowerTitleScreen;
 
 		private bool _hasPower = true;
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
@@ -90,7 +90,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											villagers,
-											_chooseVillagerTitle.ID.HashCode,
+											_chooseVillagerTitleScreen.ID.HashCode,
 											_chooseVillagerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
@@ -119,7 +119,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _noVillagersTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _noVillagersTitleScreen.ID.HashCode);
 			}
 
 			yield return 0;
@@ -205,7 +205,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _lostPowerTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _lostPowerTitleScreen.ID.HashCode);
 			}
 
 			yield return 0;

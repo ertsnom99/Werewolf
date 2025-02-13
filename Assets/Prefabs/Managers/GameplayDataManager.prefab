@@ -48,7 +48,7 @@ MonoBehaviour:
   - Roles
   - GameHistoryEntries
   - PlayerGroups
-  - Titles
+  - TitleScreens
   - ChoiceScreens
   _prohibitedHashCodes: ffffffff
   _buildGuidDictionary: 0

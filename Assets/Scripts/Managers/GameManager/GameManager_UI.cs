@@ -12,13 +12,13 @@ namespace Werewolf.Managers
 	{
 		public void DisplayTitle(int titleID, Dictionary<string, IVariable> variables = null, bool showConfirmButton = false, float countdownDuration = -1, bool fastFade = false)
 		{
-			if (!_gameplayDataManager.TryGetGameplayData(titleID, out ImageData titleData))
+			if (!_gameplayDataManager.TryGetGameplayData(titleID, out TitleScreenData titleScreenData))
 			{
-				Debug.LogError($"Could not find the title {titleData}");
+				Debug.LogError($"Could not find the title {titleID}");
 				return;
 			}
 
-			_UIManager.TitleScreen.Initialize(titleData.Image, titleData.Text, variables, showConfirmButton, titleData.PromptButtonText, countdownDuration);
+			_UIManager.TitleScreen.Initialize(titleScreenData.Image, titleScreenData.Text, variables, showConfirmButton, titleScreenData.PromptButtonText, countdownDuration);
 			_UIManager.FadeIn(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
 		}
 

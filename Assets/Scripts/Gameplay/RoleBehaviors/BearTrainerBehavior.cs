@@ -20,7 +20,7 @@ namespace Werewolf.Gameplay.Role
 		private GameHistoryEntryData _bearGrowlGameHistoryEntry;
 
 		[SerializeField]
-		private ImageData _bearGrowlTitle;
+		private TitleScreenData _bearGrowlTitleScreen;
 
 		[SerializeField]
 		private float _bearGrowlTitleDuration;
@@ -83,11 +83,11 @@ namespace Werewolf.Gameplay.Role
 											}
 										});
 
-			_gameManager.RPC_DisplayTitle(_bearGrowlTitle.ID.HashCode);
+			_gameManager.RPC_DisplayTitle(_bearGrowlTitleScreen.ID.HashCode);
 
 			GameConfig gameConfig = _gameManager.Config;
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.DisplayTitle(_bearGrowlTitle.ID.HashCode);
+			_gameManager.DisplayTitle(_bearGrowlTitleScreen.ID.HashCode);
 #endif
 			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration + _bearGrowlTitleDuration * _gameManager.GameSpeedModifier);
 			

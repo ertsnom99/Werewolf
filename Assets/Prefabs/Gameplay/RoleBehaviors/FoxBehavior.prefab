@@ -51,22 +51,20 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _lostPowerTitle: {fileID: 11400000, guid: ad979f65a673e7640bd8dae1d18c9972, type: 2}
-  _choosePlayerTitle: {fileID: 11400000, guid: 7a3da9a420873a24391102abc955986b, type: 2}
+  _lostPowerTitleScreen: {fileID: 11400000, guid: ad979f65a673e7640bd8dae1d18c9972,
+    type: 2}
+  _choosePlayerTitleScreen: {fileID: 11400000, guid: 7a3da9a420873a24391102abc955986b,
+    type: 2}
   _choosePlayerMaximumDuration: 10
   _werewolvesPlayerGroups:
   - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
   - {fileID: 11400000, guid: 4518bd88add254f4f900e3d3ef8d90d5, type: 2}
   _sniffedWerewolfGameHistoryEntry: {fileID: 11400000, guid: 2f89e303c089f0f41a2de455319151a5,
     type: 2}
-  _sniffedWerewolfGameHistoryEntryNEW: {fileID: 11400000, guid: 2f89e303c089f0f41a2de455319151a5,
-    type: 2}
-  _foundWerewolfTitle: {fileID: 11400000, guid: 7496e02db9f007f4ba33345e411c1d6a,
+  _foundWerewolfTitleScreen: {fileID: 11400000, guid: 7496e02db9f007f4ba33345e411c1d6a,
     type: 2}
   _lostPowerGameHistoryEntry: {fileID: 11400000, guid: 2922e559d2e5b3c44a30ed6a146fe2f0,
     type: 2}
-  _lostPowerGameHistoryEntryNEW: {fileID: 11400000, guid: 2922e559d2e5b3c44a30ed6a146fe2f0,
-    type: 2}
-  _foundNoWerewolfTitle: {fileID: 11400000, guid: 77d12cdc635c0824ea7547e20efb4693,
+  _foundNoWerewolfTitleScreen: {fileID: 11400000, guid: 77d12cdc635c0824ea7547e20efb4693,
     type: 2}
   _resultTitleHoldDuration: 3

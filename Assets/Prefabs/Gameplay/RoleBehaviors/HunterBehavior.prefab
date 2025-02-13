@@ -51,13 +51,12 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _choosePlayerTitle: {fileID: 11400000, guid: 882ee08e63e3dbf4ab51319d76a850bf, type: 2}
+  _choosePlayerTitleScreen: {fileID: 11400000, guid: 882ee08e63e3dbf4ab51319d76a850bf,
+    type: 2}
   _choosePlayerMaximumDuration: 10
-  _choosingPlayerTitle: {fileID: 11400000, guid: 6430c5423d58783479867029fe2583a6,
+  _choosingPlayerTitleScreen: {fileID: 11400000, guid: 6430c5423d58783479867029fe2583a6,
     type: 2}
   _killedPlayerGameHistoryEntry: {fileID: 11400000, guid: f0df03933bd2a2d44a2c747410a9ef7e,
-    type: 2}
-  _killedPlayerGameHistoryEntryNEW: {fileID: 11400000, guid: f0df03933bd2a2d44a2c747410a9ef7e,
     type: 2}
   _markForDeathAddedByShot: {fileID: 11400000, guid: fcf4c925b51d47f42a233534b1afdd2a,
     type: 2}

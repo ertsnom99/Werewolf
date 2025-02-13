@@ -44,16 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8827f6a214102944b1a8ac4669d69f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RoleGameplayTag>k__BackingField: {fileID: 0}
   <RoleID>k__BackingField:
     Guid: 
     HashCode: 0
   <PrimaryRoleType>k__BackingField: 0
-  <PlayerGroups>k__BackingField: []
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
   _showSiblingsDuration: 10
-  _siblingsImage: {fileID: -8411044993407871370, guid: 0e7014af8e28a88409bdb3f0abb80632,
+  _siblingsTitleScreen: {fileID: 11400000, guid: 3078c883d7864294b97ef9065afe217a,
     type: 2}
-  _siblingsTitle: {fileID: 11400000, guid: 3078c883d7864294b97ef9065afe217a, type: 2}

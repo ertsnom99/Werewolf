@@ -55,18 +55,16 @@ MonoBehaviour:
     type: 2}
   _lostPowerGameHistoryEntry: {fileID: 11400000, guid: 5481ebadf709b684cb8324eabbbb93ae,
     type: 2}
-  _lostPowerGameHistoryEntryNEW: {fileID: 11400000, guid: 5481ebadf709b684cb8324eabbbb93ae,
-    type: 2}
   _villagersPlayerGroup: {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce,
     type: 2}
-  _noVillagersTitle: {fileID: 11400000, guid: 379f018d12dd6244f84683e6056e1443, type: 2}
-  _chooseVillagerTitle: {fileID: 11400000, guid: 29cd07d23117b6d498960ecfc065b1cf,
+  _noVillagersTitleScreen: {fileID: 11400000, guid: 379f018d12dd6244f84683e6056e1443,
+    type: 2}
+  _chooseVillagerTitleScreen: {fileID: 11400000, guid: 29cd07d23117b6d498960ecfc065b1cf,
     type: 2}
   _chooseVillagerMaximumDuration: 10
   _choseVillagerGameHistoryEntry: {fileID: 11400000, guid: bb1a83c1d84a61345959f5f327fe73af,
     type: 2}
-  _choseVillagerGameHistoryEntryNEW: {fileID: 11400000, guid: bb1a83c1d84a61345959f5f327fe73af,
-    type: 2}
   _markForDeath: {fileID: 11400000, guid: 6b3db20462b9f694b8d3b68f9c0d6579, type: 2}
   _selectedVillagerHighlightDuration: 3
-  _lostPowerTitle: {fileID: 11400000, guid: 5cdbf8ef6dc92c7489c66780fbc44883, type: 2}
+  _lostPowerTitleScreen: {fileID: 11400000, guid: 5cdbf8ef6dc92c7489c66780fbc44883,
+    type: 2}
