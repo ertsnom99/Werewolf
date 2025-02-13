@@ -51,23 +51,20 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _lostPowerTitle: {fileID: 11400000, guid: c2f2da26e9da91649b0e2d01655ce1aa, type: 2}
-  _charmVillagersTitle: {fileID: 11400000, guid: 67cfc7ba93d35eb4b866ba29cfda182b,
+  _lostPowerTitleScreen: {fileID: 11400000, guid: c2f2da26e9da91649b0e2d01655ce1aa,
+    type: 2}
+  _charmVillagersTitleScreen: {fileID: 11400000, guid: 67cfc7ba93d35eb4b866ba29cfda182b,
     type: 2}
   _charmVillagersMaximumDuration: 10
   _charmedVillagersGameHistoryEntry: {fileID: 11400000, guid: ecfc74b4d0452b34788e41db572588e2,
     type: 2}
-  _charmedVillagersGameHistoryEntryNEW: {fileID: 11400000, guid: ecfc74b4d0452b34788e41db572588e2,
-    type: 2}
   _showCharmedVillagersHighlightHoldDuration: 3
   _showAllCharmedVillagersHighlightHoldDuration: 5
-  _charmedVillagersTitle: {fileID: 11400000, guid: fff18fba58da67f4da8e6524cbad1362,
+  _charmedVillagersTitleScreen: {fileID: 11400000, guid: fff18fba58da67f4da8e6524cbad1362,
     type: 2}
-  _charmedVillagersRecognizingEachOtherTitle: {fileID: 11400000, guid: 14bd53b40277f424498abf241d05bd42,
+  _charmedVillagersRecognizingEachOtherTitleScreen: {fileID: 11400000, guid: 14bd53b40277f424498abf241d05bd42,
     type: 2}
   _werewolvesPlayerGroup: {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0,
     type: 2}
   _lostPowerGameHistoryEntry: {fileID: 11400000, guid: 5cd8e499aafd3de4b92271931d13c240,
-    type: 2}
-  _lostPowerGameHistoryEntryNEW: {fileID: 11400000, guid: 5cd8e499aafd3de4b92271931d13c240,
     type: 2}

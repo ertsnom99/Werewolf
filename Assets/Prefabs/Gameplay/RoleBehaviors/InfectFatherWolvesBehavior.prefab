@@ -53,12 +53,11 @@ MonoBehaviour:
   <IsPrimaryBehavior>k__BackingField: 0
   _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
-  _infectTitle: {fileID: 11400000, guid: ce1db1a0f903c28479efc30a8f36edbe, type: 2}
+  _infectTitleScreen: {fileID: 11400000, guid: ce1db1a0f903c28479efc30a8f36edbe, type: 2}
   _villagersPlayerGroup: {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce,
     type: 2}
   _werewolfRoleData: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
   _infectedVillagerGameHistoryEntry: {fileID: 11400000, guid: 0b01df0204fa4924e87644b00ad745dd,
     type: 2}
-  _infectedVillagerGameHistoryEntryNEW: {fileID: 11400000, guid: 0b01df0204fa4924e87644b00ad745dd,
+  _infectedTitleScreen: {fileID: 11400000, guid: 95d73786d87a74842aa32aa5b9b3db18,
     type: 2}
-  _infectedTitle: {fileID: 11400000, guid: 95d73786d87a74842aa32aa5b9b3db18, type: 2}

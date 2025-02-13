@@ -51,13 +51,14 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _takeRoleTitle: {fileID: 11400000, guid: 5f2fd8eedef526a478b9dca2db3d30c6, type: 2}
+  _takeRoleTitleScreen: {fileID: 11400000, guid: 5f2fd8eedef526a478b9dca2db3d30c6,
+    type: 2}
   _notResettedRoles:
   - {fileID: 11400000, guid: 05239335259f3b44aa386de01ec5d91a, type: 2}
   _tookRoleGameHistoryEntry: {fileID: 11400000, guid: ed6dec1ba698f084f85c66d3202384d3,
     type: 2}
-  _tookRoleGameHistoryEntryNEW: {fileID: 11400000, guid: ed6dec1ba698f084f85c66d3202384d3,
+  _newRoleTitleScreen: {fileID: 11400000, guid: 7abef82faf5f5894189f71857fb29d82,
     type: 2}
-  _newRoleTitle: {fileID: 11400000, guid: 7abef82faf5f5894189f71857fb29d82, type: 2}
-  _tookThisRoleTitle: {fileID: 11400000, guid: da11e340e54072b40a824cc94454f29e, type: 2}
+  _tookThisRoleTitleScreen: {fileID: 11400000, guid: da11e340e54072b40a824cc94454f29e,
+    type: 2}
   _servantRevealDuration: 3

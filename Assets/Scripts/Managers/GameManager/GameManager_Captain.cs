@@ -52,7 +52,7 @@ namespace Werewolf.Managers
 
 			if (!SelectPlayers(_captain,
 								_captainChoices,
-								Config.ChooseNextCaptainTitle.ID.HashCode,
+								Config.ChooseNextCaptainTitleScreen.ID.HashCode,
 								Config.CaptainChoiceDuration * GameSpeedModifier,
 								true,
 								1,
@@ -71,11 +71,11 @@ namespace Werewolf.Managers
 			{
 				if (_networkDataManager.PlayerInfos[player.Key].IsConnected && player.Key != _captain)
 				{
-					RPC_DisplayTitle(player.Key, Config.OldCaptainChoosingTitle.ID.HashCode);
+					RPC_DisplayTitle(player.Key, Config.OldCaptainChoosingTitleScreen.ID.HashCode);
 				}
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(Config.OldCaptainChoosingTitle.ID.HashCode);
+			DisplayTitle(Config.OldCaptainChoosingTitleScreen.ID.HashCode);
 #endif
 			float elapsedTime = .0f;
 
@@ -148,7 +148,7 @@ namespace Werewolf.Managers
 
 			float titleDuration = Config.CaptainRevealDuration * GameSpeedModifier;
 			StartCoroutine(HighlightPlayerToggle(_captain, titleDuration));
-			yield return DisplayTitleForAllPlayers(Config.CaptainRevealTitle.ID.HashCode, titleDuration);
+			yield return DisplayTitleForAllPlayers(Config.CaptainRevealTitleScreen.ID.HashCode, titleDuration);
 		}
 
 		private IEnumerator MoveCaptainCard(Vector3 newPosition)

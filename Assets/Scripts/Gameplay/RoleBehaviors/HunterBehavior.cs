@@ -14,13 +14,13 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Shoot Player")]
 		[SerializeField]
-		private ImageData _choosePlayerTitle;
+		private TitleScreenData _choosePlayerTitleScreen;
 
 		[SerializeField]
 		private float _choosePlayerMaximumDuration;
 
 		[SerializeField]
-		private ImageData _choosingPlayerTitle;
+		private TitleScreenData _choosingPlayerTitleScreen;
 
 		[SerializeField]
 		private GameHistoryEntryData _killedPlayerGameHistoryEntry;
@@ -78,7 +78,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
-											_choosePlayerTitle.ID.HashCode,
+											_choosePlayerTitleScreen.ID.HashCode,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											true,
 											1,
@@ -100,11 +100,11 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected && playerInfo.Key != Player)
 				{
-					_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosingPlayerTitle.ID.HashCode);
+					_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosingPlayerTitleScreen.ID.HashCode);
 				}
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.DisplayTitle(_choosingPlayerTitle.ID.HashCode);
+			_gameManager.DisplayTitle(_choosingPlayerTitleScreen.ID.HashCode);
 #endif
 			_startChoiceTimerCoroutine = StartChoiceTimer();
 			StartCoroutine(_startChoiceTimerCoroutine);

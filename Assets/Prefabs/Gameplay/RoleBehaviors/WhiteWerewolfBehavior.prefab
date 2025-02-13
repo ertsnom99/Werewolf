@@ -55,14 +55,12 @@ MonoBehaviour:
     type: 2}
   _otherWerewolvesPlayerGroups:
   - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
-  _noOtherWerewolvesTitle: {fileID: 11400000, guid: df56e83c3482af2418aa962c5022ce11,
+  _noOtherWerewolvesTitleScreen: {fileID: 11400000, guid: df56e83c3482af2418aa962c5022ce11,
     type: 2}
-  _chooseOtherWerewolfTitle: {fileID: 11400000, guid: 67ebb5503cdcaff44a41cedaca771b05,
+  _chooseOtherWerewolfTitleScreen: {fileID: 11400000, guid: 67ebb5503cdcaff44a41cedaca771b05,
     type: 2}
   _chooseOtherWerewolfMaximumDuration: 10
   _choseWerewolfGameHistoryEntry: {fileID: 11400000, guid: 1a5661e1c5a2e74458f84914db62db80,
-    type: 2}
-  _choseWerewolfGameHistoryEntryNEW: {fileID: 11400000, guid: 1a5661e1c5a2e74458f84914db62db80,
     type: 2}
   _markForDeath: {fileID: 11400000, guid: 9f9cb76a127b8d14ea3076138c48d8a2, type: 2}
   _selectedWerewolfHighlightDuration: 3

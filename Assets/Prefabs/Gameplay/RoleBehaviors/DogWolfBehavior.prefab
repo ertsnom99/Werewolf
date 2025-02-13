@@ -54,14 +54,12 @@ MonoBehaviour:
   _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
   _choiceScreen: {fileID: 11400000, guid: 7afacb0577bd08b4fb13bfbdc22f2bca, type: 2}
-  _werewolvesTitle: {fileID: 11400000, guid: bc325030c0aa83847a01b126357ad88f, type: 2}
+  _werewolvesTitleScreen: {fileID: 11400000, guid: bc325030c0aa83847a01b126357ad88f,
+    type: 2}
   _choseWerewolvesGroupGameHistoryEntry: {fileID: 11400000, guid: 70c79237543fe4c4a938d74547f6598e,
     type: 2}
-  _choseWerewolvesGroupGameHistoryEntryNEW: {fileID: 11400000, guid: 70c79237543fe4c4a938d74547f6598e,
+  _villagersTitleScreen: {fileID: 11400000, guid: 047c606bd01c660439ca03bb902cc59c,
     type: 2}
-  _villagersTitle: {fileID: 11400000, guid: 047c606bd01c660439ca03bb902cc59c, type: 2}
   _choseVillagersGroupGameHistoryEntry: {fileID: 11400000, guid: 3a14ccb8c0f3a73428dcd0e98246e1f4,
-    type: 2}
-  _choseVillagersGroupGameHistoryEntryNEW: {fileID: 11400000, guid: 3a14ccb8c0f3a73428dcd0e98246e1f4,
     type: 2}
   _chooseGroupMaximumDuration: 10

@@ -13,13 +13,13 @@ namespace Werewolf.Gameplay.Role
 		private ChoiceScreenData _choiceScreen;
 
 		[SerializeField]
-		private ImageData _werewolvesTitle;
+		private TitleScreenData _werewolvesTitleScreen;
 
 		[SerializeField]
 		private GameHistoryEntryData _choseWerewolvesGroupGameHistoryEntry;
 
 		[SerializeField]
-		private ImageData _villagersTitle;
+		private TitleScreenData _villagersTitleScreen;
 
 		[SerializeField]
 		private GameHistoryEntryData _choseVillagersGroupGameHistoryEntry;
@@ -70,7 +70,7 @@ namespace Werewolf.Gameplay.Role
 
 		private bool ChooseGroup()
 		{
-			_choiceTitleIDs = new int[] { _werewolvesTitle.ID.HashCode, _villagersTitle.ID.HashCode };
+			_choiceTitleIDs = new int[] { _werewolvesTitleScreen.ID.HashCode, _villagersTitleScreen.ID.HashCode };
 
 			if (!_gameManager.MakeChoice(Player,
 										_choiceTitleIDs,
@@ -132,7 +132,7 @@ namespace Werewolf.Gameplay.Role
 
 			int choiceTitleID = _choiceTitleIDs[choiceIndex <= -1 ? Random.Range(0, _choiceTitleIDs.Length) : choiceIndex];
 
-			if (choiceTitleID == _werewolvesTitle.ID.HashCode)
+			if (choiceTitleID == _werewolvesTitleScreen.ID.HashCode)
 			{
 				_isWerewolf = true;
 
@@ -149,7 +149,7 @@ namespace Werewolf.Gameplay.Role
 												}
 											});
 			}
-			else if (choiceTitleID == _villagersTitle.ID.HashCode)
+			else if (choiceTitleID == _villagersTitleScreen.ID.HashCode)
 			{
 				_gameHistoryManager.AddEntry(_choseVillagersGroupGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {

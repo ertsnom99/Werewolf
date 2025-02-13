@@ -15,10 +15,10 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Find Werewolfs")]
 		[SerializeField]
-		private ImageData _lostPowerTitle;
+		private TitleScreenData _lostPowerTitleScreen;
 
 		[SerializeField]
-		private ImageData _choosePlayerTitle;
+		private TitleScreenData _choosePlayerTitleScreen;
 
 		[SerializeField]
 		private float _choosePlayerMaximumDuration;
@@ -30,13 +30,13 @@ namespace Werewolf.Gameplay.Role
 		private GameHistoryEntryData _sniffedWerewolfGameHistoryEntry;
 
 		[SerializeField]
-		private ImageData _foundWerewolfTitle;
+		private TitleScreenData _foundWerewolfTitleScreen;
 
 		[SerializeField]
 		private GameHistoryEntryData _lostPowerGameHistoryEntry;
 
 		[SerializeField]
-		private ImageData _foundNoWerewolfTitle;
+		private TitleScreenData _foundNoWerewolfTitleScreen;
 
 		[SerializeField]
 		private float _resultTitleHoldDuration;
@@ -72,7 +72,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											_gameManager.GetAlivePlayers(),
-											_choosePlayerTitle.ID.HashCode,
+											_choosePlayerTitleScreen.ID.HashCode,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,
@@ -93,7 +93,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _lostPowerTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _lostPowerTitleScreen.ID.HashCode);
 			}
 
 			yield return 0;
@@ -170,11 +170,11 @@ namespace Werewolf.Gameplay.Role
 
 			if (werewolfFound)
 			{
-				_gameManager.RPC_DisplayTitle(Player, _foundWerewolfTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _foundWerewolfTitleScreen.ID.HashCode);
 			}
 			else
 			{
-				_gameManager.RPC_DisplayTitle(Player, _foundNoWerewolfTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, _foundNoWerewolfTitleScreen.ID.HashCode);
 				_hasPower = false;
 			}
 

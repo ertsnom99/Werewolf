@@ -48,14 +48,14 @@ namespace Werewolf.Managers
 
 			foreach (int choiceTitleID in choiceTitleIDs)
 			{
-				if (!_gameplayDataManager.TryGetGameplayData(choiceTitleID, out ImageData titleData))
+				if (!_gameplayDataManager.TryGetGameplayData(choiceTitleID, out TitleScreenData titleScreenData))
 				{
 					Debug.LogError($"Could not find the title {choiceTitleID}");
 				}
 
-				if (titleData != null)
+				if (titleScreenData != null)
 				{
-					choices.Add(new() { Image = titleData.Image, Text = titleData.Text });
+					choices.Add(new() { Image = titleScreenData.Image, Text = titleScreenData.Text });
 				}
 			}
 

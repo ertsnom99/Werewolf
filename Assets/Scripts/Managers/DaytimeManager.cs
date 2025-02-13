@@ -66,7 +66,7 @@ namespace Werewolf.Managers
 			CurrentDaytime = daytime;
 			_inTransition = true;
 
-			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _config.DayTransitionTitle.ID.HashCode : _config.NightTransitionTitle.ID.HashCode));
+			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _config.DayTransitionTitleScreen.ID.HashCode : _config.NightTransitionTitleScreen.ID.HashCode));
 			StartCoroutine(TransitionDaytime());
 		}
 
@@ -93,12 +93,12 @@ namespace Werewolf.Managers
 
 		private IEnumerator TransitionTitle(int titleID)
 		{
-			if (!_gameplayDataManager.TryGetGameplayData(titleID, out ImageData titleData))
+			if (!_gameplayDataManager.TryGetGameplayData(titleID, out TitleScreenData titleScreenData))
 			{
 				yield break;
 			}
 
-			_UIManager.TitleScreen.Initialize(titleData.Image, titleData.Text);
+			_UIManager.TitleScreen.Initialize(titleScreenData.Image, titleScreenData.Text);
 
 			yield return new WaitForSeconds(_config.DaytimeTextFadeInDelay);
 

@@ -56,7 +56,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4518bd88add254f4f900e3d3ef8d90d5, type: 2}
   _bearGrowlGameHistoryEntry: {fileID: 11400000, guid: 5c651e9636bef5347a26aeed00a30b85,
     type: 2}
-  _bearGrowlGameHistoryEntryNEW: {fileID: 11400000, guid: 5c651e9636bef5347a26aeed00a30b85,
+  _bearGrowlTitleScreen: {fileID: 11400000, guid: 0df66829df13fc6488fc84b90caf6a90,
     type: 2}
-  _bearGrowlTitle: {fileID: 11400000, guid: 0df66829df13fc6488fc84b90caf6a90, type: 2}
   _bearGrowlTitleDuration: 5

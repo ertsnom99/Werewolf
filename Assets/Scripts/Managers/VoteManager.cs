@@ -291,12 +291,12 @@ namespace Werewolf.Managers
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 
-			if (!_gameplayDataManager.TryGetGameplayData(_titleID, out ImageData titleData))
+			if (!_gameplayDataManager.TryGetGameplayData(_titleID, out TitleScreenData titleScreenData))
 			{
 				Debug.LogError($"Could not find the title {_titleID}");
 			}
 
-			_UIManager.VoteScreen.Initialize(titleData.Text, false, voteDuration);
+			_UIManager.VoteScreen.Initialize(titleScreenData.Text, false, voteDuration);
 #endif
 			_step = Step.Voting;
 		}
@@ -658,12 +658,12 @@ namespace Werewolf.Managers
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 			
-			if (!_gameplayDataManager.TryGetGameplayData(titleID, out ImageData titleData))
+			if (!_gameplayDataManager.TryGetGameplayData(titleID, out TitleScreenData titleScreenData))
 			{
 				Debug.LogError($"Could not find the title {titleID}");
 			}
 
-			_UIManager.VoteScreen.Initialize(titleData.Text, displayWarning, maxDuration);
+			_UIManager.VoteScreen.Initialize(titleScreenData.Text, displayWarning, maxDuration);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
@@ -700,12 +700,12 @@ namespace Werewolf.Managers
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _config.UITransitionNormalDuration);
 
-			if (!_gameplayDataManager.TryGetGameplayData(titleID, out ImageData titleData))
+			if (!_gameplayDataManager.TryGetGameplayData(titleID, out TitleScreenData titleScreenData))
 			{
 				Debug.LogError($"Could not find the title {titleID}");
 			}
 
-			_UIManager.VoteScreen.Initialize(titleData.Text, false, maxDuration);
+			_UIManager.VoteScreen.Initialize(titleScreenData.Text, false, maxDuration);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]

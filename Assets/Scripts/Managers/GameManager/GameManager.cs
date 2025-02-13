@@ -618,7 +618,7 @@ namespace Werewolf.Managers
 					StartCoroutine(StartDeathReveal(true));
 					break;
 				case GameplayLoopStep.ExecutionDebate:
-					StartCoroutine(StartDebate(GetPlayersExcluding(GetDeadPlayers().ToArray()), Config.ExecutionDebateTitle.ID.HashCode, Config.ExecutionDebateDuration * GameSpeedModifier));
+					StartCoroutine(StartDebate(GetPlayersExcluding(GetDeadPlayers().ToArray()), Config.ExecutionDebateTitleScreen.ID.HashCode, Config.ExecutionDebateDuration * GameSpeedModifier));
 					break;
 				case GameplayLoopStep.Execution:
 					StartExecution();
@@ -687,13 +687,13 @@ namespace Werewolf.Managers
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				PromptPlayer(playerInfo.Key,
-							Config.ElectionPromptTitle.ID.HashCode,
+							Config.ElectionPromptTitleScreen.ID.HashCode,
 							Config.ElectionPromptDuration * GameSpeedModifier,
 							OnPlayerWantsToBeCaptain,
 							false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(Config.ElectionPromptTitle.ID.HashCode, variables: null, countdownDuration: Config.ElectionPromptDuration * GameSpeedModifier);
+			DisplayTitle(Config.ElectionPromptTitleScreen.ID.HashCode, variables: null, countdownDuration: Config.ElectionPromptDuration * GameSpeedModifier);
 #endif
 			yield return new WaitForSeconds(Config.ElectionPromptDuration * GameSpeedModifier);
 
@@ -724,8 +724,8 @@ namespace Werewolf.Managers
 #if UNITY_SERVER && UNITY_EDITOR
 				SetPlayersCardHighlightVisible(captainCandidates, true);
 #endif
-				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidatesTitle.ID.HashCode, Config.ElectionMultipleCandidatesDuration * GameSpeedModifier);
-				StartCoroutine(StartDebate(captainCandidates, Config.ElectionDebateTitle.ID.HashCode, Config.ElectionDebateDuration * GameSpeedModifier));
+				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidatesTitleScreen.ID.HashCode, Config.ElectionMultipleCandidatesDuration * GameSpeedModifier);
+				StartCoroutine(StartDebate(captainCandidates, Config.ElectionDebateTitleScreen.ID.HashCode, Config.ElectionDebateDuration * GameSpeedModifier));
 				yield break;
 			}
 			else if (_captainCandidates.Count == 1)
@@ -736,7 +736,7 @@ namespace Werewolf.Managers
 			else
 			{
 				_gameHistoryManager.AddEntry(Config.ElectionNoCandidateGameHistoryEntry.ID, null);
-				yield return DisplayTitleForAllPlayers(Config.ElectionNoCandidateTitle.ID.HashCode, Config.ElectionNoCandidateDuration * GameSpeedModifier);
+				yield return DisplayTitleForAllPlayers(Config.ElectionNoCandidateTitleScreen.ID.HashCode, Config.ElectionNoCandidateDuration * GameSpeedModifier);
 			}
 
 			CurrentGameplayLoopStep = GameplayLoopStep.Election;
@@ -754,7 +754,7 @@ namespace Werewolf.Managers
 		private void StartElection()
 		{
 			_voteManager.StartVoteForAllPlayers(OnElectionVotesCounted,
-												Config.ElectionVoteTitle.ID.HashCode,
+												Config.ElectionVoteTitleScreen.ID.HashCode,
 												Config.ElectionVoteDuration * GameSpeedModifier,
 												false,
 												ChoicePurpose.Other,
@@ -1138,12 +1138,12 @@ namespace Werewolf.Managers
 
 		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
 		{
-			DisplayTitle(hasAnyPlayerDied ? Config.DeathRevealSomeoneDiedTitle.ID.HashCode : Config.DeathRevealNoOneDiedTitle.ID.HashCode);
+			DisplayTitle(hasAnyPlayerDied ? Config.DeathRevealSomeoneDiedTitleScreen.ID.HashCode : Config.DeathRevealNoOneDiedTitleScreen.ID.HashCode);
 		}
 
 		private void DisplayPlayerDiedTitle(bool wasExecuted)
 		{
-			DisplayTitle(wasExecuted ? Config.PlayerExecutedTitle.ID.HashCode : Config.PlayerDiedTitle.ID.HashCode);
+			DisplayTitle(wasExecuted ? Config.PlayerExecutedTitleScreen.ID.HashCode : Config.PlayerDiedTitleScreen.ID.HashCode);
 		}
 
 		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, MarkForDeathData mark, bool returnFaceDown, Action RevealPlayerCompleted)
@@ -1290,7 +1290,7 @@ namespace Werewolf.Managers
 		private void StartExecution()
 		{
 			if (!_voteManager.StartVoteForAllPlayers(OnExecutionVotesCounted,
-													Config.ExecutionVoteTitle.ID.HashCode,
+													Config.ExecutionVoteTitleScreen.ID.HashCode,
 													Config.ExecutionVoteDuration * GameSpeedModifier,
 													true,
 													ChoicePurpose.Kill,
@@ -1323,10 +1323,10 @@ namespace Werewolf.Managers
 
 		private IEnumerator StartSecondaryExecution(PlayerRef[] mostVotedPlayers)
 		{
-			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteTitle.ID.HashCode, Config.ExecutionHoldDuration * GameSpeedModifier);
+			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteTitleScreen.ID.HashCode, Config.ExecutionHoldDuration * GameSpeedModifier);
 
 			if (!_voteManager.StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
-													Config.ExecutionVoteTitle.ID.HashCode,
+													Config.ExecutionVoteTitleScreen.ID.HashCode,
 													Config.ExecutionVoteDuration * GameSpeedModifier,
 													false,
 													ChoicePurpose.Kill,
@@ -1361,7 +1361,7 @@ namespace Werewolf.Managers
 
 			if (!SelectPlayers(_captain,
 								choices,
-								Config.ExecutionDrawYouChooseTitle.ID.HashCode,
+								Config.ExecutionDrawYouChooseTitleScreen.ID.HashCode,
 								Config.ExecutionCaptainChoiceDuration * GameSpeedModifier,
 								false,
 								1,
@@ -1378,11 +1378,11 @@ namespace Werewolf.Managers
 			{
 				if (_networkDataManager.PlayerInfos[player.Key].IsConnected && player.Key != _captain)
 				{
-					RPC_DisplayTitle(player.Key, Config.ExecutionDrawCaptainChooseTitle.ID.HashCode);
+					RPC_DisplayTitle(player.Key, Config.ExecutionDrawCaptainChooseTitleScreen.ID.HashCode);
 				}
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(Config.ExecutionDrawCaptainChooseTitle.ID.HashCode);
+			DisplayTitle(Config.ExecutionDrawCaptainChooseTitleScreen.ID.HashCode);
 #endif
 			yield return new WaitForSeconds(Config.ExecutionCaptainChoiceDuration * GameSpeedModifier);
 
@@ -1473,7 +1473,7 @@ namespace Werewolf.Managers
 
 		private IEnumerator DisplayFailedExecution()
 		{
-			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainTitle.ID.HashCode, Config.ExecutionHoldDuration * GameSpeedModifier);
+			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainTitleScreen.ID.HashCode, Config.ExecutionHoldDuration * GameSpeedModifier);
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
@@ -1619,7 +1619,7 @@ namespace Werewolf.Managers
 			}
 			else
 			{
-				DisplayTitle(Config.NoWinnerTitle.ID.HashCode);
+				DisplayTitle(Config.NoWinnerTitleScreen.ID.HashCode);
 			}
 
 			yield return new WaitForSeconds(Config.EndGameHoldDuration * GameSpeedModifier);

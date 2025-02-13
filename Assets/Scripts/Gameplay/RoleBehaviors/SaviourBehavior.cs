@@ -14,7 +14,7 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Save Player")]
 		[SerializeField]
-		private ImageData _choosePlayerTitle;
+		private TitleScreenData _choosePlayerTitleScreen;
 
 		[SerializeField]
 		private float _choosePlayerMaximumDuration;
@@ -66,7 +66,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
-											_choosePlayerTitle.ID.HashCode,
+											_choosePlayerTitleScreen.ID.HashCode,
 											_choosePlayerMaximumDuration * _gameManager.GameSpeedModifier,
 											false,
 											1,

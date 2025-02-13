@@ -17,7 +17,7 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Choose Couple")]
 		[SerializeField]
-		private ImageData _chooseCoupleTitle;
+		private TitleScreenData _chooseCoupleTitleScreen;
 
 		[SerializeField]
 		private float _chooseCoupleMaximumDuration;
@@ -36,10 +36,10 @@ namespace Werewolf.Gameplay.Role
 		private float _showCoupleHighlightHoldDuration;
 
 		[SerializeField]
-		private ImageData _inCoupleTitle;
+		private TitleScreenData _inCoupleTitleScreen;
 
 		[SerializeField]
-		private ImageData _coupleRecognizingEachOtherTitle;
+		private TitleScreenData _coupleRecognizingEachOtherTitleScreen;
 
 		[Header("Couple Death")]
 		[SerializeField]
@@ -49,7 +49,7 @@ namespace Werewolf.Gameplay.Role
 		private GameHistoryEntryData _coupleDiedGameHistoryEntry;
 
 		[SerializeField]
-		private ImageData _coupleDeathTitle;
+		private TitleScreenData _coupleDeathTitleScreen;
 
 		[SerializeField]
 		private float _coupleDeathHighlightHoldDuration;
@@ -119,7 +119,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
-											_chooseCoupleTitle.ID.HashCode,
+											_chooseCoupleTitleScreen.ID.HashCode,
 											_chooseCoupleMaximumDuration * _gameManager.GameSpeedModifier,
 											true,
 											2,
@@ -285,7 +285,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
-				_gameManager.RPC_DisplayTitle(Player, couple.Contains(Player) ? _inCoupleTitle.ID.HashCode : _coupleRecognizingEachOtherTitle.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(Player, couple.Contains(Player) ? _inCoupleTitleScreen.ID.HashCode : _coupleRecognizingEachOtherTitleScreen.ID.HashCode);
 			}
 
 			_showedCouple = true;
@@ -329,11 +329,11 @@ namespace Werewolf.Gameplay.Role
 			{
 				if (_couples[^1].Contains(playerInfo.Key))
 				{
-					titlesOverride.Add(playerInfo.Key, _inCoupleTitle.ID.HashCode);
+					titlesOverride.Add(playerInfo.Key, _inCoupleTitleScreen.ID.HashCode);
 				}
 				else
 				{
-					titlesOverride.Add(playerInfo.Key, _coupleRecognizingEachOtherTitle.ID.HashCode);
+					titlesOverride.Add(playerInfo.Key, _coupleRecognizingEachOtherTitleScreen.ID.HashCode);
 				}
 			}
 		}
@@ -441,7 +441,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void HighlightDeadPlayers(PlayerRef[] deadPlayers)
 		{
-			_gameManager.RPC_DisplayTitle(_coupleDeathTitle.ID.HashCode);
+			_gameManager.RPC_DisplayTitle(_coupleDeathTitleScreen.ID.HashCode);
 			_gameManager.RPC_SetPlayersCardHighlightVisible(deadPlayers, true);
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayersCardHighlightVisible(deadPlayers, true);

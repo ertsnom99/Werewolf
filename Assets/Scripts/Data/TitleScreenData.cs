@@ -4,8 +4,8 @@ using UnityEngine.Localization;
 
 namespace Werewolf.Data
 {
-	[CreateAssetMenu(fileName = "ImageData", menuName = "ScriptableObjects/ImageData")]
-	public class ImageData : GameplayData
+	[CreateAssetMenu(fileName = "TitleScreenData", menuName = "ScriptableObjects/TitleScreenData")]
+	public class TitleScreenData : GameplayData
 	{
 		[field: SerializeField]
 		[field: PreviewSprite]

@@ -51,23 +51,22 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _chooseCoupleTitle: {fileID: 11400000, guid: 78a99d4d6fce82348979eb3ea548b005, type: 2}
+  _chooseCoupleTitleScreen: {fileID: 11400000, guid: 78a99d4d6fce82348979eb3ea548b005,
+    type: 2}
   _chooseCoupleMaximumDuration: 10
   _couplePlayerGroup: {fileID: 11400000, guid: 1fa249ae223de304db0906931bc218a8, type: 2}
   _coupleSelectedGameHistoryEntry: {fileID: 11400000, guid: f493a5a116339ac48be8365de11977ce,
     type: 2}
-  _coupleSelectedGameHistoryEntryNEW: {fileID: 11400000, guid: f493a5a116339ac48be8365de11977ce,
-    type: 2}
   _choseCoupleHighlightHoldDuration: 3
   _showCoupleHighlightHoldDuration: 5
-  _inCoupleTitle: {fileID: 11400000, guid: 06a57fad7c2f9f6488581414fb462317, type: 2}
-  _coupleRecognizingEachOtherTitle: {fileID: 11400000, guid: 7318397f152997642bb9172992ab61db,
+  _inCoupleTitleScreen: {fileID: 11400000, guid: 06a57fad7c2f9f6488581414fb462317,
+    type: 2}
+  _coupleRecognizingEachOtherTitleScreen: {fileID: 11400000, guid: 7318397f152997642bb9172992ab61db,
     type: 2}
   _markForDeathAddedByCoupleDeath: {fileID: 11400000, guid: dd61f74423fdda344b1f318fd613f5d2,
     type: 2}
   _coupleDiedGameHistoryEntry: {fileID: 11400000, guid: 00ff1836dea5c9d44b40fd8ba7cf1bdd,
     type: 2}
-  _coupleDiedGameHistoryEntryNEW: {fileID: 11400000, guid: 00ff1836dea5c9d44b40fd8ba7cf1bdd,
+  _coupleDeathTitleScreen: {fileID: 11400000, guid: 64eacde16cb980e4aa235617a706c082,
     type: 2}
-  _coupleDeathTitle: {fileID: 11400000, guid: 64eacde16cb980e4aa235617a706c082, type: 2}
   _coupleDeathHighlightHoldDuration: 5

@@ -12,7 +12,7 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Wild Child")]
 		[SerializeField]
-		private ImageData _chooseModelTitle;
+		private TitleScreenData _chooseModelTitleScreen;
 
 		[SerializeField]
 		private float _chooseModelMaximumDuration;
@@ -78,7 +78,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!_gameManager.SelectPlayers(Player,
 											choices,
-											_chooseModelTitle.ID.HashCode,
+											_chooseModelTitleScreen.ID.HashCode,
 											_chooseModelMaximumDuration * _gameManager.GameSpeedModifier,
 											true,
 											1,
