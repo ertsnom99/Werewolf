@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67d1eacae6feb964fb2367c2a8b1e95b, type: 3}
   m_Name: VotedFor
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -6371537381687074625, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: d52c3c62-d17e-4812-a527-f3fe283efddd
     HashCode: 1322532629

@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: BigBadWolfLostPower
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -3692402352692713400, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 6a3dde74-f1fd-4242-ad8b-2f16e8c79b4b
     HashCode: -1620621605

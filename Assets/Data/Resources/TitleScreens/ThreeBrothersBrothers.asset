@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: ThreeBrothersBrothers
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -5380123629795287566, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 692929a2-4069-4a4c-bfd7-83c26d89b785
     HashCode: 1257413555

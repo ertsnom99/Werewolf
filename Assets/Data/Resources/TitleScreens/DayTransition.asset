@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: DayTransition
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 8582886363894869589, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: aa3e2d43-c8d5-4817-9f1d-6b0332185620
     HashCode: -71359409

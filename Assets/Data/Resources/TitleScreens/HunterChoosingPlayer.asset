@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: HunterChoosingPlayer
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -2521136356514112087, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 7a663742-e27e-4de8-a3e4-a09b7d8f831c
     HashCode: 113927949

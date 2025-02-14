@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb88f29120882e344854ec135f501641, type: 3}
   m_Name: WitchChoiceScreen
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 5184849998100429465, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 12d29e07-636e-4d3d-af80-f5c43c98f19e
     HashCode: 1180172654

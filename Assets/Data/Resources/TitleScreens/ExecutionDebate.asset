@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: ExecutionDebate
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -467428146297135536, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: f87b56fa-156d-495c-8384-862a653ac62b
     HashCode: 1074632632

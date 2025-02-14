@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: CupidCoupleDeath
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 7456238396284510153, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 53b8dd92-6960-42b7-836d-467547d9a069
     HashCode: -1347333546

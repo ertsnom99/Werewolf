@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: Hunter
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 8950718465599024891, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: b0c7f87a-efa1-49b8-be3a-328d9042ece4
     HashCode: -202684014
@@ -54,8 +52,6 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
-  <PlayerGroupsNEW>k__BackingField:
   - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
   <NightPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 533803202057787046, guid: 04aceefe5e1aa0545a5069613c22b513,

@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: FoxLostPower
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -3897550941697366323, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: fe5900c8-078f-4c38-aeec-f43a13b99748
     HashCode: 1479583244

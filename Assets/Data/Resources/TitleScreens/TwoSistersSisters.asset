@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: TwoSistersSisters
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -8411044993407871370, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 876254cb-6648-4503-b0cb-00c6efd3d3f6
     HashCode: 1590916430

@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67d1eacae6feb964fb2367c2a8b1e95b, type: 3}
   m_Name: PlayerDied
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 2349646183929925099, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 7f97e24b-ee02-438c-8dab-74cf3115b743
     HashCode: -555452583
