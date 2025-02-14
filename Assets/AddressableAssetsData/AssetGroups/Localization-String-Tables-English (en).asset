@@ -30,7 +30,7 @@ MonoBehaviour:
     - Locale-en
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c47532973048a2743a66536224e26a7c
-    m_Address: StringTableImage_en
+    m_Address: StringTableTitleScreen_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

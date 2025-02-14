@@ -10,267 +10,273 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: StringTableImage_en
+  m_Name: StringTableTitleScreen_fr-CA
   m_EditorClassIdentifier: 
   m_LocaleId:
-    m_Code: en
+    m_Code: fr-CA
   m_SharedData: {fileID: 11400000, guid: 0d1be4a4109b4914b871fb5b3860e3ed, type: 2}
   m_Metadata:
     m_Items:
-    - rid: 4972454616256217094
+    - rid: 4972454835144097793
   m_TableData:
   - m_Id: 424192802816
-    m_Localized: Choose the next captain
+    m_Localized: Choisissez le prochain capitaine
     m_Metadata:
       m_Items: []
   - m_Id: 760991219712
-    m_Localized: The old captain is choosing the new one
+    m_Localized: "L\u2019ancien capitaine est en train de choisir le nouveau"
     m_Metadata:
       m_Items: []
   - m_Id: 1129129476096
-    m_Localized: '{Player} is the captain!'
+    m_Localized: '{Player} est le capitaine!'
     m_Metadata:
       m_Items:
-      - rid: 4972454616256217094
+      - rid: 4972454835144097793
   - m_Id: 1288592719872
-    m_Localized: Choose the couple
+    m_Localized: Choisissez le couple
     m_Metadata:
       m_Items: []
   - m_Id: 1465684623360
-    m_Localized: This couple can't live appart from each other!
+    m_Localized: "Ce couple ne peut pas vivre l\u2019un sans l\u2019autre"
     m_Metadata:
       m_Items: []
   - m_Id: 1764906270720
-    m_Localized: The couple is recognizing each other
+    m_Localized: "Le couple se reconna\xEEt"
     m_Metadata:
       m_Items: []
   - m_Id: 2185586573312
-    m_Localized: You are now in a couple
+    m_Localized: "Vous \xEAtes maintenant en couple"
     m_Metadata:
       m_Items: []
   - m_Id: 2573417086976
-    m_Localized: The sun is rising, the village wakes up...
+    m_Localized: "Le soleil se l\xE8ve, le village se r\xE9veille..."
     m_Metadata:
       m_Items: []
   - m_Id: 2787137847296
-    m_Localized: No one died tonight!
+    m_Localized: "Personne n\u2019est mort ce soir!"
     m_Metadata:
       m_Items: []
   - m_Id: 3110720012288
-    m_Localized: You died!
+    m_Localized: "Vous \xEAtes mort!"
     m_Metadata:
       m_Items: []
   - m_Id: 3288390729728
-    m_Localized: You were executed
+    m_Localized: "Vous avez \xE9t\xE9 \xE9x\xE9cut\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 3540103495680
-    m_Localized: Some villagers died...
+    m_Localized: Des villageois sont mort...
     m_Metadata:
       m_Items: []
   - m_Id: 3887026962432
-    m_Localized: Debate about which of these villagers should be captain
+    m_Localized: "D\xE9b\xE2tez sur qui devrait devenir capitaine parmi ces villageois"
     m_Metadata:
       m_Items: []
   - m_Id: 5436641935360
-    m_Localized: Multiple villagers want to be captain. The village will debate,
-      then vote!
+    m_Localized: "Plusieurs villageois veulent devenir capitaine. Le village va d\xE9battre,
+      puis voter!"
     m_Metadata:
       m_Items: []
   - m_Id: 6150407618560
-    m_Localized: No one wanted to be the captain!
+    m_Localized: Personne ne voulait devenir capitaine!
     m_Metadata:
       m_Items: []
   - m_Id: 6391932420096
-    m_Localized: Do you want to be the captain?
+    m_Localized: Voulez-vous devenir capitaine?
     m_Metadata:
       m_Items: []
   - m_Id: 6572358795264
-    m_Localized: No one won!
+    m_Localized: "Personne n\u2019a gagn\xE9!"
     m_Metadata:
       m_Items: []
   - m_Id: 6799388082176
-    m_Localized: Debate about which of these villagers should be executed!
+    m_Localized: "D\xE9b\xE2tez \xE0 propos duquel de ces villageois devraient \xEAtre
+      ex\xE9cut\xE9!"
     m_Metadata:
       m_Items: []
   - m_Id: 7079081050112
-    m_Localized: The vote was a draw again! No one will be executed.
+    m_Localized: "Le vote a \xE9t\xE9 une \xE9galit\xE9 \xE0 nouveau! Personne en
+      sera ex\xE9cut\xE9."
     m_Metadata:
       m_Items: []
   - m_Id: 7287475044352
-    m_Localized: The vote was a draw! The captain will choose who to execute.
+    m_Localized: "Le vote a \xE9t\xE9 une \xE9galit\xE9! Le capitaine va choisir
+      qui sera ex\xE9cut\xE9."
     m_Metadata:
       m_Items: []
   - m_Id: 7421973790720
-    m_Localized: The vote was a draw! A new vote will start to break the draw.
+    m_Localized: "Le vote a \xE9t\xE9 une \xE9galit\xE9! Un nouveau vote va commencer
+      pour briser l\u2019\xE9galit\xE9."
     m_Metadata:
       m_Items: []
   - m_Id: 7593353052160
-    m_Localized: The vote was a draw! Choose who to execute.
+    m_Localized: "Le vote a \xE9t\xE9 une \xE9galit\xE9! Choisissez qui sera ex\xE9cut\xE9."
     m_Metadata:
       m_Items: []
   - m_Id: 7842247245824
-    m_Localized: Choose a villager to see his role
+    m_Localized: "Choisissez un villageois pour voir son r\xF4le."
     m_Metadata:
       m_Items: []
   - m_Id: 7940146495488
-    m_Localized: Choose the middle villager to check
+    m_Localized: "Choisissez le villageois du milieu \xE0 v\xE9rifier."
     m_Metadata:
       m_Items: []
   - m_Id: 8087697915904
-    m_Localized: There is no werewolf in this group! You lost your power!
+    m_Localized: "Il n\u2019y a pas de loup-garou dans ce groupe! Vous avez perdu
+      votre pouvoir!"
     m_Metadata:
       m_Items: []
   - m_Id: 8209857019904
-    m_Localized: There is one or more werewolf in this group!
+    m_Localized: Il y a un ou plusieurs loup-garou dans ce groupe!
     m_Metadata:
       m_Items: []
   - m_Id: 8656277766144
-    m_Localized: Choose a villager to kill
+    m_Localized: Choisissez un villageois a tuer
     m_Metadata:
       m_Items: []
   - m_Id: 8870799638528
-    m_Localized: The hunter is choosing who to kill!
+    m_Localized: Le chasseur est en train de choisir qui tuer!
     m_Metadata:
       m_Items: []
   - m_Id: 8953955909632
-    m_Localized: The sun is setting, the village goes to sleep...
+    m_Localized: "Le soleil se couche, le village s'endort\u2026"
     m_Metadata:
       m_Items: []
   - m_Id: 9065444704256
-    m_Localized: Choose a villager to protect
+    m_Localized: "Choisissez un villageois \xE0 prot\xE9ger"
     m_Metadata:
       m_Items: []
   - m_Id: 9160047230976
-    m_Localized: Choose a villager to kill!
+    m_Localized: "Choisissez un villageois \xE0 tuer"
     m_Metadata:
       m_Items: []
   - m_Id: 9296928342016
-    m_Localized: Kill
+    m_Localized: Tuer
     m_Metadata:
       m_Items: []
   - m_Id: 9378331394048
-    m_Localized: Can't use any potion
+    m_Localized: "Aucune potion ne peu \xEAtre utilis\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 9500591161344
-    m_Localized: This villager will die tonight
+    m_Localized: Ce villageois va mourir ce soir
     m_Metadata:
       m_Items: []
   - m_Id: 9717625421824
-    m_Localized: Save
+    m_Localized: Sauver
     m_Metadata:
       m_Items: []
   - m_Id: 403563773460480
-    m_Localized: Yes!
+    m_Localized: Oui!
     m_Metadata:
       m_Items: []
   - m_Id: 403990304817152
-    m_Localized: Vote for who should be the captain
+    m_Localized: "Voter pour qui devrait \xEAtre le capitaine"
     m_Metadata:
       m_Items: []
   - m_Id: 1058760967356416
-    m_Localized: '{Role} {Multiple:are playing|is playing}...'
+    m_Localized: '{Role} {Multiple:jouent|joue}...'
     m_Metadata:
       m_Items:
-      - rid: 4972454616256217094
+      - rid: 4972454835144097793
   - m_Id: 1081749771419648
-    m_Localized: Vote for who should be executed
+    m_Localized: "Votez pour qui devrait \xEAtre ex\xE9cut\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 1089443479715840
-    m_Localized: Vote for who should be killed
+    m_Localized: "Votez pour qui devrait \xEAtre tu\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 1192834260303872
-    m_Localized: Take this role?
+    m_Localized: "Prendre ce r\xF4le?"
     m_Metadata:
       m_Items: []
   - m_Id: 1193054352211968
-    m_Localized: Take role
+    m_Localized: "Prendre le r\xF4le"
     m_Metadata:
       m_Items: []
   - m_Id: 1194417882693632
-    m_Localized: 'Your new role is: {Role}'
+    m_Localized: "Votre nouveau r\xF4le est: {Role}"
     m_Metadata:
       m_Items:
-      - rid: 4972454616256217094
+      - rid: 4972454835144097793
   - m_Id: 1194478347780096
-    m_Localized: The servant has decided to take this role!
+    m_Localized: "La servante a d\xE9cid\xE9 de prendre ce r\xF4le!"
     m_Metadata:
       m_Items: []
   - m_Id: 6123585257463808
-    m_Localized: There isn't any other werewolves left
+    m_Localized: Il n'y a plus d'autres loups-garous
     m_Metadata:
       m_Items: []
   - m_Id: 6125516872867840
-    m_Localized: Choose a werewolf to kill
+    m_Localized: Choisissez un loup-garou a tuer
     m_Metadata:
       m_Items: []
   - m_Id: 7688451105611776
-    m_Localized: There isn't any villagers that you could kill
+    m_Localized: Il n'y a pas de villageois que vous pourriez tuer
     m_Metadata:
       m_Items: []
   - m_Id: 7688658887237632
-    m_Localized: Choose a villager to kill
+    m_Localized: Choisissez un villageois a tuer
     m_Metadata:
       m_Items: []
   - m_Id: 9786050608488448
-    m_Localized: The bear of the  Bear Trainer is growling!
+    m_Localized: L'ours du Montreur d'Ours grogne!
     m_Metadata:
       m_Items: []
   - m_Id: 10433339337334784
-    m_Localized: Choose your model
-    m_Metadata:
-      m_Items: []
-  - m_Id: 13073015806222336
-    m_Localized: All of you are charmed
+    m_Localized: "Choisi ton mod\xE8le"
     m_Metadata:
       m_Items: []
   - m_Id: 13073252616626176
-    m_Localized: Choose up to two villagers to charm
+    m_Localized: Choisissez jusqu'a deux villageois a charmer
     m_Metadata:
       m_Items: []
   - m_Id: 13073159595352064
-    m_Localized: The charmed villagers are recognizing each other
+    m_Localized: "Les villageois charm\xE9s se reconnaissent"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073015806222336
+    m_Localized: "Vous \xEAtes tous charm\xE9s"
     m_Metadata:
       m_Items: []
   - m_Id: 13439811033882624
-    m_Localized: Can't use your power, because you lost it!
+    m_Localized: "Impossible d\u2019utiliser votre pouvoir, car vous l\u2019avez
+      perdu!"
     m_Metadata:
       m_Items: []
   - m_Id: 17662799644057600
-    m_Localized: Werewolfs
+    m_Localized: Loups-Garous
     m_Metadata:
       m_Items: []
   - m_Id: 17662861266771968
-    m_Localized: Villagers
-    m_Metadata:
-      m_Items: []
-  - m_Id: 19117748072603648
-    m_Localized: Infect this villager?
+    m_Localized: Villageois
     m_Metadata:
       m_Items: []
   - m_Id: 19117829932834816
-    m_Localized: Infect
+    m_Localized: Infecter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19117748072603648
+    m_Localized: Infecter ce villageois?
     m_Metadata:
       m_Items: []
   - m_Id: 19142170410082304
-    m_Localized: You are now a Werewolf!
+    m_Localized: "Vous \xEAtes maintenant un Loup-Garou!"
     m_Metadata:
       m_Items: []
   - m_Id: 21377029073395712
-    m_Localized: You are the Sisters
+    m_Localized: "Vous \xEAtes les Soeurs"
     m_Metadata:
       m_Items: []
   - m_Id: 21429176750170112
-    m_Localized: You are the Brothers
+    m_Localized: "Vous \xEAtes les Fr\xE8res"
     m_Metadata:
       m_Items: []
   references:
     version: 2
     RefIds:
-    - rid: 4972454616256217094
+    - rid: 4972454835144097793
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_Entries: 00805cffefc2030000809c15513e040000805ce506010000
