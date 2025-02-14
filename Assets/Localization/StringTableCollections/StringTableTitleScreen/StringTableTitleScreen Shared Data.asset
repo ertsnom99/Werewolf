@@ -1,0 +1,273 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: StringTableTitleScreen Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: StringTableTitleScreen
+  m_TableCollectionNameGuidString: 0d1be4a4109b4914b871fb5b3860e3ed
+  m_Entries:
+  - m_Id: 424192802816
+    m_Key: Captain_ChooseNextCaptain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 760991219712
+    m_Key: Captain_OldCaptainChoosing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1129129476096
+    m_Key: Captain_Reveal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1288592719872
+    m_Key: Cupid_ChooseCouple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1465684623360
+    m_Key: Cupid_CoupleDeath
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1764906270720
+    m_Key: Cupid_CoupleRecognizingEachOther
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2185586573312
+    m_Key: Cupid_InCouple
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573417086976
+    m_Key: Day_Transition
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2787137847296
+    m_Key: DeathReveal_NoOneDied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3110720012288
+    m_Key: DeathReveal_PlayerDied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3288390729728
+    m_Key: DeathReveal_PlayerExecuted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3540103495680
+    m_Key: DeathReveal_SomeoneDied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3887026962432
+    m_Key: Election_Debate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5436641935360
+    m_Key: Election_MultipleCandidates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6150407618560
+    m_Key: Election_NoCandidate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6391932420096
+    m_Key: Election_Prompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6572358795264
+    m_Key: EndGame_NoWinner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6799388082176
+    m_Key: Execution_Debate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7079081050112
+    m_Key: Execution_DrawAgain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7287475044352
+    m_Key: Execution_DrawCaptainChoose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7421973790720
+    m_Key: Execution_DrawNewVote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7593353052160
+    m_Key: Execution_DrawYouChoose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7842247245824
+    m_Key: FortuneTeller_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7940146495488
+    m_Key: Fox_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8087697915904
+    m_Key: Fox_FoundNoWerewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8209857019904
+    m_Key: Fox_FoundWerewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8656277766144
+    m_Key: Hunter_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8870799638528
+    m_Key: Hunter_ChoosingPlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8953955909632
+    m_Key: Night_Transition
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9065444704256
+    m_Key: Savior_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9160047230976
+    m_Key: Witch_ChoosePlayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9296928342016
+    m_Key: Witch_Kill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9378331394048
+    m_Key: Witch_NoPotionToUse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9500591161344
+    m_Key: Witch_PlayerDeadTonight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9717625421824
+    m_Key: Witch_Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 403563773460480
+    m_Key: Election_PromptButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 403990304817152
+    m_Key: Election_Vote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1058760967356416
+    m_Key: NightCall_RolePlaying
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1081749771419648
+    m_Key: Execution_Vote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1089443479715840
+    m_Key: Werewolf_Vote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1192834260303872
+    m_Key: Servant_TakeRoleText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1193054352211968
+    m_Key: Servant_TakeRolePrompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1194417882693632
+    m_Key: Servant_NewRole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1194478347780096
+    m_Key: Servant_TookThisRole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6123585257463808
+    m_Key: WhiteWerewolf_NoOtherWerewolves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6125516872867840
+    m_Key: WhiteWerewolf_ChooseOtherWerewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688451105611776
+    m_Key: BigBadWolf_NoVillagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688658887237632
+    m_Key: BigBadWolf_ChooseVillager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9786050608488448
+    m_Key: BearTrainer_BearGrowling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10433339337334784
+    m_Key: WildChild_ChooseModel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073015806222336
+    m_Key: PiedPiper_CharmedVillagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073159595352064
+    m_Key: PiedPiper_CharmedVillagersRecognizingEachOther
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13073252616626176
+    m_Key: PiedPiper_CharmVillagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13439811033882624
+    m_Key: Role_LostPower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17662799644057600
+    m_Key: DogWolf_Werewolves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17662861266771968
+    m_Key: DogWolf_Villagers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19117748072603648
+    m_Key: InfectFatherWolves_InfectText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19117829932834816
+    m_Key: InfectFatherWolves_InfectPrompt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19142170410082304
+    m_Key: InfectFatherWolves_InfectedText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21377029073395712
+    m_Key: TwoSisters_Sisters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21429176750170112
+    m_Key: ThreeBrothers_Brothers
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 4972454591479152642
+  references:
+    version: 2
+    RefIds:
+    - rid: 4972454591479152642
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1733370835996
