@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: WildChildChooseModel
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 1460092710510734173, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 5572cbda-b6ea-4c6a-af46-1c31b0325487
     HashCode: 1731195173

@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: SaviorChoosePlayer
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 7494298166840074912, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 10b0e1dd-73d8-468a-9ee9-196421464867
     HashCode: -1512637840

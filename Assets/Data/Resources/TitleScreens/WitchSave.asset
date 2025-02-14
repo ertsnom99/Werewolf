@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: WitchSave
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -8974482386819651042, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: c9627b6d-8bda-4f3a-8281-1754e6171e73
     HashCode: -410157661

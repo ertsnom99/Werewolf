@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: Villager
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -7226050190254201797, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: e4b99fbd-8674-4608-9c8d-ae1ac599bc83
     HashCode: 542517090
@@ -54,8 +52,6 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 1
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
-  <PlayerGroupsNEW>k__BackingField:
   - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
   <NightPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 0}

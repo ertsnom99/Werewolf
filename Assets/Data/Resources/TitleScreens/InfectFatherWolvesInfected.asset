@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: InfectFatherWolvesInfected
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -7417052888226706271, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 137aa646-9c9d-4cd7-abe2-9d606f0d2687
     HashCode: -119004222

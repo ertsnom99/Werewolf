@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67d1eacae6feb964fb2367c2a8b1e95b, type: 3}
   m_Name: BearTrainerBearGrowled
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -190435953497311190, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 19132dd2-233e-4c0b-a723-fcbad65d3b32
     HashCode: 543996418

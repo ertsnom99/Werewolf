@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: PiedPiperCharmedVillagers
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -8899812572036424319, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 2c10e7a1-8f8a-4f4d-849b-78079e2bf49c
     HashCode: 127344188

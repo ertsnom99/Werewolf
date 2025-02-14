@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: ExecutionDrawYouChoose
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -8197723905688610027, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 765bde61-a9a6-4f40-9d39-cf1604aef140
     HashCode: -1331896589

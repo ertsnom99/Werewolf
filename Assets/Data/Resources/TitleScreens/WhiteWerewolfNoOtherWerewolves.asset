@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: WhiteWerewolfNoOtherWerewolves
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -7538681175632383403, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: a36fd367-a6f7-4cca-a924-49e9fdd7f575
     HashCode: -1975284850

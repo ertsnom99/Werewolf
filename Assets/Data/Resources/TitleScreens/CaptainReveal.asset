@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: CaptainReveal
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -4152609035969618942, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: b5e098d6-463a-4c4c-b022-17c2b5877488
     HashCode: 291207783

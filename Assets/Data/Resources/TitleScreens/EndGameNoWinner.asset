@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
   m_Name: EndGameNoWinner
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -46525750058059440, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 69dfaa91-1257-4722-b69b-08bd42b6ccf6
     HashCode: 173690762

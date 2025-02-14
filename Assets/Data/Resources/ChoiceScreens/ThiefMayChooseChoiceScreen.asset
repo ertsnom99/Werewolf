@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb88f29120882e344854ec135f501641, type: 3}
   m_Name: ThiefMayChooseChoiceScreen
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: 2863830419304168545, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: f6c652fa-0fc8-47c5-98c2-c2938dc77afc
     HashCode: 1169031809

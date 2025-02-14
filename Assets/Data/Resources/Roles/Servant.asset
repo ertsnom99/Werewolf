@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
   m_Name: Servant
   m_EditorClassIdentifier: 
-  <GameplayTag>k__BackingField: {fileID: -2503317683888758085, guid: 0e7014af8e28a88409bdb3f0abb80632,
-    type: 2}
   <ID>k__BackingField:
     Guid: 8c16eab4-0003-4231-902a-8a9af25c5967
     HashCode: -74320823
@@ -54,8 +52,6 @@ MonoBehaviour:
   <CanHaveMultiples>k__BackingField: 0
   <MandatoryCount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
-  <PlayerGroupsNEW>k__BackingField:
   - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
   <NightPriorities>k__BackingField: []
   <Behavior>k__BackingField: {fileID: 4830877496367092188, guid: 2344d20f29d66b24f8f6523b1cadfe59,
