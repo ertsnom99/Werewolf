@@ -52,26 +52,28 @@ namespace Werewolf.UI
 				return;
 			}
 
-			UpdateButtons();
+			bool historyAvailable = !string.IsNullOrEmpty(gameHistory);
+			_historyBtn.interactable = historyAvailable;
 
 			_roomMenu.Initialize(networkDataManager, localPlayer, minNicknameCharacterCount);
 			_settingsMenu.Initialize(networkDataManager, localPlayer);
 
-			if (!string.IsNullOrEmpty(gameHistory))
+			if (historyAvailable)
 			{
-				_historyBtn.interactable = true;
 				_historyMenu.Initialize(gameHistory);
 			}
 
-			_networkDataManager.PlayerInfosChanged += UpdateButtons;
-			_networkDataManager.GameSetupReadyChanged += UpdateButtons;
+			UpdateGameButtons();
+
+			_networkDataManager.PlayerInfosChanged += UpdateGameButtons;
+			_networkDataManager.GameSetupReadyChanged += UpdateGameButtons;
 			_networkDataManager.InvalidRolesSetupReceived += OnInvalidRolesSetupReceived;
 			_roomMenu.KickPlayerClicked += OnKickPlayerClicked;
 			_roomMenu.ChangeNicknameClicked += OnChangeNicknameClicked;
 			_settingsMenu.GameSpeedChanged += OnGameSpeedChanged;
 		}
 
-		private void UpdateButtons()
+		private void UpdateGameButtons()
 		{
 			bool localPlayerInfoExist = _networkDataManager.PlayerInfos.TryGet(_localPlayer, out PlayerNetworkInfo localPlayerInfo);
 			bool isLocalPlayerLeader = localPlayerInfoExist && localPlayerInfo.IsLeader;
@@ -142,8 +144,8 @@ namespace Werewolf.UI
 
 		private void OnDisable()
 		{
-			_networkDataManager.PlayerInfosChanged -= UpdateButtons;
-			_networkDataManager.GameSetupReadyChanged -= UpdateButtons;
+			_networkDataManager.PlayerInfosChanged -= UpdateGameButtons;
+			_networkDataManager.GameSetupReadyChanged -= UpdateGameButtons;
 			_networkDataManager.InvalidRolesSetupReceived -= OnInvalidRolesSetupReceived;
 			_roomMenu.KickPlayerClicked -= OnKickPlayerClicked;
 			_roomMenu.ChangeNicknameClicked -= OnChangeNicknameClicked;
