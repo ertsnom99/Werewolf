@@ -219,7 +219,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2594361137553408
-    m_Localized: Quitter la session
+    m_Localized: Quitter la Partie
     m_Metadata:
       m_Items: []
   - m_Id: 2595742095368192
@@ -279,6 +279,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 11212151973076992
     m_Localized: Entrez le nom de l'historique de jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26452182392233984
+    m_Localized: Partie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26454628984283136
+    m_Localized: Configurations
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26454823432216576
+    m_Localized: Historique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26534419045408768
+    m_Localized: N'a pas pu afficher l'historique
     m_Metadata:
       m_Items: []
   references:

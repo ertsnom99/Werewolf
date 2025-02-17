@@ -21,7 +21,7 @@ namespace Werewolf.Managers
 		private JoinMenu _joinMenu;
 
 		[SerializeField]
-		private RoomMenu _roomMenu;
+		private GameMenu _gameMenu;
 
 		[SerializeField]
 		private RulesMenu _rulesMenu;
@@ -30,7 +30,14 @@ namespace Werewolf.Managers
 		private GameHistoryMenu _gameHistoryMenu;
 
 		[SerializeField]
-		private SettingsMenu _settingsMenu;
+		private OptionsMenu _optionsMenu;
+
+		[Header("Player")]
+		[SerializeField]
+		private int _minNicknameCharacterCount;
+
+		[SerializeField]
+		private int _minPlayerCount;
 
 		[Header("Localization")]
 		[SerializeField]
@@ -63,25 +70,23 @@ namespace Werewolf.Managers
 		public static bool GAME_STARTED = false;
 		public static string GAME_HISTORY;
 
-		private readonly int MIN_NICKNAME_CHARACTER_COUNT = 3;
-
 		private void Start()
 		{
 			_joinMenu.JoinSessionClicked += JoinSession;
 			_joinMenu.ReturnClicked += OpenMainMenu;
-			_roomMenu.KickPlayerClicked += KickPlayer;
-			_roomMenu.ChangeNicknameClicked += ChangeNickname;
-			_roomMenu.GameSpeedChanged += ChangeGameSpeed;
-			_roomMenu.StartGameClicked += StartGame;
-			_roomMenu.LeaveSessionClicked += LeaveSession;
+			_gameMenu.KickPlayerClicked += KickPlayer;
+			_gameMenu.ChangeNicknameClicked += ChangeNickname;
+			_gameMenu.GameSpeedChanged += ChangeGameSpeed;
+			_gameMenu.StartGameClicked += StartGame;
+			_gameMenu.LeaveGameClicked += LeaveGame;
 			_rulesMenu.ReturnClicked += OpenMainMenu;
 			_gameHistoryMenu.ReturnClicked += OpenMainMenu;
-			_settingsMenu.ReturnClicked += OpenMainMenu;
+			_optionsMenu.ReturnClicked += OpenMainMenu;
 
 			if (_runner)
 			{
 				_runner.AddCallbacks(this);
-				OpenRoomMenu(false);
+				OpenGameMenu(false);
 			}
 			else
 			{
@@ -122,7 +127,7 @@ namespace Werewolf.Managers
 
 		private void OpenJoinMenu(LocalizedString message)
 		{
-			_joinMenu.Initialize(message, MIN_NICKNAME_CHARACTER_COUNT);
+			_joinMenu.Initialize(message, _minNicknameCharacterCount);
 			DisplayJoinMenu();
 		}
 
@@ -141,45 +146,52 @@ namespace Werewolf.Managers
 				return;
 			}
 
-			_joinMenu.Initialize(_joinFailedLocalizedString, MIN_NICKNAME_CHARACTER_COUNT);
+			_joinMenu.Initialize(_joinFailedLocalizedString, _minNicknameCharacterCount);
 
 			Debug.Log($"Join failed: {connection.Result.ShutdownReason}");
 		}
 
-		private void OpenRoomMenu(bool setNickname = true)
+		private void OpenGameMenu(bool setNickname = true)
 		{
 			if (!_networkDataManager)
 			{
 				NetworkDataManager.FinishedSpawning -= OnNetworkDataManagerFinishedSpawning;
-				_networkDataManager = FindObjectOfType<NetworkDataManager>();
+				_networkDataManager = NetworkDataManager.Instance;
 			}
 
-			_networkDataManager.GameSetupReadyChanged += _roomMenu.UpdatePlayerList;
-
 			// TODO : Change min player everytime the leader select a new game setup
-			_roomMenu.Initialize(_networkDataManager, _runner.LocalPlayer, _debugGameSetupData.MinPlayerCount, MIN_NICKNAME_CHARACTER_COUNT, GAME_HISTORY);
+			_gameMenu.Initialize(_networkDataManager, _runner.LocalPlayer, _minPlayerCount, _minNicknameCharacterCount, GAME_HISTORY);
 
 			if (setNickname)
 			{
 				_networkDataManager.RPC_SetPlayerNickname(_runner.LocalPlayer, _joinMenu.GetNickname());
 			}
 
-			DisplayRoomMenu();
+			DisplayGameMenu();
 		}
 
 		private void KickPlayer(PlayerRef kickedPlayer)
 		{
-			_networkDataManager.RPC_KickPlayer(kickedPlayer);
+			if (!_networkDataManager.GameSetupReady)
+			{
+				_networkDataManager.RPC_KickPlayer(kickedPlayer);
+			}
 		}
 
 		private void ChangeNickname(PlayerRef renamedPlayer, string nickname)
 		{
-			_networkDataManager.RPC_SetPlayerNickname(renamedPlayer, nickname);
+			if (!_networkDataManager.GameSetupReady)
+			{
+				_networkDataManager.RPC_SetPlayerNickname(renamedPlayer, nickname);
+			}
 		}
 
 		private void ChangeGameSpeed(GameSpeed gameSpeed)
 		{
-			_networkDataManager.RPC_SetGameSpeed(gameSpeed);
+			if (!_networkDataManager.GameSetupReady)
+			{
+				_networkDataManager.RPC_SetGameSpeed(gameSpeed);
+			}
 		}
 
 		private void StartGame(GameSpeed gameSpeed)
@@ -195,10 +207,10 @@ namespace Werewolf.Managers
 
 		private void OnNetworkDataManagerFinishedSpawning()
 		{
-			OpenRoomMenu();
+			OpenGameMenu();
 		}
 
-		private void LeaveSession()
+		private void LeaveGame()
 		{
 			_runner.Shutdown();
 		}
@@ -213,9 +225,9 @@ namespace Werewolf.Managers
 			DisplayGameHistoryMenu();
 		}
 
-		public void OpenSettingsMenu()
+		public void OpenOptionsMenu()
 		{
-			DisplaySettingsMenu();
+			DisplayOptionsMenu();
 		}
 
 		private void OpenMainMenu()
@@ -233,60 +245,60 @@ namespace Werewolf.Managers
 		{
 			_mainMenu.SetActive(true);
 			_joinMenu.gameObject.SetActive(false);
-			_roomMenu.gameObject.SetActive(false);
+			_gameMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
 			_gameHistoryMenu.gameObject.SetActive(false);
-			_settingsMenu.gameObject.SetActive(false);
+			_optionsMenu.gameObject.SetActive(false);
 		}
 
 		private void DisplayJoinMenu()
 		{
 			_mainMenu.SetActive(false);
 			_joinMenu.gameObject.SetActive(true);
-			_roomMenu.gameObject.SetActive(false);
+			_gameMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
 			_gameHistoryMenu.gameObject.SetActive(false);
-			_settingsMenu.gameObject.SetActive(false);
+			_optionsMenu.gameObject.SetActive(false);
 		}
 
-		private void DisplayRoomMenu()
+		private void DisplayGameMenu()
 		{
 			_mainMenu.SetActive(false);
 			_joinMenu.gameObject.SetActive(false);
-			_roomMenu.gameObject.SetActive(true);
+			_gameMenu.gameObject.SetActive(true);
 			_rulesMenu.gameObject.SetActive(false);
 			_gameHistoryMenu.gameObject.SetActive(false);
-			_settingsMenu.gameObject.SetActive(false);
+			_optionsMenu.gameObject.SetActive(false);
 		}
 
 		private void DisplayRulesMenu()
 		{
 			_mainMenu.SetActive(false);
 			_joinMenu.gameObject.SetActive(false);
-			_roomMenu.gameObject.SetActive(false);
+			_gameMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(true);
 			_gameHistoryMenu.gameObject.SetActive(false);
-			_settingsMenu.gameObject.SetActive(false);
+			_optionsMenu.gameObject.SetActive(false);
 		}
 
 		private void DisplayGameHistoryMenu()
 		{
 			_mainMenu.SetActive(false);
 			_joinMenu.gameObject.SetActive(false);
-			_roomMenu.gameObject.SetActive(false);
+			_gameMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
 			_gameHistoryMenu.gameObject.SetActive(true);
-			_settingsMenu.gameObject.SetActive(false);
+			_optionsMenu.gameObject.SetActive(false);
 		}
 
-		private void DisplaySettingsMenu()
+		private void DisplayOptionsMenu()
 		{
 			_mainMenu.SetActive(false);
 			_joinMenu.gameObject.SetActive(false);
-			_roomMenu.gameObject.SetActive(false);
+			_gameMenu.gameObject.SetActive(false);
 			_rulesMenu.gameObject.SetActive(false);
 			_gameHistoryMenu.gameObject.SetActive(false);
-			_settingsMenu.gameObject.SetActive(true);
+			_optionsMenu.gameObject.SetActive(true);
 		}
 		#endregion
 
@@ -389,11 +401,6 @@ namespace Werewolf.Managers
 
 		private void CleanupNetwork()
 		{
-			if (_networkDataManager)
-			{
-				_networkDataManager.GameSetupReadyChanged -= _roomMenu.UpdatePlayerList;
-			}
-
 			if (_runner)
 			{
 				_runner.Shutdown();
@@ -435,14 +442,6 @@ namespace Werewolf.Managers
 
 		void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner) { }
 		#endregion
-
-		private void OnDisable()
-		{
-			if (_networkDataManager)
-			{
-				_networkDataManager.GameSetupReadyChanged -= _roomMenu.UpdatePlayerList;
-			}
-		}
 
 		private void OnDestroy()
 		{
