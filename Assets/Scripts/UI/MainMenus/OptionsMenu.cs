@@ -6,7 +6,7 @@ using UnityEngine.Localization.Settings;
 
 namespace Werewolf.UI
 {
-	public class SettingsMenu : MonoBehaviour
+	public class OptionsMenu : MonoBehaviour
 	{
 		[Header("UI")]
 		[SerializeField]

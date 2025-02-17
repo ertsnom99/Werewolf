@@ -210,7 +210,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2594361137553408
-    m_Localized: Leave Session
+    m_Localized: Leave Game
     m_Metadata:
       m_Items: []
   - m_Id: 2594341835366400
@@ -257,7 +257,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3620152336048128
-    m_Localized: Settings
+    m_Localized: Options
     m_Metadata:
       m_Items: []
   - m_Id: 3631796738973696
@@ -270,6 +270,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 11212151973076992
     m_Localized: Enter game history name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26452182392233984
+    m_Localized: Room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26454628984283136
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26454823432216576
+    m_Localized: History
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26534419045408768
+    m_Localized: Could not display the history
     m_Metadata:
       m_Items: []
   references:

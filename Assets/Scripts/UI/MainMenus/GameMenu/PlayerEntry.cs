@@ -25,7 +25,7 @@ namespace Werewolf.UI
 		private TMP_Text _nicknameText;
 
 		[SerializeField]
-		private GameObject _kickButton;
+		private Button _kickButton;
 
 		[SerializeField]
 		private Color _currentPlayerColor = Color.yellow;
@@ -37,7 +37,7 @@ namespace Werewolf.UI
 
 		private PlayerRef _player;
 
-		public void Initialize(Network.PlayerNetworkInfo playerInfo, PlayerRef localPlayer, bool isOdd, bool isLocalPlayerLeader)
+		public void Initialize(Network.PlayerNetworkInfo playerInfo, PlayerRef localPlayer, bool isOdd, bool isLocalPlayerLeader, bool canBeKick)
 		{
 			_player = playerInfo.PlayerRef;
 
@@ -45,7 +45,8 @@ namespace Werewolf.UI
 			_leader.enabled = playerInfo.IsLeader;
 			_nicknameText.text = playerInfo.Nickname;
 			_nicknameText.color = playerInfo.PlayerRef == localPlayer ? _currentPlayerColor : _otherPlayerColor;
-			_kickButton.SetActive(isLocalPlayerLeader && playerInfo.PlayerRef != localPlayer);
+			_kickButton.gameObject.SetActive(isLocalPlayerLeader && playerInfo.PlayerRef != localPlayer);
+			_kickButton.interactable = canBeKick;
 		}
 
 		public void OnKickPLayer()
