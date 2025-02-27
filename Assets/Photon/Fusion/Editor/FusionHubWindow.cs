@@ -57,9 +57,6 @@ namespace Fusion.Editor {
 
       GUI.skin = FusionHubSkin;
 
-      FusionGlobalScriptableObjectUtils.EnsureAssetExists<PhotonAppSettings>();
-      FusionGlobalScriptableObjectUtils.EnsureAssetExists<NetworkProjectConfigAsset>();
-
       _windowPosition = this.position.position;
 
       // full window wrapper
@@ -158,7 +155,7 @@ namespace Fusion.Editor {
 
       GUILayout.Space(15);
 
-      DrawButtonAction(Icon.Community, Constants.DiscordHeader, Constants.DiscordText, callback: OpenURL(Constants.UrlDiscordGeneral));
+      DrawButtonAction(Icon.Community, Constants.DiscordHeader, Constants.DiscordText, callback: OpenURL(Constants.UrlDashboardProfile));
       DrawButtonAction(Icon.Documentation, Constants.DocumentationHeader, Constants.DocumentationText, callback: OpenURL(Constants.UrlFusionDocsOnline));
     }
 
@@ -181,11 +178,6 @@ namespace Fusion.Editor {
           
           // Check for changes and validate the AppId
           if (EditorGUI.EndChangeCheck() && Guid.TryParse(editedAppId, out _)) {
-            // Send attribution event if the AppId has changed
-            if (string.IsNullOrEmpty(realtimeAppId) || realtimeAppId.Equals(editedAppId) == false) {
-              VSAttribution.SendAttributionEvent(editedAppId);
-            }
-            
             // Update the AppId
             realtimeSettings.AppSettings.AppIdFusion = editedAppId;
             EditorUtility.SetDirty(realtimeSettings);
@@ -257,7 +249,13 @@ namespace Fusion.Editor {
       private static void EnsureAssetExists() {
         if (!PhotonAppSettings.TryGetGlobal(out var global) || global.AppSettings.AppIdFusion == null) {
           FusionEditorLog.Trace($"Opening HUB due to missing settings.");
-          EditorApplication.delayCall += () => { Open(); };
+          EditorApplication.delayCall += () => {
+            // Check if it is running in batch mode & ignore
+            if (UnityEditorInternal.InternalEditorUtility.inBatchMode) { return; }
+
+            // otherwise, open the window
+            Open();
+          };
         }
       }
     }

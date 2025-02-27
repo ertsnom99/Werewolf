@@ -12,10 +12,13 @@
     "InvokeRenderInBatchMode": true,
     "NetworkIdIsObjectName": false,
     "HideNetworkObjectInactivityGuard": false,
+    "AllowClientServerModesInWebGL": false,
+    "ClientsRecordFrameAndPacketTimingTraces": false,
     "Simulation": {
         "InputDataWordCount": 0,
-        "ReplicationFeatures": 0,
+        "ReplicationFeatures": 1,
         "InputTransferMode": 0,
+        "SimulationUpdateTimeMode": 0,
         "PlayerCount": 10,
         "TickRateSelection": {
             "Client": 64,
@@ -32,6 +35,9 @@
     "HostMigration": {
         "EnableAutoUpdate": false,
         "UpdateDelay": 10
+    },
+    "EncryptionConfig": {
+        "EnableEncryption": false
     },
     "NetworkConditions": {
         "Enabled": false,
@@ -57,7 +63,8 @@
         "Fusion.Unity",
         "Assembly-CSharp",
         "Assembly-CSharp-firstpass",
-        "Fusion.Addons.Physics"
+        "Fusion.Addons.Physics",
+        "Fusion.Addons.FSM"
     ],
     "UseSerializableDictionary": true,
     "NullChecksForNetworkedProperties": true,
