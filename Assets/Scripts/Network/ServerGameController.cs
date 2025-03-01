@@ -30,12 +30,12 @@ namespace Werewolf.Network
 					}
 
 					_networkDataManager.GameSetupReadyChanged += OnGameSetupReadyChanged;
-					_networkDataManager.ClearRolesSetup();
+					_networkDataManager.ResetGameSetupReady();
 					Runner.SessionInfo.IsOpen = true;
 
 					break;
 				case (int)SceneDefs.GAME:
-					GameManager.Instance.PrepareGame(_networkDataManager.RolesSetup, _networkDataManager.GameSpeed);
+					GameManager.Instance.PrepareGame();
 					break;
 			}
 		}
@@ -61,6 +61,11 @@ namespace Werewolf.Network
 		void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef player)
 		{
 			Log.Info($"Player left: {player}");
+
+			if (runner.ActivePlayers.Count() == 0)
+			{
+				_networkDataManager.ResetRoles();
+			}
 
 			if (runner.ActivePlayers.Count() > 0 || runner.SceneManager.MainRunnerScene.buildIndex != (int)SceneDefs.GAME || runner.SceneManager.IsBusy)
 			{

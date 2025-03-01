@@ -217,10 +217,6 @@ MonoBehaviour:
     m_Localized: Start Game
     m_Metadata:
       m_Items: []
-  - m_Id: 2595742095368192
-    m_Localized: An invalid roles setup was sent to the server
-    m_Metadata:
-      m_Items: []
   - m_Id: 2596856752627712
     m_Localized: Kick
     m_Metadata:
@@ -288,10 +284,44 @@ MonoBehaviour:
     m_Localized: Could not display the history
     m_Metadata:
       m_Items: []
+  - m_Id: 29287827590471680
+    m_Localized: '{Warnings:list:{}|\n|\n} '
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217108
+  - m_Id: 29288414289715200
+    m_Localized: -There cannot be more mandatory roles then there is players
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29301753199845376
+    m_Localized: -Need at least one Werewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29409318558621696
+    m_Localized: Available Roles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29409488750895104
+    m_Localized: Mandatory Roles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29409637103427584
+    m_Localized: Optional Roles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30688033162780672
+    m_Localized: The server refused this setup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30789237809209344
+    m_Localized: -Need at least {MinPlayerCount} players
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217108
   references:
     version: 2
     RefIds:
     - rid: 4972454616256217108
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 0080dc52bec702000080dcc2dfcf020000809c67c6d9020000801c252ee6020000e0c5fb62ec030000e045bc94030400
+        m_Entries: 0080dc52bec702000080dcc2dfcf020000809c67c6d9020000801c252ee6020000e0c5fb62ec030000e045bc9403040000e0c5bf1f0d680000e0850ea6626d00

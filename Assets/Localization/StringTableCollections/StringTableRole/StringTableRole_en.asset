@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: 25402ef7d32c3cb47a782073354eda10, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 5699302592880836615
   m_TableData:
   - m_Id: 1155975790592
     m_Localized: 'He stopped into the village to give a couple of shows before going
@@ -351,6 +352,20 @@ MonoBehaviour:
       other (using emotes) on the decisions to make to save the village.\r"
     m_Metadata:
       m_Items: []
+  - m_Id: 86655715137413120
+    m_Localized: '-Needs at least three pure villager roles for the Comedian (exceptions:
+      {RoleNames:list:{:t(RoleName)}|, | and })'
+    m_Metadata:
+      m_Items:
+      - rid: 5699302592880836615
+  - m_Id: 86657717783355392
+    m_Localized: -Needs at least two mandatory werewolf roles for the Thief
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 5699302592880836615
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00e085eee9dc3301

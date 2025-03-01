@@ -22,7 +22,7 @@ namespace Werewolf.Managers
 		{
 			_captain = captain;
 
-			_gameHistoryManager.AddEntry(Config.CaptainChangedGameHistoryEntry.ID,
+			_gameHistoryManager.AddEntry(GameConfig.CaptainChangedGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -52,8 +52,8 @@ namespace Werewolf.Managers
 
 			if (!SelectPlayers(_captain,
 								_captainChoices,
-								Config.ChooseNextCaptainTitleScreen.ID.HashCode,
-								Config.CaptainChoiceDuration * GameSpeedModifier,
+								GameConfig.ChooseNextCaptainTitleScreen.ID.HashCode,
+								GameConfig.CaptainChoiceDuration * GameSpeedModifier,
 								true,
 								1,
 								ChoicePurpose.Other,
@@ -71,15 +71,15 @@ namespace Werewolf.Managers
 			{
 				if (_networkDataManager.PlayerInfos[player.Key].IsConnected && player.Key != _captain)
 				{
-					RPC_DisplayTitle(player.Key, Config.OldCaptainChoosingTitleScreen.ID.HashCode);
+					RPC_DisplayTitle(player.Key, GameConfig.OldCaptainChoosingTitleScreen.ID.HashCode);
 				}
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(Config.OldCaptainChoosingTitleScreen.ID.HashCode);
+			DisplayTitle(GameConfig.OldCaptainChoosingTitleScreen.ID.HashCode);
 #endif
 			float elapsedTime = .0f;
 
-			while (_networkDataManager.PlayerInfos[_captain].IsConnected && elapsedTime < Config.CaptainChoiceDuration * GameSpeedModifier)
+			while (_networkDataManager.PlayerInfos[_captain].IsConnected && elapsedTime < GameConfig.CaptainChoiceDuration * GameSpeedModifier)
 			{
 				yield return 0;
 				elapsedTime += Time.deltaTime;
@@ -120,7 +120,7 @@ namespace Werewolf.Managers
 #if UNITY_SERVER && UNITY_EDITOR
 			HideUI();
 #endif
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
 			SetCaptain(nextCaptain);
 
@@ -135,20 +135,20 @@ namespace Werewolf.Managers
 			{
 				RPC_InstantiateCaptainCard(_captain);
 #if UNITY_SERVER && UNITY_EDITOR
-				_captainCard = Instantiate(Config.CaptainCardPrefab, _playerCards[_captain].transform.position + Config.CaptainCardOffset, Quaternion.identity);
+				_captainCard = Instantiate(GameConfig.CaptainCardPrefab, _playerCards[_captain].transform.position + GameConfig.CaptainCardOffset, Quaternion.identity);
 #endif
 			}
 			else
 			{
 				RPC_MoveCaptainCard(_captain);
 #if UNITY_SERVER && UNITY_EDITOR
-				StartCoroutine(MoveCaptainCard(_playerCards[_captain].transform.position + Config.CaptainCardOffset));
+				StartCoroutine(MoveCaptainCard(_playerCards[_captain].transform.position + GameConfig.CaptainCardOffset));
 #endif
 			}
 
-			float titleDuration = Config.CaptainRevealDuration * GameSpeedModifier;
+			float titleDuration = GameConfig.CaptainRevealDuration * GameSpeedModifier;
 			StartCoroutine(HighlightPlayerToggle(_captain, titleDuration));
-			yield return DisplayTitleForAllPlayers(Config.CaptainRevealTitleScreen.ID.HashCode, titleDuration, playerNickname: _networkDataManager.PlayerInfos[_captain].Nickname);
+			yield return DisplayTitleForAllPlayers(GameConfig.CaptainRevealTitleScreen.ID.HashCode, titleDuration, playerNickname: _networkDataManager.PlayerInfos[_captain].Nickname);
 		}
 
 		private IEnumerator MoveCaptainCard(Vector3 newPosition)
@@ -156,15 +156,15 @@ namespace Werewolf.Managers
 			Vector3 startingPosition = _captainCard.transform.position;
 			float elapsedTime = .0f;
 
-			while (elapsedTime < Config.CaptainCardMovementDuration)
+			while (elapsedTime < GameConfig.CaptainCardMovementDuration)
 			{
 				yield return 0;
 
 				elapsedTime += Time.deltaTime;
-				float progress = elapsedTime / Config.CaptainCardMovementDuration;
+				float progress = elapsedTime / GameConfig.CaptainCardMovementDuration;
 
-				_captainCard.transform.position = Vector3.Lerp(startingPosition, newPosition, Config.CaptainCardMovementXY.Evaluate(progress))
-				+ Vector3.up * Config.CaptainCardMovementYOffset.Evaluate(progress);
+				_captainCard.transform.position = Vector3.Lerp(startingPosition, newPosition, GameConfig.CaptainCardMovementXY.Evaluate(progress))
+				+ Vector3.up * GameConfig.CaptainCardMovementYOffset.Evaluate(progress);
 			}
 		}
 
@@ -172,13 +172,13 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_InstantiateCaptainCard(PlayerRef captain)
 		{
-			_captainCard = Instantiate(Config.CaptainCardPrefab, _playerCards[captain].transform.position + Config.CaptainCardOffset, Quaternion.identity);
+			_captainCard = Instantiate(GameConfig.CaptainCardPrefab, _playerCards[captain].transform.position + GameConfig.CaptainCardOffset, Quaternion.identity);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_MoveCaptainCard(PlayerRef captain)
 		{
-			StartCoroutine(MoveCaptainCard(_playerCards[captain].transform.position + Config.CaptainCardOffset));
+			StartCoroutine(MoveCaptainCard(_playerCards[captain].transform.position + GameConfig.CaptainCardOffset));
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]

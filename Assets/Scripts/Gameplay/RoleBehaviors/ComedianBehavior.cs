@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Fusion;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Managers;
 using Werewolf.Network;
@@ -11,6 +15,10 @@ namespace Werewolf.Gameplay.Role
 {
 	public class ComedianBehavior : RoleBehavior
 	{
+		[Header("Game Setup")]
+		[SerializeField]
+		private LocalizedString _notEnoughRolesWarning;
+
 		[Header("Reserve Roles")]
 		[SerializeField]
 		private RoleData[] _prohibitedRoles;
@@ -28,6 +36,7 @@ namespace Werewolf.Gameplay.Role
 		[SerializeField]
 		private GameHistoryEntryData _usedRoleGameHistoryEntry;
 
+		private LocalizedStringListVariable _warningRoles;
 		private GameManager.IndexedReservedRoles _reservedRoles;
 		private RoleBehavior _currentRoleBehavior;
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
@@ -38,6 +47,55 @@ namespace Werewolf.Gameplay.Role
 
 		private readonly int NEEDED_ROLE_COUNT = 3;
 
+		public override bool IsRolesSetupValid(NetworkArray<NetworkRoleSetup> mandatoryRoles, NetworkArray<NetworkRoleSetup> optionalRoles, GameplayDataManager gameplayDataManager, List<LocalizedString> warnings)
+		{
+			List<RoleData> possibleRoles = new();
+
+			if (CheckRoles(mandatoryRoles, possibleRoles) || CheckRoles(optionalRoles, possibleRoles))
+			{
+				return true;
+			}
+			else
+			{
+				if (_warningRoles == null)
+				{
+					_warningRoles = (LocalizedStringListVariable)_notEnoughRolesWarning["RoleNames"];
+					_warningRoles.Values.Clear();
+
+					foreach (RoleData prohibitedRole in _prohibitedRoles)
+					{
+						_warningRoles.Values.Add(prohibitedRole.CanHaveVariableAmount || prohibitedRole.MandatoryAmount > 1 ? prohibitedRole.NamePlural : prohibitedRole.NameSingular);
+					}
+				}
+
+				warnings.Add(_notEnoughRolesWarning);
+				return false;
+			}
+
+			bool CheckRoles(NetworkArray<NetworkRoleSetup> roles, List<RoleData> possibleRoles)
+			{
+				for (int i = 0; i < roles.Length; i++)
+				{
+					for (int j = 0; j < roles[i].UseCount; j++)
+					{
+						if (gameplayDataManager.TryGetGameplayData(roles[i].Pool[j], out RoleData roleData) && IsRoleValid(roleData, possibleRoles))
+						{
+							if (possibleRoles.Count == NEEDED_ROLE_COUNT - 1)
+							{
+								return true;
+							}
+							else
+							{
+								possibleRoles.Add(roleData);
+							}
+						}
+					}
+				}
+
+				return false;
+			}
+		}
+
 		public override void Initialize()
 		{
 			_gameManager = GameManager.Instance;
@@ -47,10 +105,10 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.RollCallBegin += OnRollCallBegin;
 		}
 
-		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute)
+		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute)
 		{
-			List<RoleSetupData> mandatoryRolesCopy = new(mandatoryRoles);
-			List<RoleSetupData> availableRolesCopy = new(availableRoles);
+			List<RoleSetup> mandatoryRolesCopy = new(mandatoryRoles);
+			List<RoleSetup> availableRolesCopy = new(availableRoles);
 			List<RoleData> rolesToDistributeCopy = new(rolesToDistribute);
 
 			List<RoleData> selectedRoles = new();
@@ -133,7 +191,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void SelectRolesFromRoleSetupList(List<RoleSetupData> originalList, List<RoleSetupData> listCopy, List<RoleData> selectedRoles, List<RoleData> rolesNeededToPrepare)
+		private void SelectRolesFromRoleSetupList(List<RoleSetup> originalList, List<RoleSetup> listCopy, List<RoleData> selectedRoles, List<RoleData> rolesNeededToPrepare)
 		{
 			int roleSetupIndex = Random.Range(0, listCopy.Count);
 
@@ -152,7 +210,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private bool CanTakeRolesFromSetup(RoleSetupData roleSetup, List<RoleData> selectedRoles)
+		private bool CanTakeRolesFromSetup(RoleSetup roleSetup, List<RoleData> selectedRoles)
 		{
 			if (NEEDED_ROLE_COUNT - selectedRoles.Count < roleSetup.UseCount)
 			{
@@ -187,7 +245,7 @@ namespace Werewolf.Gameplay.Role
 					&& !role.Behavior.GetType().Equals(GetType());
 		}
 
-		private List<RoleData> SelectRolesFromRoleSetup(RoleSetupData roleSetup, List<RoleData> currentSelectedRoles)
+		private List<RoleData> SelectRolesFromRoleSetup(RoleSetup roleSetup, List<RoleData> currentSelectedRoles)
 		{
 			List<RoleData> selectedRoles = new();
 			int indexOffset = Random.Range(0, roleSetup.UseCount);

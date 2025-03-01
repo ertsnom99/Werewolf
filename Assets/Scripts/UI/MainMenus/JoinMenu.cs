@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
+using Werewolf.Data;
 
 namespace Werewolf.UI
 {
@@ -34,6 +35,7 @@ namespace Werewolf.UI
 		public void Initialize(LocalizedString message, int minNicknameCharacterCount)
 		{
 			_minNicknameCharacterCount = minNicknameCharacterCount;
+			_nicknameInputField.characterLimit = GameConfig.MAX_NICKNAME_CHARACTER_COUNT;
 			_nicknameInputField.interactable = true;
 			_sessionNameInputField.interactable = true;
 

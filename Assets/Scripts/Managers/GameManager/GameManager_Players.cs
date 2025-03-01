@@ -711,7 +711,7 @@ namespace Werewolf.Managers
 		private void RPC_StopPromptingPlayer([RpcTarget] PlayerRef player, bool fastFade)
 		{
 			_UIManager.TitleScreen.ConfirmClicked -= OnPromptAccepted;
-			_UIManager.FadeOut(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
+			_UIManager.FadeOut(_UIManager.TitleScreen, fastFade ? GameConfig.UITransitionFastDuration : GameConfig.UITransitionNormalDuration);
 		}
 		#endregion
 		#endregion
@@ -721,7 +721,7 @@ namespace Werewolf.Managers
 		{
 			if (PlayerGameInfos[player].IsAlive)
 			{
-				AddMarkForDeath(player, Config.PlayerLeftMarkForDeath);
+				AddMarkForDeath(player, GameConfig.PlayerLeftMarkForDeath);
 			}
 
 			if (CurrentGameplayLoopStep == GameplayLoopStep.NightCall && PlayersWaitingFor.Contains(player) && PlayerGameInfos[player].Behaviors.Count > 0)
@@ -744,7 +744,7 @@ namespace Werewolf.Managers
 
 			PostPlayerDisconnected?.Invoke(player);
 
-			_gameHistoryManager.AddEntry(Config.PlayerDisconnectedGameHistoryEntry.ID,
+			_gameHistoryManager.AddEntry(GameConfig.PlayerDisconnectedGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{

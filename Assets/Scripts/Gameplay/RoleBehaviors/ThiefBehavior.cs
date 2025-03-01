@@ -2,6 +2,8 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Managers;
 using Werewolf.Network;
@@ -12,6 +14,10 @@ namespace Werewolf.Gameplay.Role
 {
 	public class ThiefBehavior : RoleBehavior
 	{
+		[Header("Game Setup")]
+		[SerializeField]
+		private LocalizedString _notEnoughWerewolvesWarning;
+
 		[Header("Reserve Roles")]
 		[SerializeField]
 		private RoleData[] _rolesToAdd;
@@ -43,6 +49,32 @@ namespace Werewolf.Gameplay.Role
 		private GameHistoryManager _gameHistoryManager;
 		private NetworkDataManager _networkDataManager;
 
+		public override bool IsRolesSetupValid(NetworkArray<NetworkRoleSetup> mandatoryRoles, NetworkArray<NetworkRoleSetup> optionalRoles, GameplayDataManager gameplayDataManager, List<LocalizedString> warnings)
+		{
+			int werewolvesCount = 0;
+
+			for (int i = 0; i < mandatoryRoles.Length; i++)
+			{
+				for (int j = 0; j < mandatoryRoles[i].UseCount; j++)
+				{
+					if (gameplayDataManager.TryGetGameplayData(mandatoryRoles[i].Pool[j], out RoleData roleData) && roleData.PrimaryType == PrimaryRoleType.Werewolf)
+					{
+						if (werewolvesCount == 1)
+						{
+							return true;
+						}
+						else
+						{
+							werewolvesCount++;
+						}
+					}
+				}
+			}
+
+			warnings.Add(_notEnoughWerewolvesWarning);
+			return false;
+		}
+
 		public override void Initialize()
 		{
 			_gameManager = GameManager.Instance;
@@ -53,7 +85,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.PostRoleDistribution += OnPostRoleDistribution;
 		}
 
-		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
+		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
 		private void OnPreRoleDistribution()
 		{

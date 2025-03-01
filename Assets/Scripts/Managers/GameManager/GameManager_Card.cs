@@ -22,7 +22,7 @@ namespace Werewolf.Managers
 		{
 			for (int i = 0; i < _playersOrder.Length; i++)
 			{
-				Card card = Instantiate(Config.CardPrefab, _cardPlacementSpline.EvaluatePosition((float)i / _playersOrder.Length), Quaternion.identity);
+				Card card = Instantiate(GameConfig.CardPrefab, _cardPlacementSpline.EvaluatePosition((float)i / _playersOrder.Length), Quaternion.identity);
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetOriginalPosition(card.transform.position);
@@ -66,7 +66,7 @@ namespace Werewolf.Managers
 			// Create all player cards
 			for (int i = 0; i < playerAmount; i++)
 			{
-				Card card = Instantiate(Config.CardPrefab, _cardPlacementSpline.EvaluatePosition((float)((i + indexOffset) % playerAmount) / playerAmount), Quaternion.identity);
+				Card card = Instantiate(GameConfig.CardPrefab, _cardPlacementSpline.EvaluatePosition((float)((i + indexOffset) % playerAmount) / playerAmount), Quaternion.identity);
 				card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 				card.SetOriginalPosition(card.transform.position);
@@ -93,16 +93,16 @@ namespace Werewolf.Managers
 
 			foreach (KeyValuePair<RoleBehavior, IndexedReservedRoles> reservedRoleByBehavior in _reservedRolesByBehavior)
 			{
-				Vector3 rowPosition = (Config.ReservedRolesSpacing * rowCounter * Vector3.back) + ((_reservedRolesByBehavior.Count - 1) * Config.ReservedRolesSpacing * Vector3.forward / 2.0f);
+				Vector3 rowPosition = (GameConfig.ReservedRolesSpacing * rowCounter * Vector3.back) + ((_reservedRolesByBehavior.Count - 1) * GameConfig.ReservedRolesSpacing * Vector3.forward / 2.0f);
 				Card[] cards = new Card[reservedRoleByBehavior.Value.Roles.Length];
 
 				int columnCounter = 0;
 
 				foreach (RoleData role in reservedRoleByBehavior.Value.Roles)
 				{
-					Vector3 columnPosition = (columnCounter * Config.ReservedRolesSpacing * Vector3.right) + ((reservedRoleByBehavior.Value.Roles.Length - 1) * Config.ReservedRolesSpacing * Vector3.left / 2.0f);
+					Vector3 columnPosition = (columnCounter * GameConfig.ReservedRolesSpacing * Vector3.right) + ((reservedRoleByBehavior.Value.Roles.Length - 1) * GameConfig.ReservedRolesSpacing * Vector3.left / 2.0f);
 
-					Card card = Instantiate(Config.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
+					Card card = Instantiate(GameConfig.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 					card.SetRole(role);
@@ -147,15 +147,15 @@ namespace Werewolf.Managers
 			{
 				_reservedRolesCards[rowCounter] = new Card[roles.Value.Length];
 
-				Vector3 rowPosition = (Config.ReservedRolesSpacing * rowCounter * Vector3.back) + ((rowCount - 1) * Config.ReservedRolesSpacing * Vector3.forward / 2.0f);
+				Vector3 rowPosition = (GameConfig.ReservedRolesSpacing * rowCounter * Vector3.back) + ((rowCount - 1) * GameConfig.ReservedRolesSpacing * Vector3.forward / 2.0f);
 
 				int columnCounter = 0;
 
 				foreach (int roleID in roles.Value)
 				{
-					Vector3 columnPosition = (columnCounter * Config.ReservedRolesSpacing * Vector3.right) + ((roles.Value.Length - 1) * Config.ReservedRolesSpacing * Vector3.left / 2.0f);
+					Vector3 columnPosition = (columnCounter * GameConfig.ReservedRolesSpacing * Vector3.right) + ((roles.Value.Length - 1) * GameConfig.ReservedRolesSpacing * Vector3.left / 2.0f);
 
-					Card card = Instantiate(Config.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
+					Card card = Instantiate(GameConfig.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 					card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role, true); };

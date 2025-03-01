@@ -24,7 +24,7 @@ namespace Werewolf.Managers
 #if UNITY_SERVER
 			DedicatedServerConfig config = DedicatedServerConfig.FillConfig();
 
-			Log.Info(config);
+			Log.Info(config.ToString());
 
 			NetworkRunner runner = Instantiate(_runnerPrefab);
 			StartGameResult result = await StartSimulation(runner, config);

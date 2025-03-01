@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.UI;
+using Werewolf.Data;
 using Werewolf.Network;
 
 namespace Werewolf.UI
@@ -22,31 +26,36 @@ namespace Werewolf.UI
 		private HistoryMenu _historyMenu;
 
 		[SerializeField]
-		private GameObject _warning;
-
-		[SerializeField]
 		private Button _startGameBtn;
 
 		[SerializeField]
 		private Button _leaveGameBtn;
 
-		private PlayerRef _localPlayer;
-		private int _minPlayer = -1;
+		[Header("Warnings")]
+		[SerializeField]
+		private LocalizedString _notEnoughPlayers;
 
-		private NetworkDataManager _networkDataManager;
+		[SerializeField]
+		private LocalizedString _invalidRolesSetup;
 
 		public event Action<PlayerRef> KickPlayerClicked;
 		public event Action<PlayerRef, string> ChangeNicknameClicked;
+		public event Action<int[], int[]> RolesSetupChanged;
 		public event Action<GameSpeed> GameSpeedChanged;
-		public event Action<GameSpeed> StartGameClicked;
+		public event Action StartGameClicked;
 		public event Action LeaveGameClicked;
 
-		public void Initialize(NetworkDataManager networkDataManager, PlayerRef localPlayer, int minPlayer, int minNicknameCharacterCount, string gameHistory)
+		private GameConfig _gameConfig;
+		private PlayerRef _localPlayer;
+
+		private NetworkDataManager _networkDataManager;
+
+		public void Initialize(NetworkDataManager networkDataManager, GameConfig gameConfig, PlayerRef localPlayer, string gameHistory)
 		{
 			_networkDataManager = networkDataManager;
+			_gameConfig = gameConfig;
 			_localPlayer = localPlayer;
-			_minPlayer = minPlayer;
-			
+
 			if (!_networkDataManager || _localPlayer == null)
 			{
 				return;
@@ -55,44 +64,54 @@ namespace Werewolf.UI
 			bool historyAvailable = !string.IsNullOrEmpty(gameHistory);
 			_historyBtn.interactable = historyAvailable;
 
-			_roomMenu.Initialize(networkDataManager, localPlayer, minNicknameCharacterCount);
-			_settingsMenu.Initialize(networkDataManager, localPlayer);
+			_roomMenu.Initialize(networkDataManager, localPlayer, gameConfig.MinNicknameCharacterCount);
+			_settingsMenu.Initialize(networkDataManager, gameConfig, localPlayer);
 
 			if (historyAvailable)
 			{
 				_historyMenu.Initialize(gameHistory);
 			}
+			
+			((IntVariable)_notEnoughPlayers["MinPlayerCount"]).Value = _gameConfig.MinPlayerCount;
 
-			UpdateGameButtons();
+			UpdateUI();
 
-			_networkDataManager.PlayerInfosChanged += UpdateGameButtons;
-			_networkDataManager.GameSetupReadyChanged += UpdateGameButtons;
+			_networkDataManager.PlayerInfosChanged += UpdateUI;
+			_networkDataManager.RolesSetupChanged += UpdateUI;
+			_networkDataManager.GameSetupReadyChanged += UpdateUI;
 			_networkDataManager.InvalidRolesSetupReceived += OnInvalidRolesSetupReceived;
 			_roomMenu.KickPlayerClicked += OnKickPlayerClicked;
 			_roomMenu.ChangeNicknameClicked += OnChangeNicknameClicked;
+			_settingsMenu.RolesSetupChanged += OnRolesSetupChanged;
 			_settingsMenu.GameSpeedChanged += OnGameSpeedChanged;
 		}
 
-		private void UpdateGameButtons()
+		private void UpdateUI()
 		{
-			bool localPlayerInfoExist = _networkDataManager.PlayerInfos.TryGet(_localPlayer, out PlayerNetworkInfo localPlayerInfo);
+			List<LocalizedString> warnings = new();
+			bool isRolesSetupValid = _networkDataManager.IsRolesSetupValid(warnings);
+			bool localPlayerInfoExist = _networkDataManager.PlayerInfos.TryGet(_localPlayer, out NetworkPlayerInfo localPlayerInfo);
 			bool isLocalPlayerLeader = localPlayerInfoExist && localPlayerInfo.IsLeader;
+			bool enoughPlayers = _networkDataManager.PlayerInfos.Count >= _gameConfig.MinPlayerCount;
+
+			if (!enoughPlayers)
+			{
+				warnings.Insert(0, _notEnoughPlayers);
+			}
+
+			_settingsMenu.UpdateWarnings(warnings);
 
 			_startGameBtn.interactable = isLocalPlayerLeader
-										&& _minPlayer > -1
-										&& _networkDataManager.PlayerInfos.Count >= _minPlayer
-										&& !_networkDataManager.GameSetupReady;
+										&& _gameConfig.MinPlayerCount > -1
+										&& enoughPlayers
+										&& !_networkDataManager.GameSetupReady
+										&& isRolesSetupValid;
 			_leaveGameBtn.interactable = !_networkDataManager.GameSetupReady;
 		}
 
 		private void OnInvalidRolesSetupReceived()
 		{
-			DisplayInvalidRolesSetupWarning(true);
-		}
-
-		private void DisplayInvalidRolesSetupWarning(bool display)
-		{
-			_warning.SetActive(display);
+			_settingsMenu.UpdateWarnings(new() { _invalidRolesSetup });
 		}
 
 		private void OnKickPlayerClicked(PlayerRef player)
@@ -103,6 +122,11 @@ namespace Werewolf.UI
 		private void OnChangeNicknameClicked(PlayerRef player, string nickname)
 		{
 			ChangeNicknameClicked?.Invoke(player, nickname);
+		}
+
+		private void OnRolesSetupChanged(int[] mandatoryRoleIDs, int[] optionalRoleIDs)
+		{
+			RolesSetupChanged?.Invoke(mandatoryRoleIDs, optionalRoleIDs);
 		}
 
 		private void OnGameSpeedChanged(GameSpeed gameSpeed)
@@ -133,8 +157,7 @@ namespace Werewolf.UI
 
 		public void OnStartGame()
 		{
-			DisplayInvalidRolesSetupWarning(false);
-			StartGameClicked?.Invoke(_settingsMenu.GameSpeed()); // TODO: Send all the settings together
+			StartGameClicked?.Invoke();
 		}
 
 		public void OnLeaveGame()
@@ -144,17 +167,17 @@ namespace Werewolf.UI
 
 		private void OnDisable()
 		{
-			_networkDataManager.PlayerInfosChanged -= UpdateGameButtons;
-			_networkDataManager.GameSetupReadyChanged -= UpdateGameButtons;
+			_networkDataManager.PlayerInfosChanged -= UpdateUI;
+			_networkDataManager.RolesSetupChanged -= UpdateUI;
+			_networkDataManager.GameSetupReadyChanged -= UpdateUI;
 			_networkDataManager.InvalidRolesSetupReceived -= OnInvalidRolesSetupReceived;
 			_roomMenu.KickPlayerClicked -= OnKickPlayerClicked;
 			_roomMenu.ChangeNicknameClicked -= OnChangeNicknameClicked;
+			_settingsMenu.RolesSetupChanged -= OnRolesSetupChanged;
 			_settingsMenu.GameSpeedChanged -= OnGameSpeedChanged;
 
-			_roomMenu.UnregisterAll();
-			_settingsMenu.UnregisterAll();
-
-			DisplayInvalidRolesSetupWarning(false);
+			_roomMenu.Cleanup();
+			_settingsMenu.Cleanup();
 		}
 	}
 }

@@ -15,12 +15,32 @@ MonoBehaviour:
   m_TableCollectionName: StringTableRole
   m_TableCollectionNameGuidString: 25402ef7d32c3cb47a782073354eda10
   m_Entries:
+  - m_Id: 66778713047818240
+    m_Key: BearTrainer_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 66778607871451136
+    m_Key: BearTrainer_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 64646369176313856
+    m_Key: BigBadWolf_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 64645302468337664
+    m_Key: BigBadWolf_NameSingular
+    m_Metadata:
+      m_Items: []
   - m_Id: 1155975790592
     m_Key: Comedian_Description
     m_Metadata:
       m_Items: []
   - m_Id: 1069766066176
     m_Key: Comedian_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86655715137413120
+    m_Key: Comedian_NotEnoughRolesWarning
     m_Metadata:
       m_Items: []
   - m_Id: 2578041978880
@@ -33,6 +53,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 2521448235008
     m_Key: Cupid_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74428795301781504
+    m_Key: DogWolf_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74428792986525696
+    m_Key: DogWolf_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 3933225795584
@@ -59,8 +87,32 @@ MonoBehaviour:
     m_Key: Hunter_NameSingular
     m_Metadata:
       m_Items: []
-  - m_Id: 62484989748830208
-    m_Key: WhiteWerewolf_Description
+  - m_Id: 75435867946475520
+    m_Key: InfectFatherWolves_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 75435865786408960
+    m_Key: InfectFatherWolves_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 65920829212712960
+    m_Key: KnightWithRustySword_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 65920755028058112
+    m_Key: KnightWithRustySword_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86657474274648064
+    m_Key: New Entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69694886416605184
+    m_Key: PiedPiper_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69694821123874816
+    m_Key: PiedPiper_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 4889510330368
@@ -85,6 +137,30 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5773111771136
     m_Key: Thief_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78451454616395776
+    m_Key: ThreeBrothers_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78451447016316928
+    m_Key: ThreeBrothers_NamePlural
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78451445313429504
+    m_Key: ThreeBrothers_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77951072211427328
+    m_Key: TwoSisters_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77948391115841536
+    m_Key: TwoSisters_NamePlural
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77948389408759808
+    m_Key: TwoSisters_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 6100871462912
@@ -119,8 +195,20 @@ MonoBehaviour:
     m_Key: Werewolf_PlayerGroup
     m_Metadata:
       m_Items: []
+  - m_Id: 62484989748830208
+    m_Key: WhiteWerewolf_Description
+    m_Metadata:
+      m_Items: []
   - m_Id: 62483541757648896
     m_Key: WhiteWerewolf_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 67446738352726016
+    m_Key: WildChild_Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 67446694559997952
+    m_Key: WildChild_NameSingular
     m_Metadata:
       m_Items: []
   - m_Id: 8301756989440
@@ -131,84 +219,8 @@ MonoBehaviour:
     m_Key: Witch_NameSingular
     m_Metadata:
       m_Items: []
-  - m_Id: 64645302468337664
-    m_Key: BigBadWolf_NameSingular
-    m_Metadata:
-      m_Items: []
-  - m_Id: 64646369176313856
-    m_Key: BigBadWolf_Description
-    m_Metadata:
-      m_Items: []
-  - m_Id: 65920755028058112
-    m_Key: KnightWithRustySword_NameSingular
-    m_Metadata:
-      m_Items: []
-  - m_Id: 65920829212712960
-    m_Key: KnightWithRustySword_Description
-    m_Metadata:
-      m_Items: []
-  - m_Id: 66778607871451136
-    m_Key: BearTrainer_NameSingular
-    m_Metadata:
-      m_Items: []
-  - m_Id: 66778713047818240
-    m_Key: BearTrainer_Description
-    m_Metadata:
-      m_Items: []
-  - m_Id: 67446694559997952
-    m_Key: WildChild_NameSingular
-    m_Metadata:
-      m_Items: []
-  - m_Id: 67446738352726016
-    m_Key: WildChild_Description
-    m_Metadata:
-      m_Items: []
-  - m_Id: 69694821123874816
-    m_Key: PiedPiper_NameSingular
-    m_Metadata:
-      m_Items: []
-  - m_Id: 69694886416605184
-    m_Key: PiedPiper_Description
-    m_Metadata:
-      m_Items: []
-  - m_Id: 74428792986525696
-    m_Key: DogWolf_NameSingular
-    m_Metadata:
-      m_Items: []
-  - m_Id: 74428795301781504
-    m_Key: DogWolf_Description
-    m_Metadata:
-      m_Items: []
-  - m_Id: 75435865786408960
-    m_Key: InfectFatherWolves_NameSingular
-    m_Metadata:
-      m_Items: []
-  - m_Id: 75435867946475520
-    m_Key: InfectFatherWolves_Description
-    m_Metadata:
-      m_Items: []
-  - m_Id: 77948389408759808
-    m_Key: TwoSisters_NameSingular
-    m_Metadata:
-      m_Items: []
-  - m_Id: 77948391115841536
-    m_Key: TwoSisters_NamePlural
-    m_Metadata:
-      m_Items: []
-  - m_Id: 77951072211427328
-    m_Key: TwoSisters_Description
-    m_Metadata:
-      m_Items: []
-  - m_Id: 78451445313429504
-    m_Key: ThreeBrothers_NameSingular
-    m_Metadata:
-      m_Items: []
-  - m_Id: 78451447016316928
-    m_Key: ThreeBrothers_NamePlural
-    m_Metadata:
-      m_Items: []
-  - m_Id: 78451454616395776
-    m_Key: ThreeBrothers_Description
+  - m_Id: 86657717783355392
+    m_Key: Thief_NotEnoughWerewolvesWarning
     m_Metadata:
       m_Items: []
   m_Metadata:

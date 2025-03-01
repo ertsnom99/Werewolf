@@ -458,7 +458,7 @@ namespace Werewolf.Managers
 			_UIManager.ChoiceScreen.ConfirmedChoice += GiveReservedRoleChoice;
 
 			_UIManager.ChoiceScreen.Initialize(choices.ToArray(), choiceScreen.ChooseText, choiceScreen.ChoosedText, choiceScreen.DidNotChoosedText, mustChoose, maximumDuration);
-			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionNormalDuration);
+			_UIManager.FadeIn(_UIManager.ChoiceScreen, GameConfig.UITransitionNormalDuration);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -499,23 +499,23 @@ namespace Werewolf.Managers
 
 		private IEnumerator RevealPlayerRole(Card card, bool waitBeforeReveal, bool returnFaceDown)
 		{
-			yield return MoveCardToCamera(card.transform, !waitBeforeReveal, Config.MoveToCameraDuration);
+			yield return MoveCardToCamera(card.transform, !waitBeforeReveal, GameConfig.MoveToCameraDuration);
 
 			if (waitBeforeReveal)
 			{
-				yield return new WaitForSeconds(Config.RoleRevealWaitDuration * GameSpeedModifier);
-				yield return FlipCard(card.transform, Config.RoleRevealFlipDuration);
+				yield return new WaitForSeconds(GameConfig.RoleRevealWaitDuration * GameSpeedModifier);
+				yield return FlipCard(card.transform, GameConfig.RoleRevealFlipDuration);
 			}
 
-			yield return new WaitForSeconds(Config.RoleRevealHoldDuration * GameSpeedModifier);
-			yield return PutCardBackDown(card, returnFaceDown, Config.MoveToCameraDuration);
+			yield return new WaitForSeconds(GameConfig.RoleRevealHoldDuration * GameSpeedModifier);
+			yield return PutCardBackDown(card, returnFaceDown, GameConfig.MoveToCameraDuration);
 
 			RPC_RevealPlayerRoleFinished();
 		}
 
 		public void MoveCardToCamera(PlayerRef cardPlayer, bool showRevealed, Action MovementCompleted = null)
 		{
-			StartCoroutine(MoveCardToCamera(_playerCards[cardPlayer].transform, showRevealed, Config.MoveToCameraDuration, MovementCompleted));
+			StartCoroutine(MoveCardToCamera(_playerCards[cardPlayer].transform, showRevealed, GameConfig.MoveToCameraDuration, MovementCompleted));
 		}
 
 		private IEnumerator MoveCardToCamera(Transform card, bool showRevealed, float duration, Action MovementCompleted = null)
@@ -523,7 +523,7 @@ namespace Werewolf.Managers
 			Camera mainCamera = Camera.main;
 
 			Vector3 startingPosition = card.position;
-			Vector3 targetPosition = mainCamera.transform.position + mainCamera.transform.forward * Config.RoleRevealDistanceToCamera;
+			Vector3 targetPosition = mainCamera.transform.position + mainCamera.transform.forward * GameConfig.RoleRevealDistanceToCamera;
 
 			Quaternion startingRotation = card.transform.rotation;
 			Quaternion targetRotation;
@@ -581,7 +581,7 @@ namespace Werewolf.Managers
 				_playerCards[cardPlayer].SetRole(roleData);
 			}
 
-			StartCoroutine(FlipCard(_playerCards[cardPlayer].transform, Config.RoleRevealFlipDuration, FlipCompleted));
+			StartCoroutine(FlipCard(_playerCards[cardPlayer].transform, GameConfig.RoleRevealFlipDuration, FlipCompleted));
 		}
 
 		private IEnumerator FlipCard(Transform card, float duration, Action FlipCompleted = null)
@@ -619,7 +619,7 @@ namespace Werewolf.Managers
 
 		public void PutCardBackDown(PlayerRef cardPlayer, bool returnFaceDown, Action PutDownCompleted = null)
 		{
-			StartCoroutine(PutCardBackDown(_playerCards[cardPlayer], returnFaceDown, Config.MoveToCameraDuration, PutDownCompleted));
+			StartCoroutine(PutCardBackDown(_playerCards[cardPlayer], returnFaceDown, GameConfig.MoveToCameraDuration, PutDownCompleted));
 		}
 
 		private IEnumerator PutCardBackDown(Card card, bool returnFaceDown, float duration, Action PutDownCompleted = null)

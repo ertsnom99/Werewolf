@@ -51,17 +51,48 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
+  _notEnoughRolesWarning:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 86655715137413120
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables:
+    - name: RoleNames
+      variable:
+        rid: 5699302592880836617
   _prohibitedRoles:
   - {fileID: 11400000, guid: 487a3d6743b9ccd4f8af37c479c3365c, type: 2}
   - {fileID: 11400000, guid: ab3288c5368621349841361cd66f7bfa, type: 2}
-  - {fileID: 11400000, guid: 28d64caafe8877649a56d1661a9604fb, type: 2}
   _wasGivenRolesGameHistoryEntry: {fileID: 11400000, guid: 4545a36991683b14094654e507d2467e,
-    type: 2}
-  _wasGivenRolesGameHistoryEntryNEW: {fileID: 11400000, guid: 4545a36991683b14094654e507d2467e,
     type: 2}
   _choiceScreen: {fileID: 11400000, guid: 5e9f87f81aee1124ba8bda0cdca556a8, type: 2}
   _chooseReservedRoleMaximumDuration: 10
   _usedRoleGameHistoryEntry: {fileID: 11400000, guid: 7150d32f897f9d84f91cb00df0e75228,
     type: 2}
-  _usedRoleGameHistoryEntryNEW: {fileID: 11400000, guid: 7150d32f897f9d84f91cb00df0e75228,
-    type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5699302592880836617
+      type: {class: LocalizedStringListVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Assembly-CSharp}
+      data:
+        Values:
+        - m_TableReference:
+            m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+          m_TableEntryReference:
+            m_KeyId: 78451447016316928
+            m_Key: 
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []
+        - m_TableReference:
+            m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+          m_TableEntryReference:
+            m_KeyId: 77948391115841536
+            m_Key: 
+          m_FallbackState: 0
+          m_WaitForCompletion: 0
+          m_LocalVariables: []

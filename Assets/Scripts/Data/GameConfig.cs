@@ -8,6 +8,26 @@ namespace Werewolf.Data
 	public class GameConfig : ScriptableObject
 	{
 		public const int MAX_PLAYER_COUNT = 24;
+		public const int MAX_NICKNAME_CHARACTER_COUNT = 30;
+		public const int MAX_ROLE_SETUP_COUNT = 50;
+		public const int MAX_ROLE_SETUP_POOL_COUNT = 5;
+
+		[field: Header("Players")]
+		[field: SerializeField]
+		public int MinNicknameCharacterCount { get; private set; }
+
+		[field: Header("Game Setup")]
+		[field: SerializeField]
+		public int MinPlayerCount { get; private set; }
+
+		[field: SerializeField]
+		public RoleData DefaultRole { get; private set; }
+
+		[field: SerializeField]
+		public LocalizedString TooManyMandatoryRolesWarning { get; private set; }
+
+		[field: SerializeField]
+		public LocalizedString NeedOneWerewolfWarning { get; private set; }
 
 		[field: Header("Loading Screen")]
 		[field: SerializeField]
@@ -16,7 +36,7 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float LoadingScreenTransitionDuration { get; private set; }
 
-		[field: Header("Visual")]
+		[field: Header("Cards")]
 		[field: SerializeField]
 		public Card CardPrefab { get; private set; }
 

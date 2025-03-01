@@ -19,37 +19,37 @@ namespace Werewolf.Managers
 			}
 
 			_UIManager.TitleScreen.Initialize(titleScreenData.Image, titleScreenData.Text, variables, showConfirmButton, titleScreenData.PromptButtonText, countdownDuration);
-			_UIManager.FadeIn(_UIManager.TitleScreen, fastFade ? Config.UITransitionFastDuration : Config.UITransitionNormalDuration);
+			_UIManager.FadeIn(_UIManager.TitleScreen, fastFade ? GameConfig.UITransitionFastDuration : GameConfig.UITransitionNormalDuration);
 		}
 
 		public void DisplayTitle(Sprite image, LocalizedString title, Dictionary<string, IVariable> variables = null)
 		{
 			_UIManager.TitleScreen.Initialize(image, title, variables);
-			_UIManager.FadeIn(_UIManager.TitleScreen, Config.UITransitionNormalDuration);
+			_UIManager.FadeIn(_UIManager.TitleScreen, GameConfig.UITransitionNormalDuration);
 		}
 
 		private IEnumerator DisplayTitleForAllPlayers(int titleID, float holdDuration, int roleID = -1, string playerNickname = "")
 		{
-			if (holdDuration < Config.UITransitionNormalDuration)
+			if (holdDuration < GameConfig.UITransitionNormalDuration)
 			{
-				Debug.LogError($"{nameof(holdDuration)} most not be smaller than {Config.UITransitionNormalDuration}");
+				Debug.LogError($"{nameof(holdDuration)} most not be smaller than {GameConfig.UITransitionNormalDuration}");
 			}
 
 			RPC_DisplayTitle(titleID, roleID, playerNickname);
 #if UNITY_SERVER && UNITY_EDITOR
 			DisplayTitle(titleID, CreateTitleVariables(roleID, playerNickname));
 #endif
-			yield return new WaitForSeconds(holdDuration - Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(holdDuration - GameConfig.UITransitionNormalDuration);
 			RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
 			HideUI();
 #endif
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 		}
 
 		public void HideUI()
 		{
-			_UIManager.FadeOutAll(Config.UITransitionNormalDuration);
+			_UIManager.FadeOutAll(GameConfig.UITransitionNormalDuration);
 		}
 
 		private Dictionary<string, IVariable> CreateTitleVariables(int roleID = -1, string playerNickname = "")

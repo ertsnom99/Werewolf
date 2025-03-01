@@ -73,7 +73,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
+		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{

@@ -13,6 +13,10 @@ namespace Werewolf.Managers
 {
 	public class MainMenuManager : MonoBehaviour, INetworkRunnerCallbacks
 	{
+		[Header("Configs")]
+		[SerializeField]
+		private GameConfig _gameConfig;
+
 		[Header("Menu")]
 		[SerializeField]
 		private GameObject _mainMenu;
@@ -32,13 +36,6 @@ namespace Werewolf.Managers
 		[SerializeField]
 		private OptionsMenu _optionsMenu;
 
-		[Header("Player")]
-		[SerializeField]
-		private int _minNicknameCharacterCount;
-
-		[SerializeField]
-		private int _minPlayerCount;
-
 		[Header("Localization")]
 		[SerializeField]
 		private LocalizedString _joinFailedLocalizedString;
@@ -56,11 +53,6 @@ namespace Werewolf.Managers
 		[SerializeField]
 		private NetworkRunner _runnerPrefab;
 
-		// TODO: when complete workflow is integrated, add a UNITY_EDITOR region
-		[Header("Debug")]
-		[SerializeField]
-		private GameSetupData _debugGameSetupData;
-
 		private static NetworkRunner _runner;
 
 		private NetworkDataManager _networkDataManager;
@@ -76,6 +68,7 @@ namespace Werewolf.Managers
 			_joinMenu.ReturnClicked += OpenMainMenu;
 			_gameMenu.KickPlayerClicked += KickPlayer;
 			_gameMenu.ChangeNicknameClicked += ChangeNickname;
+			_gameMenu.RolesSetupChanged += ChangeRolesSetup;
 			_gameMenu.GameSpeedChanged += ChangeGameSpeed;
 			_gameMenu.StartGameClicked += StartGame;
 			_gameMenu.LeaveGameClicked += LeaveGame;
@@ -127,7 +120,7 @@ namespace Werewolf.Managers
 
 		private void OpenJoinMenu(LocalizedString message)
 		{
-			_joinMenu.Initialize(message, _minNicknameCharacterCount);
+			_joinMenu.Initialize(message, _gameConfig.MinNicknameCharacterCount);
 			DisplayJoinMenu();
 		}
 
@@ -146,7 +139,7 @@ namespace Werewolf.Managers
 				return;
 			}
 
-			_joinMenu.Initialize(_joinFailedLocalizedString, _minNicknameCharacterCount);
+			_joinMenu.Initialize(_joinFailedLocalizedString, _gameConfig.MinNicknameCharacterCount);
 
 			Debug.Log($"Join failed: {connection.Result.ShutdownReason}");
 		}
@@ -159,8 +152,7 @@ namespace Werewolf.Managers
 				_networkDataManager = NetworkDataManager.Instance;
 			}
 
-			// TODO : Change min player everytime the leader select a new game setup
-			_gameMenu.Initialize(_networkDataManager, _runner.LocalPlayer, _minPlayerCount, _minNicknameCharacterCount, GAME_HISTORY);
+			_gameMenu.Initialize(_networkDataManager, _gameConfig, _runner.LocalPlayer, GAME_HISTORY);
 
 			if (setNickname)
 			{
@@ -186,6 +178,14 @@ namespace Werewolf.Managers
 			}
 		}
 
+		private void ChangeRolesSetup(int[] mandatoryRoleIDs, int[] optionalRoleIDs)
+		{
+			if (!_networkDataManager.GameSetupReady)
+			{
+				_networkDataManager.RPC_SetRolesSetup(mandatoryRoleIDs, optionalRoleIDs);
+			}
+		}
+
 		private void ChangeGameSpeed(GameSpeed gameSpeed)
 		{
 			if (!_networkDataManager.GameSetupReady)
@@ -194,15 +194,14 @@ namespace Werewolf.Managers
 			}
 		}
 
-		private void StartGame(GameSpeed gameSpeed)
+		private void StartGame()
 		{
 			if (!_networkDataManager)
 			{
 				return;
 			}
 
-			// TODO : send the selected game setup
-			_networkDataManager.RPC_SetGameSetup(NetworkDataManager.ConvertToRolesSetup(_debugGameSetupData), gameSpeed, _debugGameSetupData.MinPlayerCount);
+			_networkDataManager.RPC_SetGameSetupReady();
 		}
 
 		private void OnNetworkDataManagerFinishedSpawning()

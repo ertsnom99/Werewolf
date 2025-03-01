@@ -51,7 +51,7 @@ namespace Werewolf.Managers
 #if UNITY_SERVER && UNITY_EDITOR
 			OnDebateEnded();
 #endif
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}

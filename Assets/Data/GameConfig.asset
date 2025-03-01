@@ -12,6 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b4fe5951b970f43a2fcd1087386345, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
+  <MinNicknameCharacterCount>k__BackingField: 2
+  <MinPlayerCount>k__BackingField: 5
+  <DefaultRole>k__BackingField: {fileID: 11400000, guid: 9225c604e9fe4664eb919866d085078f,
+    type: 2}
+  <TooManyMandatoryRolesWarning>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:ecf16318bb6cc7d42a507b623f97360d
+    m_TableEntryReference:
+      m_KeyId: 29288414289715200
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <NeedOneWerewolfWarning>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:ecf16318bb6cc7d42a507b623f97360d
+    m_TableEntryReference:
+      m_KeyId: 29301753199845376
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <WaitingForServerText>k__BackingField:
     m_TableReference:
       m_TableCollectionName: GUID:ecf16318bb6cc7d42a507b623f97360d

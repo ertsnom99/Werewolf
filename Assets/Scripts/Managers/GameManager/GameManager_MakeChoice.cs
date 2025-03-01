@@ -68,7 +68,7 @@ namespace Werewolf.Managers
 			_UIManager.ChoiceScreen.ConfirmedChoice += GiveChoice;
 
 			_UIManager.ChoiceScreen.Initialize(choices.ToArray(), choiceScreen.ChooseText, choiceScreen.ChoosedText, choiceScreen.DidNotChoosedText, mustChoose, maximumDuration);
-			_UIManager.FadeIn(_UIManager.ChoiceScreen, Config.UITransitionNormalDuration);
+			_UIManager.FadeIn(_UIManager.ChoiceScreen, GameConfig.UITransitionNormalDuration);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]

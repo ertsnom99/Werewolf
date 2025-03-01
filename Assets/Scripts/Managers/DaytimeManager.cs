@@ -20,22 +20,22 @@ namespace Werewolf.Managers
 		public Daytime CurrentDaytime { get; private set; }
 		private bool _inTransition = false;
 
-		private GameConfig _config;
+		private GameConfig _gameConfig;
 
 		private GameplayDataManager _gameplayDataManager;
 		private UIManager _UIManager;
 
 		public void Initialize(GameConfig config)
 		{
-			_config = config;
+			_gameConfig = config;
 			_gameplayDataManager = GameplayDataManager.Instance;
 			_UIManager = UIManager.Instance;
 
 			SetDaytime(CurrentDaytime);
 
-			if (_config.DaytimeTransitionDuration < (_config.DaytimeTextFadeInDelay + _config.UITransitionNormalDuration))
+			if (_gameConfig.DaytimeTransitionDuration < (_gameConfig.DaytimeTextFadeInDelay + _gameConfig.UITransitionNormalDuration))
 			{
-				Debug.LogError($"{nameof(_config.DaytimeTransitionDuration)} most not be smaller than {_config.DaytimeTextFadeInDelay + _config.UITransitionNormalDuration}");
+				Debug.LogError($"{nameof(_gameConfig.DaytimeTransitionDuration)} most not be smaller than {_gameConfig.DaytimeTextFadeInDelay + _gameConfig.UITransitionNormalDuration}");
 			}
 		}
 
@@ -46,12 +46,12 @@ namespace Werewolf.Managers
 			switch (daytime)
 			{
 				case Daytime.Day:
-					_light.color = _config.DayColor;
-					_light.colorTemperature = _config.DayTemperature;
+					_light.color = _gameConfig.DayColor;
+					_light.colorTemperature = _gameConfig.DayTemperature;
 					break;
 				case Daytime.Night:
-					_light.color = _config.NightColor;
-					_light.colorTemperature = _config.NightTemperature;
+					_light.color = _gameConfig.NightColor;
+					_light.colorTemperature = _gameConfig.NightTemperature;
 					break;
 			}
 		}
@@ -66,7 +66,7 @@ namespace Werewolf.Managers
 			CurrentDaytime = daytime;
 			_inTransition = true;
 
-			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _config.DayTransitionTitleScreen.ID.HashCode : _config.NightTransitionTitleScreen.ID.HashCode));
+			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _gameConfig.DayTransitionTitleScreen.ID.HashCode : _gameConfig.NightTransitionTitleScreen.ID.HashCode));
 			StartCoroutine(TransitionDaytime());
 		}
 
@@ -74,17 +74,17 @@ namespace Werewolf.Managers
 		{
 			Color startingColor = _light.color;
 			float startingTemperature = _light.colorTemperature;
-			Color targetColor = CurrentDaytime == Daytime.Day ? _config.DayColor : _config.NightColor;
-			float targetTemperature = CurrentDaytime == Daytime.Day ? _config.DayTemperature : _config.NightTemperature;
+			Color targetColor = CurrentDaytime == Daytime.Day ? _gameConfig.DayColor : _gameConfig.NightColor;
+			float targetTemperature = CurrentDaytime == Daytime.Day ? _gameConfig.DayTemperature : _gameConfig.NightTemperature;
 
 			float transitionProgress = .0f;
 
-			while (transitionProgress < _config.DaytimeLightTransitionDuration)
+			while (transitionProgress < _gameConfig.DaytimeLightTransitionDuration)
 			{
 				yield return 0;
 
 				transitionProgress += Time.deltaTime;
-				float progressRatio = Mathf.Clamp01(transitionProgress / _config.DaytimeLightTransitionDuration);
+				float progressRatio = Mathf.Clamp01(transitionProgress / _gameConfig.DaytimeLightTransitionDuration);
 
 				_light.color = Color.Lerp(startingColor, targetColor, progressRatio);
 				_light.colorTemperature = Mathf.Lerp(startingTemperature, targetTemperature, progressRatio);
@@ -100,15 +100,15 @@ namespace Werewolf.Managers
 
 			_UIManager.TitleScreen.Initialize(titleScreenData.Image, titleScreenData.Text);
 
-			yield return new WaitForSeconds(_config.DaytimeTextFadeInDelay);
+			yield return new WaitForSeconds(_gameConfig.DaytimeTextFadeInDelay);
 
-			_UIManager.FadeIn(_UIManager.TitleScreen, _config.UITransitionNormalDuration);
+			_UIManager.FadeIn(_UIManager.TitleScreen, _gameConfig.UITransitionNormalDuration);
 
-			yield return new WaitForSeconds(_config.DaytimeTransitionDuration - _config.DaytimeTextFadeInDelay - _config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(_gameConfig.DaytimeTransitionDuration - _gameConfig.DaytimeTextFadeInDelay - _gameConfig.UITransitionNormalDuration);
 
-			_UIManager.FadeOutAll(_config.UITransitionNormalDuration);
+			_UIManager.FadeOutAll(_gameConfig.UITransitionNormalDuration);
 
-			yield return new WaitForSeconds(_config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(_gameConfig.UITransitionNormalDuration);
 
 			_inTransition = false;
 		}

@@ -4,38 +4,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Localization;
 using Utilities.GameplayData;
 using Werewolf.Data;
 using Werewolf.Network.Configs;
 
 namespace Werewolf.Network
 {
-	[Serializable]
-	public struct PlayerNetworkInfo : INetworkStruct
+	public struct NetworkPlayerInfo : INetworkStruct
 	{
 		public PlayerRef PlayerRef;
-		[Networked, Capacity(24)]
+		[Networked, Capacity(GameConfig.MAX_NICKNAME_CHARACTER_COUNT)]
 		public string Nickname { get => default; set { } }
 		public bool IsLeader;
 		public bool IsConnected;
 	}
 
-	[Serializable]
-	public struct RoleSetup : INetworkStruct
+	public struct NetworkRoleSetup : INetworkStruct
 	{
-		[Networked, Capacity(5)]
+		[Networked, Capacity(GameConfig.MAX_ROLE_SETUP_POOL_COUNT)]
 		public NetworkArray<int> Pool { get; }
 		public int UseCount;
 	}
 
-	[Serializable]
-	public struct RolesSetup : INetworkStruct
+	public struct RoleSetup
 	{
-		public int DefaultRoleID;
-		[Networked, Capacity(100)]
-		public NetworkArray<RoleSetup> MandatoryRoles { get; }
-		[Networked, Capacity(100)]
-		public NetworkArray<RoleSetup> AvailableRoles { get; }
+		public RoleData[] Pool;
+		public int UseCount;
 	}
 
 	public enum GameSpeed
@@ -47,30 +42,42 @@ namespace Werewolf.Network
 
 	public class NetworkDataManager : NetworkBehaviourSingleton<NetworkDataManager>, INetworkRunnerCallbacks
 	{
-		[Networked, Capacity(GameConfig.MAX_PLAYER_COUNT)]
-		public NetworkDictionary<PlayerRef, PlayerNetworkInfo> PlayerInfos { get; }
+		[Header("Config")]
+		[SerializeField]
+		private GameConfig _gameConfig;
 
-		[field: SerializeField]
-		public RolesSetup RolesSetup { get; private set; }
+		[Networked, Capacity(GameConfig.MAX_PLAYER_COUNT)]
+		public NetworkDictionary<PlayerRef, NetworkPlayerInfo> PlayerInfos { get; }
+
+		[Networked, Capacity(GameConfig.MAX_PLAYER_COUNT)]
+		public NetworkArray<NetworkRoleSetup> MandatoryRoles { get; }
+
+		[Networked, Capacity(GameConfig.MAX_ROLE_SETUP_COUNT)]
+		public NetworkArray<NetworkRoleSetup> OptionalRoles { get; }
 
 		[Networked]
 		public GameSpeed GameSpeed { get; private set; }
 
 		public bool GameSetupReady { get; private set; }
 
-		private ChangeDetector _changeDetector;
-
 		public static event Action FinishedSpawning;
 		public event Action PlayerInfosChanged;
-		public event Action<GameSpeed> GameSpeedChanged;
+		public event Action RolesSetupChanged;
+		public event Action GameSpeedChanged;
 		public event Action InvalidRolesSetupReceived;
 		public event Action GameSetupReadyChanged;
 		public event Action<PlayerRef> PlayerDisconnected;
+
+		private ChangeDetector _changeDetector;
+
+		private GameplayDataManager _gameplayDataManager;
 
 		protected override void Awake()
 		{
 			base.Awake();
 			DontDestroyOnLoad(gameObject);
+
+			_gameplayDataManager = GameplayDataManager.Instance;
 		}
 
 		public override void Spawned()
@@ -90,17 +97,27 @@ namespace Werewolf.Network
 					case nameof(PlayerInfos):
 						PlayerInfosChanged?.Invoke();
 						break;
+					case nameof(MandatoryRoles):
+					case nameof(OptionalRoles):
+						RolesSetupChanged?.Invoke();
+						break;
 					case nameof(GameSpeed):
-						GameSpeedChanged?.Invoke(GameSpeed);
+						GameSpeedChanged?.Invoke();
 						break;
 				}
 			}
 		}
 
-		private bool IsRolesSetupValid(RolesSetup rolesSetup, int minPlayerCount)
+		public void ResetRoles()
 		{
-			//TODO: Check if setup is valid
-			return true;
+			MandatoryRoles.Clear();
+			OptionalRoles.Clear();
+		}
+
+		public void ResetGameSetupReady()
+		{
+			SetGameSetupReady(false);
+			RPC_SetGameSetupReady(false);
 		}
 
 		private void SetGameSetupReady(bool isReady)
@@ -109,64 +126,91 @@ namespace Werewolf.Network
 			GameSetupReadyChanged?.Invoke();
 		}
 
-		public void ClearRolesSetup()
+		public bool IsRolesSetupValid(List<LocalizedString> warnings)
 		{
-			RolesSetup = new();
-			SetGameSetupReady(false);
-			RPC_SetGameSetupReady(false);
-		}
+			warnings.Clear();
+			int totalMandatoryCount = 0;
+			bool hasMandatoryWerewolf = false;
 
-		#region Convertion Methods
-		public static RolesSetup ConvertToRolesSetup(GameSetupData gameSetupData)
-		{
-			RolesSetup rolesSetup = new()
+			for (int i = 0; i < MandatoryRoles.Length; i++)
 			{
-				DefaultRoleID = gameSetupData.DefaultRole.ID.HashCode,
-			};
+				NetworkRoleSetup networkRoleSetup = MandatoryRoles[i];
 
-			for (int i = 0; i < gameSetupData.MandatoryRoles.Length; i++)
-			{
-				rolesSetup.MandatoryRoles.Set(i, ConvertToRoleSetup(gameSetupData.MandatoryRoles[i]));
+				if (networkRoleSetup.UseCount == 0)
+				{
+					break;
+				}
+
+				CheckRoleSetup(networkRoleSetup, true, warnings);
+
+				totalMandatoryCount += networkRoleSetup.UseCount;
 			}
 
-			for (int i = 0; i < gameSetupData.AvailableRoles.Length; i++)
+			if (!hasMandatoryWerewolf)
 			{
-				rolesSetup.AvailableRoles.Set(i, ConvertToRoleSetup(gameSetupData.AvailableRoles[i]));
+				warnings.Add(_gameConfig.NeedOneWerewolfWarning);
 			}
 
-			return rolesSetup;
-		}
-
-		public static RoleSetup ConvertToRoleSetup(RoleSetupData roleSetupData)
-		{
-			RoleSetup roleSetup = new();
-
-			for (int i = 0; i < roleSetupData.Pool.Length; i++)
+			if (totalMandatoryCount > PlayerInfos.Count)
 			{
-				roleSetup.Pool.Set(i, roleSetupData.Pool[i].ID.HashCode);
+				warnings.Add(_gameConfig.TooManyMandatoryRolesWarning);
 			}
 
-			roleSetup.UseCount = roleSetupData.UseCount;
+			for (int i = 0; i < OptionalRoles.Length; i++)
+			{
+				NetworkRoleSetup networkRoleSetup = OptionalRoles[i];
 
-			return roleSetup;
+				if (networkRoleSetup.UseCount == 0)
+				{
+					break;
+				}
+
+				CheckRoleSetup(networkRoleSetup, false, warnings);
+			}
+
+			return warnings.Count == 0;
+
+			bool CheckRoleSetup(NetworkRoleSetup networkRoleSetup, bool checkForMandatoryWerewolfs, List<LocalizedString> warnings)
+			{
+				bool isValid = true;
+
+				for (int i = 0; i < networkRoleSetup.UseCount; i++)
+				{
+					if (!_gameplayDataManager.TryGetGameplayData(networkRoleSetup.Pool[i], out RoleData roleData))
+					{
+						Debug.LogError($"Could not find the role {networkRoleSetup.Pool[i]}");
+						continue;
+					}
+
+					if (roleData.Behavior && !roleData.Behavior.IsRolesSetupValid(MandatoryRoles, OptionalRoles, _gameplayDataManager, warnings))
+					{
+						isValid = false;
+					}
+
+					if (checkForMandatoryWerewolfs && roleData.PrimaryType == PrimaryRoleType.Werewolf)
+					{
+						hasMandatoryWerewolf = true;
+					}
+				}
+
+				return isValid;
+			}
 		}
 
-		public static void ConvertToRoleSetupDatas(NetworkArray<RoleSetup> roleSetups, out List<RoleSetupData> roleSetupDatas)
+		public void ConvertToRoleSetupDatas(NetworkArray<NetworkRoleSetup> networkRoleSetups, out List<RoleSetup> roleSetups)
 		{
-			GameplayDataManager _gameplayDataManager = GameplayDataManager.Instance;
+			roleSetups = new();
 
-			roleSetupDatas = new();
-
-			foreach (RoleSetup roleSetup in roleSetups)
+			foreach (NetworkRoleSetup networkRoleSetup in networkRoleSetups)
 			{
-				if (roleSetup.UseCount <= 0)
+				if (networkRoleSetup.UseCount <= 0)
 				{
 					return;
 				}
 
 				List<RoleData> Pool = new();
 
-				foreach (int roleID in roleSetup.Pool)
+				foreach (int roleID in networkRoleSetup.Pool)
 				{
 					if (roleID != 0)
 					{
@@ -181,20 +225,21 @@ namespace Werewolf.Network
 					}
 				}
 
-				roleSetupDatas.Add(new()
+				roleSetups.Add(new()
 				{
 					Pool = Pool.ToArray(),
-					UseCount = roleSetup.UseCount
+					UseCount = networkRoleSetup.UseCount
 				});
 			}
 		}
-		#endregion
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_KickPlayer(PlayerRef kickedPlayer, RpcInfo info = default)
 		{
-			if (PlayerInfos.TryGet(info.Source, out PlayerNetworkInfo playerInfo) && playerInfo.IsLeader)
+			if (!GameSetupReady
+			&& PlayerInfos.TryGet(info.Source, out NetworkPlayerInfo playerInfo)
+			&& playerInfo.IsLeader)
 			{
 				Runner.Disconnect(kickedPlayer);
 			}
@@ -203,11 +248,16 @@ namespace Werewolf.Network
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_SetPlayerNickname(PlayerRef playerRef, string nickname)
 		{
-			PlayerNetworkInfo playerData = new()
+			if (GameSetupReady)
+			{
+				return;
+			}
+
+			NetworkPlayerInfo playerData = new()
 			{
 				PlayerRef = playerRef,
 				Nickname = nickname,
-				IsLeader = PlayerInfos.TryGet(playerRef, out PlayerNetworkInfo playerInfo) ? playerInfo.IsLeader : PlayerInfos.Count <= 0,
+				IsLeader = PlayerInfos.TryGet(playerRef, out NetworkPlayerInfo playerInfo) ? playerInfo.IsLeader : PlayerInfos.Count <= 0,
 				IsConnected = true
 			};
 
@@ -215,34 +265,90 @@ namespace Werewolf.Network
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_SetRolesSetup(int[] mandatoryRoleIDs, int[] optionalRoleIDs, RpcInfo info = default)
+		{
+			if (GameSetupReady
+			|| mandatoryRoleIDs.Length > GameConfig.MAX_PLAYER_COUNT
+			|| optionalRoleIDs.Length > GameConfig.MAX_ROLE_SETUP_COUNT
+			|| !PlayerInfos.TryGet(info.Source, out NetworkPlayerInfo playerInfo)
+			|| !playerInfo.IsLeader)
+			{
+				return;
+			}
+
+			NetworkRoleSetup roleSetup = new();
+
+			MandatoryRoles.Clear();
+
+			for (int i = 0; i < mandatoryRoleIDs.Length; i++)
+			{
+				AddRole(mandatoryRoleIDs[i], MandatoryRoles, i);
+			}
+
+			OptionalRoles.Clear();
+
+			for (int i = 0; i < optionalRoleIDs.Length; i++)
+			{
+				AddRole(optionalRoleIDs[i], OptionalRoles, i);
+			}
+
+			void AddRole(int roleID, NetworkArray<NetworkRoleSetup> roles, int index)
+			{
+				if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+				{
+					return;
+				}
+				
+				roleSetup.Pool.Clear();
+
+				if (roleData.CanHaveVariableAmount || roleData.MandatoryAmount == 1)
+				{
+					roleSetup.Pool.Set(0, roleID);
+					roleSetup.UseCount = 1;
+				}
+				else
+				{
+					for (int j = 0; j < roleData.MandatoryAmount; j++)
+					{
+						roleSetup.Pool.Set(j, roleID);
+					}
+
+					roleSetup.UseCount = roleData.MandatoryAmount;
+				}
+
+				roles.Set(index, roleSetup);
+			}
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_SetGameSpeed(GameSpeed gameSpeed, RpcInfo info = default)
 		{
-			if (PlayerInfos[info.Source].IsLeader)
+			if (!GameSetupReady
+			&& PlayerInfos.TryGet(info.Source, out NetworkPlayerInfo playerInfo)
+			&& playerInfo.IsLeader)
 			{
 				GameSpeed = gameSpeed;
 			}
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_SetGameSetup(RolesSetup rolesSetup, GameSpeed gameSpeed, int minPlayerCount, RpcInfo info = default)
+		public void RPC_SetGameSetupReady(RpcInfo info = default)
 		{
-			if (!PlayerInfos.TryGet(info.Source, out PlayerNetworkInfo playerInfo) || !playerInfo.IsLeader
-				|| GameSetupReady
-				|| PlayerInfos.Count < minPlayerCount)
+			if (GameSetupReady
+			|| PlayerInfos.Count < _gameConfig.MinPlayerCount
+			|| !PlayerInfos.TryGet(info.Source, out NetworkPlayerInfo playerInfo)
+			|| !playerInfo.IsLeader)
 			{
 				return;
 			}
 
-			if (!IsRolesSetupValid(rolesSetup, minPlayerCount))
+			if (!IsRolesSetupValid(new()))
 			{
 				RPC_WarnInvalidRolesSetup(info.Source);
 				return;
 			}
 
-			RolesSetup = rolesSetup;
-			GameSpeed = gameSpeed;
 			SetGameSetupReady(true);
-
 			RPC_SetGameSetupReady(true);
 		}
 
@@ -290,9 +396,9 @@ namespace Werewolf.Network
 				return;
 			}
 
-			foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, NetworkPlayerInfo> playerInfo in PlayerInfos)
 			{
-				PlayerNetworkInfo newPlayerData = playerInfo.Value;
+				NetworkPlayerInfo newPlayerData = playerInfo.Value;
 				newPlayerData.IsLeader = true;
 
 				PlayerInfos.Set(playerInfo.Key, newPlayerData);
@@ -303,7 +409,7 @@ namespace Werewolf.Network
 
 		private void SetPlayerDisconnected(PlayerRef player)
 		{
-			PlayerNetworkInfo newPlayerData = PlayerInfos[player];
+			NetworkPlayerInfo newPlayerData = PlayerInfos[player];
 			newPlayerData.IsConnected = false;
 
 			PlayerInfos.Set(player, newPlayerData);
@@ -316,11 +422,11 @@ namespace Werewolf.Network
 				return;
 			}
 
-			KeyValuePair<PlayerRef, PlayerNetworkInfo>[] disconnectedPlayers = PlayerInfos.Where(kv => !kv.Value.IsConnected).ToArray();
+			KeyValuePair<PlayerRef, NetworkPlayerInfo>[] disconnectedPlayers = PlayerInfos.Where(kv => !kv.Value.IsConnected).ToArray();
 
 			bool isLeaderGone = false;
 
-			foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> disconnectedPlayer in disconnectedPlayers)
+			foreach (KeyValuePair<PlayerRef, NetworkPlayerInfo> disconnectedPlayer in disconnectedPlayers)
 			{
 				if (PlayerInfos[disconnectedPlayer.Key].IsLeader)
 				{
@@ -335,12 +441,12 @@ namespace Werewolf.Network
 				return;
 			}
 
-			foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> playerInfo in PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, NetworkPlayerInfo> playerInfo in PlayerInfos)
 			{
-				PlayerNetworkInfo playerNetworkInfo = playerInfo.Value;
-				playerNetworkInfo.IsLeader = true;
+				NetworkPlayerInfo networkPlayerInfo = playerInfo.Value;
+				networkPlayerInfo.IsLeader = true;
 
-				PlayerInfos.Set(playerInfo.Key, playerNetworkInfo);
+				PlayerInfos.Set(playerInfo.Key, networkPlayerInfo);
 				break;
 			}
 		}

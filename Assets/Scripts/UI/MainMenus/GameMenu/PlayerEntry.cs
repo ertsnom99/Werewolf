@@ -37,7 +37,7 @@ namespace Werewolf.UI
 
 		private PlayerRef _player;
 
-		public void Initialize(Network.PlayerNetworkInfo playerInfo, PlayerRef localPlayer, bool isOdd, bool isLocalPlayerLeader, bool canBeKick)
+		public void Initialize(Network.NetworkPlayerInfo playerInfo, PlayerRef localPlayer, bool isOdd, bool isLocalPlayerLeader, bool canBeKick)
 		{
 			_player = playerInfo.PlayerRef;
 

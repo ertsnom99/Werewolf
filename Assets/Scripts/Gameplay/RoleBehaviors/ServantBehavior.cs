@@ -48,7 +48,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.WaitBeforeDeathRevealEnded += OnWaitBeforeDeathRevealEnded;
 		}
 
-		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
+		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
@@ -60,7 +60,7 @@ namespace Werewolf.Gameplay.Role
 			if (Player.IsNone
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| Player == playerRevealed
-				|| mark != _gameManager.Config.ExecutionMarkForDeath
+				|| mark != _gameManager.GameConfig.ExecutionMarkForDeath
 				|| !_gameManager.PromptPlayer(Player, _takeRoleTitleScreen.ID.HashCode, revealDuration, OnTakeRole))
 			{
 				return;
@@ -164,7 +164,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.ChangePlayerCardRole(previousPlayer, RoleToTake);
 			_gameManager.PutCardBackDown(previousPlayer, false);
 #endif
-			yield return new WaitForSeconds(_gameManager.Config.MoveToCameraDuration);
+			yield return new WaitForSeconds(_gameManager.GameConfig.MoveToCameraDuration);
 			_gameManager.SetPlayerDeathRevealCompleted();
 
 			Destroy(gameObject);

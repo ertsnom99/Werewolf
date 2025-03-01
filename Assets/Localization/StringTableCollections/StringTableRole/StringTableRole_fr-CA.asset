@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: fr-CA
   m_SharedData: {fileID: 11400000, guid: 25402ef7d32c3cb47a782073354eda10, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 5699302592880836616
   m_TableData:
   - m_Id: 1069766066176
     m_Localized: "Com\xE9dien"
@@ -339,6 +340,21 @@ MonoBehaviour:
       \xE0 prendre pour sauver le village. \r"
     m_Metadata:
       m_Items: []
+  - m_Id: 86655715137413120
+    m_Localized: "-Besoin d'un minimum de trois r\xF4les de villageois pure pour
+      le Com\xE9dien (exceptions: {RoleNames:list:{:t(RoleName)}|, | et })"
+    m_Metadata:
+      m_Items:
+      - rid: 5699302592880836616
+  - m_Id: 86657717783355392
+    m_Localized: "-Besoin d'un minimum de deux r\xF4les obligatoires de Loup-Garou
+      pour le Voleur"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 5699302592880836616
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00e085eee9dc3301

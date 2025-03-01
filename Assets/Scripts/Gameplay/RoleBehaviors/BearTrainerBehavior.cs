@@ -42,7 +42,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.DeathRevealEnded += OnDeathRevealEnded;
 		}
 
-		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
+		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
@@ -85,7 +85,7 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.RPC_DisplayTitle(_bearGrowlTitleScreen.ID.HashCode);
 
-			GameConfig gameConfig = _gameManager.Config;
+			GameConfig gameConfig = _gameManager.GameConfig;
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.DisplayTitle(_bearGrowlTitleScreen.ID.HashCode);
 #endif
