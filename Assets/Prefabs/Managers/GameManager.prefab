@@ -63,6 +63,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15887fdbe77016f4685c28dbdf1c5804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Config>k__BackingField: {fileID: 11400000, guid: 0f941fa41f0cb734990265241e09e57b,
+  <GameConfig>k__BackingField: {fileID: 11400000, guid: 0f941fa41f0cb734990265241e09e57b,
     type: 2}
-  _myTets: {fileID: 7456238396284510153, guid: 0e7014af8e28a88409bdb3f0abb80632, type: 2}
+  _cardPlacementSpline: {fileID: 0}

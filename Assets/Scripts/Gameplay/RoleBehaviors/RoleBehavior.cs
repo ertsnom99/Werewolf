@@ -1,8 +1,10 @@
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 using Utilities.GameplayData;
 using Werewolf.Data;
+using Werewolf.Network;
 
 namespace Werewolf.Gameplay.Role
 {
@@ -31,6 +33,11 @@ namespace Werewolf.Gameplay.Role
 		[field: SerializeField]
 		[field: ReadOnly]
 		public PlayerRef Player { get; private set; }
+
+		public virtual bool IsRolesSetupValid(NetworkArray<NetworkRoleSetup> mandatoryRoles, NetworkArray<NetworkRoleSetup> optionalRoles, GameplayDataManager gameplayDataManager, List<LocalizedString> warnings)
+		{
+			return true;
+		}
 
 		public void SetRoleID(UniqueID roleID)
 		{
@@ -96,7 +103,7 @@ namespace Werewolf.Gameplay.Role
 
 		public abstract void Initialize();
 
-		public abstract void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute);
+		public abstract void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute);
 
 		public abstract bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp);
 

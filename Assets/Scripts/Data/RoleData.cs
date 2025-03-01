@@ -54,11 +54,11 @@ namespace Werewolf.Data
 
 		// This allows to have more than once this role in a game
 		[field: SerializeField]
-		public bool CanHaveMultiples { get; private set; }
+		public bool CanHaveVariableAmount { get; private set; }
 
 		// When CanHaveMultiples is false, there will be this exact number of this role at once in a game 
 		[field: SerializeField]
-		public int MandatoryCount { get; private set; }
+		public int MandatoryAmount { get; private set; }
 
 		[field: SerializeField]
 		public PlayerGroupData[] PlayerGroups { get; private set; }

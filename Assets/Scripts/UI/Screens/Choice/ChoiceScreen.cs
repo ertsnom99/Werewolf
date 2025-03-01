@@ -30,7 +30,7 @@ namespace Werewolf.UI
 		[SerializeField]
 		private LocalizeStringEvent _confirmButtonText;
 
-		private GameConfig _config;
+		private GameConfig _gameConfig;
 
 		private bool _mustChooseOne;
 
@@ -60,7 +60,7 @@ namespace Werewolf.UI
 
 		public void SetConfig(GameConfig config)
 		{
-			_config = config;
+			_gameConfig = config;
 		}
 
 		public void Initialize(Choice.ChoiceData[] choices, LocalizedString chooseText, LocalizedString choosedText, LocalizedString didNotChoosedText, bool mustChooseOne, float countdownDuration)
@@ -111,7 +111,7 @@ namespace Werewolf.UI
 		private void UpdateConfirmButton(bool hasChoiceSelected)
 		{
 			_confirmButton.interactable = hasChoiceSelected || !_mustChooseOne ? true : false;
-			_confirmButtonText.StringReference = !hasChoiceSelected ? (_mustChooseOne ? _config.MustChooseText : _config.SkipChoiceText) : _config.ConfirmChoiceText;
+			_confirmButtonText.StringReference = !hasChoiceSelected ? (_mustChooseOne ? _gameConfig.MustChooseText : _gameConfig.SkipChoiceText) : _gameConfig.ConfirmChoiceText;
 		}
 
 		public void OnConfirmChoice()

@@ -18,13 +18,13 @@ namespace Werewolf.UI
 
 		private readonly Dictionary<Transform, float> DisconnectedTextDisplayStartTimes = new();
 
-		private GameConfig _config;
+		private GameConfig _gameConfig;
 
 		private NetworkDataManager _networkDataManager;
 
 		public void SetConfig(GameConfig config)
 		{
-			_config = config;
+			_gameConfig = config;
 		}
 
 		private void Start()
@@ -38,7 +38,7 @@ namespace Werewolf.UI
 
 			foreach (KeyValuePair<Transform, float> playerNicknameDisplayStartTime in DisconnectedTextDisplayStartTimes)
 			{
-				if(Time.time - playerNicknameDisplayStartTime.Value > _config.DisconnectedTextDuration)
+				if(Time.time - playerNicknameDisplayStartTime.Value > _gameConfig.DisconnectedTextDuration)
 				{
 					playerNicknamesToRemove.Add(playerNicknameDisplayStartTime.Key);
 				}

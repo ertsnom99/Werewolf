@@ -22,7 +22,7 @@ namespace Werewolf.Managers
 	public partial class GameManager : NetworkBehaviourSingleton<GameManager>, INetworkRunnerCallbacks
 	{
 		[field: SerializeField]
-		public GameConfig Config { get; private set; }
+		public GameConfig GameConfig { get; private set; }
 
 		public List<RoleData> RolesToDistribute { get; private set; }
 
@@ -31,8 +31,6 @@ namespace Werewolf.Managers
 		public HashSet<PlayerRef> PlayersWaitingFor { get; private set; }
 
 		public int AlivePlayerCount { get; private set; }
-
-		private RolesSetup _rolesSetup;
 
 		private bool _allPlayersReadyToBeInitialized = false;
 		private bool _startedPlayersInitialization = false;
@@ -105,9 +103,9 @@ namespace Werewolf.Managers
 			PlayerGameInfos = new();
 			PlayersWaitingFor = new();
 
-			if (!Config)
+			if (!GameConfig)
 			{
-				Debug.LogError($"The {nameof(GameConfig)} of the {nameof(GameManager)} is not defined");
+				Debug.LogError($"The {nameof(Data.GameConfig)} of the {nameof(Managers.GameManager)} is not defined");
 			}
 		}
 
@@ -130,13 +128,12 @@ namespace Werewolf.Managers
 		}
 
 		#region Pre Gameplay Loop
-		public void PrepareGame(RolesSetup rolesSetup, GameSpeed gameSpeed)
+		public void PrepareGame()
 		{
 			_networkDataManager = NetworkDataManager.Instance;
 			_networkDataManager.PlayerDisconnected += OnPlayerDisconnected;
 
-			_rolesSetup = rolesSetup;
-			GameSpeedModifier = Config.GameSpeedModifier[(int)gameSpeed];
+			GameSpeedModifier = GameConfig.GameSpeedModifier[(int)_networkDataManager.GameSpeed];
 
 			_gameHistoryManager.ClearEntries();
 
@@ -147,7 +144,7 @@ namespace Werewolf.Managers
 		{
 			if (!_allPlayersReadyToBeInitialized)
 			{
-				foreach (KeyValuePair<PlayerRef, PlayerNetworkInfo> playerInfo in _networkDataManager.PlayerInfos)
+				foreach (KeyValuePair<PlayerRef, NetworkPlayerInfo> playerInfo in _networkDataManager.PlayerInfos)
 				{
 					if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
 					{
@@ -159,7 +156,7 @@ namespace Werewolf.Managers
 			}
 			else if (!_startedPlayersInitialization)
 			{
-				SelectRolesToDistribute(_rolesSetup);
+				SelectRolesToDistribute();
 				DistributeRoles();
 
 				DeterminePlayerGroups();
@@ -199,34 +196,33 @@ namespace Werewolf.Managers
 		}
 
 		#region Roles Selection
-		private void SelectRolesToDistribute(RolesSetup rolesSetup)
+		private void SelectRolesToDistribute()
 		{
 			// Convert RoleIDs to RoleData
-			if (!_gameplayDataManager.TryGetGameplayData(rolesSetup.DefaultRoleID, out RoleData defaultRole))
+			if (!_gameplayDataManager.TryGetGameplayData(GameConfig.DefaultRole.ID.HashCode, out RoleData defaultRole))
 			{
-				Debug.LogError($"Could not find the role {rolesSetup.DefaultRoleID} for the default role");
+				Debug.LogError($"Could not find the role {GameConfig.DefaultRole.ID.HashCode} for the default role");
 			}
 
-			NetworkDataManager.ConvertToRoleSetupDatas(rolesSetup.MandatoryRoles, out List<RoleSetupData> mandatoryRoles);
-			NetworkDataManager.ConvertToRoleSetupDatas(rolesSetup.AvailableRoles, out List<RoleSetupData> availableRoles);
-
 			List<RoleData> rolesToDistribute = new();
+			_networkDataManager.ConvertToRoleSetupDatas(_networkDataManager.MandatoryRoles, out List<RoleSetup> mandatoryRoles);
+			_networkDataManager.ConvertToRoleSetupDatas(_networkDataManager.OptionalRoles, out List<RoleSetup> optionalRoles);
 
 			// Add all mandatory roles first
 			while (mandatoryRoles.Count > 0)
 			{
 				RoleData[] addedRoles = SelectRolesFromRoleSetup(mandatoryRoles[0], rolesToDistribute);
-				mandatoryRoles.Remove(mandatoryRoles[0]);
+				mandatoryRoles.RemoveAt(0);
 
 				if (addedRoles == null)
 				{
 					continue;
 				}
 
-				PrepareRoleBehaviors(addedRoles, rolesToDistribute, mandatoryRoles, availableRoles);
+				PrepareRoleBehaviors(addedRoles, rolesToDistribute, mandatoryRoles, optionalRoles);
 			}
 
-			List<RoleSetupData> excludedRuleSetups = new();
+			List<RoleSetup> excludedRuleSetups = new();
 			int attempts = 0;
 
 			// Complete with available roles at random or default role
@@ -234,16 +230,16 @@ namespace Werewolf.Managers
 			{
 				int startingRoleCount = rolesToDistribute.Count;
 
-				if (availableRoles.Count <= 0 || attempts >= Config.AvailableRolesMaxAttemptCount)
+				if (optionalRoles.Count <= 0 || attempts >= GameConfig.AvailableRolesMaxAttemptCount)
 				{
 					rolesToDistribute.Add(defaultRole);
-					PrepareRoleBehavior(defaultRole, rolesToDistribute, mandatoryRoles, availableRoles);
+					PrepareRoleBehavior(defaultRole, rolesToDistribute, mandatoryRoles, optionalRoles);
 
 					continue;
 				}
 
-				int randomIndex = UnityEngine.Random.Range(0, availableRoles.Count);
-				RoleSetupData roleSetup = availableRoles[randomIndex];
+				int randomIndex = UnityEngine.Random.Range(0, optionalRoles.Count);
+				RoleSetup roleSetup = optionalRoles[randomIndex];
 
 				// Do not use roles setup that would add too many roles 
 				if (excludedRuleSetups.Contains(roleSetup))
@@ -258,9 +254,9 @@ namespace Werewolf.Managers
 				}
 
 				RoleData[] addedRoles = SelectRolesFromRoleSetup(roleSetup, rolesToDistribute);
-				availableRoles.RemoveAt(randomIndex);
+				optionalRoles.RemoveAt(randomIndex);
 
-				PrepareRoleBehaviors(addedRoles, rolesToDistribute, mandatoryRoles, availableRoles);
+				PrepareRoleBehaviors(addedRoles, rolesToDistribute, mandatoryRoles, optionalRoles);
 
 				// Some roles were removed from the list of roles to distribute
 				if (startingRoleCount > rolesToDistribute.Count)
@@ -273,7 +269,7 @@ namespace Werewolf.Managers
 			RolesToDistribute = rolesToDistribute;
 		}
 
-		private RoleData[] SelectRolesFromRoleSetup(RoleSetupData roleSetup, List<RoleData> rolesToDistribute)
+		private RoleData[] SelectRolesFromRoleSetup(RoleSetup roleSetup, List<RoleData> rolesToDistribute)
 		{
 			if (roleSetup.UseCount <= 0 || roleSetup.UseCount > roleSetup.Pool.Length)
 			{
@@ -295,7 +291,7 @@ namespace Werewolf.Managers
 			return addedRoles;
 		}
 
-		public void PrepareRoleBehaviors(RoleData[] roles, List<RoleData> rolesToDistribute, List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles)
+		public void PrepareRoleBehaviors(RoleData[] roles, List<RoleData> rolesToDistribute, List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles)
 		{
 			foreach (RoleData role in roles)
 			{
@@ -303,7 +299,7 @@ namespace Werewolf.Managers
 			}
 		}
 
-		public void PrepareRoleBehavior(RoleData role, List<RoleData> rolesToDistribute, List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles)
+		public void PrepareRoleBehavior(RoleData role, List<RoleData> rolesToDistribute, List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles)
 		{
 			if (!role.Behavior)
 			{
@@ -345,7 +341,7 @@ namespace Werewolf.Managers
 		{
 			PreRoleDistribution?.Invoke();
 
-			foreach (KeyValuePair<PlayerRef, Network.PlayerNetworkInfo> playerInfo in _networkDataManager.PlayerInfos)
+			foreach (KeyValuePair<PlayerRef, NetworkPlayerInfo> playerInfo in _networkDataManager.PlayerInfos)
 			{
 				RoleData selectedRole = RolesToDistribute[UnityEngine.Random.Range(0, RolesToDistribute.Count)];
 				RolesToDistribute.Remove(selectedRole);
@@ -366,7 +362,7 @@ namespace Werewolf.Managers
 
 				PlayerGameInfos.Add(playerInfo.Key, new() { Role = selectedRole, Behaviors = selectedBehaviors, IsAwake = true, IsAlive = true });
 
-				_gameHistoryManager.AddEntry(Config.PlayerGivenRoleGameHistoryEntry.ID,
+				_gameHistoryManager.AddEntry(GameConfig.PlayerGivenRoleGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -495,11 +491,11 @@ namespace Werewolf.Managers
 
 		private void InitializeConfigAndManagers()
 		{
-			_daytimeManager.Initialize(Config);
-			_voteManager.Initialize(Config);
-			_emotesManager.Initialize(Config);
-			_UIManager.ChoiceScreen.SetConfig(Config);
-			_UIManager.DisconnectedScreen.SetConfig(Config);
+			_daytimeManager.Initialize(GameConfig);
+			_voteManager.Initialize(GameConfig);
+			_emotesManager.Initialize(GameConfig);
+			_UIManager.ChoiceScreen.SetConfig(GameConfig);
+			_UIManager.DisconnectedScreen.SetConfig(GameConfig);
 		}
 
 		#region RPC Calls
@@ -584,7 +580,7 @@ namespace Werewolf.Managers
 				CurrentGameplayLoopStep++;
 			}
 
-			yield return new WaitForSeconds(Config.GameplayLoopStepDelay);
+			yield return new WaitForSeconds(GameConfig.GameplayLoopStepDelay);
 
 			ExecuteGameplayLoopStep();
 		}
@@ -618,7 +614,7 @@ namespace Werewolf.Managers
 					StartCoroutine(StartDeathReveal(true));
 					break;
 				case GameplayLoopStep.ExecutionDebate:
-					StartCoroutine(StartDebate(GetPlayersExcluding(GetDeadPlayers().ToArray()), Config.ExecutionDebateTitleScreen.ID.HashCode, Config.ExecutionDebateDuration * GameSpeedModifier));
+					StartCoroutine(StartDebate(GetPlayersExcluding(GetDeadPlayers().ToArray()), GameConfig.ExecutionDebateTitleScreen.ID.HashCode, GameConfig.ExecutionDebateDuration * GameSpeedModifier));
 					break;
 				case GameplayLoopStep.Execution:
 					StartExecution();
@@ -663,7 +659,7 @@ namespace Werewolf.Managers
 				RPC_HideUI(playerInfo.Key);
 			}
 
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
@@ -676,7 +672,7 @@ namespace Werewolf.Managers
 				{ "Role", _playerCards[Runner.LocalPlayer].Role.NameSingular }
 			};
 
-			DisplayTitle(null, Config.GivenRoleText, variables);
+			DisplayTitle(null, GameConfig.GivenRoleText, variables);
 		}
 		#endregion
 		#endregion
@@ -687,28 +683,28 @@ namespace Werewolf.Managers
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				PromptPlayer(playerInfo.Key,
-							Config.ElectionPromptTitleScreen.ID.HashCode,
-							Config.ElectionPromptDuration * GameSpeedModifier,
+							GameConfig.ElectionPromptTitleScreen.ID.HashCode,
+							GameConfig.ElectionPromptDuration * GameSpeedModifier,
 							OnPlayerWantsToBeCaptain,
 							false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(Config.ElectionPromptTitleScreen.ID.HashCode, variables: null, countdownDuration: Config.ElectionPromptDuration * GameSpeedModifier);
+			DisplayTitle(GameConfig.ElectionPromptTitleScreen.ID.HashCode, variables: null, countdownDuration: GameConfig.ElectionPromptDuration * GameSpeedModifier);
 #endif
-			yield return new WaitForSeconds(Config.ElectionPromptDuration * GameSpeedModifier);
+			yield return new WaitForSeconds(GameConfig.ElectionPromptDuration * GameSpeedModifier);
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
 				StopPromptingPlayer(playerInfo.Key, false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_UIManager.FadeOutAll(Config.UITransitionNormalDuration);
+			_UIManager.FadeOutAll(GameConfig.UITransitionNormalDuration);
 #endif
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
 			if (_captainCandidates.Count > 1)
 			{
-				_gameHistoryManager.AddEntry(Config.ElectionMultipleCandidatesGameHistoryEntry.ID,
+				_gameHistoryManager.AddEntry(GameConfig.ElectionMultipleCandidatesGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -724,8 +720,8 @@ namespace Werewolf.Managers
 #if UNITY_SERVER && UNITY_EDITOR
 				SetPlayersCardHighlightVisible(captainCandidates, true);
 #endif
-				yield return DisplayTitleForAllPlayers(Config.ElectionMultipleCandidatesTitleScreen.ID.HashCode, Config.ElectionMultipleCandidatesDuration * GameSpeedModifier);
-				StartCoroutine(StartDebate(captainCandidates, Config.ElectionDebateTitleScreen.ID.HashCode, Config.ElectionDebateDuration * GameSpeedModifier));
+				yield return DisplayTitleForAllPlayers(GameConfig.ElectionMultipleCandidatesTitleScreen.ID.HashCode, GameConfig.ElectionMultipleCandidatesDuration * GameSpeedModifier);
+				StartCoroutine(StartDebate(captainCandidates, GameConfig.ElectionDebateTitleScreen.ID.HashCode, GameConfig.ElectionDebateDuration * GameSpeedModifier));
 				yield break;
 			}
 			else if (_captainCandidates.Count == 1)
@@ -735,8 +731,8 @@ namespace Werewolf.Managers
 			}
 			else
 			{
-				_gameHistoryManager.AddEntry(Config.ElectionNoCandidateGameHistoryEntry.ID, null);
-				yield return DisplayTitleForAllPlayers(Config.ElectionNoCandidateTitleScreen.ID.HashCode, Config.ElectionNoCandidateDuration * GameSpeedModifier);
+				_gameHistoryManager.AddEntry(GameConfig.ElectionNoCandidateGameHistoryEntry.ID, null);
+				yield return DisplayTitleForAllPlayers(GameConfig.ElectionNoCandidateTitleScreen.ID.HashCode, GameConfig.ElectionNoCandidateDuration * GameSpeedModifier);
 			}
 
 			CurrentGameplayLoopStep = GameplayLoopStep.Election;
@@ -754,8 +750,8 @@ namespace Werewolf.Managers
 		private void StartElection()
 		{
 			_voteManager.StartVoteForAllPlayers(OnElectionVotesCounted,
-												Config.ElectionVoteTitleScreen.ID.HashCode,
-												Config.ElectionVoteDuration * GameSpeedModifier,
+												GameConfig.ElectionVoteTitleScreen.ID.HashCode,
+												GameConfig.ElectionVoteDuration * GameSpeedModifier,
 												false,
 												ChoicePurpose.Other,
 												GetDeadPlayers().ToArray(),
@@ -801,10 +797,10 @@ namespace Werewolf.Managers
 			switch (daytime)
 			{
 				case Daytime.Day:
-					_gameHistoryManager.AddEntry(Config.SunRoseGameHistoryEntry.ID, null);
+					_gameHistoryManager.AddEntry(GameConfig.SunRoseGameHistoryEntry.ID, null);
 					break;
 				case Daytime.Night:
-					_gameHistoryManager.AddEntry(Config.SunSetGameHistoryEntry.ID, null);
+					_gameHistoryManager.AddEntry(GameConfig.SunSetGameHistoryEntry.ID, null);
 					break;
 			}
 
@@ -812,7 +808,7 @@ namespace Werewolf.Managers
 			SetAllPlayersAwake(isDaytime);
 			_emotesManager.SetAsleepCanSee(isDaytime);
 
-			yield return new WaitForSeconds(Config.DaytimeTransitionDuration);
+			yield return new WaitForSeconds(GameConfig.DaytimeTransitionDuration);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
@@ -864,7 +860,7 @@ namespace Werewolf.Managers
 
 							if (isWakingUp)
 							{
-								_gameHistoryManager.AddEntry(Config.WokeUpPlayerGameHistoryEntry.ID,
+								_gameHistoryManager.AddEntry(GameConfig.WokeUpPlayerGameHistoryEntry.ID,
 															new GameHistorySaveEntryVariable[] {
 															new()
 															{
@@ -924,7 +920,7 @@ namespace Werewolf.Managers
 #endif
 					float elapsedTime = .0f;
 
-					while (PlayersWaitingFor.Count > 0 || elapsedTime < Config.NightCallMinimumDuration * GameSpeedModifier)
+					while (PlayersWaitingFor.Count > 0 || elapsedTime < GameConfig.NightCallMinimumDuration * GameSpeedModifier)
 					{
 						yield return 0;
 						elapsedTime += Time.deltaTime;
@@ -937,10 +933,10 @@ namespace Werewolf.Managers
 					HideUI();
 					SetAllPlayersCardHighlightVisible(false);
 #endif
-					yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+					yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
 					StartNightCallChangeDelay?.Invoke();
-					yield return new WaitForSeconds(Config.NightCallChangeDelay);
+					yield return new WaitForSeconds(GameConfig.NightCallChangeDelay);
 				}
 
 				_currentNightCallIndex++;
@@ -992,12 +988,12 @@ namespace Werewolf.Managers
 				Debug.LogError($"Could not find the role {roleID}");
 			}
 
-			bool multipleRole = roleData.CanHaveMultiples;
+			bool multipleRole = roleData.CanHaveVariableAmount || roleData.MandatoryAmount > 1;
 
 			_rolePlayingTextVariables["Role"] = multipleRole ? roleData.NamePlural : roleData.NameSingular;
 			((BoolVariable)_rolePlayingTextVariables["Multiple"]).Value = multipleRole;
 
-			DisplayTitle(roleData.Image, Config.RolePlayingText, _rolePlayingTextVariables);
+			DisplayTitle(roleData.Image, GameConfig.RolePlayingText, _rolePlayingTextVariables);
 		}
 
 		#region RPC Calls
@@ -1020,14 +1016,14 @@ namespace Werewolf.Managers
 #if UNITY_SERVER && UNITY_EDITOR
 				DisplayDeathRevealTitle(hasAnyPlayerDied);
 #endif
-				yield return new WaitForSeconds(Config.UITransitionNormalDuration);
-				yield return new WaitForSeconds(Config.DeathRevealHoldDuration * GameSpeedModifier);
+				yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
+				yield return new WaitForSeconds(GameConfig.DeathRevealHoldDuration * GameSpeedModifier);
 
 				RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
 				HideUI();
 #endif
-				yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+				yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 			}
 
 			if (hasAnyPlayerDied)
@@ -1042,9 +1038,9 @@ namespace Werewolf.Managers
 						continue;
 					}
 
-					yield return new WaitForSeconds(Config.DelayBeforeRevealingDeadPlayer * GameSpeedModifier);
+					yield return new WaitForSeconds(GameConfig.DelayBeforeRevealingDeadPlayer * GameSpeedModifier);
 
-					_gameHistoryManager.AddEntry(Config.PlayerDiedGameHistoryEntry.ID,
+					_gameHistoryManager.AddEntry(GameConfig.PlayerDiedGameHistoryEntry.ID,
 												new GameHistorySaveEntryVariable[] {
 													new()
 													{
@@ -1062,7 +1058,7 @@ namespace Werewolf.Managers
 
 					if (_networkDataManager.PlayerInfos[deadPlayer].IsConnected)
 					{
-						RPC_DisplayPlayerDiedTitle(deadPlayer, _marksForDeath[0].Mark == Config.ExecutionMarkForDeath);
+						RPC_DisplayPlayerDiedTitle(deadPlayer, _marksForDeath[0].Mark == GameConfig.ExecutionMarkForDeath);
 					}
 
 					_isPlayerDeathRevealCompleted = false;
@@ -1084,7 +1080,7 @@ namespace Werewolf.Managers
 #if UNITY_SERVER && UNITY_EDITOR
 					HideUI();
 #endif
-					yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+					yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
 					PlayerDeathRevealEnded?.Invoke(deadPlayer, _marksForDeath[0].Mark);
 
@@ -1098,7 +1094,7 @@ namespace Werewolf.Managers
 
 					if (deadPlayer == _captain)
 					{
-						_gameHistoryManager.AddEntry(Config.CaptainDiedGameHistoryEntry.ID,
+						_gameHistoryManager.AddEntry(GameConfig.CaptainDiedGameHistoryEntry.ID,
 													new GameHistorySaveEntryVariable[] {
 														new()
 														{
@@ -1138,12 +1134,12 @@ namespace Werewolf.Managers
 
 		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
 		{
-			DisplayTitle(hasAnyPlayerDied ? Config.DeathRevealSomeoneDiedTitleScreen.ID.HashCode : Config.DeathRevealNoOneDiedTitleScreen.ID.HashCode);
+			DisplayTitle(hasAnyPlayerDied ? GameConfig.DeathRevealSomeoneDiedTitleScreen.ID.HashCode : GameConfig.DeathRevealNoOneDiedTitleScreen.ID.HashCode);
 		}
 
 		private void DisplayPlayerDiedTitle(bool wasExecuted)
 		{
-			DisplayTitle(wasExecuted ? Config.PlayerExecutedTitleScreen.ID.HashCode : Config.PlayerDiedTitleScreen.ID.HashCode);
+			DisplayTitle(wasExecuted ? GameConfig.PlayerExecutedTitleScreen.ID.HashCode : GameConfig.PlayerDiedTitleScreen.ID.HashCode);
 		}
 
 		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, MarkForDeathData mark, bool returnFaceDown, Action RevealPlayerCompleted)
@@ -1172,9 +1168,9 @@ namespace Werewolf.Managers
 
 			if (waitBeforeReveal)
 			{
-				WaitBeforeDeathRevealStarted?.Invoke(playerRevealed, mark, Config.RoleRevealWaitDuration * GameSpeedModifier);
+				WaitBeforeDeathRevealStarted?.Invoke(playerRevealed, mark, GameConfig.RoleRevealWaitDuration * GameSpeedModifier);
 
-				yield return new WaitForSeconds(Config.RoleRevealWaitDuration * GameSpeedModifier);
+				yield return new WaitForSeconds(GameConfig.RoleRevealWaitDuration * GameSpeedModifier);
 
 				WaitBeforeDeathRevealEnded?.Invoke(playerRevealed);
 
@@ -1198,7 +1194,7 @@ namespace Werewolf.Managers
 				}
 			}
 
-			yield return new WaitForSeconds(Config.RoleRevealHoldDuration * GameSpeedModifier);
+			yield return new WaitForSeconds(GameConfig.RoleRevealHoldDuration * GameSpeedModifier);
 
 			foreach (PlayerRef player in revealTo)
 			{
@@ -1290,8 +1286,8 @@ namespace Werewolf.Managers
 		private void StartExecution()
 		{
 			if (!_voteManager.StartVoteForAllPlayers(OnExecutionVotesCounted,
-													Config.ExecutionVoteTitleScreen.ID.HashCode,
-													Config.ExecutionVoteDuration * GameSpeedModifier,
+													GameConfig.ExecutionVoteTitleScreen.ID.HashCode,
+													GameConfig.ExecutionVoteDuration * GameSpeedModifier,
 													true,
 													ChoicePurpose.Kill,
 													GetDeadPlayers().ToArray(),
@@ -1301,7 +1297,7 @@ namespace Werewolf.Managers
 				return;
 			}
 
-			_gameHistoryManager.AddEntry(Config.ExecutionVoteStartedGameHistoryEntry.ID, null);
+			_gameHistoryManager.AddEntry(GameConfig.ExecutionVoteStartedGameHistoryEntry.ID, null);
 		}
 
 		private void OnExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -1323,11 +1319,11 @@ namespace Werewolf.Managers
 
 		private IEnumerator StartSecondaryExecution(PlayerRef[] mostVotedPlayers)
 		{
-			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawNewVoteTitleScreen.ID.HashCode, Config.ExecutionHoldDuration * GameSpeedModifier);
+			yield return DisplayTitleForAllPlayers(GameConfig.ExecutionDrawNewVoteTitleScreen.ID.HashCode, GameConfig.ExecutionHoldDuration * GameSpeedModifier);
 
 			if (!_voteManager.StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
-													Config.ExecutionVoteTitleScreen.ID.HashCode,
-													Config.ExecutionVoteDuration * GameSpeedModifier,
+													GameConfig.ExecutionVoteTitleScreen.ID.HashCode,
+													GameConfig.ExecutionVoteDuration * GameSpeedModifier,
 													false,
 													ChoicePurpose.Kill,
 													GetDeadPlayers().ToArray(),
@@ -1338,7 +1334,7 @@ namespace Werewolf.Managers
 				yield break;
 			}
 
-			_gameHistoryManager.AddEntry(Config.ExecutionDrawNewVoteGameHistoryEntry.ID, null);
+			_gameHistoryManager.AddEntry(GameConfig.ExecutionDrawNewVoteGameHistoryEntry.ID, null);
 		}
 
 		private void OnSecondaryExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -1349,7 +1345,7 @@ namespace Werewolf.Managers
 			}
 			else
 			{
-				_gameHistoryManager.AddEntry(Config.ExecutionDrawAgainGameHistoryEntry.ID, null);
+				_gameHistoryManager.AddEntry(GameConfig.ExecutionDrawAgainGameHistoryEntry.ID, null);
 				StartCoroutine(DisplayFailedExecution());
 			}
 		}
@@ -1361,8 +1357,8 @@ namespace Werewolf.Managers
 
 			if (!SelectPlayers(_captain,
 								choices,
-								Config.ExecutionDrawYouChooseTitleScreen.ID.HashCode,
-								Config.ExecutionCaptainChoiceDuration * GameSpeedModifier,
+								GameConfig.ExecutionDrawYouChooseTitleScreen.ID.HashCode,
+								GameConfig.ExecutionCaptainChoiceDuration * GameSpeedModifier,
 								false,
 								1,
 								ChoicePurpose.Other,
@@ -1378,13 +1374,13 @@ namespace Werewolf.Managers
 			{
 				if (_networkDataManager.PlayerInfos[player.Key].IsConnected && player.Key != _captain)
 				{
-					RPC_DisplayTitle(player.Key, Config.ExecutionDrawCaptainChooseTitleScreen.ID.HashCode);
+					RPC_DisplayTitle(player.Key, GameConfig.ExecutionDrawCaptainChooseTitleScreen.ID.HashCode);
 				}
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			DisplayTitle(Config.ExecutionDrawCaptainChooseTitleScreen.ID.HashCode);
+			DisplayTitle(GameConfig.ExecutionDrawCaptainChooseTitleScreen.ID.HashCode);
 #endif
-			yield return new WaitForSeconds(Config.ExecutionCaptainChoiceDuration * GameSpeedModifier);
+			yield return new WaitForSeconds(GameConfig.ExecutionCaptainChoiceDuration * GameSpeedModifier);
 
 			_startCaptainExecutionCoroutine = null;
 
@@ -1394,7 +1390,7 @@ namespace Werewolf.Managers
 #if UNITY_SERVER && UNITY_EDITOR
 			HideUI();
 #endif
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
 			AddExecutionDrawCaptainDidNotChoseGameHistoryEntry();
 			StartCoroutine(DisplayFailedExecution());
@@ -1417,7 +1413,7 @@ namespace Werewolf.Managers
 #if UNITY_SERVER && UNITY_EDITOR
 			HideUI();
 #endif
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
 			if (executedPlayer.IsNone)
 			{
@@ -1426,7 +1422,7 @@ namespace Werewolf.Managers
 			}
 			else
 			{
-				_gameHistoryManager.AddEntry(Config.ExecutionDrawCaptainChoseGameHistoryEntry.ID,
+				_gameHistoryManager.AddEntry(GameConfig.ExecutionDrawCaptainChoseGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -1442,7 +1438,7 @@ namespace Werewolf.Managers
 
 		private void AddExecutionDrawCaptainDidNotChoseGameHistoryEntry()
 		{
-			_gameHistoryManager.AddEntry(Config.ExecutionDrawCaptainDidnotChoseGameHistoryEntry.ID,
+			_gameHistoryManager.AddEntry(GameConfig.ExecutionDrawCaptainDidnotChoseGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -1455,7 +1451,7 @@ namespace Werewolf.Managers
 
 		private IEnumerator ExecutePlayer(PlayerRef executedPlayer)
 		{
-			_gameHistoryManager.AddEntry(Config.ExecutionVotedPlayerGameHistoryEntry.ID,
+			_gameHistoryManager.AddEntry(GameConfig.ExecutionVotedPlayerGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -1465,15 +1461,15 @@ namespace Werewolf.Managers
 											}
 										});
 
-			AddMarkForDeath(executedPlayer, Config.ExecutionMarkForDeath);
-			yield return HighlightPlayerToggle(executedPlayer, Config.ExecutionVotedPlayerDuration);
+			AddMarkForDeath(executedPlayer, GameConfig.ExecutionMarkForDeath);
+			yield return HighlightPlayerToggle(executedPlayer, GameConfig.ExecutionVotedPlayerDuration);
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
 		private IEnumerator DisplayFailedExecution()
 		{
-			yield return DisplayTitleForAllPlayers(Config.ExecutionDrawAgainTitleScreen.ID.HashCode, Config.ExecutionHoldDuration * GameSpeedModifier);
+			yield return DisplayTitleForAllPlayers(GameConfig.ExecutionDrawAgainTitleScreen.ID.HashCode, GameConfig.ExecutionHoldDuration * GameSpeedModifier);
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
@@ -1495,7 +1491,7 @@ namespace Werewolf.Managers
 		{
 			if (_playerGroups.Count <= 0)
 			{
-				_gameHistoryManager.AddEntry(Config.EndGameNobodyWonGameHistoryEntry.ID, null);
+				_gameHistoryManager.AddEntry(GameConfig.EndGameNobodyWonGameHistoryEntry.ID, null);
 
 				PrepareEndGameSequence(new() { ID = default, Priority = -1, Players = new() });
 				return true;
@@ -1513,7 +1509,7 @@ namespace Werewolf.Managers
 					Debug.LogError($"Could not find the player group {playerGroup.ID.HashCode}");
 				}
 
-				_gameHistoryManager.AddEntry(Config.EndGamePlayerGroupWonGameHistoryEntry.ID,
+				_gameHistoryManager.AddEntry(GameConfig.EndGamePlayerGroupWonGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -1615,32 +1611,32 @@ namespace Werewolf.Managers
 					{ "PluralName",  new BoolVariable() { Value = playerGroupData.HasPluralName } }
 				};
 
-				DisplayTitle(playerGroupData.Image, Config.PlayerGroupWonText, variables);
+				DisplayTitle(playerGroupData.Image, GameConfig.PlayerGroupWonText, variables);
 			}
 			else
 			{
-				DisplayTitle(Config.NoWinnerTitleScreen.ID.HashCode);
+				DisplayTitle(GameConfig.NoWinnerTitleScreen.ID.HashCode);
 			}
 
-			yield return new WaitForSeconds(Config.EndGameHoldDuration * GameSpeedModifier);
+			yield return new WaitForSeconds(GameConfig.EndGameHoldDuration * GameSpeedModifier);
 			HideUI();
-			yield return new WaitForSeconds(Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
-			_UIManager.EndGameScreen.Initialize(endGamePlayerInfos, Config.ReturnToLobbyCountdownDuration * GameSpeedModifier);
-			_UIManager.FadeIn(_UIManager.EndGameScreen, Config.UITransitionNormalDuration);
+			_UIManager.EndGameScreen.Initialize(endGamePlayerInfos, GameConfig.ReturnToLobbyCountdownDuration * GameSpeedModifier);
+			_UIManager.FadeIn(_UIManager.EndGameScreen, GameConfig.UITransitionNormalDuration);
 
-			yield return new WaitForSeconds(Config.ReturnToLobbyCountdownDuration * GameSpeedModifier);
+			yield return new WaitForSeconds(GameConfig.ReturnToLobbyCountdownDuration * GameSpeedModifier);
 
 			_UIManager.LoadingScreen.Initialize(null);
-			_UIManager.FadeIn(_UIManager.LoadingScreen, Config.LoadingScreenTransitionDuration);
+			_UIManager.FadeIn(_UIManager.LoadingScreen, GameConfig.LoadingScreenTransitionDuration);
 		}
 
 		private IEnumerator ReturnToLobby()
 		{
-			yield return new WaitForSeconds(Config.EndGameHoldDuration * GameSpeedModifier +
-											Config.UITransitionNormalDuration +
-											Config.ReturnToLobbyCountdownDuration * GameSpeedModifier +
-											Config.LoadingScreenTransitionDuration);
+			yield return new WaitForSeconds(GameConfig.EndGameHoldDuration * GameSpeedModifier +
+											GameConfig.UITransitionNormalDuration +
+											GameConfig.ReturnToLobbyCountdownDuration * GameSpeedModifier +
+											GameConfig.LoadingScreenTransitionDuration);
 
 			Runner.LoadScene(SceneRef.FromIndex((int)SceneDefs.MENU), LoadSceneMode.Single);
 		}

@@ -85,7 +85,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
+		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
 		public override UniqueID[] GetCurrentPlayerGroupIDs()
 		{
@@ -460,7 +460,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.SetPlayersCardHighlightVisible(deadPlayers, false);
 			_gameManager.HideUI();
 #endif
-			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(_gameManager.GameConfig.UITransitionNormalDuration);
 
 			_waitToRemoveDeadCoupleHighlightCoroutine = null;
 			_gameManager.StopWaintingForPlayer(Player);

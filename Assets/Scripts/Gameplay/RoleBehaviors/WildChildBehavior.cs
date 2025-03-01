@@ -154,7 +154,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.SetPlayerCardHighlightVisible(_model, false);
 			_gameManager.HideUI();
 #endif
-			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration + _selectedModelHighlightDuration * _gameManager.GameSpeedModifier);
+			yield return new WaitForSeconds(_gameManager.GameConfig.UITransitionNormalDuration + _selectedModelHighlightDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.StopWaintingForPlayer(Player);
 		}

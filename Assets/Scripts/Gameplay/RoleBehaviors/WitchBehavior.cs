@@ -76,7 +76,7 @@ namespace Werewolf.Gameplay.Role
 			_networkDataManager = NetworkDataManager.Instance;
 		}
 
-		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
+		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
@@ -119,7 +119,7 @@ namespace Werewolf.Gameplay.Role
 
 				_gameManager.RPC_HideUI(Player);
 
-				yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
+				yield return new WaitForSeconds(_gameManager.GameConfig.UITransitionNormalDuration);
 
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _markedForDeathPlayer, false);
 			}
@@ -247,7 +247,7 @@ namespace Werewolf.Gameplay.Role
 			yield return new WaitForSeconds(_choiceSelectedHoldDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.RPC_HideUI(Player);
-			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(_gameManager.GameConfig.UITransitionNormalDuration);
 
 			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 			choices.Remove(Player);
@@ -334,7 +334,7 @@ namespace Werewolf.Gameplay.Role
 			if (hideUI)
 			{
 				_gameManager.RPC_HideUI(Player);
-				yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
+				yield return new WaitForSeconds(_gameManager.GameConfig.UITransitionNormalDuration);
 			}
 
 			if (DisplayPotionChoices(false))

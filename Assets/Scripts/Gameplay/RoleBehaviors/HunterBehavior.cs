@@ -49,7 +49,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
 		}
 
-		public override void OnSelectedToDistribute(List<RoleSetupData> mandatoryRoles, List<RoleSetupData> availableRoles, List<RoleData> rolesToDistribute) { }
+		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
 		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
 		{
@@ -186,7 +186,7 @@ namespace Werewolf.Gameplay.Role
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.HideUI();
 #endif
-			yield return new WaitForSeconds(_gameManager.Config.UITransitionNormalDuration);
+			yield return new WaitForSeconds(_gameManager.GameConfig.UITransitionNormalDuration);
 
 			_gameManager.StopWaintingForPlayer(Player);
 		}

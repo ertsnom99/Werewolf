@@ -222,11 +222,6 @@ MonoBehaviour:
     m_Localized: Quitter la Partie
     m_Metadata:
       m_Items: []
-  - m_Id: 2595742095368192
-    m_Localized: "Une configuration de r\xF4les invalide a \xE9t\xE9 envoy\xE9e au
-      serveur"
-    m_Metadata:
-      m_Items: []
   - m_Id: 2596856752627712
     m_Localized: Expulser
     m_Metadata:
@@ -297,10 +292,44 @@ MonoBehaviour:
     m_Localized: N'a pas pu afficher l'historique
     m_Metadata:
       m_Items: []
+  - m_Id: 29287827590471680
+    m_Localized: '{Warnings:list:{}|\n|\n} '
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097795
+  - m_Id: 29288414289715200
+    m_Localized: "-Il ne doit pas avoir plus de r\xF4les obligatoires que de joueurs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29301753199845376
+    m_Localized: "-N\xE9cessite au moin 1 Loup-Garou"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29409318558621696
+    m_Localized: "R\xF4les Disponibles"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29409488750895104
+    m_Localized: "R\xF4les Obligatoires"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29409637103427584
+    m_Localized: "R\xF4les Facultatifs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30688033162780672
+    m_Localized: "Le serveur a refus\xE9 cette configuration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30789237809209344
+    m_Localized: "-N\xE9cessite au moin {MinPlayerCount} joueurs"
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097795
   references:
     version: 2
     RefIds:
     - rid: 4972454835144097795
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 0080dc52bec702000080dcc2dfcf020000809c67c6d9020000801c252ee6020000e0c5fb62ec030000e045bc94030400
+        m_Entries: 0080dc52bec702000080dcc2dfcf020000809c67c6d9020000801c252ee6020000e0c5fb62ec030000e045bc9403040000e0c5bf1f0d680000e0850ea6626d00

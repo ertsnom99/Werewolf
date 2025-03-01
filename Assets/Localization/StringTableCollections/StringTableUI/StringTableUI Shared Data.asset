@@ -143,10 +143,6 @@ MonoBehaviour:
     m_Key: GameMenu_Settings_GameSpeedSlow
     m_Metadata:
       m_Items: []
-  - m_Id: 2595742095368192
-    m_Key: GameMenu_Settings_InvalidRolesSetupSent
-    m_Metadata:
-      m_Items: []
   - m_Id: 2594341835366400
     m_Key: GameMenu_StartGame
     m_Metadata:
@@ -233,6 +229,38 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 26534419045408768
     m_Key: GameMenu_History_CouldNotDisplay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29287827590471680
+    m_Key: GameMenu_Settings_Warnings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29288414289715200
+    m_Key: GameMenu_Settings_WarningTooManyMandatoryRoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29301753199845376
+    m_Key: GameMenu_Settings_WarningNeedOneWerewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29409318558621696
+    m_Key: GameMenu_Settings_AvailableRoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29409488750895104
+    m_Key: GameMenu_Settings_MandatoryRoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29409637103427584
+    m_Key: GameMenu_Settings_OptionalRoles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30688033162780672
+    m_Key: GameMenu_InvalidRolesSetup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30789237809209344
+    m_Key: GameMenu_NotEnoughPlayers
     m_Metadata:
       m_Items: []
   m_Metadata:

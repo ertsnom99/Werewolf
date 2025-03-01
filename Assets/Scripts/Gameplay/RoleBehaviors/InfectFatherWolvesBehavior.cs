@@ -107,7 +107,7 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.RPC_DisplayTitle(_choosenVillager, _infectedTitleScreen.ID.HashCode, fastFade: true);
 
-			Data.GameConfig config = _gameManager.Config;
+			Data.GameConfig config = _gameManager.GameConfig;
 			yield return new WaitForSeconds(config.NightCallChangeDelay - config.UITransitionFastDuration - config.UITransitionNormalDuration);
 
 			if (_networkDataManager.PlayerInfos[_choosenVillager].IsConnected)

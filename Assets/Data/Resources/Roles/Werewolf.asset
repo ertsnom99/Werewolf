@@ -49,8 +49,8 @@ MonoBehaviour:
     type: 3}
   <PrimaryType>k__BackingField: 1
   <SecondaryType>k__BackingField: 0
-  <CanHaveMultiples>k__BackingField: 1
-  <MandatoryCount>k__BackingField: 1
+  <CanHaveVariableAmount>k__BackingField: 1
+  <MandatoryAmount>k__BackingField: 0
   <PlayerGroups>k__BackingField:
   - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
   <NightPriorities>k__BackingField:
