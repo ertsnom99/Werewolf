@@ -27,11 +27,10 @@ namespace Werewolf.UI
 		[SerializeField]
 		private LocalizeStringEvent _confirmButtonText;
 
-		private IntVariable _countdownVariable;
-
-		private IEnumerator _countdownCoroutine;
-
 		public event Action ConfirmClicked;
+
+		private IntVariable _countdownVariable;
+		private IEnumerator _countdownCoroutine;
 
 		protected override void Awake()
 		{

@@ -32,10 +32,6 @@ namespace Werewolf.Managers
 
 		public int AlivePlayerCount { get; private set; }
 
-		private bool _allPlayersReadyToBeInitialized = false;
-		private bool _startedPlayersInitialization = false;
-		private bool _allPlayersReadyToPlay = false;
-
 		public GameplayLoopStep CurrentGameplayLoopStep { get; private set; }
 
 		public enum GameplayLoopStep
@@ -52,6 +48,12 @@ namespace Werewolf.Managers
 			ExecutionDeathReveal,
 		}
 
+		public static bool HasSpawned { get; private set; }
+
+		private bool _allPlayersReadyToBeInitialized = false;
+		private bool _startedPlayersInitialization = false;
+		private bool _allPlayersReadyToPlay = false;
+
 		private int _nightCount;
 
 		private readonly List<PlayerRef> _captainCandidates = new();
@@ -64,7 +66,7 @@ namespace Werewolf.Managers
 
 		private bool _isPlayerDeathRevealCompleted;
 		private IEnumerator _revealPlayerDeathCoroutine;
-
+		
 		private IEnumerator _startCaptainExecutionCoroutine;
 
 		private GameplayDataManager _gameplayDataManager;
@@ -90,8 +92,6 @@ namespace Werewolf.Managers
 
 		// Client events
 		public event Action PlayerInitialized;
-
-		public static bool HasSpawned { get; private set; }
 
 		public static event Action ManagerSpawned;
 

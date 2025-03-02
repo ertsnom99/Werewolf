@@ -30,21 +30,16 @@ namespace Werewolf.UI
 		[SerializeField]
 		private LocalizeStringEvent _confirmButtonText;
 
+		public event Action<int> ConfirmedChoice;
+
 		private GameConfig _gameConfig;
-
 		private bool _mustChooseOne;
-
 		private Choice[] _choices;
-
 		private Choice _selectedChoice;
 		private LocalizedString _choosedText;
 		private LocalizedString _didNotChoosedText;
-
 		private IntVariable _countdownVariable;
-
 		private IEnumerator _countdownCoroutine;
-
-		public event Action<int> ConfirmedChoice;
 
 		protected override void Awake()
 		{

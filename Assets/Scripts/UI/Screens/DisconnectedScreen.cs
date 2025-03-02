@@ -13,12 +13,12 @@ namespace Werewolf.UI
 		[Header("UI")]
 		[SerializeField]
 		private Transform _disconnectedTextsContainer;
+
 		[SerializeField]
 		private LocalizeStringEvent _disconnectedText;
 
-		private readonly Dictionary<Transform, float> DisconnectedTextDisplayStartTimes = new();
-
 		private GameConfig _gameConfig;
+		private readonly Dictionary<Transform, float> DisconnectedTextDisplayStartTimes = new();
 
 		private NetworkDataManager _networkDataManager;
 

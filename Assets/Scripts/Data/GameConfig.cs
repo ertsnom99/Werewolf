@@ -7,11 +7,6 @@ namespace Werewolf.Data
 	[CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/GameConfig")]
 	public class GameConfig : ScriptableObject
 	{
-		public const int MAX_PLAYER_COUNT = 24;
-		public const int MAX_NICKNAME_CHARACTER_COUNT = 30;
-		public const int MAX_ROLE_SETUP_COUNT = 50;
-		public const int MAX_ROLE_SETUP_POOL_COUNT = 5;
-
 		[field: Header("Players")]
 		[field: SerializeField]
 		public int MinNicknameCharacterCount { get; private set; }
@@ -336,5 +331,10 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public float DisconnectedTextDuration { get; private set; }
+
+		public const int MAX_PLAYER_COUNT = 24;
+		public const int MAX_NICKNAME_CHARACTER_COUNT = 30;
+		public const int MAX_ROLE_SETUP_COUNT = 50;
+		public const int MAX_ROLE_SETUP_POOL_COUNT = 5;
 	}
 }

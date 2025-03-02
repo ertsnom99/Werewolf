@@ -14,14 +14,32 @@ namespace Werewolf.Managers
 {
 	public class VoteManager : NetworkBehaviourSingleton<VoteManager>
 	{
+		public HashSet<PlayerRef> Voters { get; private set; }
+
+		public HashSet<PlayerRef> Spectators { get; private set; }
+
+		public event Action<ChoicePurpose> VoteStarting;
+		public event Action<Dictionary<PlayerRef, int>> VoteCompleted;
+
 		private GameConfig _gameConfig;
 		private Dictionary<PlayerRef, Card> _playerCards;
-
-		public HashSet<PlayerRef> Voters { get; private set; }
 		private readonly HashSet<PlayerRef> _immune = new();
 		private readonly Dictionary<PlayerRef, HashSet<PlayerRef>> _immuneFromPlayers = new();
-		public HashSet<PlayerRef> Spectators { get; private set; }
 		private readonly Dictionary<PlayerRef, PlayerRef> _votes = new();
+
+		private int _titleID;
+		private float _maxDuration;
+		private bool _failingToVoteGivesPenalty;
+		private Dictionary<PlayerRef, int> _modifiers;
+		private int _voteCount;
+		private bool _resetAllVotedElapsedTime;
+		private Step _step;
+		private ChoicePurpose _purpose;
+
+		private Action<PlayerRef[]> _votesCountedCallback;
+		private IEnumerator _voteCoroutine;
+		private Card _selectedCard;
+		private PlayerRef[] _playersImmuneFromLocalPlayer;
 
 		[Serializable]
 		private struct VoteModifier : INetworkStruct
@@ -30,16 +48,6 @@ namespace Werewolf.Managers
 			public int VoteValue;
 		}
 
-		private int _titleID;
-		private float _maxDuration;
-		private bool _failingToVoteGivesPenalty;
-		private Dictionary<PlayerRef, int> _modifiers;
-		private int _voteCount;
-		private bool _resetAllVotedElapsedTime;
-
-		private ChoicePurpose _purpose;
-		private Step _step;
-
 		private enum Step
 		{
 			NotVoting,
@@ -47,19 +55,11 @@ namespace Werewolf.Managers
 			Voting,
 		}
 
-		private Action<PlayerRef[]> _votesCountedCallback;
-		private IEnumerator _voteCoroutine;
-		private Card _selectedCard;
-		private PlayerRef[] _playersImmuneFromLocalPlayer;
-
 		private GameManager _gameManager;
 		private UIManager _UIManager;
 		private NetworkDataManager _networkDataManager;
 		private GameplayDataManager _gameplayDataManager;
 		private GameHistoryManager _gameHistoryManager;
-
-		public event Action<ChoicePurpose> VoteStarting;
-		public event Action<Dictionary<PlayerRef, int>> VoteCompleted;
 
 		protected override void Awake()
 		{

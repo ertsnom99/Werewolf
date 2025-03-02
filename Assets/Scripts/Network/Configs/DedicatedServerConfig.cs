@@ -6,11 +6,17 @@ namespace Werewolf.Network.Configs
 	public class DedicatedServerConfig
 	{
 		public string SessionName { get; set; }
+
 		public int MaxPlayerCount { get; set; }
+
 		public string Lobby { get; set; }
+
 		public ushort Port { get; set; } = 27015;
+
 		public ushort PublicPort { get; set; }
+
 		public string PublicIP { get; set; }
+
 		public Dictionary<string, SessionProperty> SessionProperties { get; private set; } = new();
 
 		private DedicatedServerConfig() { }

@@ -39,10 +39,8 @@ namespace Werewolf.Gameplay.Role
 		private GameHistoryEntryData _tookRoleGameHistoryEntry;
 
 		private bool _choseRole;
-
 		private IndexedReservedRoles _reservedRoles;
 		private bool _reservedOnlyWerewolves;
-
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		private GameManager _gameManager;

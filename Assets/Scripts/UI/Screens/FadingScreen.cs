@@ -7,11 +7,10 @@ namespace Werewolf.UI
 	[RequireComponent(typeof(CanvasGroup))]
 	public abstract class FadingScreen : MonoBehaviour
 	{
-		private IEnumerator _coroutine;
-
-		private CanvasGroup _canvasGroup;
-
 		public event Action<FadingScreen, float> FadeFinished;
+
+		private IEnumerator _coroutine;
+		private CanvasGroup _canvasGroup;
 
 		protected virtual void Awake()
 		{

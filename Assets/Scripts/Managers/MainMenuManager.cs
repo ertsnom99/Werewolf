@@ -53,14 +53,14 @@ namespace Werewolf.Managers
 		[SerializeField]
 		private NetworkRunner _runnerPrefab;
 
-		private static NetworkRunner _runner;
-
-		private NetworkDataManager _networkDataManager;
-
 		public static bool JUST_OPEN = true;
 		public static LocalizedString START_MESSAGE = null;
 		public static bool GAME_STARTED = false;
 		public static string GAME_HISTORY;
+
+		private static NetworkRunner _runner;
+
+		private NetworkDataManager _networkDataManager;
 
 		private void Start()
 		{

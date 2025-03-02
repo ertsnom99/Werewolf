@@ -13,21 +13,25 @@ namespace Werewolf.Managers
 		[field: Header("Emotes")]
 		[SerializeField]
 		private Sprite[] _emotes;
+
 		[SerializeField]
 		private Emote _emotePrefab;
+
 		[SerializeField]
 		private float _maxDistance;
+
 		[SerializeField]
 		private Vector3 _globalOffset;
 
 		[field: Header("Spam")]
 		[SerializeField]
 		private float _delay;
+
 		[SerializeField]
 		private int _limit;
 
+		private EmoteScreen _emoteScreen;
 		private bool _asleepCanSee;
-
 		private Dictionary<PlayerRef, Card> _playerCards;
 		private readonly Dictionary<PlayerRef, Usage> _playerUsage = new();
 		
@@ -36,8 +40,6 @@ namespace Werewolf.Managers
 			public int amount;
 			public float elapsedTime;
 		}
-
-		private EmoteScreen _emoteScreen;
 
 		private GameManager _gameManager;
 
