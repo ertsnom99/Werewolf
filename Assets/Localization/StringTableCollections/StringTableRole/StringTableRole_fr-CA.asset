@@ -26,27 +26,29 @@ MonoBehaviour:
   - m_Id: 1155975790592
     m_Localized: "Il s'est arr\xEAt\xE9 au village pour y donner quelques repr\xE9sentations
       avant de descendre passer l'hiver dans le sud. G\xE9nial a interpr\xE9ter 
-      la com\xE9die et le drame, il est un acteur talentueux. \n\nAvant la partie,
-      trois roles seront mit de cot\xE9 pour le com\xE9dien. Ils seront plac\xE9,
+      la com\xE9die et le drame, il est un acteur talentueux. \n\n{\"Avant la partie,
+      trois r\xF4les seront mit de cot\xE9 pour le com\xE9dien. Ils seront plac\xE9,
       face visible, au milieu des villageois. Chaque nuit, le com\xE9dien peut choisir
-      un de ces roles et l'utiliser jusqu'a la prochaine nuit. Une fois choisi, le
-      role sera retir\xE9."
+      un de ces r\xF4les et l'utiliser jusqu'a la prochaine nuit. Une fois choisi,
+      le r\xF4le sera retir\xE9.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 2521448235008
     m_Localized: Cupidon
     m_Metadata:
       m_Items: []
   - m_Id: 2525135028224
     m_Localized: "Grace au pouvoir de ses fl\xEAches c\xE9l\xE8bre, il peut faire
-      deux villageois tomber en amour.\n\nDurant la premi\xE8re nuit, il choisi deux
-      villageois qui deviendront amoureux. Il peut \xEAtre un des amoureux. Si un
-      amoureux meurt, l'autre meurt de tristesse imm\xE9diatement. Un amoureux ne
-      peut jamais tenter de tuer l'autre amoureux. Si un amoureux est un loup-garous
+      deux villageois tomber en amour.\n\n{\"Durant la premi\xE8re nuit, il choisi
+      deux villageois qui deviendront amoureux. Il peut \xEAtre un des amoureux.
+      Si un amoureux meurt, l'autre meurt de tristesse imm\xE9diatement. Un amoureux
+      ne peut jamais tenter de tuer l'autre amoureux. Si un amoureux est un loup-garous
       et l'autre est un villageois, ils devront \xEAtre les seuls villageois en vie
-      pour gagner."
+      pour gagner.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 2578041978880
     m_Localized: Couple
     m_Metadata:
@@ -57,75 +59,80 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3933225795584
     m_Localized: "Avec sa boule de crystal, elle peut voir la vrai identit\xE9 d'un
-      villageois.\n\nChaque nuit, elle peut regarder la carte d'un autre villageois."
+      villageois.\n\n{\"Chaque nuit, elle peut regarder la carte d'un autre villageois.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 4372801437696
     m_Localized: Renard
     m_Metadata:
       m_Items: []
   - m_Id: 4374936338432
-    m_Localized: "Dans le village, tout le monde adore l\u2019odorat de ce personnage
-      rapide et fut\xE9, \xE0 l\u2019exception des loups-garous.\n\nChaque nuit,
-      il peut choisir un group de trois villageois cons\xE9cutifs, en s\xE9lectionnant
+    m_Localized: "Dans le village, tout le monde adore l'odorat de ce personnage
+      rapide et fut\xE9, \xE0 l'exception des Loups-Garous.\n\n{\"Chaque nuit, il
+      peut choisir un group de trois villageois cons\xE9cutifs, en s\xE9lectionnant
       celui du milieu (les villageois morts sont ignor\xE9s). Il sera par la suite
-      r\xE9v\xE9l\xE9 s\u2019il y a au moins un loup-garou parmi ce groupe. S\u2019il
-      ne trouve pas de loups-garous, le renard perd son pouvoir pour le reste de
-      la."
+      r\xE9v\xE9l\xE9 s'il y a au moins un Loup-Garou parmi ce groupe. S'il ne trouve
+      pas de Loups-Garous, le renard perd son pouvoir pour le reste de la.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 4704545718272
     m_Localized: Chasseur
     m_Metadata:
       m_Items: []
   - m_Id: 4706357657600
-    m_Localized: "Il est un chasseur exp\xE9riment\xE9 et ne mourra pas sans se d\xE9fendre!\n\nQuand
-      il meurt, il doit choisir un autre villageois \xE0 tuer."
+    m_Localized: "Il est un chasseur exp\xE9riment\xE9 et ne mourra pas sans se d\xE9fendre!\n\n{\"Quand
+      il meurt, il doit choisir un autre villageois \xE0 tuer.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 4887052468224
     m_Localized: Salvateur
     m_Metadata:
       m_Items: []
   - m_Id: 4889510330368
-    m_Localized: "Son pouvoir peut sauver un villageois en le prot\xE9geant des loups-garous.\n\nChaque
+    m_Localized: "Son pouvoir peut sauver un villageois en le prot\xE9geant des loups-garous.\n\n{\"Chaque
       nuit, il peut choisir un villageois \xE0 prot\xE9ger. Ce villageois ne sera
-      pas tu\xE9 par les loups-garous, durant cette nuit. Le salvateur peu se prot\xE9ger.
-      Il ne peut pas prot\xE9ger le m\xEAme villageois deux fois d\u2019affil\xE9.
-      Cette protection ne fonctionne pas sur la petite fille. Elle ne prot\xE8ge
-      pas non plus de l\u2019infection de l\u2019infect p\xE8re des loups."
+      pas tu\xE9 par les Loups-Garous, durant cette nuit. Le Salvateur peu se prot\xE9ger.
+      Il ne peut pas prot\xE9ger le m\xEAme villageois deux fois d'affil\xE9. Cette
+      protection ne fonctionne pas sur la Petite Fille. Elle ne prot\xE8ge pas non
+      plus de l'infection de l'Infect P\xE8re des Loups.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 5095198998528
     m_Localized: Servante
     m_Metadata:
       m_Items: []
   - m_Id: 5097270984704
-    m_Localized: "Qui pourrait demander pour une meilleure servante qu\u2019une qui
+    m_Localized: "Qui pourrait demander pour une meilleure Servante qu\u2019une qui
       serait pr\xEAte \xE0 reprendre le flambeau de son maitre. Soyez prudent, car
-      ses ambitions pourraient amener le village a sa fin. \n\nJuste avant que le
-      r\xF4le d\u2019un villageois ex\xE9cut\xE9 soit r\xE9v\xE9l\xE9, elle peut
-      se r\xE9v\xE9ler. Par la suite, elle perdra son r\xF4le de servante et prendra
+      ses ambitions pourraient amener le village a sa fin. \n\n{\"Juste avant que
+      le r\xF4le d'un villageois ex\xE9cut\xE9 soit r\xE9v\xE9l\xE9, elle peut se
+      r\xE9v\xE9ler. Par la suite, elle perdra son r\xF4le de Servante et prendra
       le r\xF4le du villageois ex\xE9cut\xE9, sans que celui-ci soit r\xE9v\xE9l\xE9
       aux autres villageois. Elle jouera en temps que ce r\xF4le pour le reste de
-      la partie. "
+      la partie.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 5773111771136
     m_Localized: Voleur
     m_Metadata:
       m_Items: []
   - m_Id: 5775175368704
     m_Localized: "Quel r\xF4le va-t-il r\xE9ellement jouer? Il faudra attendre pour
-      avoir la r\xE9ponse.\n\nSi le voleur est dans la partie, deux villageois suppl\xE9mentaires
-      seront ajout\xE9 aux r\xF4les distribu\xE9s parmi les villageois. Une fois
-      que tous les r\xF4les seront distribu\xE9s, les deux r\xF4les restants seront
-      plac\xE9s, face cach\xE9e, au milieu des villageois. La premi\xE8re nuit, le
-      voleur aura la possibilit\xE9 de changer son r\xF4le pour un des deux r\xF4les
-      restants, s\u2019il le veut. Si les deux r\xF4les sont des loups-garous, il
-      doit choisir l\u2019un des deux. "
+      avoir la r\xE9ponse.\n\n{\"Si le voleur est dans la partie, deux villageois
+      suppl\xE9mentaires seront ajout\xE9 aux r\xF4les distribu\xE9s parmi les villageois.
+      Une fois que tous les r\xF4les seront distribu\xE9s, les deux r\xF4les restants
+      seront plac\xE9s, face cach\xE9e, au milieu des villageois. La premi\xE8re
+      nuit, le voleur aura la possibilit\xE9 de changer son r\xF4le pour un des deux
+      r\xF4les restants, s'il le veut. Si les deux r\xF4les sont des Loups-Garous,
+      il doit choisir l'un des deux.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 6095993487360
     m_Localized: Villageois
     m_Metadata:
@@ -145,11 +152,12 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 7364653006848
     m_Localized: "Une b\xEAte de la for\xEAt. Il agit comme un villageois durant
-      le jour, mais devient un tueur la nuit.\n\nChaque nuit, tout les loup-garous
+      le jour, mais devient un tueur la nuit.\n\n{\"Chaque nuit, tout les Loup-Garous
       devront voter ensemble pour un villageois a d\xE9vorer. Le vote doit \xEAtre
-      unanime ou aucun villageois sera \xE9limin\xE9 cette nuit."
+      unanime ou aucun villageois sera \xE9limin\xE9 cette nuit.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 7366301368320
     m_Localized: Loups-Garous
     m_Metadata:
@@ -159,17 +167,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8301756989440
-    m_Localized: "Est-t-elle une maitresse de l\u2019alchimie ou de la magie noir?
-      Personne ne sait avec certitude, mais le pouvoir de ses potions est ind\xE9niable.\n\nLa
-      sorci\xE8re poss\xE8de deux potions qu\u2019elle peut utiliser : une potion
-      de vie et une potion de mort. Chaque nuit, elle sera r\xE9v\xE9l\xE9e qui a
-      \xE9t\xE9 tu\xE9 par les loups-garous durant la nuit. Elle pourra ensuite utiliser
-      ses potions. Chaque potion peut \xEAtre utilis\xE9 une seul fois durant la
-      partie, mais elle peut utiliser les deux durant la m\xEAme nuit. Sa potion
-      de vie va sauver le villageois tu\xE9 par les loups-garous. Sa potion de mort
-      va tuer un villageois de son choix."
+    m_Localized: "Est-t-elle une maitresse de l'alchimie ou de la magie noir? Personne
+      ne sait avec certitude, mais le pouvoir de ses potions est ind\xE9niable.\n\n{\"La
+      Sorci\xE8re poss\xE8de une potion de vie et une potion de mort. Chaque nuit,
+      elle sera r\xE9v\xE9l\xE9e qui a \xE9t\xE9 tu\xE9 par les Loups-Garous durant
+      la nuit. Elle pourra ensuite utiliser ses potions. Chaque potion peut \xEAtre
+      utilis\xE9 une seul fois durant la partie, mais elle peut utiliser les deux
+      durant la m\xEAme nuit. Sa potion de vie va sauver le villageois tu\xE9 par
+      les Loups-Garous, qui pourrait \xEAtre elle-m\xEAme. Sa potion de mort va tuer
+      un villageois de son choix.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 58103591669104640
     m_Localized: Villageois
     m_Metadata:
@@ -184,12 +193,13 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 62484989748830208
     m_Localized: "Ce tr\xE8s malfaisant personage d\xE9teste autant les Loups-Garous
-      que les villageois! Il parait qu\u2019une \xE9trange mutation serait survenue
-      au sein m\xEAme de la population lycanthropique. \r\n\r\nChaque nuit, il se
+      que les villageois! Il parait qu'une \xE9trange mutation serait survenue au
+      sein m\xEAme de la population lycanthropique. \r\n\r\n{\"Chaque nuit, il se
       r\xE9veille et d\xE9vore avec les autres Loups-Garous. Cependant, une nuit
-      sur deux, il se reveille seul et peut \xE9liminer un Loup-Garou.\r"
+      sur deux, il se reveille seul et peut \xE9liminer un Loup-Garou.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 64645302468337664
     m_Localized: "Grand-M\xE9chant-Loup"
     m_Metadata:
@@ -197,30 +207,32 @@ MonoBehaviour:
   - m_Id: 64646369176313856
     m_Localized: "Dans le village, les petits cochons ne sont pas les seuls \xE0
       redouter le Grand-M\xE9chant-Loup. Il est \xE9norme et son app\xE9tit est gigantesque.
-      A cause de lui, des villages entiers furent ray\xE9s de la carte!\r\n\r\nChaque
-      nuit, il se r\xE9veille et d\xE9vore avec les autres loups-garous. Tant qu\u2019aucun
+      A cause de lui, des villages entiers furent ray\xE9s de la carte!\r\n\r\n{\"Chaque
+      nuit, il se r\xE9veille et d\xE9vore avec les autres Loups-Garous. Tant qu'aucun
       Loup-Garou (incluant un Enfant Sauvage ou Chien-Loup qui se r\xE9veille avec
-      les autres Loups-Garous, mais excluant le Loup-Garou Blanc) n\u2019est \xE9limin\xE9,
+      les autres Loups-Garous, mais excluant le Loup-Garou Blanc) n'est \xE9limin\xE9,
       il se r\xE9veille seul une deuxi\xE8me fois et d\xE9vore une autre victime.
-      Il ne peut pas d\xE9vorer de Loup-Garou.\r"
+      Il ne peut pas d\xE9vorer de Loup-Garou.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 65920755028058112
     m_Localized: "Chevalier \xE0 l'\xC9p\xE9e Rouill\xE9e"
     m_Metadata:
       m_Items: []
   - m_Id: 65920829212712960
     m_Localized: "Il est un tr\xE8s vieux chevalier \xE0 la retraite. Il est assez
-      \xE9puis\xE9 par une vie de qu\xEAtes \xE0 travers le monde et n\u2019entretient
+      \xE9puis\xE9 par une vie de qu\xEAtes \xE0 travers le monde et n'entretient
       plus tr\xE8s bien son noble outil. La rouille s'est peu \xE0 peu d\xE9pos\xE9e
       sur le tranchant \xE9mouss\xE9 de sa fid\xE8le protectrice mais jamais il ne
       la quittera pour une autre. Il dort encore tous les soirs avec elle ces temps-ci
-      : gare aux importuns !\r\n\r\nSi les Loups-Garous le d\xE9vore, le premier
+      : gare aux importuns!\r\n\r\n{\"Si les Loups-Garous le d\xE9vore, le premier
       a \xE7a gauche, qui \xE9taient impliqu\xE9 dans son meurtre, attrapera le t\xE9tanos
       \xE0 cause de son \xE9p\xE9e rouill\xE9e. Il sera encore en vie durant le jour,
-      mais mourra \xE0 la fin de la nuit suivante."
+      mais mourra \xE0 la fin de la nuit suivante.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 66778607871451136
     m_Localized: Montreur d'Ours
     m_Metadata:
@@ -231,73 +243,77 @@ MonoBehaviour:
       d\u2019Ursus. Titan, le Montreur d\u2019Ours, dirigeait avec maestria son compagnon
       dans un ballet si gracieux qu'on en pleurait chaque \xE9t\xE9 dans le village.
       Ursus avait en outre ce pouvoir si pr\xE9cieux, de d\xE9tecter les lycanthropes
-      cach\xE9s pr\xE8s de lui.\r\n\nChaque matin, juste apr\xE8s la r\xE9v\xE9lation
+      cach\xE9s pr\xE8s de lui.\r\n\n{\"Chaque matin, juste apr\xE8s la r\xE9v\xE9lation
       des villageois morts, si au moins un Loup-Garou est directement voisin de lui
-      (les villageois morts sont ignor\xE9s), ou qu\u2019il devient un Loup-Garou,
-      l\u2019ours grognera.\r"
+      (les villageois morts sont ignor\xE9s), ou qu'il devient un Loup-Garou, l'ours
+      grognera.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 67446694559997952
     m_Localized: Enfant Sauvage
     m_Metadata:
       m_Items: []
   - m_Id: 67446738352726016
     m_Localized: "Abandonn\xE9 dans la for\xEAt par ses parents dans sa plus tendre
-      enfance, il y fut \xE9lev\xE9 par des loups. D\xE8s qu\u2019il sut marcher
-      \xE0 quatre pattes, l\u2019Enfant Sauvage se mit \xE0 errer aux abords du village.
-      Un beau jour, fascin\xE9 par un habitant du village qui marchait debout avec
-      gr\xE2ce et prestance, il en fit son mod\xE8le en secret. Il d\xE9cida alors
-      d\u2019int\xE9grer la communaut\xE9 du village et p\xE9n\xE9tra, inquiet, dans
-      le village. La communaut\xE9 fut \xE9mue par sa fragilit\xE9, l\u2019adopta
-      et l\u2019accueillit en son sein. Que deviendra-t-il : honn\xEAte Villageois
-      ou terrible Loup-Garou?\r\n\nL\u2019Enfant Sauvage est un villageois. La premi\xE8re
-      nuit, il d\xE9signe un mod\xE8le. Si durant la partie le mod\xE8le est \xE9limin\xE9,
-      l\u2019Enfant Sauvage devient Loup-Garou jusqu\u2019\xE0 la fin de la partie.
-      \r"
+      enfance, il y fut \xE9lev\xE9 par des loups. D\xE8s qu'il sut marcher \xE0
+      quatre pattes, l'Enfant Sauvage se mit \xE0 errer aux abords du village. Un
+      beau jour, fascin\xE9 par un habitant du village qui marchait debout avec gr\xE2ce
+      et prestance, il en fit son mod\xE8le en secret. Il d\xE9cida alors d'int\xE9grer
+      la communaut\xE9 du village et p\xE9n\xE9tra, inquiet, dans le village. La
+      communaut\xE9 fut \xE9mue par sa fragilit\xE9, l'adopta et l'accueillit en
+      son sein. Que deviendra-t-il : honn\xEAte Villageois ou terrible Loup-Garou?\r\n\n{\"L'Enfant
+      Sauvage est un villageois. La premi\xE8re nuit, il d\xE9signe un mod\xE8le.
+      Si durant la partie le mod\xE8le est \xE9limin\xE9, l'Enfant Sauvage devient
+      Loup-Garou jusqu'\xE0 la fin de la partie.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 69694821123874816
     m_Localized: "Joueur de Fl\xFBte"
     m_Metadata:
       m_Items: []
   - m_Id: 69694886416605184
     m_Localized: "Ignominieusement chass\xE9 du village, il est revenu des ann\xE9es
-      plus tard sous le couvert d\u2019une fausse identit\xE9 pour exercer sa terrible
-      vengeance. \r\n\nChaque nuit, il charme deux nouveaux villageois. S\u2019il
-      r\xE9ussit \xE0 charmer tout le village, il gagne. S\u2019il est infect\xE9
-      par l\u2019Infect P\xE8re des Loups, il devient un simple Loup-Garou. Son objectif
-      initial, qui \xE9tait vouloir charmer tout le village, est donc abandonn\xE9.
-      Il va collaborer avec les Loups-Garous pour leur victoire commune.\r"
+      plus tard sous le couvert d'une fausse identit\xE9 pour exercer sa terrible
+      vengeance. \r\n\n{\"Chaque nuit, il charme deux nouveaux villageois. S'il r\xE9ussit
+      \xE0 charmer tout le village, il gagne. S'il est infect\xE9 par l'Infect P\xE8re
+      des Loups, il devient un simple Loup-Garou. Son objectif initial, qui \xE9tait
+      vouloir charmer tout le village, est donc abandonn\xE9. Il va collaborer avec
+      les Loups-Garous pour leur victoire commune.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 74428792986525696
     m_Localized: Chien-Loup
     m_Metadata:
       m_Items: []
   - m_Id: 74428795301781504
-    m_Localized: "Tous les chiens savent au tr\xE9fonds d\u2019eux-m\xEAmes que leurs
-      anc\xEAtres \xE9taient loups et que c\u2019est l\u2019homme qui les a maintenus
-      dans cet \xE9tat de compagnons enfantins et craintifs, mais fid\xE8les et g\xE9n\xE9reux.
-      En tout cas, seul le Chien-Loup peut d\xE9cider s\u2019il ob\xE9ira \xE0 son
-      ma\xEEtre humain et civilis\xE9 ou s\u2019il \xE9coutera l\u2019appel de la
-      nature sauvage enfouie dans ses entrailles.\r\n\nLa premi\xE8re nuit, le Chien-Loup
-      d\xE9cide s\u2019il veut \xEAtre un Villageois ou un Loup-Garou.  \r"
+    m_Localized: "Tous les chiens savent au tr\xE9fonds d'eux-m\xEAmes que leurs
+      anc\xEAtres \xE9taient loups et que c'est l'homme qui les a maintenus dans
+      cet \xE9tat de compagnons enfantins et craintifs, mais fid\xE8les et g\xE9n\xE9reux.
+      En tout cas, seul le Chien-Loup peut d\xE9cider s'il ob\xE9ira \xE0 son ma\xEEtre
+      humain et civilis\xE9 ou s'il \xE9coutera l'appel de la nature sauvage enfouie
+      dans ses entrailles.\r\n\n{\"La premi\xE8re nuit, le Chien-Loup d\xE9cide s'il
+      veut \xEAtre un Villageois ou un Loup-Garou.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 75435867946475520
     m_Localized: "Le tout premier Loup-Garou de nos contr\xE9es, le p\xE8re de tous
       leurs p\xE8res, avait deux pouvoirs : le premier \xE9tait de propager son engeance
-      par une morsure sp\xE9ciale et le second de fuir ce monde en s\u2019endormant
-      pour quelques si\xE8cles. Heureusement pour nos anc\xEAtres r\xE9cents, il
-      s\u2019\xE9tait depuis longtemps assoupi. Cependant, l\u2019Infect P\xE8re
-      des Loups vient juste de se r\xE9veiller d\u2019un long sommeil et il a tr\xE8s
-      faim!\r\n\nChaque nuit, il se r\xE9veille et d\xE9vore avec les autres loups-garous.
-      Une fois durant la partie, au moment o\xF9 les Loups-Garous ont choisi leur
-      victime, l\u2019Infect P\xE8re des Loups peut infect\xE9e la victime au lieu
-      de la d\xE9vorer. La victime gardera son pouvoir, se r\xE9veillera toujours
-      avec les Loups-Garous et devra aussi gagner avec eux. \r"
+      par une morsure sp\xE9ciale et le second de fuir ce monde en s'endormant pour
+      quelques si\xE8cles. Heureusement pour nos anc\xEAtres r\xE9cents, il s'\xE9tait
+      depuis longtemps assoupi. Cependant, l'Infect P\xE8re des Loups vient juste
+      de se r\xE9veiller d'un long sommeil et il a tr\xE8s faim!\r\n\n{\"Chaque nuit,
+      il se r\xE9veille et d\xE9vore avec les autres loups-garous. Une fois durant
+      la partie, au moment o\xF9 les Loups-Garous ont choisi leur victime, l'Infect
+      P\xE8re des Loups peut infect\xE9e la victime au lieu de la d\xE9vorer. La
+      victime gardera son pouvoir, se r\xE9veillera toujours avec les Loups-Garous
+      et devra aussi gagner avec eux.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 75435865786408960
     m_Localized: "Infect P\xE8re des Loups"
     m_Metadata:
@@ -308,17 +324,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 77951072211427328
     m_Localized: "Certains les confondent quand ils croisent une des Deux S\u0153urs
-      au d\xE9tour d\u2019un chemin creux. Le sourire qui s\u2019affiche sur le visage
-      de la jeune fille apr\xE8s qu\u2019on a tent\xE9 sa chance au jeu du pr\xE9nom
-      est difficile \xE0 interpr\xE9ter : la jeune nubile est-elle heureuse d\u2019avoir
-      \xE9t\xE9 identifi\xE9e, ou s\u2019amuse-t-elle de la m\xE9prise ? En tout
-      cas, les Deux S\u0153urs s\u2019entendent comme les doigts de la main ou les
-      cheveux d\u2019une m\xEAme m\xE8che. C\u2019est certes encourageant d\u2019avoir
-      un proche sur qui compter dans ces moments incertains !\r\n\nUne nuit sur deux,
-      elles se r\xE9veillent ensemble et peuvent se concerter (en utilisant les emotes)
-      sur les d\xE9cisions \xE0 prendre pour sauver le village. \r"
+      au d\xE9tour d'un chemin creux. Le sourire qui s'affiche sur le visage de la
+      jeune fille apr\xE8s qu\u2019on a tent\xE9 sa chance au jeu du pr\xE9nom est
+      difficile \xE0 interpr\xE9ter : la jeune nubile est-elle heureuse d\u2019avoir
+      \xE9t\xE9 identifi\xE9e, ou s'amuse-t-elle de la m\xE9prise ? En tout cas,
+      les Deux S\u0153urs s'entendent comme les doigts de la main ou les cheveux
+      d\u2019une m\xEAme m\xE8che. C'est certes encourageant d'avoir un proche sur
+      qui compter dans ces moments incertains !\r\n\n{\"Une nuit sur deux, elles
+      se r\xE9veillent ensemble et peuvent se concerter (en utilisant les emotes)
+      sur les d\xE9cisions \xE0 prendre pour sauver le village.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 77948389408759808
     m_Localized: Soeur
     m_Metadata:
@@ -334,12 +351,13 @@ MonoBehaviour:
   - m_Id: 78451454616395776
     m_Localized: "Tout le village r\xE9sonne de leurs joyeux \xE9clats verbaux quand
       ils regagnent la maison apr\xE8s le travail des champs. Pendant les d\xE9bats,
-      un simple coup d\u2019\u0153il entre eux leur permet de prendre une bonne d\xE9cision
-      quant \xE0 l\u2019avenir du village.\n\nUne nuit sur deux, ils se r\xE9veillent
+      un simple coup d'\u0153il entre eux leur permet de prendre une bonne d\xE9cision
+      quant \xE0 l\u2019avenir du village.\n\n{\"Une nuit sur deux, ils se r\xE9veillent
       ensemble et peuvent se concerter (en utilisant les emotes) sur les d\xE9cisions
-      \xE0 prendre pour sauver le village. \r"
+      \xE0 prendre pour sauver le village.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836616
   - m_Id: 86655715137413120
     m_Localized: "-Besoin d'un minimum de trois r\xF4les de villageois pure pour
       le Com\xE9dien (exceptions: {RoleNames:list:{:t(RoleName)}|, | et })"
@@ -357,4 +375,4 @@ MonoBehaviour:
     - rid: 5699302592880836616
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00e085eee9dc3301
+        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb71601

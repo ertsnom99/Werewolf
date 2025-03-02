@@ -51,6 +51,8 @@ MonoBehaviour:
           text: <color=#FF56D2><b>{}</b></color>
         - name: PlayerGroupName
           text: <color=#BF9100><b>{}</b></color>
+        - name: RoleDescription
+          text: <color=#FFBC00><b>{}</b></color>
     - rid: 7029503860835352576
       type: {class: CommandLineLocaleSelector, ns: UnityEngine.Localization.Settings,
         asm: Unity.Localization}
@@ -138,8 +140,8 @@ MonoBehaviour:
         m_Settings:
           rid: 7029503860835352583
         m_AlphanumericSelectors: 1
-        m_AllowedSelectorChars: "_-\" \xE9\xE8\xC9\xE0'\xFB"
-        m_Operators: '[]().,'
+        m_AllowedSelectorChars: "_'-\" '\xE9\xEA\xE8\xC9\xE0\xFB\xF9\xF4\xE7():.,"
+        m_Operators: '[]'
         m_AlternativeEscaping: 0
         m_AlternativeEscapeChar: 92
     - rid: 7029503860835352585
