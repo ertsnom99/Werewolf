@@ -51,7 +51,7 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
+  _commonWerewolvesData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
   _chooseModelTitleScreen: {fileID: 11400000, guid: 689fd2b5b29eaa841ab7f8bae9390278,
     type: 2}

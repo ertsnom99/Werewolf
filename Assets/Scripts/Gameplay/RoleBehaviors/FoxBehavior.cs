@@ -13,7 +13,7 @@ namespace Werewolf.Gameplay.Role
 {
 	public class FoxBehavior : RoleBehavior
 	{
-		[Header("Find Werewolfs")]
+		[Header("Find Werewolves")]
 		[SerializeField]
 		private TitleScreenData _lostPowerTitleScreen;
 
@@ -117,10 +117,10 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
-			StartCoroutine(CheckForWerewolfs(players[0]));
+			StartCoroutine(CheckForWerewolves(players[0]));
 		}
 
-		private IEnumerator CheckForWerewolfs(PlayerRef middlePlayer)
+		private IEnumerator CheckForWerewolves(PlayerRef middlePlayer)
 		{
 			HashSet<PlayerRef> playersToCheck = _gameManager.FindSurroundingPlayers(middlePlayer);
 			playersToCheck.Add(middlePlayer);

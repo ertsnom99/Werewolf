@@ -51,7 +51,7 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
+  _commonWerewolvesData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
   _infectTitleScreen: {fileID: 11400000, guid: ce1db1a0f903c28479efc30a8f36edbe, type: 2}
   _villagersPlayerGroup: {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce,

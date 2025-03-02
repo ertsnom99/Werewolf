@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Werewolf.Data
 {
-	[CreateAssetMenu(fileName = "CommonWerewolfsData", menuName = "ScriptableObjects/Roles/CommonWerewolfsData")]
-	public class CommonWerewolfsData : ScriptableObject
+	[CreateAssetMenu(fileName = "CommonWerewolvesData", menuName = "ScriptableObjects/Roles/CommonWerewolvesData")]
+	public class CommonWerewolvesData : ScriptableObject
 	{
 		[field: SerializeField]
 		public TitleScreenData VotePlayerTitleScreen { get; private set; }

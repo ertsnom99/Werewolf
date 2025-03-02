@@ -14,7 +14,7 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Data")]
 		[SerializeField]
-		protected CommonWerewolfsData _commonWerewolfsData;
+		protected CommonWerewolvesData _commonWerewolvesData;
 
 		private bool _preparedVote;
 
@@ -41,7 +41,7 @@ namespace Werewolf.Gameplay.Role
 
 		protected void VoteForVillager()
 		{
-			_preparedVote = _voteManager.PrepareVote(_commonWerewolfsData.VotePlayerTitleScreen.ID.HashCode, _commonWerewolfsData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
+			_preparedVote = _voteManager.PrepareVote(_commonWerewolvesData.VotePlayerTitleScreen.ID.HashCode, _commonWerewolvesData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{
@@ -97,7 +97,7 @@ namespace Werewolf.Gameplay.Role
 
 			if (!firstPlayerVotedFor.IsNone && votes[firstPlayerVotedFor] == _voteManager.Voters.Count)
 			{
-				_gameHistoryManager.AddEntry(_commonWerewolfsData.VotedPlayerGameHistoryEntry.ID,
+				_gameHistoryManager.AddEntry(_commonWerewolvesData.VotedPlayerGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 												new()
 												{
@@ -107,7 +107,7 @@ namespace Werewolf.Gameplay.Role
 												}
 											});
 
-				_gameManager.AddMarkForDeath(firstPlayerVotedFor, _commonWerewolfsData.MarkForDeath);
+				_gameManager.AddMarkForDeath(firstPlayerVotedFor, _commonWerewolvesData.MarkForDeath);
 
 				foreach (PlayerRef voter in _voteManager.Voters)
 				{
@@ -127,11 +127,11 @@ namespace Werewolf.Gameplay.Role
 #if UNITY_SERVER && UNITY_EDITOR
 				_gameManager.SetPlayerCardHighlightVisible(firstPlayerVotedFor, true);
 #endif
-				yield return new WaitForSeconds(_commonWerewolfsData.ChoosenVillagerHighlightDuration);
+				yield return new WaitForSeconds(_commonWerewolvesData.ChoosenVillagerHighlightDuration);
 			}
 			else
 			{
-				_gameHistoryManager.AddEntry(_commonWerewolfsData.FailedToVotePlayerGameHistoryEntry.ID, null);
+				_gameHistoryManager.AddEntry(_commonWerewolvesData.FailedToVotePlayerGameHistoryEntry.ID, null);
 			}
 
 			_gameManager.StopWaintingForPlayer(Player);
