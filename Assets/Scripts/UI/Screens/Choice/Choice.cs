@@ -21,9 +21,9 @@ namespace Werewolf.UI
 		[SerializeField]
 		private LocalizeStringEvent _text;
 
-		private bool _isSelected;
-
 		public event Action<Choice> Selected;
+
+		private bool _isSelected;
 
 		public struct ChoiceData
 		{

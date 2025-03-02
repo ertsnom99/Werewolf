@@ -22,9 +22,7 @@ namespace Werewolf.UI
 		private GameObject _warningText;
 
 		private IntVariable _countdownVariable;
-
 		private float _confirmVoteDelayDuration;
-
 		private IEnumerator _countdownCoroutine;
 		private IEnumerator _confirmVoteDelayCountdownCoroutine;
 

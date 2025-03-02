@@ -11,14 +11,12 @@ namespace Werewolf.UI
 		[field: Header("UI")]
 		[SerializeField]
 		private GameObject _cache;
+
 		[SerializeField]
 		private RectTransform _emotes;
+
 		[SerializeField]
 		private EmoteButton[] _emoteButtons;
-
-		private PlayerRef _selectedPlayer;
-
-		public event Action<PlayerRef, int> EmoteSelected;
 
 		[Serializable]
 		private struct EmoteButton
@@ -27,6 +25,9 @@ namespace Werewolf.UI
 			public Image Image;
 		}
 
+		public event Action<PlayerRef, int> EmoteSelected;
+
+		private PlayerRef _selectedPlayer;
 		private Camera _camera;
 
 		private void Start()

@@ -15,7 +15,6 @@ namespace Werewolf.Managers
 	public partial class GameManager
 	{
 		private readonly Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
-
 		private readonly Dictionary<int, int[]> ReservedRoles = new();
 		private readonly Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
 

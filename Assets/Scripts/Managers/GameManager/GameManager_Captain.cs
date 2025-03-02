@@ -11,7 +11,6 @@ namespace Werewolf.Managers
 	{
 		private PlayerRef _captain;
 		private GameObject _captainCard;
-
 		private IEnumerator _chooseNextCaptainCoroutine;
 		private List<PlayerRef> _captainChoices = new();
 		private bool _isNextCaptainChoiceCompleted;

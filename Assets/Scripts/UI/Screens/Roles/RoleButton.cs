@@ -11,11 +11,11 @@ namespace Werewolf.UI
 		[SerializeField]
 		private GameObject _highlight;
 
-		private Image _image;
-
 		public RoleData RoleData { get; private set; }
 
 		public event Action<RoleButton> Selected;
+
+		private Image _image;
 
 		private void Awake()
 		{

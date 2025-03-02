@@ -6,9 +6,9 @@ namespace Werewolf.UI
 	[RequireComponent(typeof(CanvasGroup))]
 	public class QuitScreen : MonoBehaviour
 	{
-		private CanvasGroup _canvasGroup;
-
 		public static event Action QuitClicked;
+
+		private CanvasGroup _canvasGroup;
 
 		private void Awake()
 		{

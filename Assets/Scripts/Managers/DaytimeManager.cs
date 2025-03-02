@@ -18,9 +18,9 @@ namespace Werewolf.Managers
 		private Light _light;
 
 		public Daytime CurrentDaytime { get; private set; }
-		private bool _inTransition = false;
 
 		private GameConfig _gameConfig;
+		private bool _inTransition = false;
 
 		private GameplayDataManager _gameplayDataManager;
 		private UIManager _UIManager;

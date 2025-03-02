@@ -14,6 +14,7 @@ namespace Werewolf.Gameplay
 		[field: Header("Card")]
 		[field: SerializeField]
 		public float Thickness { get; private set; }
+
 		public Vector3 OriginalPosition { get; private set; }
 
 		[Header("Role")]
@@ -23,26 +24,35 @@ namespace Werewolf.Gameplay
 		[Header("Selection")]
 		[SerializeField]
 		private float _leftClickHoldDuration;
+
 		[SerializeField]
 		private GameObject _notClickableCache;
+
 		[SerializeField]
 		private GameObject _selectedFrame;
+
 		[SerializeField]
 		private Color _selectedColor;
+
 		[SerializeField]
 		private Color _notSelectedColor;
 
 		[Header("Votes")]
 		[SerializeField]
 		private GameObject _voteCountContainer;
+
 		[SerializeField]
 		private LocalizeStringEvent _voteCountText;
+
 		[SerializeField]
 		private RectTransform _vote;
+
 		[SerializeField]
 		private LineRenderer _voteLine;
+
 		[SerializeField]
 		private GameObject _voteSelf;
+
 		[SerializeField]
 		private GameObject _skip;
 
@@ -53,16 +63,20 @@ namespace Werewolf.Gameplay
 		[Header("Death")]
 		[SerializeField]
 		private GameObject _deathIcon;
+
 		[SerializeField]
 		private Color _deathTint;
 
 		[Header("UI")]
 		[SerializeField]
 		private SpriteRenderer _roleImage;
+
 		[SerializeField]
 		private Canvas _groundCanvas;
+
 		[SerializeField]
 		private GameObject _highlight;
+
 		[SerializeField]
 		private TMP_Text _nicknameText;
 
@@ -70,22 +84,21 @@ namespace Werewolf.Gameplay
 		[field: SerializeField]
 		[field: ReadOnly]
 		public PlayerRef Player { get; private set; }
+
 		[field: SerializeField]
 		[field: ReadOnly]
 		public RoleData Role { get; private set; }
 
-		private IEnumerator _waitForLeftClickHoldCoroutine;
-
-		private int _voteCount;
-		private IntVariable _voteCountVariable;
-
-		private bool _inSelectionMode;
-		private bool _isClickable;
-		private bool _isSelected;
-
 		public event Action<Card> LeftClicked;
 		public event Action<Card> LeftClickHolded;
 		public event Action<Card> RightClicked;
+
+		private IEnumerator _waitForLeftClickHoldCoroutine;
+		private int _voteCount;
+		private IntVariable _voteCountVariable;
+		private bool _inSelectionMode;
+		private bool _isClickable;
+		private bool _isSelected;
 
 		private void Awake()
 		{
