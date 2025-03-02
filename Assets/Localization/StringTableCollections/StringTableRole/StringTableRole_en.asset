@@ -26,12 +26,14 @@ MonoBehaviour:
 
 
 
-      Before the game, three roles will be set aside
-      for the comedian. They will be placed, with their role visible, in the middle
-      of all the villagers. Each night, the comedian can choose one of these roles
-      and use that role until the next night. Once a role is selected, it is removed.'
+      {"Before the game, three roles will be set
+      aside for the comedian. They will be placed, with their role visible, in the
+      middle of all the villagers. Each night, the comedian can choose one of these
+      roles and use that role until the next night. Once a role is selected, it is
+      removed.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 1069766066176
     m_Localized: Comedian
     m_Metadata:
@@ -46,13 +48,14 @@ MonoBehaviour:
 
 
 
-      During the first night, he chooses two villagers that
+      {"During the first night, he chooses two villagers that
       will become lovers. One of the lovers can be himself. If one of the lovers
       dies, the other dies of sadness immediately. The lovers can never attempt to
       kill or frame each other. If one of the lovers is a werewolf and the other
-      is a villager, they will need to be the last villagers left to win.'
+      is a villager, they will need to be the last villagers left to win.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 2578041978880
     m_Localized: Couple
     m_Metadata:
@@ -61,27 +64,29 @@ MonoBehaviour:
     m_Localized: 'With her crystal ball, she can see a villager''s true identity.
 
 
-      Each
-      night, she can look at an other villager''s card.'
+      {"Each
+      night, she can look at an other villager''s card.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 3931116060672
     m_Localized: Fortune Teller
     m_Metadata:
       m_Items: []
   - m_Id: 4374936338432
     m_Localized: 'In the village, everyone loves the flair of this swift and discreet
-      character, except for the werewolves.
+      character, except for the Werewolves.
 
 
 
-      Each night, he can choose a
-      group of three consecutive villagers, by selecting the middle one (dead villagers
-      are skipped). He will then be told if there is at least one werewolf in this
-      group. If there is no werewolf, the fox loose his power for the rest of the
-      game.'
+      {"Each night, he can choose
+      a group of three consecutive villagers, by selecting the middle one (dead villagers
+      are skipped). He will then be told if there is at least one Werewolf in this
+      group. If there is no Werewolf, the fox loose his power for the rest of the
+      game.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 4372801437696
     m_Localized: Fox
     m_Metadata:
@@ -90,10 +95,11 @@ MonoBehaviour:
     m_Localized: 'He is an experimented hunter and won''t die without a fight!
 
 
-      When
-      he gets killed, he must choose an other villager to kill.'
+      {"When
+      he gets killed, he must choose an other villager to kill.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 4704545718272
     m_Localized: Hunter
     m_Metadata:
@@ -103,13 +109,14 @@ MonoBehaviour:
       the werewolves.
 
 
-      Each night, he can select a villager to protect. That
-      villager will not get killed by any werewolves, during that night. The savior
-      can protect himself. He cannot protect the same villager twice in a row. This
-      protection doesn''t work on the little girl. It also doesn''t protect from
-      the infection of the foul father wolf.'
+      {"Each night, he can select a villager to protect.
+      That villager will not get killed by any Werewolves, during that night. The
+      Savior can protect himself. He cannot protect the same villager twice in a
+      row. This protection doesn''t work on the Little Girl. It also doesn''t protect
+      from the infection of the Foul Father Wolf.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 4887052468224
     m_Localized: Saviour
     m_Metadata:
@@ -119,30 +126,32 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5097270984704
-    m_Localized: 'Who could ask for a better servant then one who would keep the
+    m_Localized: 'Who could ask for a better Servant then one who would keep the
       legacy of their master going? Do be careful, because her ambition could bring
       the village to its end!
 
 
-      Just before the reveal of the role of a villager
+      {"Just before the reveal of the role of a villager
       killed by the village vote, she can reveal herself. Afterward, she will lose
       her role and take the one of the dead villager, without revealing what it is.
-      From that point on, she will play as that new role.'
+      From that point on, she will play as that new role.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 5775175368704
     m_Localized: 'What role will he truly play? Only time will tell.
 
 
-      If the
-      thief is in the game, two extra villager cards will be added to the roles distributed
-      to the villagers. once all the roles are distributed, the two leftover will
-      be placed, face down, in the middle of all the villagers. The first night,
+      {"If
+      the thief is in the game, two extra villager cards will be added to the roles
+      distributed to the villagers. once all the roles are distributed, the two leftover
+      will be placed, face down, in the middle of all the villagers. The first night,
       the thief will be allowed to change his role for either of the two leftover
-      roles, if he wants to. If both roles are werewolves, he must choose one of
-      them.'
+      roles, if he wants to. If both roles are Werewolves, he must choose one of
+      them.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 5773111771136
     m_Localized: Thief
     m_Metadata:
@@ -165,11 +174,12 @@ MonoBehaviour:
       but becomes killer at night.
 
 
-      Each night, all werewolves will be asked
+      {"Each night, all Werewolves will be asked
       to vote together for a villager to feast on. The vote must be unanimous or
-      else, no villager will be eliminated that night.'
+      else, no villager will be eliminated that night.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 7362610380800
     m_Localized: Werewolf
     m_Metadata:
@@ -187,14 +197,15 @@ MonoBehaviour:
       but the power of her potion is undeniable.
 
 
-      The witch has two potion
-      she can used: a life potion and a death potion. Each night, she will be told
-      who was killed by the werewolves. she can then use her potions. Each potion
-      can be only used once during the game, but she can use both potion at the same
-      time. Her life potion will save the villager who was supposed to die, which
-      could be herself. The death potion will kill a villager of her choice.'
+      {"The Witch has life potion
+      and a death potion. Each night, she will be told who was killed by the Werewolves.
+      she can then use her potions. Each potion can be only used once during the
+      game, but she can use both potion at the same time. Her life potion will save
+      the villager killed by the Werewolves, which could be herself. The death potion
+      will kill a villager of her choice.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 58103591669104640
     m_Localized: Villagers
     m_Metadata:
@@ -210,11 +221,12 @@ MonoBehaviour:
   - m_Id: 62484989748830208
     m_Localized: "This evil character hates the Werewolves as much as the villagers!
       It is said that a strange mutation happened within the lycanthropic population
-      itself. \r\n\r\nEach night, he wakes up and feast with all the other Werewolves.
+      itself. \r\n\r\n{\"Each night, he wakes up and feast with all the other Werewolves.
       Every other night, he wakes up alone to eliminate a Werewolf. He wins only
-      if he is the last one standing (unless he is in a couple).\r"
+      if he is the last one standing (unless he is in a couple).\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 64645302468337664
     m_Localized: Big Bad Wolf
     m_Metadata:
@@ -222,97 +234,120 @@ MonoBehaviour:
   - m_Id: 64646369176313856
     m_Localized: "In the village, small pigs aren't the only ones to fear the Big
       Bad Wolf. He is enormous and his appetite is gigantic. Because of him, full
-      villages were destroyed! \r\n\r\nEach night, he wakes up and feasts with all
-      the other Werewolves. While no other Werewolf (including a Wild Child or Dog-Wolf
-      that wakes up with the other Werewolves, but excluding the White Werewolf)
-      dies, he wakes up alone a second time to feast on an other victim. He can\u2019t
-      feast on a Werewolf. \r"
+      villages were destroyed! \r\n\r\n{\"Each night, he wakes up and feasts with
+      all the other Werewolves. While no other Werewolf (including a Wild Child or
+      Dog-Wolf that wakes up with the other Werewolves, but excluding the White Werewolf)
+      dies, he wakes up alone a second time to feast on an other victim. He can't
+      feast on a Werewolf.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 65920755028058112
     m_Localized: Knight with the Rusty Sword
     m_Metadata:
       m_Items: []
   - m_Id: 65920829212712960
-    m_Localized: "He is an old retired knight. He is tired because of a life of quest
-      throughout the world and doesn\u2019t maintain his tool so well. Rust gradually
+    m_Localized: 'He is an old retired knight. He is tired because of a life of quest
+      throughout the world and doesn''t maintain his tool so well. Rust gradually
       settled on the dull edge of its faithful protector, but he would never leave
-      her for another. He still sleeps with her every night these days: beware of
-      importunate!\r\n\nIf he is killed by the werewolves, the first one to his left,
-      that was involved in his killing, will get tetanus from his rusty blade. He
-      will still be alive during the day but die at the end of the following night."
+      her for another. He still sleeps with her every night these days. Beware of
+      importunate!
+
+
+      {"If he is killed by the Werewolves, the first one to
+      his left, that was involved in his killing, will get tetanus from his rusty
+      blade. He will still be alive during the day but die at the end of the following
+      night.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 66778607871451136
     m_Localized: Bear Trainer
     m_Metadata:
       m_Items: []
   - m_Id: 66778713047818240
-    m_Localized: "How pleasant it is to my memory, this sound of a chain sliding
+    m_Localized: 'How pleasant it is to my memory, this sound of a chain sliding
       on the cobblestones of the village accompanied by the growl of Ursus. Titan,
       the bear trainer, masterfully directed his companion in a ballet so graceful
       that people cried every summer in the village. Ursus also had this precious
-      power of detecting the lycanthropes hidden near him.\r\n\nEach morning, after
-      the dead villagers are revealed, if at least one werewolf is next to him (dead
-      villagers are skipped), or he became a werewolf, the bear will growl. \r"
+      power of detecting the lycanthropes hidden near him.
+
+
+      {"Each morning,
+      after the dead villagers are revealed, if at least one werewolf is next to
+      him (dead villagers are skipped), or he became a werewolf, the bear will growl.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 67446694559997952
     m_Localized: Wild Child
     m_Metadata:
       m_Items: []
   - m_Id: 67446738352726016
-    m_Localized: "Abandoned in the forest by his parents in his early childhood,
+    m_Localized: 'Abandoned in the forest by his parents in his early childhood,
       he was raised there by wolves. As soon as he could walk on all fours, the Wild
       Child began to wander around the outskirts of the village. One day, fascinated
       by a villager who walked upright with grace and poise, he secretly made him
       his model. He then decided to join the village community and entered the village,
       worried. The community was moved by his fragility, adopted him and welcomed
       him into their midst. What will he become: an honest Villager or a terrible
-      Werewolf?\r\n\nThe Wild Child is a villager. On the first night, he chooses
+      Werewolf?
+
+
+      {"The Wild Child is a villager. On the first night, he chooses
       a model. If during the game the model is eliminated, the Wild Child becomes
-      a Werewolf until the end of the game.\r"
+      a Werewolf until the end of the game.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 69694821123874816
     m_Localized: Pied Piper
     m_Metadata:
       m_Items: []
   - m_Id: 69694886416605184
     m_Localized: "Ignorantly chased out of the village, he returned years later under
-      the cover of a false identity to wreak his terrible vengeance. \r\n\nEvery
+      the cover of a false identity to wreak his terrible vengeance. \r\n\n{\"Every
       night, he charms two new villagers. If he succeeds in charming the entire village,
       he wins. If he is infected by the Foul Father of Wolves, he becomes a simple
       Werewolf. Its initial objective, which was to charm the entire village, is
       therefore abandoned. He will collaborate with the Werewolves for their common
-      victory.\r"
+      victory.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 74428792986525696
     m_Localized: Dog-Wolf
     m_Metadata:
       m_Items: []
   - m_Id: 74428795301781504
-    m_Localized: "All dogs know deep within themselves that their ancestors were
+    m_Localized: 'All dogs know deep within themselves that their ancestors were
       wolves and that it was man who kept them in this state of childish and fearful,
       but faithful and generous companions. In any case, only the Dog-Wolf can decide
       if he will obey his human and civilized master or if he will listen to the
-      call of the wild nature buried in his bowels.\r\n\nThe first night, the Dog-Wolf
-      decides whether he wants to be a Villager or a Werewolf.\r"
+      call of the wild nature buried in his bowels.
+
+
+      {"The first night, the
+      Dog-Wolf decides whether he wants to be a Villager or a Werewolf.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 75435867946475520
-    m_Localized: "The very first Werewolf of our lands, the father of all their fathers,
+    m_Localized: 'The very first Werewolf of our lands, the father of all their fathers,
       had two powers: the first was to propagate his breed through a special bite
       and the second to flee this world by falling asleep for a few centuries. Fortunately
       for our recent ancestors, it had long since fallen asleep. However, the Infect
-      Father of Wolves has just woken up from a long sleep and he is very hungry!\r\n\nEach
+      Father of Wolves has just woken up from a long sleep and he is very hungry!
+
+
+      {"Each
       night, he wakes up and feasts with all the other Werewolves. Once during the
       game, when the Werewolves have chosen their victim, the Infect Father of Wolves
       can infect the victim instead of devouring them. The victim will keep their
-      power, will always wake up with the Werewolves and must also win with them.\r"
+      power, will always wake up with the Werewolves and must also win with them.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 75435865786408960
     m_Localized: Infect Father of Wolves
     m_Metadata:
@@ -328,10 +363,12 @@ MonoBehaviour:
       nubile happy to have been identified, or is she having fun? In any case, the
       Two Sisters get along like the fingers of a hand or the hairs of the same lock.
       It\u2019s certainly encouraging to have someone close to you to count on in
-      these uncertain times!\r\n\nEvery other night, they wake up together and can
-      consult each other (using emotes) on the decisions to make to save the village.\r"
+      these uncertain times!\r\n\n{\"Every other night, they wake up together and
+      can consult each other (using emotes) on the decisions to make to save the
+      village.\":t(RoleDescription)}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 77948389408759808
     m_Localized: Sister
     m_Metadata:
@@ -345,13 +382,17 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 78451454616395776
-    m_Localized: "The whole village resonates with their joyful verbal outbursts
+    m_Localized: 'The whole village resonates with their joyful verbal outbursts
       when they return home after working in the fields. During the debates, a simple
       glance between them allows them to make a good decision about the future of
-      the village.\n\nEvery other night, they wake up together and can consult each
-      other (using emotes) on the decisions to make to save the village.\r"
+      the village.
+
+
+      {"Every other night, they wake up together and can consult
+      each other (using emotes) on the decisions to make to save the village.":t(RoleDescription)}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 5699302592880836615
   - m_Id: 86655715137413120
     m_Localized: '-Needs at least three pure villager roles for the Comedian (exceptions:
       {RoleNames:list:{:t(RoleName)}|, | and })'
@@ -368,4 +409,4 @@ MonoBehaviour:
     - rid: 5699302592880836615
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00e085eee9dc3301
+        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb71601
