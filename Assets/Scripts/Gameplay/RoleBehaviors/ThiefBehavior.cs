@@ -41,7 +41,7 @@ namespace Werewolf.Gameplay.Role
 		private bool _choseRole;
 
 		private IndexedReservedRoles _reservedRoles;
-		private bool _reservedOnlyWerewolfs;
+		private bool _reservedOnlyWerewolves;
 
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
@@ -143,20 +143,20 @@ namespace Werewolf.Gameplay.Role
 				return isWakingUp = false;
 			}
 
-			_reservedOnlyWerewolfs = true;
+			_reservedOnlyWerewolves = true;
 
 			foreach (RoleData role in _reservedRoles.Roles)
 			{
 				if (role.PrimaryType != PrimaryRoleType.Werewolf)
 				{
-					_reservedOnlyWerewolfs = false;
+					_reservedOnlyWerewolves = false;
 					break;
 				}
 			}
 
 			if (!_gameManager.ChooseReservedRole(this,
-												_reservedOnlyWerewolfs ? _mustChooseChoiceScreen.ID.HashCode : _mayChooseChoiceScreen.ID.HashCode,
-												_reservedOnlyWerewolfs,
+												_reservedOnlyWerewolves ? _mustChooseChoiceScreen.ID.HashCode : _mayChooseChoiceScreen.ID.HashCode,
+												_reservedOnlyWerewolves,
 												_chooseReservedRoleMaximumDuration * _gameManager.GameSpeedModifier,
 												OnRoleSelected))
 			{
@@ -206,7 +206,7 @@ namespace Werewolf.Gameplay.Role
 				AddTookRoleGameHistoryEntry(selectedRole);
 				_gameManager.ChangeRole(Player, selectedRole, _reservedRoles.Behaviors[choiceIndex]);
 			}
-			else if (_reservedOnlyWerewolfs)
+			else if (_reservedOnlyWerewolves)
 			{
 				ChangeForRandomRole();
 			}
@@ -216,7 +216,7 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.StopWaintingForPlayer(previousPlayer);
 
-			if (choiceIndex > -1 || _reservedOnlyWerewolfs)
+			if (choiceIndex > -1 || _reservedOnlyWerewolves)
 			{
 				Destroy(gameObject);
 			}
@@ -255,14 +255,14 @@ namespace Werewolf.Gameplay.Role
 			
 			_gameManager.StopChoosingReservedRole(Player);
 
-			if (_reservedOnlyWerewolfs)
+			if (_reservedOnlyWerewolves)
 			{
 				ChangeForRandomRole();
 			}
 
 			_gameManager.RemoveReservedRoles(this, new int[0]);
 
-			if (_reservedOnlyWerewolfs)
+			if (_reservedOnlyWerewolves)
 			{
 				Destroy(gameObject);
 			}

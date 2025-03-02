@@ -51,7 +51,7 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _commonWerewolfsData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
+  _commonWerewolvesData: {fileID: 11400000, guid: 9572bec103f80b9428a8d20f0be85d32,
     type: 2}
   _lostPowerGameHistoryEntry: {fileID: 11400000, guid: 5481ebadf709b684cb8324eabbbb93ae,
     type: 2}

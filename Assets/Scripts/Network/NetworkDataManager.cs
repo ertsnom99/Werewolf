@@ -170,7 +170,7 @@ namespace Werewolf.Network
 
 			return warnings.Count == 0;
 
-			bool CheckRoleSetup(NetworkRoleSetup networkRoleSetup, bool checkForMandatoryWerewolfs, List<LocalizedString> warnings)
+			bool CheckRoleSetup(NetworkRoleSetup networkRoleSetup, bool checkForMandatoryWerewolves, List<LocalizedString> warnings)
 			{
 				bool isValid = true;
 
@@ -187,7 +187,7 @@ namespace Werewolf.Network
 						isValid = false;
 					}
 
-					if (checkForMandatoryWerewolfs && roleData.PrimaryType == PrimaryRoleType.Werewolf)
+					if (checkForMandatoryWerewolves && roleData.PrimaryType == PrimaryRoleType.Werewolf)
 					{
 						hasMandatoryWerewolf = true;
 					}

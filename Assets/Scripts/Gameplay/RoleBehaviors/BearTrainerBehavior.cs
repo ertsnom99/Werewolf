@@ -12,7 +12,7 @@ namespace Werewolf.Gameplay.Role
 {
 	public class BearTrainerBehavior : RoleBehavior
 	{
-		[Header("Find Werewolfs")]
+		[Header("Find Werewolves")]
 		[SerializeField]
 		private PlayerGroupData[] _werewolvesPlayerGroups;
 
@@ -58,10 +58,10 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
-			StartCoroutine(CheckForWerewolfs());
+			StartCoroutine(CheckForWerewolves());
 		}
 
-		private IEnumerator CheckForWerewolfs()
+		private IEnumerator CheckForWerewolves()
 		{
 			HashSet<PlayerRef> playersToCheck = _gameManager.FindSurroundingPlayers(Player);
 			playersToCheck.Add(Player);
