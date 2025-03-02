@@ -1,6 +1,7 @@
 using Fusion;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +31,7 @@ namespace Werewolf.UI
 
 		private PlayerRef _localPlayer;
 		private int _minNicknameCharacterCount;
+		private readonly List<PlayerEntry> _playerEntriesPool = new();
 		private bool _initializedNicknameInputField;
 
 		private NetworkDataManager _networkDataManager;
@@ -58,7 +60,7 @@ namespace Werewolf.UI
 
 			for (int i = _playerEntries.childCount - 1; i >= 0; i--)
 			{
-				Destroy(_playerEntries.GetChild(i).gameObject);
+				ReturnPlayerEntryToPool(_playerEntries.GetChild(i).GetComponent<PlayerEntry>());
 			}
 
 			bool isOdd = true;
@@ -66,7 +68,8 @@ namespace Werewolf.UI
 
 			foreach (KeyValuePair<PlayerRef, NetworkPlayerInfo> playerInfo in _networkDataManager.PlayerInfos)
 			{
-				PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, _playerEntries);
+				PlayerEntry playerEntry = GetPlayerEntryFromPool();
+				playerEntry.transform.SetParent(_playerEntries);
 				playerEntry.Initialize(playerInfo.Value, _localPlayer, isOdd, localPlayerInfoExist && localPlayerInfo.IsLeader, !_networkDataManager.GameSetupReady);
 				playerEntry.KickPlayerClicked += OnKickPlayer;
 
@@ -81,6 +84,31 @@ namespace Werewolf.UI
 
 			UpdateNicknameButton();
 		}
+
+		#region PlayerEntry Pool
+		private PlayerEntry GetPlayerEntryFromPool()
+		{
+			if (_playerEntriesPool.Count > 0)
+			{
+				PlayerEntry playerEntry = _playerEntriesPool.Last();
+				_playerEntriesPool.RemoveAt(_playerEntriesPool.Count - 1);
+				playerEntry.gameObject.SetActive(true);
+				return playerEntry;
+			}
+			else
+			{
+				PlayerEntry playerEntry = Instantiate(_playerEntryPrefab, transform);
+				return playerEntry;
+			}
+		}
+
+		private void ReturnPlayerEntryToPool(PlayerEntry playerEntry)
+		{
+			playerEntry.transform.SetParent(transform);
+			playerEntry.gameObject.SetActive(false);
+			_playerEntriesPool.Add(playerEntry);
+		}
+		#endregion
 
 		public void UpdateNicknameButton()
 		{
