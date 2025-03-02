@@ -501,7 +501,7 @@ namespace Werewolf.Managers
 			_serverChoices = choices;
 			PreSelectPlayers?.Invoke(selectingPlayer, purpose, _serverChoices);
 
-			if (!_networkDataManager.PlayerInfos[selectingPlayer].IsConnected || _selectPlayersCallbacks.ContainsKey(selectingPlayer) || _serverChoices.Count < playerAmount)
+			if (!_networkDataManager.PlayerInfos[selectingPlayer].IsConnected || _selectPlayersCallbacks.ContainsKey(selectingPlayer) || (mustSelect && _serverChoices.Count < playerAmount))
 			{
 				return false;
 			}
