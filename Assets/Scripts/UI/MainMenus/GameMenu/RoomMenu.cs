@@ -31,8 +31,8 @@ namespace Werewolf.UI
 
 		private PlayerRef _localPlayer;
 		private int _minNicknameCharacterCount;
-		private readonly List<PlayerEntry> _playerEntriesPool = new();
 		private bool _initializedNicknameInputField;
+		private readonly List<PlayerEntry> _playerEntriesPool = new();
 
 		private NetworkDataManager _networkDataManager;
 
@@ -45,13 +45,13 @@ namespace Werewolf.UI
 			_nicknameInputField.text = string.Empty;
 			_nicknameInputField.characterLimit = GameConfig.MAX_NICKNAME_CHARACTER_COUNT;
 
-			UpdatePlayerList();
+			OnPlayerInfosChanged();
 
-			_networkDataManager.PlayerInfosChanged += UpdatePlayerList;
-			_networkDataManager.GameSetupReadyChanged += UpdatePlayerList;
+			_networkDataManager.PlayerInfosChanged += OnPlayerInfosChanged;
+			_networkDataManager.GameSetupReadyChanged += OnGameSetupReadyChanged;
 		}
 
-		private void UpdatePlayerList()
+		private void OnPlayerInfosChanged()
 		{
 			if (!_networkDataManager || _localPlayer == null)
 			{
@@ -80,6 +80,21 @@ namespace Werewolf.UI
 			{
 				_nicknameInputField.text = localPlayerInfo.Nickname;
 				_initializedNicknameInputField = true;
+			}
+
+			UpdateNicknameButton();
+		}
+
+		private void OnGameSetupReadyChanged()
+		{
+			if (!_networkDataManager || _localPlayer == null)
+			{
+				return;
+			}
+
+			for (int i = _playerEntries.childCount - 1; i >= 0; i--)
+			{
+				_playerEntries.GetChild(i).GetComponent<PlayerEntry>().SetCanBeKick(!_networkDataManager.GameSetupReady);
 			}
 
 			UpdateNicknameButton();
@@ -127,8 +142,8 @@ namespace Werewolf.UI
 
 		public void Cleanup()
 		{
-			_networkDataManager.PlayerInfosChanged -= UpdatePlayerList;
-			_networkDataManager.GameSetupReadyChanged -= UpdatePlayerList;
+			_networkDataManager.PlayerInfosChanged -= OnPlayerInfosChanged;
+			_networkDataManager.GameSetupReadyChanged -= OnGameSetupReadyChanged;
 		}
 	}
 }
