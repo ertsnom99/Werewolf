@@ -17,9 +17,6 @@ namespace Werewolf.UI
 	{
 		[Header("UI")]
 		[SerializeField]
-		private CanvasGroup _canvasGroup;
-
-		[SerializeField]
 		private GameObject[] _containerButtons;
 
 		[SerializeField]
@@ -37,6 +34,9 @@ namespace Werewolf.UI
 
 		[SerializeField]
 		private DraggableRole _draggableRolePrefab;
+
+		[SerializeField]
+		private RoleDescriptionPopup _roleDescriptionPopup;
 
 		[Header("Game Speed")]
 		[SerializeField]
@@ -56,8 +56,8 @@ namespace Werewolf.UI
 		private GameConfig _gameConfig;
 		private PlayerRef _localPlayer;
 		private bool _isLocalPlayerLeader;
-		private LocalizedStringListVariable _warningsVariables;
 		private readonly List<DraggableRole> _draggableRolesPool = new();
+		private LocalizedStringListVariable _warningsVariables;
 		private bool _rolesSetupChanged;
 
 		private GameplayDataManager _gameplayDataManager;
@@ -83,6 +83,11 @@ namespace Werewolf.UI
 			FillRolesContainers();
 			UpdateRolesContainers();
 			OnPlayerInfosChanged();
+			OnGameSpeedChanged();
+
+			_availableRolesContainer.DraggableRoleMiddleClicked += DisplayRoleDescriptionPopup;
+			_mandatoryRolesContainer.DraggableRoleMiddleClicked += DisplayRoleDescriptionPopup;
+			_optionalRolesContainer.DraggableRoleMiddleClicked += DisplayRoleDescriptionPopup;
 
 			_networkDataManager.PlayerInfosChanged += OnPlayerInfosChanged;
 			_networkDataManager.RolesSetupChanged += OnRolesSetupChanged;
@@ -224,15 +229,6 @@ namespace Werewolf.UI
 		private void OnPlayerInfosChanged()
 		{
 			bool isLocalPlayerLeader = _networkDataManager.PlayerInfos.TryGet(_localPlayer, out NetworkPlayerInfo localPlayerInfo) && localPlayerInfo.IsLeader;
-			_canvasGroup.blocksRaycasts = isLocalPlayerLeader;
-
-			foreach (GameObject containerButton in _containerButtons)
-			{
-				containerButton.SetActive(isLocalPlayerLeader);
-			}
-
-			_gameSpeedDropdown.gameObject.SetActive(isLocalPlayerLeader);
-			_gameSpeedText.gameObject.SetActive(!isLocalPlayerLeader);
 
 			if (_isLocalPlayerLeader == isLocalPlayerLeader)
 			{
@@ -240,6 +236,8 @@ namespace Werewolf.UI
 			}
 
 			_isLocalPlayerLeader = isLocalPlayerLeader;
+
+			UpdateUI(isLocalPlayerLeader: isLocalPlayerLeader);
 
 			if (isLocalPlayerLeader)
 			{
@@ -255,6 +253,27 @@ namespace Werewolf.UI
 				_optionalRolesContainer.DraggableRolesChanged -= OnDraggableRolesChanged;
 				_optionalRolesContainer.DraggableRoleRightClicked -= ReturnToAvailable;
 			}
+		}
+
+		private void UpdateUI(bool isLocalPlayerLeader)
+		{
+			foreach (GameObject containerButton in _containerButtons)
+			{
+				containerButton.SetActive(isLocalPlayerLeader);
+			}
+
+			_gameSpeedDropdown.gameObject.SetActive(isLocalPlayerLeader);
+			_gameSpeedText.gameObject.SetActive(!isLocalPlayerLeader);
+			_gameSpeedDropdown.RefreshShownValue();
+
+			foreach (DraggableRole draggableRole in _draggableRolesPool)
+			{
+				draggableRole.EnableDrag(isLocalPlayerLeader);
+			}
+
+			_availableRolesContainer.EnableDrag(isLocalPlayerLeader);
+			_mandatoryRolesContainer.EnableDrag(isLocalPlayerLeader);
+			_optionalRolesContainer.EnableDrag(isLocalPlayerLeader);
 		}
 
 		private void OnDraggableRolesChanged()
@@ -312,6 +331,11 @@ namespace Werewolf.UI
 		}
 		#endregion
 
+		private void DisplayRoleDescriptionPopup(DraggableRole draggableRole)
+		{
+			_roleDescriptionPopup.Display(draggableRole.RoleData.Description, draggableRole.transform.position);
+		}
+
 		public void UpdateWarnings(List<LocalizedString> warnings)
 		{
 			_warningsVariables.Values = warnings;
@@ -338,11 +362,17 @@ namespace Werewolf.UI
 		{
 			if (_isLocalPlayerLeader)
 			{
+				UpdateUI(isLocalPlayerLeader: false);
+
 				_mandatoryRolesContainer.DraggableRolesChanged -= OnDraggableRolesChanged;
 				_mandatoryRolesContainer.DraggableRoleRightClicked -= ReturnToAvailable;
 				_optionalRolesContainer.DraggableRolesChanged -= OnDraggableRolesChanged;
 				_optionalRolesContainer.DraggableRoleRightClicked -= ReturnToAvailable;
 			}
+
+			_availableRolesContainer.DraggableRoleMiddleClicked -= DisplayRoleDescriptionPopup;
+			_mandatoryRolesContainer.DraggableRoleMiddleClicked -= DisplayRoleDescriptionPopup;
+			_optionalRolesContainer.DraggableRoleMiddleClicked -= DisplayRoleDescriptionPopup;
 
 			_networkDataManager.PlayerInfosChanged -= OnPlayerInfosChanged;
 			_networkDataManager.RolesSetupChanged -= OnRolesSetupChanged;

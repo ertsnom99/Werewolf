@@ -28,8 +28,10 @@ namespace Werewolf.UI
 		public delegate DraggableRole GetFromPoolDelegate();
 
 		public event Action<DraggableRole> ParentChanged;
+		public event Action<DraggableRole> MiddleClicked;
 		public event Action<DraggableRole> RightClicked;
 
+		private bool _isDragEnable;
 		private Vector2 sizeDelta;
 		private Transform _parent;
 		private int _siblingIndex;
@@ -69,6 +71,11 @@ namespace Werewolf.UI
 			_getFromPoolDelegate = getFromPoolDelegate;
 		}
 
+		public void EnableDrag(bool enable)
+		{
+			_isDragEnable = enable;
+		}
+
 		public void SetParent(Transform parent, int siblingIndex = -1)
 		{
 			if (_parent == parent)
@@ -102,6 +109,9 @@ namespace Werewolf.UI
 				case PointerEventData.InputButton.Left:
 					_dragOffset = (Vector2)transform.position - eventData.position;
 					break;
+				case PointerEventData.InputButton.Middle:
+					MiddleClicked?.Invoke(this);
+					break;
 				case PointerEventData.InputButton.Right:
 					RightClicked?.Invoke(this);
 					break;
@@ -110,7 +120,7 @@ namespace Werewolf.UI
 
 		public void OnBeginDrag(PointerEventData eventData)
 		{
-			if (eventData.button != PointerEventData.InputButton.Left)
+			if (!_isDragEnable || eventData.button != PointerEventData.InputButton.Left)
 			{
 				return;
 			}
@@ -131,7 +141,7 @@ namespace Werewolf.UI
 
 		public void OnDrag(PointerEventData eventData)
 		{
-			if (eventData.button != PointerEventData.InputButton.Left)
+			if (!_isDragEnable || eventData.button != PointerEventData.InputButton.Left)
 			{
 				return;
 			}
@@ -148,7 +158,7 @@ namespace Werewolf.UI
 
 		public void OnEndDrag(PointerEventData eventData)
 		{
-			if (eventData.button != PointerEventData.InputButton.Left)
+			if (!_isDragEnable || eventData.button != PointerEventData.InputButton.Left)
 			{
 				return;
 			}

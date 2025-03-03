@@ -13,8 +13,10 @@ namespace Werewolf.UI
 		public Transform Grid { get; private set; }
 
 		private int _maxDraggableRoles;
+		private bool _isDragEnable;
 
 		public event Action DraggableRolesChanged;
+		public event Action<DraggableRole> DraggableRoleMiddleClicked;
 		public event Action<DraggableRole> DraggableRoleRightClicked;
 
 		public List<DraggableRole> DraggableRoles { get; private set; }
@@ -25,9 +27,19 @@ namespace Werewolf.UI
 			_maxDraggableRoles = maxDraggableRoles;
 		}
 
+		public void EnableDrag(bool enable)
+		{
+			_isDragEnable = enable;
+
+			foreach (DraggableRole draggableRole in DraggableRoles)
+			{
+				draggableRole.EnableDrag(enable);
+			}
+		}
+
 		public void OnDrop(PointerEventData eventData)
 		{
-			if (eventData.button != PointerEventData.InputButton.Left)
+			if (!_isDragEnable || eventData.button != PointerEventData.InputButton.Left)
 			{
 				return;
 			}
@@ -63,6 +75,7 @@ namespace Werewolf.UI
 			DraggableRoles.Add(draggableRole);
 			draggableRole.SetParent(Grid, siblingIndex > -1 ? siblingIndex : Grid.childCount);
 			draggableRole.ParentChanged += OnLeavedContainer;
+			draggableRole.MiddleClicked += OnDraggableRoleMiddleClicked;
 			draggableRole.RightClicked += OnDraggableRoleRightClicked;
 			DraggableRolesChanged?.Invoke();
 		}
@@ -70,9 +83,15 @@ namespace Werewolf.UI
 		private void OnLeavedContainer(DraggableRole draggableRole)
 		{
 			draggableRole.ParentChanged -= OnLeavedContainer;
+			draggableRole.MiddleClicked -= OnDraggableRoleMiddleClicked;
 			draggableRole.RightClicked -= OnDraggableRoleRightClicked;
 			DraggableRoles.Remove(draggableRole);
 			DraggableRolesChanged?.Invoke();
+		}
+
+		private void OnDraggableRoleMiddleClicked(DraggableRole draggableRole)
+		{
+			DraggableRoleMiddleClicked?.Invoke(draggableRole);
 		}
 
 		private void OnDraggableRoleRightClicked(DraggableRole draggableRole)
