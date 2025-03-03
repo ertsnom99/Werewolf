@@ -49,6 +49,11 @@ namespace Werewolf.UI
 			_kickButton.interactable = canBeKick;
 		}
 
+		public void SetCanBeKick(bool canBeKick)
+		{
+			_kickButton.interactable = canBeKick;
+		}
+
 		public void OnKickPLayer()
 		{
 			KickPlayerClicked?.Invoke(_player);
