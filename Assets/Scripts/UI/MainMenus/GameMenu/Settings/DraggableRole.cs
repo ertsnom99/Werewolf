@@ -50,14 +50,16 @@ namespace Werewolf.UI
 			{
 				sizeDelta = ((RectTransform)transform).sizeDelta;
 				_amount.text = "\u221E";
+				_amount.gameObject.SetActive(true);
 			}
 			else if (roleData.MandatoryAmount > 1)
 			{
 				_amount.text = roleData.MandatoryAmount.ToString();
+				_amount.gameObject.SetActive(true);
 			}
 			else
 			{
-				_amount.text = "";
+				_amount.gameObject.SetActive(false);
 			}
 		}
 
