@@ -48,7 +48,7 @@ namespace Werewolf.Managers
 		private Task<StartGameResult> StartSimulation(NetworkRunner runner, DedicatedServerConfig serverConfig) => StartSimulation(
 			runner,
 			serverConfig.SessionName,
-			Mathf.Min(serverConfig.MaxPlayerCount, GameConfig.MAX_PLAYER_COUNT),
+			serverConfig.MaxPlayerCount > 0 ? Mathf.Min(serverConfig.MaxPlayerCount, GameConfig.MAX_PLAYER_COUNT) : GameConfig.MAX_PLAYER_COUNT,
 			serverConfig.SessionProperties,
 			serverConfig.Port,
 			serverConfig.Lobby,
