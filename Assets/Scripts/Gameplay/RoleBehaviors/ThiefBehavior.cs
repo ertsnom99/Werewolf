@@ -47,24 +47,39 @@ namespace Werewolf.Gameplay.Role
 		private GameHistoryManager _gameHistoryManager;
 		private NetworkDataManager _networkDataManager;
 
+		private readonly int NEEDED_WEREWOLVES_COUNT = 2;
+
 		public override bool IsRolesSetupValid(NetworkArray<NetworkRoleSetup> mandatoryRoles, NetworkArray<NetworkRoleSetup> optionalRoles, GameplayDataManager gameplayDataManager, List<LocalizedString> warnings)
 		{
-			int werewolvesCount = 0;
+			int totalWerewolvesCount = 0;
 
 			for (int i = 0; i < mandatoryRoles.Length; i++)
 			{
-				for (int j = 0; j < mandatoryRoles[i].UseCount; j++)
+				int PoolCount = 0;
+				int werewolvesCount = 0;
+				
+				foreach (int roleID in mandatoryRoles[i].Pool)
 				{
-					if (gameplayDataManager.TryGetGameplayData(mandatoryRoles[i].Pool[j], out RoleData roleData) && roleData.PrimaryType == PrimaryRoleType.Werewolf)
+					if (roleID == 0)
 					{
-						if (werewolvesCount == 1)
-						{
-							return true;
-						}
-						else
-						{
-							werewolvesCount++;
-						}
+						continue;
+					}
+
+					PoolCount++;
+
+					if (gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData) && roleData.PrimaryType == PrimaryRoleType.Werewolf)
+					{
+						werewolvesCount++;
+					}
+				}
+
+				if (PoolCount - werewolvesCount < mandatoryRoles[i].UseCount)
+				{
+					totalWerewolvesCount += mandatoryRoles[i].UseCount - PoolCount + werewolvesCount;
+
+					if (totalWerewolvesCount >= NEEDED_WEREWOLVES_COUNT)
+					{
+						return true;
 					}
 				}
 			}

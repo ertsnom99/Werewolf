@@ -335,6 +335,6 @@ namespace Werewolf.Data
 		public const int MAX_PLAYER_COUNT = 24;
 		public const int MAX_NICKNAME_CHARACTER_COUNT = 30;
 		public const int MAX_ROLE_SETUP_COUNT = 50;
-		public const int MAX_ROLE_SETUP_POOL_COUNT = 5;
+		public const int MAX_ROLE_SETUP_POOL_COUNT = 4;
 	}
 }

@@ -50,8 +50,9 @@ namespace Werewolf.Gameplay.Role
 		public override bool IsRolesSetupValid(NetworkArray<NetworkRoleSetup> mandatoryRoles, NetworkArray<NetworkRoleSetup> optionalRoles, GameplayDataManager gameplayDataManager, List<LocalizedString> warnings)
 		{
 			List<RoleData> possibleRoles = new();
+			int totalPossibleRolesCount = 0;
 
-			if (CheckRoles(mandatoryRoles, possibleRoles) || CheckRoles(optionalRoles, possibleRoles))
+			if (CheckRoles(mandatoryRoles, possibleRoles, ref totalPossibleRolesCount) || CheckRoles(optionalRoles, possibleRoles, ref totalPossibleRolesCount))
 			{
 				return true;
 			}
@@ -72,22 +73,36 @@ namespace Werewolf.Gameplay.Role
 				return false;
 			}
 
-			bool CheckRoles(NetworkArray<NetworkRoleSetup> roles, List<RoleData> possibleRoles)
+			bool CheckRoles(NetworkArray<NetworkRoleSetup> roles, List<RoleData> possibleRoles, ref int totalPossibleRolesCount)
 			{
 				for (int i = 0; i < roles.Length; i++)
 				{
-					for (int j = 0; j < roles[i].UseCount; j++)
+					int PoolCount = 0;
+					int possibleRolesCount = 0;
+
+					for (int j = 0; j < roles[i].Pool.Count(); j++)
 					{
+						if (roles[i].Pool[j] == 0)
+						{
+							break;
+						}
+
+						PoolCount++;
+
 						if (gameplayDataManager.TryGetGameplayData(roles[i].Pool[j], out RoleData roleData) && IsRoleValid(roleData, possibleRoles))
 						{
-							if (possibleRoles.Count == NEEDED_ROLE_COUNT - 1)
-							{
-								return true;
-							}
-							else
-							{
-								possibleRoles.Add(roleData);
-							}
+							possibleRoles.Add(roleData);
+							possibleRolesCount++;
+						}
+					}
+
+					if (PoolCount - possibleRolesCount < roles[i].UseCount)
+					{
+						totalPossibleRolesCount += roles[i].UseCount - PoolCount + possibleRolesCount;
+
+						if (totalPossibleRolesCount >= NEEDED_ROLE_COUNT)
+						{
+							return true;
 						}
 					}
 				}
