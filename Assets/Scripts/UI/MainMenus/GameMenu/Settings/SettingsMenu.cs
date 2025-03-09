@@ -24,16 +24,16 @@ namespace Werewolf.UI
 
 		[Header("Roles")]
 		[SerializeField]
-		private DraggableRolesContainer _availableRolesContainer;
+		private DraggableRoleSetupsContainer _availableRolesContainer;
 
 		[SerializeField]
-		private DraggableRolesContainer _mandatoryRolesContainer;
+		private DraggableRoleSetupsContainer _mandatoryRolesContainer;
 
 		[SerializeField]
-		private DraggableRolesContainer _optionalRolesContainer;
+		private DraggableRoleSetupsContainer _optionalRolesContainer;
 
 		[SerializeField]
-		private DraggableRole _draggableRolePrefab;
+		private DraggableRoleSetup _draggableRoleSetupPrefab;
 
 		[SerializeField]
 		private RoleDescriptionPopup _roleDescriptionPopup;
@@ -50,15 +50,16 @@ namespace Werewolf.UI
 
 		public GameSpeed GameSpeed => (GameSpeed)_gameSpeedDropdown.value;
 
-		public event Action<int[], int[]> RolesSetupChanged;
+		public event Action<RoleSetup[], RoleSetup[]> RolesSetupChanged;
 		public event Action<GameSpeed> GameSpeedChanged;
 
 		private GameConfig _gameConfig;
 		private PlayerRef _localPlayer;
 		private bool _isLocalPlayerLeader;
-		private readonly List<DraggableRole> _draggableRolesPool = new();
+		private readonly List<DraggableRoleSetup> _draggableRoleSetupsPool = new();
 		private LocalizedStringListVariable _warningsVariables;
-		private bool _rolesSetupChanged;
+		private bool _draggableRoleSetupsChanged;
+		private bool _networkRoleSetupsChanged;
 
 		private GameplayDataManager _gameplayDataManager;
 		private NetworkDataManager _networkDataManager;
@@ -76,72 +77,93 @@ namespace Werewolf.UI
 			_isLocalPlayerLeader = false;
 			_warningsVariables = (LocalizedStringListVariable)_warningsText.StringReference["Warnings"];
 
-			_availableRolesContainer.Initialize(GameConfig.MAX_ROLE_SETUP_COUNT);
-			_mandatoryRolesContainer.Initialize(GameConfig.MAX_PLAYER_COUNT);
-			_optionalRolesContainer.Initialize(GameConfig.MAX_ROLE_SETUP_COUNT);
+			_availableRolesContainer.Initialize(GameConfig.MAX_ROLE_SETUP_COUNT, false);
+			_mandatoryRolesContainer.Initialize(GameConfig.MAX_PLAYER_COUNT, true);
+			_optionalRolesContainer.Initialize(GameConfig.MAX_ROLE_SETUP_COUNT, true);
 
 			FillRolesContainers();
 			UpdateRolesContainers();
 			OnPlayerInfosChanged();
 			OnGameSpeedChanged();
 
-			_availableRolesContainer.DraggableRoleMiddleClicked += DisplayRoleDescriptionPopup;
-			_mandatoryRolesContainer.DraggableRoleMiddleClicked += DisplayRoleDescriptionPopup;
-			_optionalRolesContainer.DraggableRoleMiddleClicked += DisplayRoleDescriptionPopup;
+			_availableRolesContainer.DraggableRoleSetupDragChanged += OnDraggableRoleSetupDragChanged;
+			_availableRolesContainer.DraggableRoleSetupMiddleClicked += OnDraggableRoleSetupMiddleClicked;
+			_mandatoryRolesContainer.DraggableRoleSetupDragChanged += OnDraggableRoleSetupDragChanged;
+			_mandatoryRolesContainer.DraggableRoleSetupMiddleClicked += OnDraggableRoleSetupMiddleClicked;
+			_optionalRolesContainer.DraggableRoleSetupDragChanged += OnDraggableRoleSetupDragChanged;
+			_optionalRolesContainer.DraggableRoleSetupMiddleClicked += OnDraggableRoleSetupMiddleClicked;
 
 			_networkDataManager.PlayerInfosChanged += OnPlayerInfosChanged;
-			_networkDataManager.RolesSetupChanged += OnRolesSetupChanged;
+			_networkDataManager.RoleSetupsChanged += OnRoleSetupsChanged;
 			_networkDataManager.GameSpeedChanged += OnGameSpeedChanged;
 			_networkDataManager.GameSetupReadyChanged += OnGameSetupReadyChanged;
 		}
 
 		private void FillRolesContainers()
 		{
-			List<RoleData> roles = GameplayDataManager.Instance.TryGetGameplayData<RoleData>();
+			List<RoleData> roleDatas = GameplayDataManager.Instance.TryGetGameplayData<RoleData>();
 			bool placedDefaultRole = false;
 
-			foreach (RoleData role in roles)
+			foreach (RoleData roleData in roleDatas)
 			{
-				DraggableRole draggableRole = GetDraggableRoleFromPool();
-				bool isInfiniteSource = role.CanHaveVariableAmount;
-				draggableRole.Initialize(role, isInfiniteSource);
-
 				int siblingIndex;
-				
-				if (role == _gameConfig.DefaultRole)
+
+				if (roleData == _gameConfig.DefaultRole)
 				{
 					siblingIndex = 0;
 					placedDefaultRole = true;
 				}
 				else
 				{
-					siblingIndex = isInfiniteSource ? placedDefaultRole ? 1 : 0 : -1;
+					siblingIndex = roleData.CanHaveVariableAmount ? placedDefaultRole ? 1 : 0 : -1;
 				}
 
-				_availableRolesContainer.AddRole(draggableRole, siblingIndex: siblingIndex);
-				draggableRole.MoveToParent();
+				AddToAvailable(roleData, siblingIndex);
 			}
 		}
 
 		private void LateUpdate()
 		{
-			if (_rolesSetupChanged)
+			if (_draggableRoleSetupsChanged)
+			{
+				RolesSetupChanged?.Invoke(ConvertToRoleSetupArray(_mandatoryRolesContainer), ConvertToRoleSetupArray(_optionalRolesContainer));
+				_draggableRoleSetupsChanged = false;
+			}
+
+			if (_networkRoleSetupsChanged)
 			{
 				UpdateRolesContainers();
-				_rolesSetupChanged = false;
+				_networkRoleSetupsChanged = false;
 			}
+		}
+
+		private static RoleSetup[] ConvertToRoleSetupArray(DraggableRoleSetupsContainer draggableRoleSetupsContainer)
+		{
+			RoleSetup[] roleSetups = new RoleSetup[draggableRoleSetupsContainer.DraggableRoleSetups.Count];
+
+			for (int i = 0; i < draggableRoleSetupsContainer.DraggableRoleSetups.Count; i++)
+			{
+				DraggableRoleSetup draggableRoleSetup = draggableRoleSetupsContainer.DraggableRoleSetups[i];
+				roleSetups[i] = new()
+				{
+					Pool = draggableRoleSetup.RoleDataPool.ToArray(),
+					UseCount = draggableRoleSetup.UseCount
+				};
+			}
+
+			return roleSetups;
 		}
 
 		private void UpdateRolesContainers()
 		{
-			for (int i = _mandatoryRolesContainer.DraggableRoles.Count - 1; i >= 0; i--)
+			for (int i = _mandatoryRolesContainer.DraggableRoleSetups.Count - 1; i >= 0; i--)
 			{
-				ReturnToAvailable(_mandatoryRolesContainer.DraggableRoles[i]);
+				ReturnToAvailable(_mandatoryRolesContainer.DraggableRoleSetups[i]);
 			}
 
-			for (int i = _optionalRolesContainer.DraggableRoles.Count - 1; i >= 0; i--)
+			for (int i = _optionalRolesContainer.DraggableRoleSetups.Count - 1; i >= 0; i--)
 			{
-				ReturnToAvailable(_optionalRolesContainer.DraggableRoles[i]);
+				ReturnToAvailable(_optionalRolesContainer.DraggableRoleSetups[i]);
 			}
 
 			foreach (NetworkRoleSetup mandatoryRole in _networkDataManager.MandatoryRoles)
@@ -153,75 +175,117 @@ namespace Werewolf.UI
 			{
 				AddToContainer(optionalRole, _optionalRolesContainer);
 			}
+		}
 
-			void AddToContainer(NetworkRoleSetup networkRoleSetup, DraggableRolesContainer draggableRolesContainer)
+		private void AddToContainer(NetworkRoleSetup networkRoleSetup, DraggableRoleSetupsContainer draggableRoleSetupsContainer)
+		{
+			if (networkRoleSetup.UseCount == 0 || networkRoleSetup.Pool.Length == 0)
 			{
-				if (networkRoleSetup.UseCount == 0 || networkRoleSetup.Pool.Length == 0 || !_gameplayDataManager.TryGetGameplayData(networkRoleSetup.Pool[0], out RoleData roleData))
+				return;
+			}
+
+			List<RoleData> roleDatas = new();
+
+			foreach (int roleID in networkRoleSetup.Pool)
+			{
+				if (roleID == 0)
 				{
+					break;
+				}
+
+				if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
+				{
+					Debug.LogError($"Could not find the role {roleID}");
 					return;
 				}
 
-				if (roleData.CanHaveVariableAmount)
-				{
-					DraggableRole draggableRole = GetDraggableRoleFromPool();
-					draggableRole.Initialize(roleData, false);
-					draggableRolesContainer.AddRole(draggableRole);
-					draggableRole.MoveToParent();
-				}
-				else
-				{
-					DraggableRole draggableRole = _availableRolesContainer.DraggableRoles.Find(x => x.RoleData == roleData);
+				roleDatas.Add(roleData);
 
-					if (draggableRole)
-					{
-						draggableRolesContainer.AddRole(draggableRole);
-						draggableRole.MoveToParent();
-					}
+				DraggableRoleSetup availableDraggableRoleSetup = _availableRolesContainer.DraggableRoleSetups.Find(x => !x.IsInfiniteSource && x.RoleDataPool[0] == roleData);
+
+				if (availableDraggableRoleSetup)
+				{
+					ReturnDraggableRoleSetupToPool(availableDraggableRoleSetup);
 				}
 			}
+
+			DraggableRoleSetup draggableRoleSetup = GetDraggableRoleSetupFromPool();
+			draggableRoleSetup.EnableDrag(_isLocalPlayerLeader);
+			draggableRoleSetup.EnableUseCountButtons(_isLocalPlayerLeader);
+			draggableRoleSetup.Initialize(roleDatas.ToArray(), networkRoleSetup.UseCount, false);
+			draggableRoleSetupsContainer.AddRole(draggableRoleSetup);
+			draggableRoleSetup.MoveToParent();
 		}
 
-		public void ReturnAllFromContainer(DraggableRolesContainer draggableRolesContainer)
+		private void AddToAvailable(RoleData roleData, int siblingIndex = -1)
 		{
-			if (!_isLocalPlayerLeader)
-			{
-				return;
-			}
+			DraggableRoleSetup draggableRoleSetup = GetDraggableRoleSetupFromPool();
+			RoleData[] roleDatas;
+			bool isInfiniteSource = roleData.CanHaveVariableAmount;
 
-			for (int i = draggableRolesContainer.DraggableRoles.Count - 1; i >= 0; i--)
+			if (isInfiniteSource)
 			{
-				ReturnToAvailable(draggableRolesContainer.DraggableRoles[i]);
-			}
-		}
-
-		private void ReturnToAvailable(DraggableRole draggableRole)
-		{
-			if (draggableRole.RoleData.CanHaveVariableAmount)
-			{
-				draggableRole.ReturnToPool();
+				roleDatas = new[] { roleData };
 			}
 			else
 			{
-				_availableRolesContainer.AddRole(draggableRole);
-				draggableRole.MoveToParent();
+				roleDatas = new RoleData[roleData.MandatoryAmount];
+
+				for (int i = 0; i < roleData.MandatoryAmount; i++)
+				{
+					roleDatas[i] = roleData;
+				}
 			}
+
+			draggableRoleSetup.EnableDrag(_isLocalPlayerLeader);
+			draggableRoleSetup.EnableUseCountButtons(_isLocalPlayerLeader);
+			draggableRoleSetup.Initialize(roleDatas, isInfiniteSource ? 1 : roleData.MandatoryAmount, isInfiniteSource);
+
+			_availableRolesContainer.AddRole(draggableRoleSetup, siblingIndex);
+			draggableRoleSetup.MoveToParent();
 		}
 
-		public void AddAllToContainer(DraggableRolesContainer draggableRolesContainer)
+		private void ReturnToAvailable(DraggableRoleSetup draggableRoleSetup)
+		{
+			foreach (RoleData roleData in draggableRoleSetup.RoleDataPool)
+			{
+				if (!_availableRolesContainer.DraggableRoleSetups.Find(x => x.RoleDataPool[0] == roleData))
+				{
+					AddToAvailable(roleData);
+				}
+			}
+
+			ReturnDraggableRoleSetupToPool(draggableRoleSetup);
+		}
+
+		public void ReturnAllFromContainer(DraggableRoleSetupsContainer draggableRoleSetupsContainer)
 		{
 			if (!_isLocalPlayerLeader)
 			{
 				return;
 			}
 
-			for (int i = _availableRolesContainer.DraggableRoles.Count - 1; i >= 0; i--)
+			for (int i = draggableRoleSetupsContainer.DraggableRoleSetups.Count - 1; i >= 0; i--)
 			{
-				DraggableRole draggableRole = _availableRolesContainer.DraggableRoles[i];
+				ReturnToAvailable(draggableRoleSetupsContainer.DraggableRoleSetups[i]);
+			}
+		}
 
-				if (!draggableRole.RoleData.CanHaveVariableAmount)
+		public void AddAllToContainer(DraggableRoleSetupsContainer draggableRoleSetupsContainer)
+		{
+			if (!_isLocalPlayerLeader)
+			{
+				return;
+			}
+
+			for (int i = _availableRolesContainer.DraggableRoleSetups.Count - 1; i >= 0; i--)
+			{
+				DraggableRoleSetup draggableRoleSetup = _availableRolesContainer.DraggableRoleSetups[i];
+
+				if (!draggableRoleSetup.IsInfiniteSource)
 				{
-					draggableRolesContainer.AddRole(draggableRole);
-					draggableRole.MoveToParent();
+					draggableRoleSetupsContainer.AddRole(draggableRoleSetup);
+					draggableRoleSetup.MoveToParent();
 				}
 			}
 		}
@@ -237,25 +301,25 @@ namespace Werewolf.UI
 
 			_isLocalPlayerLeader = isLocalPlayerLeader;
 
-			UpdateUI(isLocalPlayerLeader: isLocalPlayerLeader);
+			UpdateVisual(isLocalPlayerLeader);
 
 			if (isLocalPlayerLeader)
 			{
-				_mandatoryRolesContainer.DraggableRolesChanged += OnDraggableRolesChanged;
-				_mandatoryRolesContainer.DraggableRoleRightClicked += ReturnToAvailable;
-				_optionalRolesContainer.DraggableRolesChanged += OnDraggableRolesChanged;
-				_optionalRolesContainer.DraggableRoleRightClicked += ReturnToAvailable;
+				_mandatoryRolesContainer.DraggableRoleSetupsChanged += OnDraggableRoleSetupsChanged;
+				_mandatoryRolesContainer.DraggableRoleSetupRightClicked += OnDraggableRoleSetupRightClicked;
+				_optionalRolesContainer.DraggableRoleSetupsChanged += OnDraggableRoleSetupsChanged;
+				_optionalRolesContainer.DraggableRoleSetupRightClicked += OnDraggableRoleSetupRightClicked;
 			}
 			else
 			{
-				_mandatoryRolesContainer.DraggableRolesChanged -= OnDraggableRolesChanged;
-				_mandatoryRolesContainer.DraggableRoleRightClicked -= ReturnToAvailable;
-				_optionalRolesContainer.DraggableRolesChanged -= OnDraggableRolesChanged;
-				_optionalRolesContainer.DraggableRoleRightClicked -= ReturnToAvailable;
+				_mandatoryRolesContainer.DraggableRoleSetupsChanged -= OnDraggableRoleSetupsChanged;
+				_mandatoryRolesContainer.DraggableRoleSetupRightClicked -= OnDraggableRoleSetupRightClicked;
+				_optionalRolesContainer.DraggableRoleSetupsChanged -= OnDraggableRoleSetupsChanged;
+				_optionalRolesContainer.DraggableRoleSetupRightClicked -= OnDraggableRoleSetupRightClicked;
 			}
 		}
 
-		private void UpdateUI(bool isLocalPlayerLeader)
+		private void UpdateVisual(bool isLocalPlayerLeader)
 		{
 			foreach (GameObject containerButton in _containerButtons)
 			{
@@ -266,74 +330,95 @@ namespace Werewolf.UI
 			_gameSpeedText.gameObject.SetActive(!isLocalPlayerLeader);
 			_gameSpeedDropdown.RefreshShownValue();
 
-			foreach (DraggableRole draggableRole in _draggableRolesPool)
-			{
-				draggableRole.EnableDrag(isLocalPlayerLeader);
-			}
-
-			_availableRolesContainer.EnableDrag(isLocalPlayerLeader);
-			_mandatoryRolesContainer.EnableDrag(isLocalPlayerLeader);
-			_optionalRolesContainer.EnableDrag(isLocalPlayerLeader);
+			EnableDraggableRoleSetups(isLocalPlayerLeader);
 		}
 
-		private void OnDraggableRolesChanged()
+		private void EnableDraggableRoleSetups(bool enable)
 		{
-			int[] mandatoryRoleIDs = new int[_mandatoryRolesContainer.DraggableRoles.Count];
-
-			for (int i = 0; i < _mandatoryRolesContainer.DraggableRoles.Count; i++)
+			foreach (DraggableRoleSetup draggableRoleSetup in _draggableRoleSetupsPool)
 			{
-				mandatoryRoleIDs[i] = _mandatoryRolesContainer.DraggableRoles[i].RoleData.ID.HashCode;
+				draggableRoleSetup.EnableDrag(enable);
+				draggableRoleSetup.EnableUseCountButtons(enable);
 			}
 
-			int[] optionalRoleIDs = new int[_optionalRolesContainer.DraggableRoles.Count];
-
-			for (int i = 0; i < _optionalRolesContainer.DraggableRoles.Count; i++)
-			{
-				optionalRoleIDs[i] = _optionalRolesContainer.DraggableRoles[i].RoleData.ID.HashCode;
-			}
-
-			RolesSetupChanged?.Invoke(mandatoryRoleIDs, optionalRoleIDs);
+			_availableRolesContainer.EnableDrag(enable);
+			_availableRolesContainer.EnableUseCountButtons(enable);
+			_mandatoryRolesContainer.EnableDrag(enable);
+			_mandatoryRolesContainer.EnableUseCountButtons(enable);
+			_optionalRolesContainer.EnableDrag(enable);
+			_optionalRolesContainer.EnableUseCountButtons(enable);
 		}
 
-		private void OnRolesSetupChanged()
+		private void OnDraggableRoleSetupsChanged()
+		{
+			_draggableRoleSetupsChanged = true;
+		}
+
+		private void OnRoleSetupsChanged()
 		{
 			if (!_isLocalPlayerLeader)
 			{
-				_rolesSetupChanged = true;
+				_networkRoleSetupsChanged = true;
 			}
 		}
 
-		#region DraggableRole Pool
-		private DraggableRole GetDraggableRoleFromPool()
+		#region DraggableRoleSetup Pool
+		private DraggableRoleSetup GetDraggableRoleSetupFromPool()
 		{
-			if (_draggableRolesPool.Count > 0)
+			if (_draggableRoleSetupsPool.Count > 0)
 			{
-				DraggableRole draggableRole = _draggableRolesPool.Last();
-				_draggableRolesPool.RemoveAt(_draggableRolesPool.Count - 1);
-				draggableRole.gameObject.SetActive(true);
-				return draggableRole;
+				DraggableRoleSetup draggableRoleSetup = _draggableRoleSetupsPool.Last();
+				_draggableRoleSetupsPool.RemoveAt(_draggableRoleSetupsPool.Count - 1);
+				draggableRoleSetup.gameObject.SetActive(true);
+				return draggableRoleSetup;
 			}
 			else
 			{
-				DraggableRole draggableRole = Instantiate(_draggableRolePrefab, transform);
-				draggableRole.SetReturnToPoolDelegate(ReturnDraggableRoleToPool);
-				draggableRole.SetGetFromPoolDelegate(GetDraggableRoleFromPool);
-				return draggableRole;
+				DraggableRoleSetup draggableRoleSetup = Instantiate(_draggableRoleSetupPrefab, transform);
+				draggableRoleSetup.SetReturnToPoolDelegate(ReturnDraggableRoleSetupToPool);
+				draggableRoleSetup.SetGetFromPoolDelegate(GetDraggableRoleSetupFromPool);
+				return draggableRoleSetup;
 			}
 		}
 
-		private void ReturnDraggableRoleToPool(DraggableRole draggableRole)
+		private void ReturnDraggableRoleSetupToPool(DraggableRoleSetup draggableRoleSetup)
 		{
-			draggableRole.SetParent(null);
-			draggableRole.transform.SetParent(transform);
-			draggableRole.gameObject.SetActive(false);
-			_draggableRolesPool.Add(draggableRole);
+			draggableRoleSetup.SetParent(null);
+			draggableRoleSetup.transform.SetParent(transform);
+			draggableRoleSetup.gameObject.SetActive(false);
+			_draggableRoleSetupsPool.Add(draggableRoleSetup);
 		}
 		#endregion
 
-		private void DisplayRoleDescriptionPopup(DraggableRole draggableRole)
+		private void OnDraggableRoleSetupDragChanged(bool isDragging)
 		{
-			_roleDescriptionPopup.Display(draggableRole.RoleData.Description, draggableRole.transform.position);
+			_availableRolesContainer.EnablePointerDown(!isDragging);
+			_mandatoryRolesContainer.EnablePointerDown(!isDragging);
+			_optionalRolesContainer.EnablePointerDown(!isDragging);
+		}
+
+		private void OnDraggableRoleSetupMiddleClicked(RoleData roleData, Vector3 position)
+		{
+			_roleDescriptionPopup.Display(roleData, position);
+		}
+
+		private void OnDraggableRoleSetupRightClicked(DraggableRoleSetup draggableRoleSetup, int RoleDataPoolIndex)
+		{
+			if (RoleDataPoolIndex == -1)
+			{
+				ReturnToAvailable(draggableRoleSetup);
+			}
+			else if (draggableRoleSetup.IsMultiRole && draggableRoleSetup.RoleDataPool.Count > RoleDataPoolIndex)
+			{
+				RoleData roleData = draggableRoleSetup.RoleDataPool[RoleDataPoolIndex];
+
+				if (!_availableRolesContainer.DraggableRoleSetups.Find(x => x.RoleDataPool[0] == roleData))
+				{
+					AddToAvailable(roleData);
+				}
+
+				draggableRoleSetup.RemoveRoleData(RoleDataPoolIndex);
+			}
 		}
 
 		public void UpdateWarnings(List<LocalizedString> warnings)
@@ -356,26 +441,30 @@ namespace Werewolf.UI
 		private void OnGameSetupReadyChanged()
 		{
 			_gameSpeedDropdown.interactable = !_networkDataManager.GameSetupReady;
+			EnableDraggableRoleSetups(false);
 		}
 
 		public void Cleanup()
 		{
 			if (_isLocalPlayerLeader)
 			{
-				UpdateUI(isLocalPlayerLeader: false);
+				UpdateVisual(isLocalPlayerLeader: false);
 
-				_mandatoryRolesContainer.DraggableRolesChanged -= OnDraggableRolesChanged;
-				_mandatoryRolesContainer.DraggableRoleRightClicked -= ReturnToAvailable;
-				_optionalRolesContainer.DraggableRolesChanged -= OnDraggableRolesChanged;
-				_optionalRolesContainer.DraggableRoleRightClicked -= ReturnToAvailable;
+				_mandatoryRolesContainer.DraggableRoleSetupsChanged -= OnDraggableRoleSetupsChanged;
+				_mandatoryRolesContainer.DraggableRoleSetupRightClicked -= OnDraggableRoleSetupRightClicked;
+				_optionalRolesContainer.DraggableRoleSetupsChanged -= OnDraggableRoleSetupsChanged;
+				_optionalRolesContainer.DraggableRoleSetupRightClicked -= OnDraggableRoleSetupRightClicked;
 			}
 
-			_availableRolesContainer.DraggableRoleMiddleClicked -= DisplayRoleDescriptionPopup;
-			_mandatoryRolesContainer.DraggableRoleMiddleClicked -= DisplayRoleDescriptionPopup;
-			_optionalRolesContainer.DraggableRoleMiddleClicked -= DisplayRoleDescriptionPopup;
+			_availableRolesContainer.DraggableRoleSetupDragChanged -= OnDraggableRoleSetupDragChanged;
+			_availableRolesContainer.DraggableRoleSetupMiddleClicked -= OnDraggableRoleSetupMiddleClicked;
+			_mandatoryRolesContainer.DraggableRoleSetupDragChanged -= OnDraggableRoleSetupDragChanged;
+			_mandatoryRolesContainer.DraggableRoleSetupMiddleClicked -= OnDraggableRoleSetupMiddleClicked;
+			_optionalRolesContainer.DraggableRoleSetupDragChanged -= OnDraggableRoleSetupDragChanged;
+			_optionalRolesContainer.DraggableRoleSetupMiddleClicked -= OnDraggableRoleSetupMiddleClicked;
 
 			_networkDataManager.PlayerInfosChanged -= OnPlayerInfosChanged;
-			_networkDataManager.RolesSetupChanged -= OnRolesSetupChanged;
+			_networkDataManager.RoleSetupsChanged -= OnRoleSetupsChanged;
 			_networkDataManager.GameSpeedChanged -= OnGameSpeedChanged;
 			_networkDataManager.GameSetupReadyChanged -= OnGameSetupReadyChanged;
 

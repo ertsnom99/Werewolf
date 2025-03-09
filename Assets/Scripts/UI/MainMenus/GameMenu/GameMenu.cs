@@ -14,7 +14,7 @@ namespace Werewolf.UI
 	{
 		[Header("UI")]
 		[SerializeField]
-		private Button _historyBtn;
+		private Button _historyButton;
 
 		[SerializeField]
 		private RoomMenu _roomMenu;
@@ -26,10 +26,10 @@ namespace Werewolf.UI
 		private HistoryMenu _historyMenu;
 
 		[SerializeField]
-		private Button _startGameBtn;
+		private Button _startGameButton;
 
 		[SerializeField]
-		private Button _leaveGameBtn;
+		private Button _leaveGameButton;
 
 		[Header("Warnings")]
 		[SerializeField]
@@ -40,7 +40,7 @@ namespace Werewolf.UI
 
 		public event Action<PlayerRef> KickPlayerClicked;
 		public event Action<PlayerRef, string> ChangeNicknameClicked;
-		public event Action<int[], int[]> RolesSetupChanged;
+		public event Action<RoleSetup[], RoleSetup[]> RolesSetupChanged;
 		public event Action<GameSpeed> GameSpeedChanged;
 		public event Action StartGameClicked;
 		public event Action LeaveGameClicked;
@@ -62,7 +62,7 @@ namespace Werewolf.UI
 			}
 
 			bool historyAvailable = !string.IsNullOrEmpty(gameHistory);
-			_historyBtn.interactable = historyAvailable;
+			_historyButton.interactable = historyAvailable;
 
 			_roomMenu.Initialize(networkDataManager, localPlayer, gameConfig.MinNicknameCharacterCount);
 			_settingsMenu.Initialize(networkDataManager, gameConfig, localPlayer);
@@ -74,11 +74,11 @@ namespace Werewolf.UI
 			
 			((IntVariable)_notEnoughPlayers["MinPlayerCount"]).Value = _gameConfig.MinPlayerCount;
 
-			UpdateUI();
+			UpdateVisual();
 
-			_networkDataManager.PlayerInfosChanged += UpdateUI;
-			_networkDataManager.RolesSetupChanged += UpdateUI;
-			_networkDataManager.GameSetupReadyChanged += UpdateUI;
+			_networkDataManager.PlayerInfosChanged += UpdateVisual;
+			_networkDataManager.RoleSetupsChanged += UpdateVisual;
+			_networkDataManager.GameSetupReadyChanged += UpdateVisual;
 			_networkDataManager.InvalidRolesSetupReceived += OnInvalidRolesSetupReceived;
 			_roomMenu.KickPlayerClicked += OnKickPlayerClicked;
 			_roomMenu.ChangeNicknameClicked += OnChangeNicknameClicked;
@@ -86,10 +86,10 @@ namespace Werewolf.UI
 			_settingsMenu.GameSpeedChanged += OnGameSpeedChanged;
 		}
 
-		private void UpdateUI()
+		private void UpdateVisual()
 		{
 			List<LocalizedString> warnings = new();
-			bool isRolesSetupValid = _networkDataManager.IsRolesSetupValid(warnings);
+			bool areNetworkRoleSetupsValid = _networkDataManager.AreNetworkRoleSetupsValid(warnings);
 			bool localPlayerInfoExist = _networkDataManager.PlayerInfos.TryGet(_localPlayer, out NetworkPlayerInfo localPlayerInfo);
 			bool isLocalPlayerLeader = localPlayerInfoExist && localPlayerInfo.IsLeader;
 			bool enoughPlayers = _networkDataManager.PlayerInfos.Count >= _gameConfig.MinPlayerCount;
@@ -101,12 +101,12 @@ namespace Werewolf.UI
 
 			_settingsMenu.UpdateWarnings(warnings);
 
-			_startGameBtn.interactable = isLocalPlayerLeader
+			_startGameButton.interactable = isLocalPlayerLeader
 										&& _gameConfig.MinPlayerCount > -1
 										&& enoughPlayers
 										&& !_networkDataManager.GameSetupReady
-										&& isRolesSetupValid;
-			_leaveGameBtn.interactable = !_networkDataManager.GameSetupReady;
+										&& areNetworkRoleSetupsValid;
+			_leaveGameButton.interactable = !_networkDataManager.GameSetupReady;
 		}
 
 		private void OnInvalidRolesSetupReceived()
@@ -124,9 +124,9 @@ namespace Werewolf.UI
 			ChangeNicknameClicked?.Invoke(player, nickname);
 		}
 
-		private void OnRolesSetupChanged(int[] mandatoryRoleIDs, int[] optionalRoleIDs)
+		private void OnRolesSetupChanged(RoleSetup[] mandatoryRoleSetups, RoleSetup[] optionalRoleSetups)
 		{
-			RolesSetupChanged?.Invoke(mandatoryRoleIDs, optionalRoleIDs);
+			RolesSetupChanged?.Invoke(mandatoryRoleSetups, optionalRoleSetups);
 		}
 
 		private void OnGameSpeedChanged(GameSpeed gameSpeed)
@@ -167,9 +167,9 @@ namespace Werewolf.UI
 
 		private void OnDisable()
 		{
-			_networkDataManager.PlayerInfosChanged -= UpdateUI;
-			_networkDataManager.RolesSetupChanged -= UpdateUI;
-			_networkDataManager.GameSetupReadyChanged -= UpdateUI;
+			_networkDataManager.PlayerInfosChanged -= UpdateVisual;
+			_networkDataManager.RoleSetupsChanged -= UpdateVisual;
+			_networkDataManager.GameSetupReadyChanged -= UpdateVisual;
 			_networkDataManager.InvalidRolesSetupReceived -= OnInvalidRolesSetupReceived;
 			_roomMenu.KickPlayerClicked -= OnKickPlayerClicked;
 			_roomMenu.ChangeNicknameClicked -= OnChangeNicknameClicked;

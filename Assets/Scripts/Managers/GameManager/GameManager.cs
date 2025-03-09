@@ -205,8 +205,8 @@ namespace Werewolf.Managers
 			}
 
 			List<RoleData> rolesToDistribute = new();
-			_networkDataManager.ConvertToRoleSetupDatas(_networkDataManager.MandatoryRoles, out List<RoleSetup> mandatoryRoles);
-			_networkDataManager.ConvertToRoleSetupDatas(_networkDataManager.OptionalRoles, out List<RoleSetup> optionalRoles);
+			List<RoleSetup> mandatoryRoles = _networkDataManager.ConvertToRoleSetups(_networkDataManager.MandatoryRoles);
+			List<RoleSetup> optionalRoles = _networkDataManager.ConvertToRoleSetups(_networkDataManager.OptionalRoles);
 
 			// Add all mandatory roles first
 			while (mandatoryRoles.Count > 0)

@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
+using Werewolf.Data;
 
 namespace Werewolf.UI
 {
@@ -12,11 +12,15 @@ namespace Werewolf.UI
 		private RectTransform _popup;
 
 		[SerializeField]
+		private LocalizeStringEvent _roleNameText;
+
+		[SerializeField]
 		private LocalizeStringEvent _roleDescriptionText;
 
-		public void Display(LocalizedString roleDescription, Vector3 popupTargetPosition)
+		public void Display(RoleData roleData, Vector3 popupTargetPosition)
 		{
-			_roleDescriptionText.StringReference = roleDescription;
+			_roleNameText.StringReference = roleData.MandatoryAmount > 1 ? roleData.NamePlural : roleData.NameSingular;
+			_roleDescriptionText.StringReference = roleData.Description;
 
 			gameObject.SetActive(true);
 			LayoutRebuilder.ForceRebuildLayoutImmediate(_popup);
