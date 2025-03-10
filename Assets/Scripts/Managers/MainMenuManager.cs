@@ -66,6 +66,7 @@ namespace Werewolf.Managers
 		{
 			_joinMenu.JoinSessionClicked += JoinSession;
 			_joinMenu.ReturnClicked += OpenMainMenu;
+			_gameMenu.PromotePlayerClicked += PromotePlayer;
 			_gameMenu.KickPlayerClicked += KickPlayer;
 			_gameMenu.ChangeNicknameClicked += ChangeNickname;
 			_gameMenu.RolesSetupChanged += ChangeRolesSetup;
@@ -160,6 +161,14 @@ namespace Werewolf.Managers
 			}
 
 			DisplayGameMenu();
+		}
+
+		private void PromotePlayer(PlayerRef promotedPlayer)
+		{
+			if (!_networkDataManager.GameSetupReady)
+			{
+				_networkDataManager.RPC_PromotePlayer(promotedPlayer);
+			}
 		}
 
 		private void KickPlayer(PlayerRef kickedPlayer)

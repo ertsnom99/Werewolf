@@ -25,6 +25,9 @@ namespace Werewolf.UI
 		private TMP_Text _nicknameText;
 
 		[SerializeField]
+		private Button _promoteButton;
+
+		[SerializeField]
 		private Button _kickButton;
 
 		[SerializeField]
@@ -33,11 +36,12 @@ namespace Werewolf.UI
 		[SerializeField]
 		private Color _otherPlayerColor = Color.white;
 
+		public event Action<PlayerRef> PromotePlayerClicked;
 		public event Action<PlayerRef> KickPlayerClicked;
 
 		private PlayerRef _player;
 
-		public void Initialize(Network.NetworkPlayerInfo playerInfo, PlayerRef localPlayer, bool isOdd, bool isLocalPlayerLeader, bool canBeKick)
+		public void Initialize(Network.NetworkPlayerInfo playerInfo, PlayerRef localPlayer, bool isOdd, bool isLocalPlayerLeader, bool canBePromoted, bool canBeKick)
 		{
 			_player = playerInfo.PlayerRef;
 
@@ -45,13 +49,25 @@ namespace Werewolf.UI
 			_leader.enabled = playerInfo.IsLeader;
 			_nicknameText.text = playerInfo.Nickname;
 			_nicknameText.color = playerInfo.PlayerRef == localPlayer ? _currentPlayerColor : _otherPlayerColor;
+			_promoteButton.gameObject.SetActive(isLocalPlayerLeader && playerInfo.PlayerRef != localPlayer);
+			_promoteButton.interactable = canBePromoted;
 			_kickButton.gameObject.SetActive(isLocalPlayerLeader && playerInfo.PlayerRef != localPlayer);
 			_kickButton.interactable = canBeKick;
+		}
+
+		public void SetCanBePromoted(bool canBePromoted)
+		{
+			_promoteButton.interactable = canBePromoted;
 		}
 
 		public void SetCanBeKick(bool canBeKick)
 		{
 			_kickButton.interactable = canBeKick;
+		}
+
+		public void OnPromotePLayer()
+		{
+			PromotePlayerClicked?.Invoke(_player);
 		}
 
 		public void OnKickPLayer()

@@ -26,6 +26,7 @@ namespace Werewolf.UI
 		[SerializeField]
 		private Button _nicknameButton;
 
+		public event Action<PlayerRef> PromotePlayerClicked;
 		public event Action<PlayerRef> KickPlayerClicked;
 		public event Action<PlayerRef, string> ChangeNicknameClicked;
 
@@ -70,7 +71,8 @@ namespace Werewolf.UI
 			{
 				PlayerEntry playerEntry = GetPlayerEntryFromPool();
 				playerEntry.transform.SetParent(_playerEntries);
-				playerEntry.Initialize(playerInfo.Value, _localPlayer, isOdd, localPlayerInfoExist && localPlayerInfo.IsLeader, !_networkDataManager.GameSetupReady);
+				playerEntry.Initialize(playerInfo.Value, _localPlayer, isOdd, localPlayerInfoExist && localPlayerInfo.IsLeader, !_networkDataManager.GameSetupReady, !_networkDataManager.GameSetupReady);
+				playerEntry.PromotePlayerClicked += OnPromotePlayer;
 				playerEntry.KickPlayerClicked += OnKickPlayer;
 
 				isOdd = !isOdd;
@@ -94,7 +96,9 @@ namespace Werewolf.UI
 
 			for (int i = _playerEntries.childCount - 1; i >= 0; i--)
 			{
-				_playerEntries.GetChild(i).GetComponent<PlayerEntry>().SetCanBeKick(!_networkDataManager.GameSetupReady);
+				PlayerEntry playerEntry = _playerEntries.GetChild(i).GetComponent<PlayerEntry>();
+				playerEntry.SetCanBePromoted(!_networkDataManager.GameSetupReady);
+				playerEntry.SetCanBeKick(!_networkDataManager.GameSetupReady);
 			}
 
 			UpdateNicknameButton();
@@ -128,6 +132,11 @@ namespace Werewolf.UI
 		public void UpdateNicknameButton()
 		{
 			_nicknameButton.interactable = _nicknameInputField.text.Length >= _minNicknameCharacterCount &&!_networkDataManager.GameSetupReady;
+		}
+
+		private void OnPromotePlayer(PlayerRef promotedPlayer)
+		{
+			PromotePlayerClicked?.Invoke(promotedPlayer);
 		}
 
 		private void OnKickPlayer(PlayerRef kickedPlayer)

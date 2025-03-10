@@ -318,6 +318,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 4972454616256217108
+  - m_Id: 34114125823336448
+    m_Localized: Promote
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

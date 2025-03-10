@@ -38,6 +38,7 @@ namespace Werewolf.UI
 		[SerializeField]
 		private LocalizedString _invalidRolesSetup;
 
+		public event Action<PlayerRef> PromotePlayerClicked;
 		public event Action<PlayerRef> KickPlayerClicked;
 		public event Action<PlayerRef, string> ChangeNicknameClicked;
 		public event Action<SerializableRoleSetups> RolesSetupChanged;
@@ -80,6 +81,7 @@ namespace Werewolf.UI
 			_networkDataManager.RoleSetupsChanged += UpdateVisual;
 			_networkDataManager.GameSetupReadyChanged += UpdateVisual;
 			_networkDataManager.InvalidRolesSetupReceived += OnInvalidRolesSetupReceived;
+			_roomMenu.PromotePlayerClicked += OnPromotePlayerClicked;
 			_roomMenu.KickPlayerClicked += OnKickPlayerClicked;
 			_roomMenu.ChangeNicknameClicked += OnChangeNicknameClicked;
 			_settingsMenu.RolesSetupChanged += OnRolesSetupChanged;
@@ -112,6 +114,11 @@ namespace Werewolf.UI
 		private void OnInvalidRolesSetupReceived()
 		{
 			_settingsMenu.UpdateWarnings(new() { _invalidRolesSetup });
+		}
+
+		private void OnPromotePlayerClicked(PlayerRef player)
+		{
+			PromotePlayerClicked?.Invoke(player);
 		}
 
 		private void OnKickPlayerClicked(PlayerRef player)
@@ -171,6 +178,7 @@ namespace Werewolf.UI
 			_networkDataManager.RoleSetupsChanged -= UpdateVisual;
 			_networkDataManager.GameSetupReadyChanged -= UpdateVisual;
 			_networkDataManager.InvalidRolesSetupReceived -= OnInvalidRolesSetupReceived;
+			_roomMenu.PromotePlayerClicked -= OnPromotePlayerClicked;
 			_roomMenu.KickPlayerClicked -= OnKickPlayerClicked;
 			_roomMenu.ChangeNicknameClicked -= OnChangeNicknameClicked;
 			_settingsMenu.RolesSetupChanged -= OnRolesSetupChanged;
