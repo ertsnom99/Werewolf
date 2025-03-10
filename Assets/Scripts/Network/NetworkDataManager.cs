@@ -218,34 +218,9 @@ namespace Werewolf.Network
 			return isValid;
 		}
 
-		public void SetRolesSetup(RoleSetup[] mandatoryRoleSetups, RoleSetup[] optionalRoleSetups)
+		public void SetRolesSetup(SerializableRoleSetups serializableRoleSetups)
 		{
-			SerializableRoleSetups serializableRoleSetups = new()
-			{
-				MandatoryRoles = ConvertToSerializableRoleSetups(mandatoryRoleSetups),
-				OptionalRoles = ConvertToSerializableRoleSetups(optionalRoleSetups)
-			};
-
 			Runner.SendReliableDataToServer(new ReliableKey(), Serialize(serializableRoleSetups));
-
-			static SerializableRoleSetup[] ConvertToSerializableRoleSetups(RoleSetup[] roleSetups)
-			{
-				SerializableRoleSetup[] serializableRoleSetup = new SerializableRoleSetup[roleSetups.Length];
-
-				for (int i = 0; i < roleSetups.Length; i++)
-				{
-					serializableRoleSetup[i].Pool = new int[roleSetups[i].Pool.Length];
-
-					for (int j = 0; j < roleSetups[i].Pool.Length; j++)
-					{
-						serializableRoleSetup[i].Pool[j] = roleSetups[i].Pool[j].ID.HashCode;
-					}
-
-					serializableRoleSetup[i].UseCount = roleSetups[i].UseCount;
-				}
-
-				return serializableRoleSetup;
-			}
 		}
 
 		void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
