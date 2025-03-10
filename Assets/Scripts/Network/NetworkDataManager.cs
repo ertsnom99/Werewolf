@@ -424,6 +424,22 @@ namespace Werewolf.Network
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_PromotePlayer(PlayerRef promotedPlayer, RpcInfo info = default)
+		{
+			if (!GameSetupReady
+			&& PlayerInfos.TryGet(info.Source, out NetworkPlayerInfo playerInfo)
+			&& playerInfo.IsLeader
+			&& PlayerInfos.TryGet(promotedPlayer, out NetworkPlayerInfo promotedPlayerInfo))
+			{
+				playerInfo.IsLeader = false;
+				PlayerInfos.Set(info.Source, playerInfo);
+
+				promotedPlayerInfo.IsLeader = true;
+				PlayerInfos.Set(promotedPlayer, promotedPlayerInfo);
+			}
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_KickPlayer(PlayerRef kickedPlayer, RpcInfo info = default)
 		{
 			if (!GameSetupReady

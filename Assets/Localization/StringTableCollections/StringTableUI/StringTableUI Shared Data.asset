@@ -263,6 +263,10 @@ MonoBehaviour:
     m_Key: GameMenu_NotEnoughPlayers
     m_Metadata:
       m_Items: []
+  - m_Id: 34114125823336448
+    m_Key: GameMenu_Room_Promote
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
