@@ -40,7 +40,7 @@ namespace Werewolf.UI
 
 		public event Action<PlayerRef> KickPlayerClicked;
 		public event Action<PlayerRef, string> ChangeNicknameClicked;
-		public event Action<RoleSetup[], RoleSetup[]> RolesSetupChanged;
+		public event Action<SerializableRoleSetups> RolesSetupChanged;
 		public event Action<GameSpeed> GameSpeedChanged;
 		public event Action StartGameClicked;
 		public event Action LeaveGameClicked;
@@ -124,9 +124,9 @@ namespace Werewolf.UI
 			ChangeNicknameClicked?.Invoke(player, nickname);
 		}
 
-		private void OnRolesSetupChanged(RoleSetup[] mandatoryRoleSetups, RoleSetup[] optionalRoleSetups)
+		private void OnRolesSetupChanged(SerializableRoleSetups serializableRoleSetups)
 		{
-			RolesSetupChanged?.Invoke(mandatoryRoleSetups, optionalRoleSetups);
+			RolesSetupChanged?.Invoke(serializableRoleSetups);
 		}
 
 		private void OnGameSpeedChanged(GameSpeed gameSpeed)

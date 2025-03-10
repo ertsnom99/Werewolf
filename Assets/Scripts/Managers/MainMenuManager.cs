@@ -178,11 +178,11 @@ namespace Werewolf.Managers
 			}
 		}
 
-		private void ChangeRolesSetup(RoleSetup[] mandatoryRoleSetups, RoleSetup[] optionalRoleSetups)
+		private void ChangeRolesSetup(SerializableRoleSetups serializableRoleSetups)
 		{
 			if (!_networkDataManager.GameSetupReady)
 			{
-				_networkDataManager.SetRolesSetup(mandatoryRoleSetups, optionalRoleSetups);
+				_networkDataManager.SetRolesSetup(serializableRoleSetups);
 			}
 		}
 

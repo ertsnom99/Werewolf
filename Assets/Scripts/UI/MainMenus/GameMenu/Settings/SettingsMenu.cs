@@ -50,7 +50,7 @@ namespace Werewolf.UI
 
 		public GameSpeed GameSpeed => (GameSpeed)_gameSpeedDropdown.value;
 
-		public event Action<RoleSetup[], RoleSetup[]> RolesSetupChanged;
+		public event Action<SerializableRoleSetups> RolesSetupChanged;
 		public event Action<GameSpeed> GameSpeedChanged;
 
 		private GameConfig _gameConfig;
@@ -126,7 +126,10 @@ namespace Werewolf.UI
 		{
 			if (_draggableRoleSetupsChanged)
 			{
-				RolesSetupChanged?.Invoke(ConvertToRoleSetupArray(_mandatoryRolesContainer), ConvertToRoleSetupArray(_optionalRolesContainer));
+				RolesSetupChanged?.Invoke(new() {
+											MandatoryRoles = ConvertToSerializableRoleSetups(_mandatoryRolesContainer),
+											OptionalRoles = ConvertToSerializableRoleSetups(_optionalRolesContainer)
+										});
 				_draggableRoleSetupsChanged = false;
 			}
 
@@ -136,22 +139,26 @@ namespace Werewolf.UI
 				_networkRoleSetupsChanged = false;
 			}
 		}
-
-		private static RoleSetup[] ConvertToRoleSetupArray(DraggableRoleSetupsContainer draggableRoleSetupsContainer)
+		
+		private SerializableRoleSetup[] ConvertToSerializableRoleSetups(DraggableRoleSetupsContainer draggableRoleSetupsContainer)
 		{
-			RoleSetup[] roleSetups = new RoleSetup[draggableRoleSetupsContainer.DraggableRoleSetups.Count];
+			SerializableRoleSetup[] serializableRoleSetup = new SerializableRoleSetup[draggableRoleSetupsContainer.DraggableRoleSetups.Count];
 
 			for (int i = 0; i < draggableRoleSetupsContainer.DraggableRoleSetups.Count; i++)
 			{
 				DraggableRoleSetup draggableRoleSetup = draggableRoleSetupsContainer.DraggableRoleSetups[i];
-				roleSetups[i] = new()
+
+				serializableRoleSetup[i].Pool = new int[draggableRoleSetup.RoleDataPool.Count];
+
+				for (int j = 0; j < draggableRoleSetup.RoleDataPool.Count; j++)
 				{
-					Pool = draggableRoleSetup.RoleDataPool.ToArray(),
-					UseCount = draggableRoleSetup.UseCount
-				};
+					serializableRoleSetup[i].Pool[j] = draggableRoleSetup.RoleDataPool[j].ID.HashCode;
+				}
+
+				serializableRoleSetup[i].UseCount = draggableRoleSetup.UseCount;
 			}
 
-			return roleSetups;
+			return serializableRoleSetup;
 		}
 
 		private void UpdateRolesContainers()
