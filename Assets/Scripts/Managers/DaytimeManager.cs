@@ -66,8 +66,8 @@ namespace Werewolf.Managers
 			CurrentDaytime = daytime;
 			_inTransition = true;
 
-			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _gameConfig.DayTransitionTitleScreen.ID.HashCode : _gameConfig.NightTransitionTitleScreen.ID.HashCode));
 			StartCoroutine(TransitionDaytime());
+			StartCoroutine(TransitionTitle(daytime == Daytime.Day ? _gameConfig.DayTransitionTitleScreen.ID.HashCode : _gameConfig.NightTransitionTitleScreen.ID.HashCode));
 		}
 
 		private IEnumerator TransitionDaytime()
