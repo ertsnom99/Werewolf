@@ -71,6 +71,8 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-# Private packages (can't be pushed because they cost money)
+# Private folders
+/[Aa]ssets/Photon.meta
+/[Aa]ssets/Photon/
 /[Aa]ssets/Packages.meta
 /[Aa]ssets/Packages/
