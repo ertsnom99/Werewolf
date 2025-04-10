@@ -117,6 +117,18 @@ namespace Werewolf.Data
 		public float DaytimeLightTransitionDuration { get; private set; }
 
 		[field: SerializeField]
+		public string SkyHorizonColorParameter { get; private set; }
+
+		[field: SerializeField]
+		public string SkyColorParameter { get; private set; }
+
+		[field: SerializeField]
+		public Color DaySkyHorizonColor { get; private set; }
+
+		[field: SerializeField]
+		public Color DaySkyColor { get; private set; }
+
+		[field: SerializeField]
 		public Color DayColor { get; private set; }
 
 		[field: SerializeField]
@@ -124,6 +136,12 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public TitleScreenData DayTransitionTitleScreen { get; private set; }
+
+		[field: SerializeField]
+		public Color NightSkyHorizonColor { get; private set; }
+
+		[field: SerializeField]
+		public Color NightSkyColor { get; private set; }
 
 		[field: SerializeField]
 		public Color NightColor { get; private set; }

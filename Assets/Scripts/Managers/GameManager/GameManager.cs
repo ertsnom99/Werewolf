@@ -91,7 +91,7 @@ namespace Werewolf.Managers
 		public event Action<PlayerRef, MarkForDeathData> PlayerDeathRevealEnded;
 
 		// Client events
-		public event Action PlayerInitialized;
+		public event Action<bool> PlayerInitialized;
 
 		public static event Action ManagerSpawned;
 
@@ -177,7 +177,7 @@ namespace Werewolf.Managers
 					}
 
 					WaitForPlayer(playerGameInfo.Key);
-					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, _playersOrder, PlayerGameInfos[playerGameInfo.Key].Role.ID.HashCode);
+					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, true, _playersOrder, PlayerGameInfos[playerGameInfo.Key].Role.ID.HashCode);
 				}
 
 				_startedPlayersInitialization = true;
@@ -186,6 +186,8 @@ namespace Werewolf.Managers
 				CreateReservedRoleCardsForServer();
 				LogNightCalls();
 				_voteManager.SetPlayerCards(_playerCards);
+				IntroManager.Instance.SkipIntro();
+				_daytimeManager.ChangeDaytime(Daytime.Day);
 #endif
 			}
 			else if (_allPlayersReadyToPlay)
@@ -500,21 +502,6 @@ namespace Werewolf.Managers
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
-		{
-			StopWaintingForPlayer(info.Source);
-
-			if (PlayersWaitingFor.Count > 0)
-			{
-				return;
-			}
-
-			_allPlayersReadyToPlay = true;
-
-			UpdatePreGameplayLoopProgress();
-		}
-
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		public void RPC_ConfirmPlayerReadyToBeInitialized(RpcInfo info = default)
 		{
 			StopWaintingForPlayer(info.Source);
@@ -534,7 +521,7 @@ namespace Werewolf.Managers
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_InitializePlayer([RpcTarget] PlayerRef player, float gameSpeedModifier, PlayerRef[] playersOrder, int roleID)
+		public void RPC_InitializePlayer([RpcTarget] PlayerRef player, float gameSpeedModifier, bool playIntro, PlayerRef[] playersOrder, int roleID)
 		{
 			GameSpeedModifier = gameSpeedModifier;
 			InitializeConfigAndManagers();
@@ -556,7 +543,22 @@ namespace Werewolf.Managers
 			_emotesManager.SetPlayerCards(_playerCards);
 			_UIManager.RolesScreen.SelectRole(roleData, false);
 
-			PlayerInitialized?.Invoke();
+			PlayerInitialized?.Invoke(playIntro);
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_ConfirmPlayerReadyToPlay(RpcInfo info = default)
+		{
+			StopWaintingForPlayer(info.Source);
+
+			if (PlayersWaitingFor.Count > 0)
+			{
+				return;
+			}
+
+			_allPlayersReadyToPlay = true;
+
+			UpdatePreGameplayLoopProgress();
 		}
 		#endregion
 		#endregion

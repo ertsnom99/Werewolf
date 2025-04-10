@@ -23,6 +23,7 @@ namespace Werewolf.Network
 		private NetworkRunner _networkRunner;
 		private GameManager _gameManager;
 		private UIManager _UIManager;
+		private IntroManager _introManager;
 
 		private void Awake()
 		{
@@ -48,6 +49,8 @@ namespace Werewolf.Network
 						OnGameManagerSpawned();
 					}
 
+					_introManager = IntroManager.Instance;
+
 					break;
 			}
 		}
@@ -64,7 +67,7 @@ namespace Werewolf.Network
 			_gameManager = GameManager.Instance;
 			_UIManager.LoadingScreen.Initialize(_gameManager.GameConfig.WaitingForServerText);
 
-			_gameManager.PlayerInitialized += StartLoadingFade;
+			_gameManager.PlayerInitialized += OnPlayerInitialized;
 			StartCoroutine(ConfirmReadyToBeInitialized());
 		}
 
@@ -78,19 +81,30 @@ namespace Werewolf.Network
 			_gameManager.RPC_ConfirmPlayerReadyToBeInitialized();
 		}
 
-		private void StartLoadingFade()
+		private void OnPlayerInitialized(bool playIntro)
 		{
-			_gameManager.PlayerInitialized -= StartLoadingFade;
+			_gameManager.PlayerInitialized -= OnPlayerInitialized;
 
-			_UIManager.LoadingScreen.FadeFinished += ConfirmReadyToPlay;
 			_UIManager.LoadingScreen.Initialize(null);
 			_UIManager.FadeOut(_UIManager.LoadingScreen, _gameManager.GameConfig.LoadingScreenTransitionDuration);
+
+			_introManager.IntroFinished += OnIntroFinished;
+
+			if (playIntro)
+			{
+				_introManager.StartIntro();
+			}
+			else
+			{
+				_introManager.SkipIntro();
+			}
 		}
 
-		private void ConfirmReadyToPlay(FadingScreen fadingScreen, float opacity)
+		private void OnIntroFinished()
 		{
-			_UIManager.LoadingScreen.FadeFinished -= ConfirmReadyToPlay;
+			_introManager.IntroFinished -= OnIntroFinished;
 
+			DaytimeManager.Instance.ChangeDaytime(Daytime.Day, showTitle: false);
 			_gameManager.RPC_ConfirmPlayerReadyToPlay();
 		}
 
