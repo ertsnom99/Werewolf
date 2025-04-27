@@ -144,6 +144,12 @@ namespace Werewolf.Gameplay
 			_groundCanvas.transform.position = tempPosition;
 		}
 
+		public void Display(bool display)
+		{
+			gameObject.SetActive(display);
+			_groundCanvas.gameObject.SetActive(display);
+		}
+
 		public void Flip()
 		{
 			transform.rotation *= Quaternion.AngleAxis(180, transform.forward);

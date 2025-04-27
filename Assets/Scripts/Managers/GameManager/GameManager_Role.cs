@@ -28,7 +28,6 @@ namespace Werewolf.Managers
 		private readonly Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new();
 #endif
 		private readonly Dictionary<PlayerRef, Action<int>> _chooseReservedRoleCallbacks = new();
-		private Card[][] _reservedRolesCards;
 
 		private readonly Dictionary<PlayerRef, Action<PlayerRef>> _revealPlayerRoleCallbacks = new();
 		private readonly Dictionary<PlayerRef, Action> _moveCardToCameraCallbacks = new();

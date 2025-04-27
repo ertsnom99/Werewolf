@@ -46,7 +46,7 @@ MonoBehaviour:
   <LoadingScreenTransitionDuration>k__BackingField: 2
   <CardPrefab>k__BackingField: {fileID: 2092366821852372363, guid: f1a13b5e49102a4489154c427ff896be,
     type: 3}
-  <ReservedRolesSpacing>k__BackingField: 1.5
+  <ReservedRolesSpacing>k__BackingField: 2.5
   <CaptainCardPrefab>k__BackingField: {fileID: 4242641526295142619, guid: d00483e34f2d91c43a011de8c4cbb2e5,
     type: 3}
   <CaptainCardOffset>k__BackingField: {x: -1, y: 0, z: 0}
@@ -95,18 +95,19 @@ MonoBehaviour:
   <DaytimeLightTransitionDuration>k__BackingField: 1
   <SkyHorizonColorParameter>k__BackingField: _HorizonColor
   <SkyColorParameter>k__BackingField: _SkyColor
-  <DaySkyHorizonColor>k__BackingField: {r: 0.44313726, g: 0.44313726, b: 0.40784314,
-    a: 1}
-  <DaySkyColor>k__BackingField: {r: 0.74509805, g: 0.7411765, b: 0.6862745, a: 1}
-  <DayColor>k__BackingField: {r: 1, g: 1, b: 1, a: 0}
+  <DaySkyHorizonColor>k__BackingField: {r: 0.8915094, g: 0.9359222, b: 1, a: 1}
+  <DaySkyColor>k__BackingField: {r: 0.75226945, g: 0.8592597, b: 0.990566, a: 1}
+  <DayColor>k__BackingField: {r: 1, g: 1, b: 1, a: 1}
   <DayTemperature>k__BackingField: 5000
   <DayTransitionTitleScreen>k__BackingField: {fileID: 11400000, guid: 554e26384b3ab394da4cadbd963bc243,
     type: 2}
   <NightSkyHorizonColor>k__BackingField: {r: 0.10980392, g: 0.16470589, b: 0.41568628,
     a: 1}
   <NightSkyColor>k__BackingField: {r: 0, g: 0.047058824, b: 0.31764707, a: 1}
-  <NightColor>k__BackingField: {r: 0.58431375, g: 0.6745098, b: 0.8666667, a: 1}
+  <NightColor>k__BackingField: {r: 0.15477037, g: 0.38665307, b: 0.8867924, a: 1}
   <NightTemperature>k__BackingField: 20000
+  <LampLightsDayIntensity>k__BackingField: 0
+  <LampLightsNightIntensity>k__BackingField: 30
   <NightTransitionTitleScreen>k__BackingField: {fileID: 11400000, guid: 137e37d4518fbc14193f1db687d4ff54,
     type: 2}
   <WokeUpPlayerGameHistoryEntry>k__BackingField: {fileID: 11400000, guid: f5a64306ece1da44b81d61bf3a1cb43c,

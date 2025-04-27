@@ -15,6 +15,7 @@ namespace Werewolf.Managers
 		private SplineContainer _cardPlacementSpline;
 
 		private readonly Dictionary<PlayerRef, Card> _playerCards = new();
+		private Card[][] _reservedRolesCards;
 
 		#region Create Card
 #if UNITY_SERVER && UNITY_EDITOR
@@ -102,10 +103,11 @@ namespace Werewolf.Managers
 				{
 					Vector3 columnPosition = (columnCounter * GameConfig.ReservedRolesSpacing * Vector3.right) + ((reservedRoleByBehavior.Value.Roles.Length - 1) * GameConfig.ReservedRolesSpacing * Vector3.left / 2.0f);
 
-					Card card = Instantiate(GameConfig.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
+					Card card = Instantiate(GameConfig.CardPrefab, _cardPlacementSpline.transform.position + rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 					card.SetRole(role);
+					card.SetNickname(string.Empty);
 					card.Flip();
 
 					cards[columnCounter] = card;
@@ -155,7 +157,7 @@ namespace Werewolf.Managers
 				{
 					Vector3 columnPosition = (columnCounter * GameConfig.ReservedRolesSpacing * Vector3.right) + ((roles.Value.Length - 1) * GameConfig.ReservedRolesSpacing * Vector3.left / 2.0f);
 
-					Card card = Instantiate(GameConfig.CardPrefab, rowPosition + columnPosition, Quaternion.identity);
+					Card card = Instantiate(GameConfig.CardPrefab, _cardPlacementSpline.transform.position + rowPosition + columnPosition, Quaternion.identity);
 					card.transform.position += Vector3.up * card.Thickness / 2.0f;
 
 					card.RightClicked += card => { _UIManager.RolesScreen.SelectRole(card.Role, true); };
@@ -170,6 +172,8 @@ namespace Werewolf.Managers
 						card.SetRole(role);
 						card.Flip();
 					}
+
+					card.SetNickname(string.Empty);
 
 					_reservedRolesCards[rowCounter][columnCounter] = card;
 
@@ -190,6 +194,22 @@ namespace Werewolf.Managers
 			}
 		}
 		#endregion
+
+		public void DisplayCards(bool display)
+		{
+			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+			{
+				playerCard.Value.Display(display);
+			}
+
+			foreach (Card[] reservedRolesCard in _reservedRolesCards)
+			{
+				foreach (Card card in reservedRolesCard)
+				{
+					card.Display(display);
+				}
+			}
+		}
 
 		#region Destroy Card
 		public void DestroyPlayerCard(PlayerRef cardPlayer)

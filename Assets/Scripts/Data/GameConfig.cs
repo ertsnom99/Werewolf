@@ -150,6 +150,12 @@ namespace Werewolf.Data
 		public float NightTemperature { get; private set; }
 
 		[field: SerializeField]
+		public float LampLightsDayIntensity { get; private set; }
+
+		[field: SerializeField]
+		public float LampLightsNightIntensity { get; private set; }
+
+		[field: SerializeField]
 		public TitleScreenData NightTransitionTitleScreen { get; private set; }
 
 		[field: Header("NightCall")]

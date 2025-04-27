@@ -187,7 +187,7 @@ namespace Werewolf.Managers
 				LogNightCalls();
 				_voteManager.SetPlayerCards(_playerCards);
 				IntroManager.Instance.SkipIntro();
-				_daytimeManager.ChangeDaytime(Daytime.Day);
+				_daytimeManager.SetDaytime(Daytime.Day);
 #endif
 			}
 			else if (_allPlayersReadyToPlay)
@@ -530,6 +530,8 @@ namespace Werewolf.Managers
 			{
 				_networkDataManager = NetworkDataManager.Instance;
 			}
+
+			_daytimeManager.SetDaytime(Daytime.Night);
 
 			if (!_gameplayDataManager.TryGetGameplayData(roleID, out RoleData roleData))
 			{
