@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utilities.GameplayData;
 using Werewolf.Data;
 using static Werewolf.Managers.GameHistoryManager;
 
@@ -38,12 +39,18 @@ namespace Werewolf.Gameplay.Role
 		[SerializeField]
 		private TitleScreenData _lostPowerTitleScreen;
 
+		[SerializeField]
+		private PlayerGroupData[] _werewolvesPlayerGroups;
+
+		private UniqueID[] _werewolvesPlayerGroupIDs;
 		private bool _hasPower = true;
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
 
 		public override void Initialize()
 		{
 			base.Initialize();
+
+			_werewolvesPlayerGroupIDs = GameplayData.GetIDs(_werewolvesPlayerGroups);
 
 			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
 
@@ -218,7 +225,7 @@ namespace Werewolf.Gameplay.Role
 			if (Player.IsNone
 				|| Player == deadPlayer
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
-				|| !_gameManager.IsPlayerInPlayerGroup(deadPlayer, _villagersPlayerGroup.ID))
+				|| !_gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroupIDs))
 			{
 				return;
 			}

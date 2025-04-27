@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Utilities.GameplayData
@@ -42,14 +43,7 @@ namespace Utilities.GameplayData
 
 		public static UniqueID[] GetIDs(GameplayData[] gameplayDatas)
 		{
-			UniqueID[] IDs = new UniqueID[gameplayDatas.Length];
-
-			for (int i = 0; i < gameplayDatas.Length; i++)
-			{
-				IDs[i] = gameplayDatas[i].ID;
-			}
-
-			return IDs;
+			return gameplayDatas.Select(x => x.ID).ToArray();
 		}
 	}
 }

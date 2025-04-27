@@ -68,3 +68,6 @@ MonoBehaviour:
   _selectedVillagerHighlightDuration: 3
   _lostPowerTitleScreen: {fileID: 11400000, guid: 5cdbf8ef6dc92c7489c66780fbc44883,
     type: 2}
+  _werewolvesPlayerGroups:
+  - {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0, type: 2}
+  - {fileID: 11400000, guid: 4518bd88add254f4f900e3d3ef8d90d5, type: 2}
