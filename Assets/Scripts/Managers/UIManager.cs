@@ -20,12 +20,12 @@ namespace Werewolf.Managers
 		public VoteScreen VoteScreen { get; private set; }
 
 		[field: SerializeField]
+		public RolesScreen RolesScreen { get; private set; }
+
+		[field: SerializeField]
 		public EndGameScreen EndGameScreen { get; private set; }
 
 		[field: Header("Other Screens")]
-		[field: SerializeField]
-		public RolesScreen RolesScreen { get; private set; }
-
 		[field: SerializeField]
 		public EmoteScreen EmoteScreen { get; private set; }
 
@@ -33,6 +33,7 @@ namespace Werewolf.Managers
 		public DisconnectedScreen DisconnectedScreen { get; private set; }
 
 		private readonly HashSet<FadingScreen> _activeFadingScreens = new();
+		private readonly List<FadingScreen> _permanentScreens = new();
 
 		protected override void Awake()
 		{
@@ -41,6 +42,11 @@ namespace Werewolf.Managers
 			ChoiceScreen.FadeFinished += OnFadeFinished;
 			VoteScreen.FadeFinished += OnFadeFinished;
 			EndGameScreen.FadeFinished += OnFadeFinished;
+		}
+
+		public void AddPermanentScreen(FadingScreen fadingScreen)
+		{
+			_permanentScreens.Add(fadingScreen);
 		}
 
 		public void FadeIn(FadingScreen fadingScreen, float transitionDuration)
@@ -66,7 +72,10 @@ namespace Werewolf.Managers
 
 			foreach (FadingScreen screen in _activeFadingScreens)
 			{
-				screen.FadeOut(transitionDuration);
+				if (!_permanentScreens.Contains(screen))
+				{
+					screen.FadeOut(transitionDuration);
+				}
 			}
 		}
 

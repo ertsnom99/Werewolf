@@ -6,7 +6,7 @@ using Werewolf.Data;
 
 namespace Werewolf.UI
 {
-	public class RolesScreen : MonoBehaviour
+	public class RolesScreen : FadingScreen
 	{
 		[SerializeField]
 		private RectTransform _screen;
@@ -84,5 +84,7 @@ namespace Werewolf.UI
 			_screen.anchoredPosition = new Vector3(_areRolesDisplayed ? -_screen.rect.width : 0, 0, 0);
 			_backgroundButton.SetActive(_areRolesDisplayed);
 		}
+
+		protected override void OnFadeStarts(float targetOpacity) { }
 	}
 }

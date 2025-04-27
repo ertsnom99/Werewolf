@@ -496,8 +496,10 @@ namespace Werewolf.Managers
 			_daytimeManager.Initialize(GameConfig);
 			_voteManager.Initialize(GameConfig);
 			_emotesManager.Initialize(GameConfig);
+			_UIManager.AddPermanentScreen(_UIManager.RolesScreen);
 			_UIManager.ChoiceScreen.SetConfig(GameConfig);
 			_UIManager.DisconnectedScreen.SetConfig(GameConfig);
+			IntroManager.Instance.SetConfig(GameConfig);
 		}
 
 		#region RPC Calls
