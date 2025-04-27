@@ -22,6 +22,8 @@ namespace Werewolf.Managers
 			public float elapsedTime;
 		}
 
+		private bool _showEmoteSelectionEnabled;
+
 		private GameManager _gameManager;
 
 		public void Initialize(GameConfig config)
@@ -31,6 +33,8 @@ namespace Werewolf.Managers
 
 			_emoteScreen.SetEmotes(config.Emotes);
 			_emoteScreen.EmoteSelected += OnEmoteSelected;
+
+			_showEmoteSelectionEnabled = true;
 #if UNITY_SERVER
 			_gameManager = GameManager.Instance;
 
@@ -47,7 +51,15 @@ namespace Werewolf.Managers
 
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in playerCards)
 			{
-				playerCard.Value.LeftClickHolded += card => { _emoteScreen.ShowEmoteSelection(card.Player, card.transform.position); };
+				playerCard.Value.LeftClickHolded += OnLeftClickHolded;
+			}
+		}
+
+		private void OnLeftClickHolded(Card card)
+		{
+			if (_showEmoteSelectionEnabled)
+			{
+				_emoteScreen.ShowEmoteSelection(card.Player, card.transform.position);
 			}
 		}
 #if UNITY_SERVER
@@ -76,6 +88,11 @@ namespace Werewolf.Managers
 			}
 		}
 #endif
+		public void EnableShowEmoteSelection(bool enable)
+		{
+			_showEmoteSelectionEnabled = enable;
+		}
+
 		private void OnEmoteSelected(PlayerRef selectedPlayer, int emoteIndex)
 		{
 			RPC_ShowEmote(selectedPlayer, emoteIndex);

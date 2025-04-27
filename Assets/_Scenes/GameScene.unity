@@ -17984,8 +17984,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1293315787}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.08960962, y: 0.15195185, z: 0.013834655, w: 0.9842202}
-  m_LocalPosition: {x: 327.01, y: 1.09, z: 235.8}
+  m_LocalRotation: {x: 0.22678275, y: 0.15515913, z: -0.036622692, w: 0.96080905}
+  m_LocalPosition: {x: 326.92728, y: 1, z: 235.6828}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18572,11 +18572,35 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 3503882638049575153}
+          m_TargetAssemblyTypeName: Werewolf.Managers.EmotesManager, Assembly-CSharp
+          m_MethodName: EnableShowEmoteSelection
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1736046587}
           m_TargetAssemblyTypeName: Werewolf.Managers.GameManager, Assembly-CSharp
           m_MethodName: DisplayCards
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 3503882638049575153}
+          m_TargetAssemblyTypeName: Werewolf.Managers.EmotesManager, Assembly-CSharp
+          m_MethodName: EnableShowEmoteSelection
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -22870,7 +22894,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1691361325}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.52719355, y: -0.34113544, z: 0.13158321, w: 0.767059}
+  m_LocalRotation: {x: 0.55291426, y: -0.0012266347, z: 0.00055512454, w: 0.8332371}
   m_LocalPosition: {x: 253.08624, y: 17.456635, z: 216.79443}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -28825,6 +28849,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6f9bd0504615f84d947915e4b6fde28, type: 3}
+--- !u!114 &3503882638049575153 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4469119733156614424, guid: b6f9bd0504615f84d947915e4b6fde28,
+    type: 3}
+  m_PrefabInstance: {fileID: 3503882638049575152}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d1e50c34573c6344b78f205a9ed765b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5010136653956674030
 PrefabInstance:
   m_ObjectHideFlags: 0
