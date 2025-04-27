@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Localization;
 using Werewolf.Gameplay;
+using Werewolf.UI;
 
 namespace Werewolf.Data
 {
@@ -329,6 +330,25 @@ namespace Werewolf.Data
 
 		[field: SerializeField]
 		public float RoleRevealHoldDuration { get; private set; }
+
+		[field: Header("Emotes")]
+		[field: SerializeField]
+		public Sprite[] Emotes { get; private set; }
+
+		[field: SerializeField]
+		public Emote EmotePrefab { get; private set; }
+
+		[field: SerializeField]
+		public float EmoteMaxDistance { get; private set; }
+
+		[field: SerializeField]
+		public Vector3 EmoteGlobalOffset { get; private set; }
+
+		[field: SerializeField]
+		public float EmoteDelay { get; private set; }
+
+		[field: SerializeField]
+		public int EmoteLimit { get; private set; }
 
 		[field: Header("UI")]
 		[field: SerializeField]

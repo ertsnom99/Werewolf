@@ -257,6 +257,19 @@ MonoBehaviour:
   <RoleRevealWaitDuration>k__BackingField: 2
   <RoleRevealFlipDuration>k__BackingField: 0.25
   <RoleRevealHoldDuration>k__BackingField: 2.5
+  <Emotes>k__BackingField:
+  - {fileID: 21300000, guid: 497c4d8cae260fe45af48452fe8a9bbd, type: 3}
+  - {fileID: 21300000, guid: e7e10e030a56491449c1d2ed1af04043, type: 3}
+  - {fileID: 21300000, guid: c3166152e0dafb3408120e4c4f89e298, type: 3}
+  - {fileID: 21300000, guid: aadf7c221d526ba47b92f68bfa80ee03, type: 3}
+  - {fileID: 21300000, guid: 0fb2227f930d9d44e9a9c5a81d1108b2, type: 3}
+  - {fileID: 21300000, guid: 032bf3c0fd5814b4bae5e5f874498691, type: 3}
+  <EmotePrefab>k__BackingField: {fileID: 1298131608606284834, guid: 3d2f897fb85f6a648af14fa8fa26f859,
+    type: 3}
+  <EmoteMaxDistance>k__BackingField: 1
+  <EmoteGlobalOffset>k__BackingField: {x: 0, y: 0.75, z: 0}
+  <EmoteDelay>k__BackingField: 5
+  <EmoteLimit>k__BackingField: 5
   <UITransitionNormalDuration>k__BackingField: 0.75
   <UITransitionFastDuration>k__BackingField: 0.1
   <SkipChoiceText>k__BackingField:

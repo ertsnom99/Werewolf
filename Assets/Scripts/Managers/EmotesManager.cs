@@ -10,26 +10,7 @@ namespace Werewolf.Managers
 {
 	public class EmotesManager : NetworkBehaviourSingleton<EmotesManager>
 	{
-		[field: Header("Emotes")]
-		[SerializeField]
-		private Sprite[] _emotes;
-
-		[SerializeField]
-		private Emote _emotePrefab;
-
-		[SerializeField]
-		private float _maxDistance;
-
-		[SerializeField]
-		private Vector3 _globalOffset;
-
-		[field: Header("Spam")]
-		[SerializeField]
-		private float _delay;
-
-		[SerializeField]
-		private int _limit;
-
+		private GameConfig _gameConfig;
 		private EmoteScreen _emoteScreen;
 		private bool _asleepCanSee;
 		private Dictionary<PlayerRef, Card> _playerCards;
@@ -45,9 +26,10 @@ namespace Werewolf.Managers
 
 		public void Initialize(GameConfig config)
 		{
+			_gameConfig = config;
 			_emoteScreen = UIManager.Instance.EmoteScreen;
 
-			_emoteScreen.SetEmotes(_emotes);
+			_emoteScreen.SetEmotes(config.Emotes);
 			_emoteScreen.EmoteSelected += OnEmoteSelected;
 #if UNITY_SERVER
 			_gameManager = GameManager.Instance;
@@ -78,10 +60,10 @@ namespace Werewolf.Managers
 					continue;
 				}
 
-				if (usage.Value.elapsedTime >= _delay)
+				if (usage.Value.elapsedTime >= _gameConfig.EmoteDelay)
 				{
 					usage.Value.amount--;
-					usage.Value.elapsedTime -= _delay;
+					usage.Value.elapsedTime -= _gameConfig.EmoteDelay;
 
 					if (usage.Value.amount <= 0)
 					{
@@ -101,16 +83,16 @@ namespace Werewolf.Managers
 
 		private void ShowEmote(PlayerRef selectedPlayer, int emoteIndex)
 		{
-			if (_emotes.Length <= emoteIndex)
+			if (_gameConfig.Emotes.Length <= emoteIndex)
 			{
 				Debug.LogError($"No emote is set for the index {emoteIndex}");
 				return;
 			}
 
-			Vector3 positionOffsetRelativeToCard = Quaternion.Euler(0, Random.Range(.0f, 360.0f), 0) * Vector3.back * Random.Range(.0f, _maxDistance);
+			Vector3 positionOffsetRelativeToCard = Quaternion.Euler(0, Random.Range(.0f, 360.0f), 0) * Vector3.back * Random.Range(.0f, _gameConfig.EmoteMaxDistance);
 
-			Emote emote = Instantiate(_emotePrefab, _playerCards[selectedPlayer].OriginalPosition + positionOffsetRelativeToCard + _globalOffset, Quaternion.identity);
-			emote.SetEmote(_emotes[emoteIndex]);
+			Emote emote = Instantiate(_gameConfig.EmotePrefab, _playerCards[selectedPlayer].OriginalPosition + positionOffsetRelativeToCard + _gameConfig.EmoteGlobalOffset, Quaternion.identity);
+			emote.SetEmote(_gameConfig.Emotes[emoteIndex]);
 		}
 
 		public void SetAsleepCanSee(bool asleepCanSee)
@@ -122,7 +104,7 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		private void RPC_ShowEmote(PlayerRef selectedPlayer, int emoteIndex, RpcInfo info = default)
 		{
-			if (_playerUsage[info.Source].amount >= _limit || !_gameManager.IsPlayerAwake(info.Source))
+			if (_playerUsage[info.Source].amount >= _gameConfig.EmoteLimit || !_gameManager.IsPlayerAwake(info.Source))
 			{
 				return;
 			}
