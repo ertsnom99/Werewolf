@@ -10,6 +10,7 @@ using Utilities.GameplayData;
 using Werewolf.Data;
 using System.Linq;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
+using UnityEngine.UI;
 
 namespace Werewolf.UI
 {
@@ -48,10 +49,15 @@ namespace Werewolf.UI
 		[SerializeField]
 		private LocalizeStringEvent _gameSpeedText;
 
+		[Header("Play Intro")]
+		[SerializeField]
+		private Toggle _playIntroToggle;
+
 		public GameSpeed GameSpeed => (GameSpeed)_gameSpeedDropdown.value;
 
 		public event Action<SerializableRoleSetups> RolesSetupChanged;
 		public event Action<GameSpeed> GameSpeedChanged;
+		public event Action<bool> PlayIntroChanged;
 
 		private GameConfig _gameConfig;
 		private PlayerRef _localPlayer;
@@ -85,6 +91,7 @@ namespace Werewolf.UI
 			UpdateRolesContainers();
 			OnPlayerInfosChanged();
 			OnGameSpeedChanged();
+			OnPlayIntroChanged();
 
 			_availableRolesContainer.DraggableRoleSetupDragChanged += OnDraggableRoleSetupDragChanged;
 			_availableRolesContainer.DraggableRoleSetupMiddleClicked += OnDraggableRoleSetupMiddleClicked;
@@ -96,6 +103,7 @@ namespace Werewolf.UI
 			_networkDataManager.PlayerInfosChanged += OnPlayerInfosChanged;
 			_networkDataManager.RoleSetupsChanged += OnRoleSetupsChanged;
 			_networkDataManager.GameSpeedChanged += OnGameSpeedChanged;
+			_networkDataManager.PlayIntroChanged += OnPlayIntroChanged;
 			_networkDataManager.GameSetupReadyChanged += OnGameSetupReadyChanged;
 		}
 
@@ -337,6 +345,8 @@ namespace Werewolf.UI
 			_gameSpeedText.gameObject.SetActive(!isLocalPlayerLeader);
 			_gameSpeedDropdown.RefreshShownValue();
 
+			_playIntroToggle.interactable = isLocalPlayerLeader;
+
 			EnableDraggableRoleSetups(isLocalPlayerLeader);
 		}
 
@@ -445,6 +455,16 @@ namespace Werewolf.UI
 			_gameSpeedText.StringReference = _gameSpeedLocalizeDropdown.GetLocalizedValue();
 		}
 
+		public void OnChangePlayIntro(bool playIntro)
+		{
+			PlayIntroChanged?.Invoke(playIntro);
+		}
+
+		private void OnPlayIntroChanged()
+		{
+			_playIntroToggle.isOn = _networkDataManager.PlayIntro;
+		}
+
 		private void OnGameSetupReadyChanged()
 		{
 			_gameSpeedDropdown.interactable = !_networkDataManager.GameSetupReady;
@@ -473,6 +493,7 @@ namespace Werewolf.UI
 			_networkDataManager.PlayerInfosChanged -= OnPlayerInfosChanged;
 			_networkDataManager.RoleSetupsChanged -= OnRoleSetupsChanged;
 			_networkDataManager.GameSpeedChanged -= OnGameSpeedChanged;
+			_networkDataManager.PlayIntroChanged -= OnPlayIntroChanged;
 			_networkDataManager.GameSetupReadyChanged -= OnGameSetupReadyChanged;
 
 			_availableRolesContainer.ReturnAllRoles();

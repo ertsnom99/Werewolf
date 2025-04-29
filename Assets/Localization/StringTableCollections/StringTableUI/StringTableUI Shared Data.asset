@@ -267,6 +267,10 @@ MonoBehaviour:
     m_Key: GameMenu_Room_Promote
     m_Metadata:
       m_Items: []
+  - m_Id: 52131722737082368
+    m_Key: GameMenu_Settings_PlayIntro
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -330,6 +330,10 @@ MonoBehaviour:
     m_Localized: Promouvoir
     m_Metadata:
       m_Items: []
+  - m_Id: 52131722737082368
+    m_Localized: Jouer l'intro
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

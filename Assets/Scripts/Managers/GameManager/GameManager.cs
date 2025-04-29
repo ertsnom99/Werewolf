@@ -177,7 +177,7 @@ namespace Werewolf.Managers
 					}
 
 					WaitForPlayer(playerGameInfo.Key);
-					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, true, _playersOrder, PlayerGameInfos[playerGameInfo.Key].Role.ID.HashCode);
+					RPC_InitializePlayer(playerGameInfo.Key, GameSpeedModifier, _networkDataManager.PlayIntro, _playersOrder, PlayerGameInfos[playerGameInfo.Key].Role.ID.HashCode);
 				}
 
 				_startedPlayersInitialization = true;

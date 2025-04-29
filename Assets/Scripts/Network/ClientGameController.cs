@@ -105,6 +105,12 @@ namespace Werewolf.Network
 			_introManager.IntroFinished -= OnIntroFinished;
 
 			DaytimeManager.Instance.ChangeDaytime(Daytime.Day, showTitle: false);
+			StartCoroutine(DelayConfirmPlayerReadyToPlay());
+		}
+
+		private IEnumerator DelayConfirmPlayerReadyToPlay()
+		{
+			yield return new WaitForSeconds(_gameManager.GameConfig.PostIntroDelay);
 			_gameManager.RPC_ConfirmPlayerReadyToPlay();
 		}
 

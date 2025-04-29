@@ -44,6 +44,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   <LoadingScreenTransitionDuration>k__BackingField: 2
+  <PostIntroDelay>k__BackingField: 1.5
   <CardPrefab>k__BackingField: {fileID: 2092366821852372363, guid: f1a13b5e49102a4489154c427ff896be,
     type: 3}
   <ReservedRolesSpacing>k__BackingField: 2.5

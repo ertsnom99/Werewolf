@@ -74,12 +74,16 @@ namespace Werewolf.Network
 		[Networked]
 		public GameSpeed GameSpeed { get; private set; }
 
+		[Networked]
+		public bool PlayIntro { get; private set; }
+
 		public bool GameSetupReady { get; private set; }
 
 		public static event Action FinishedSpawning;
 		public event Action PlayerInfosChanged;
 		public event Action RoleSetupsChanged;
 		public event Action GameSpeedChanged;
+		public event Action PlayIntroChanged;
 		public event Action InvalidRolesSetupReceived;
 		public event Action GameSetupReadyChanged;
 		public event Action<PlayerRef> PlayerDisconnected;
@@ -100,6 +104,7 @@ namespace Werewolf.Network
 		{
 			_changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 			GameSpeed = GameSpeed.Normal;
+			PlayIntro = true;
 
 			FinishedSpawning?.Invoke();
 		}
@@ -119,6 +124,9 @@ namespace Werewolf.Network
 						break;
 					case nameof(GameSpeed):
 						GameSpeedChanged?.Invoke();
+						break;
+					case nameof(PlayIntro):
+						PlayIntroChanged?.Invoke();
 						break;
 				}
 			}
@@ -477,6 +485,17 @@ namespace Werewolf.Network
 			&& playerInfo.IsLeader)
 			{
 				GameSpeed = gameSpeed;
+			}
+		}
+
+		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
+		public void RPC_SetPlayIntro(bool playIntro, RpcInfo info = default)
+		{
+			if (!GameSetupReady
+			&& PlayerInfos.TryGet(info.Source, out NetworkPlayerInfo playerInfo)
+			&& playerInfo.IsLeader)
+			{
+				PlayIntro = playIntro;
 			}
 		}
 

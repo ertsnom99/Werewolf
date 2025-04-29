@@ -71,6 +71,7 @@ namespace Werewolf.Managers
 			_gameMenu.ChangeNicknameClicked += ChangeNickname;
 			_gameMenu.RolesSetupChanged += ChangeRolesSetup;
 			_gameMenu.GameSpeedChanged += ChangeGameSpeed;
+			_gameMenu.PlayIntroChanged += ChangePlayIntro;
 			_gameMenu.StartGameClicked += StartGame;
 			_gameMenu.LeaveGameClicked += LeaveGame;
 			_rulesMenu.ReturnClicked += OpenMainMenu;
@@ -200,6 +201,14 @@ namespace Werewolf.Managers
 			if (!_networkDataManager.GameSetupReady)
 			{
 				_networkDataManager.RPC_SetGameSpeed(gameSpeed);
+			}
+		}
+
+		private void ChangePlayIntro(bool playIntro)
+		{
+			if (!_networkDataManager.GameSetupReady)
+			{
+				_networkDataManager.RPC_SetPlayIntro(playIntro);
 			}
 		}
 

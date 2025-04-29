@@ -43,6 +43,7 @@ namespace Werewolf.UI
 		public event Action<PlayerRef, string> ChangeNicknameClicked;
 		public event Action<SerializableRoleSetups> RolesSetupChanged;
 		public event Action<GameSpeed> GameSpeedChanged;
+		public event Action<bool> PlayIntroChanged;
 		public event Action StartGameClicked;
 		public event Action LeaveGameClicked;
 
@@ -86,6 +87,7 @@ namespace Werewolf.UI
 			_roomMenu.ChangeNicknameClicked += OnChangeNicknameClicked;
 			_settingsMenu.RolesSetupChanged += OnRolesSetupChanged;
 			_settingsMenu.GameSpeedChanged += OnGameSpeedChanged;
+			_settingsMenu.PlayIntroChanged += OnPlayIntroChanged;
 		}
 
 		private void UpdateVisual()
@@ -139,6 +141,11 @@ namespace Werewolf.UI
 		private void OnGameSpeedChanged(GameSpeed gameSpeed)
 		{
 			GameSpeedChanged?.Invoke(gameSpeed);
+		}
+
+		private void OnPlayIntroChanged(bool playIntro)
+		{
+			PlayIntroChanged?.Invoke(playIntro);
 		}
 
 		public void OnShowRoom()

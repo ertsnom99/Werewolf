@@ -32,6 +32,10 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float LoadingScreenTransitionDuration { get; private set; }
 
+		[field: Header("Intro")]
+		[field: SerializeField]
+		public float PostIntroDelay { get; private set; }
+
 		[field: Header("Cards")]
 		[field: SerializeField]
 		public Card CardPrefab { get; private set; }
