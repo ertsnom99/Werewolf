@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3898873661331948332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6042422229852219233}
+  - component: {fileID: 7752189942175934928}
+  m_Layer: 0
+  m_Name: ScapegoatBehavior
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6042422229852219233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3898873661331948332}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7752189942175934928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3898873661331948332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b469388a02fbb145a74a7c29a09a7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
+  <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroupIDs>k__BackingField: []
+  <NightPriorities>k__BackingField: []
+  <IsPrimaryBehavior>k__BackingField: 0
+  _executionDrawGameHistoryEntry: {fileID: 11400000, guid: d08c4b0d63010ae4ea79ad9d54ccaaf5,
+    type: 2}
+  _executionDrawTitleScreen: {fileID: 11400000, guid: 2054e369a3d0e4d4fad13792b4d849c9,
+    type: 2}
+  _roleRevealTitleScreen: {fileID: 11400000, guid: aa7d00da6f3672248a2acf67621e34a2,
+    type: 2}
+  _choosePlayersTitleScreen: {fileID: 11400000, guid: 2f760ddee9e2ae24eb708c844b63cc38,
+    type: 2}
+  _choosePlayersMaximumDuration: 30
+  _choosingPlayersTitleScreen: {fileID: 11400000, guid: 4c818f869e3dde34098188d653e5d493,
+    type: 2}
+  _nextVotersGameHistoryEntry: {fileID: 11400000, guid: 92f346ac09bbb6b49ac3b22d64f3fb54,
+    type: 2}
+  _selectedPlayersHighlightDuration: 3

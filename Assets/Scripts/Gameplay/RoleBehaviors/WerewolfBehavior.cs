@@ -41,7 +41,7 @@ namespace Werewolf.Gameplay.Role
 
 		protected void VoteForVillager()
 		{
-			_preparedVote = _voteManager.PrepareVote(_commonWerewolvesData.VotePlayerTitleScreen.ID.HashCode, _commonWerewolvesData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
+			_preparedVote = _voteManager.PrepareVote(_commonWerewolvesData.VotePlayerTitleScreen.ID.HashCode, -1, _commonWerewolvesData.VoteMaxDuration * _gameManager.GameSpeedModifier, false, ChoicePurpose.Kill);
 
 			if (_networkDataManager.PlayerInfos[Player].IsConnected)
 			{

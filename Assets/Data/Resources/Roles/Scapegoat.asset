@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
+  m_Name: Scapegoat
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField:
+    Guid: 4e9aeb87-93dc-468d-8139-28612146d789
+    HashCode: 1694999983
+  <DebugName>k__BackingField: Scapegoat
+  <NameSingular>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 109841347158335488
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <NamePlural>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 109841350270509056
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Image>k__BackingField: {fileID: 21300000, guid: 5c936d70e7b244743830c0e43445c8b0,
+    type: 3}
+  <SmallImage>k__BackingField: {fileID: 21300000, guid: 072406d8730fc194b8aa1b06669de86c,
+    type: 3}
+  <PrimaryType>k__BackingField: 0
+  <SecondaryType>k__BackingField: 0
+  <CanHaveVariableAmount>k__BackingField: 0
+  <MandatoryAmount>k__BackingField: 1
+  <PlayerGroups>k__BackingField:
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
+  <NightPriorities>k__BackingField: []
+  <Behavior>k__BackingField: {fileID: 7752189942175934928, guid: 5bd6df4eb83a6c441b4e83609c8d1f00,
+    type: 3}
+  references:
+    version: 2
+    RefIds: []

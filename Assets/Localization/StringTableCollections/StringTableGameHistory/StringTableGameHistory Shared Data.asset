@@ -211,6 +211,14 @@ MonoBehaviour:
     m_Key: InfectFatherWolves_InfectedVillager
     m_Metadata:
       m_Items: []
+  - m_Id: 112281149732413440
+    m_Key: Scapegoat_ExecutionDraw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 112283153930248192
+    m_Key: Scapegoat_NextVoters
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -44,8 +44,8 @@ namespace Werewolf.Gameplay.Role
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
 
-			_gameManager.WaitBeforeDeathRevealStarted += OnWaitBeforeDeathRevealStarted;
-			_gameManager.WaitBeforeDeathRevealEnded += OnWaitBeforeDeathRevealEnded;
+			_gameManager.WaitBeforePlayerDeathRevealStarted += OnWaitBeforePlayerDeathRevealStarted;
+			_gameManager.WaitBeforePlayerDeathRevealEnded += OnWaitBeforePlayerDeathRevealEnded;
 		}
 
 		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
@@ -55,7 +55,7 @@ namespace Werewolf.Gameplay.Role
 			return isWakingUp = false;
 		}
 
-		private void OnWaitBeforeDeathRevealStarted(PlayerRef playerRevealed, MarkForDeathData mark, float revealDuration)
+		private void OnWaitBeforePlayerDeathRevealStarted(PlayerRef playerRevealed, MarkForDeathData mark, float revealDuration)
 		{
 			if (Player.IsNone
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
@@ -170,7 +170,7 @@ namespace Werewolf.Gameplay.Role
 			Destroy(gameObject);
 		}
 
-		private void OnWaitBeforeDeathRevealEnded(PlayerRef playerRevealed)
+		private void OnWaitBeforePlayerDeathRevealEnded(PlayerRef playerRevealed)
 		{
 			if (_isWaitingForPromptAnswer)
 			{
@@ -184,8 +184,8 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnDestroy()
 		{
-			_gameManager.WaitBeforeDeathRevealStarted -= OnWaitBeforeDeathRevealStarted;
-			_gameManager.WaitBeforeDeathRevealEnded -= OnWaitBeforeDeathRevealEnded;
+			_gameManager.WaitBeforePlayerDeathRevealStarted -= OnWaitBeforePlayerDeathRevealStarted;
+			_gameManager.WaitBeforePlayerDeathRevealEnded -= OnWaitBeforePlayerDeathRevealEnded;
 		}
 	}
 }

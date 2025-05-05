@@ -223,6 +223,14 @@ MonoBehaviour:
     m_Key: Thief_NotEnoughWerewolvesWarning
     m_Metadata:
       m_Items: []
+  - m_Id: 109841347158335488
+    m_Key: Scapegoat_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109841350270509056
+    m_Key: Scapegoat_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -548,7 +548,8 @@ namespace Werewolf.Managers
 
 			if (_mustSelectPlayer)
 			{
-				_UIManager.TitleScreen.SetConfirmButtonInteractable(_selectedPlayers.Count == _playerAmountToSelect);
+				_UIManager.TitleScreen.SetConfirmButtonInteractable((_playerAmountToSelect == -1 && _selectedPlayers.Count >= 1)
+																	|| _selectedPlayers.Count == _playerAmountToSelect);
 			}
 		}
 

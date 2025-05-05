@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
-  m_Name: ExecutionVote
+  m_Name: ScapegoatExecutionDraw
   m_EditorClassIdentifier: 
   <ID>k__BackingField:
-    Guid: fb2170a9-34c7-478c-a6ac-df6bed7c9977
-    HashCode: 514239233
-  <DebugName>k__BackingField: ExecutionVote
-  <Image>k__BackingField: {fileID: 0}
+    Guid: 3d1c478d-121c-4d50-baac-7402c2920fb1
+    HashCode: -733788343
+  <DebugName>k__BackingField: ScapegoatExecutionDraw
+  <Image>k__BackingField: {fileID: 21300000, guid: 8c8734fb28ab4e640b62f16effc20d8a,
+    type: 3}
   <Text>k__BackingField:
     m_TableReference:
       m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
     m_TableEntryReference:
-      m_KeyId: 1081749771419648
+      m_KeyId: 53549495245725696
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0

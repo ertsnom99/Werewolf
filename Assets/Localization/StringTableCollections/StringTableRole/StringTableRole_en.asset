@@ -403,6 +403,20 @@ MonoBehaviour:
     m_Localized: -Needs at least two mandatory werewolf roles for the Thief
     m_Metadata:
       m_Items: []
+  - m_Id: 109841347158335488
+    m_Localized: Scapegoat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109841350270509056
+    m_Localized: 'It''s very sad, but in this village, when something goes wrong
+      it''s always him who unfairly suffers the consequences...
+
+
+      If the village
+      vote results in a draw, it is the Scapegoat who is eliminated instead. Subsequently,
+      he designates who will vote during the next day.'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

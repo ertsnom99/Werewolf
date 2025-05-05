@@ -85,10 +85,12 @@ namespace Werewolf.Managers
 		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
 		public event Action StartNightCallChangeDelay;
-		public event Action DeathRevealEnded;
-		public event Action<PlayerRef, MarkForDeathData, float> WaitBeforeDeathRevealStarted;
-		public event Action<PlayerRef> WaitBeforeDeathRevealEnded;
+		public event Action<PlayerRef> PlayerDeathRevealStarted;
+		public event Action<PlayerRef, MarkForDeathData, float> WaitBeforePlayerDeathRevealStarted;
+		public event Action<PlayerRef> WaitBeforePlayerDeathRevealEnded;
 		public event Action<PlayerRef, MarkForDeathData> PlayerDeathRevealEnded;
+		public event Action DeathRevealEnded;
+		public event Action<List<PlayerRef>> FirstExecutionVotesCounted;
 
 		// Client events
 		public event Action<bool> PlayerInitialized;
@@ -757,12 +759,13 @@ namespace Werewolf.Managers
 		{
 			_voteManager.StartVoteForAllPlayers(OnElectionVotesCounted,
 												GameConfig.ElectionVoteTitleScreen.ID.HashCode,
+												-1,
 												GameConfig.ElectionVoteDuration * GameSpeedModifier,
 												false,
 												ChoicePurpose.Other,
 												GetDeadPlayers().ToArray(),
 												canVoteForSelf: true,
-												ImmunePlayers: GetPlayersExcluding(_captainCandidates.ToArray()));
+												immunePlayers: GetPlayersExcluding(_captainCandidates.ToArray()));
 		}
 
 		private void OnElectionVotesCounted(PlayerRef[] mostVotedPlayers)
@@ -1064,7 +1067,9 @@ namespace Werewolf.Managers
 
 					if (_networkDataManager.PlayerInfos[deadPlayer].IsConnected)
 					{
-						RPC_DisplayPlayerDiedTitle(deadPlayer, _marksForDeath[0].Mark == GameConfig.ExecutionMarkForDeath);
+						RPC_DisplayTitle(deadPlayer, _marksForDeath[0].Mark == GameConfig.ExecutionMarkForDeath ?
+																GameConfig.PlayerExecutedTitleScreen.ID.HashCode
+																: GameConfig.PlayerDiedTitleScreen.ID.HashCode);
 					}
 
 					_isPlayerDeathRevealCompleted = false;
@@ -1076,6 +1081,8 @@ namespace Werewolf.Managers
 																	false,
 																	OnRevealPlayerDeathEnded);
 					StartCoroutine(_revealPlayerDeathCoroutine);
+
+					PlayerDeathRevealStarted?.Invoke(deadPlayer);
 
 					while (!_isPlayerDeathRevealCompleted)
 					{
@@ -1143,11 +1150,6 @@ namespace Werewolf.Managers
 			DisplayTitle(hasAnyPlayerDied ? GameConfig.DeathRevealSomeoneDiedTitleScreen.ID.HashCode : GameConfig.DeathRevealNoOneDiedTitleScreen.ID.HashCode);
 		}
 
-		private void DisplayPlayerDiedTitle(bool wasExecuted)
-		{
-			DisplayTitle(wasExecuted ? GameConfig.PlayerExecutedTitleScreen.ID.HashCode : GameConfig.PlayerDiedTitleScreen.ID.HashCode);
-		}
-
 		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, MarkForDeathData mark, bool returnFaceDown, Action RevealPlayerCompleted)
 		{
 			foreach (PlayerRef player in revealTo)
@@ -1174,11 +1176,11 @@ namespace Werewolf.Managers
 
 			if (waitBeforeReveal)
 			{
-				WaitBeforeDeathRevealStarted?.Invoke(playerRevealed, mark, GameConfig.RoleRevealWaitDuration * GameSpeedModifier);
+				WaitBeforePlayerDeathRevealStarted?.Invoke(playerRevealed, mark, GameConfig.RoleRevealWaitDuration * GameSpeedModifier);
 
 				yield return new WaitForSeconds(GameConfig.RoleRevealWaitDuration * GameSpeedModifier);
 
-				WaitBeforeDeathRevealEnded?.Invoke(playerRevealed);
+				WaitBeforePlayerDeathRevealEnded?.Invoke(playerRevealed);
 
 				foreach (PlayerRef player in revealTo)
 				{
@@ -1279,12 +1281,6 @@ namespace Werewolf.Managers
 		{
 			DisplayDeathRevealTitle(hasAnyPlayerDied);
 		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayPlayerDiedTitle([RpcTarget] PlayerRef player, bool wasExecuted)
-		{
-			DisplayPlayerDiedTitle(wasExecuted);
-		}
 		#endregion
 		#endregion
 
@@ -1292,7 +1288,8 @@ namespace Werewolf.Managers
 		private void StartExecution()
 		{
 			if (!_voteManager.StartVoteForAllPlayers(OnExecutionVotesCounted,
-													GameConfig.ExecutionVoteTitleScreen.ID.HashCode,
+													GameConfig.ExecutionVoterTitleScreen.ID.HashCode,
+													GameConfig.ExecutionSpectatorTitleScreen.ID.HashCode,
 													GameConfig.ExecutionVoteDuration * GameSpeedModifier,
 													true,
 													ChoicePurpose.Kill,
@@ -1308,33 +1305,37 @@ namespace Werewolf.Managers
 
 		private void OnExecutionVotesCounted(PlayerRef[] mostVotedPlayers)
 		{
-			if (mostVotedPlayers.Length == 1)
+			List<PlayerRef> mostVotedPlayersList = mostVotedPlayers.ToList();
+			FirstExecutionVotesCounted?.Invoke(mostVotedPlayersList);
+
+			if (mostVotedPlayersList.Count == 1)
 			{
-				StartCoroutine(ExecutePlayer(mostVotedPlayers[0]));
+				StartCoroutine(ExecutePlayer(mostVotedPlayersList[0]));
 			}
 			else if (_captain.IsNone)
 			{
-				StartCoroutine(StartSecondaryExecution(mostVotedPlayers));
+				StartCoroutine(StartSecondaryExecution(mostVotedPlayersList));
 			}
 			else
 			{
-				_startCaptainExecutionCoroutine = StartCaptainExecution(mostVotedPlayers);
+				_startCaptainExecutionCoroutine = StartCaptainExecution(mostVotedPlayersList);
 				StartCoroutine(_startCaptainExecutionCoroutine);
 			}
 		}
 
-		private IEnumerator StartSecondaryExecution(PlayerRef[] mostVotedPlayers)
+		private IEnumerator StartSecondaryExecution(List<PlayerRef> mostVotedPlayers)
 		{
 			yield return DisplayTitleForAllPlayers(GameConfig.ExecutionDrawNewVoteTitleScreen.ID.HashCode, GameConfig.ExecutionHoldDuration * GameSpeedModifier);
 
 			if (!_voteManager.StartVoteForAllPlayers(OnSecondaryExecutionVotesCounted,
-													GameConfig.ExecutionVoteTitleScreen.ID.HashCode,
+													GameConfig.ExecutionVoterTitleScreen.ID.HashCode,
+													GameConfig.ExecutionSpectatorTitleScreen.ID.HashCode,
 													GameConfig.ExecutionVoteDuration * GameSpeedModifier,
 													false,
 													ChoicePurpose.Kill,
 													GetDeadPlayers().ToArray(),
 													modifiers: GetExecutionVoteModifiers(),
-													ImmunePlayers: GetPlayersExcluding(mostVotedPlayers)))
+													immunePlayers: GetPlayersExcluding(mostVotedPlayers.ToArray())))
 			{
 				Debug.LogError("Couldn't start the secondary execution vote");
 				yield break;
@@ -1356,13 +1357,12 @@ namespace Werewolf.Managers
 			}
 		}
 
-		private IEnumerator StartCaptainExecution(PlayerRef[] mostVotedPlayers)
+		private IEnumerator StartCaptainExecution(List<PlayerRef> mostVotedPlayers)
 		{
-			List<PlayerRef> choices = mostVotedPlayers.ToList();
-			choices.Remove(_captain);
+			mostVotedPlayers.Remove(_captain);
 
 			if (!SelectPlayers(_captain,
-								choices,
+								mostVotedPlayers,
 								GameConfig.ExecutionDrawYouChooseTitleScreen.ID.HashCode,
 								GameConfig.ExecutionCaptainChoiceDuration * GameSpeedModifier,
 								false,

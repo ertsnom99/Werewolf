@@ -369,6 +369,18 @@ MonoBehaviour:
       pour le Voleur"
     m_Metadata:
       m_Items: []
+  - m_Id: 109841347158335488
+    m_Localized: "Bouc \xC9missaire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109841350270509056
+    m_Localized: "C\u2019est bien triste, mais dans ce village, quand quelque chose
+      ne va pas c\u2019est toujours lui qui en subit injustement les cons\xE9quences\u2026\r\n\nSi
+      le vote du village am\xE8ne une \xE9galit\xE9, c\u2019est le Bouc \xC9missaire
+      qui est \xE9limin\xE9 \xE0 la place des ex aequo. Pars la suite, il d\xE9signe
+      qui votera durant la prochaine journ\xE9e.\r"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

@@ -130,7 +130,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8870799638528
-    m_Localized: The hunter is choosing who to kill!
+    m_Localized: The Hunter is choosing who to kill!
     m_Metadata:
       m_Items: []
   - m_Id: 8953955909632
@@ -267,10 +267,34 @@ MonoBehaviour:
     m_Localized: You are the Brothers
     m_Metadata:
       m_Items: []
+  - m_Id: 53202957105487872
+    m_Localized: Choose who will be allowed to vote during the next execution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53202983135338496
+    m_Localized: The {"Scapegoat":t(RoleName)} is choosing who will be allowed to
+      vote during the next execution
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217094
+  - m_Id: 53232720389988352
+    m_Localized: The execution was a draw, therefore the {"Scapegoat":t(RoleName)}
+      was executed
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217094
+  - m_Id: 53549495245725696
+    m_Localized: The execution was a draw, therefore you were executed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53977959291543552
+    m_Localized: You are spectating during the execution vote
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
     - rid: 4972454616256217094
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00805cffefc2030000809c15513e040000805ce506010000
+        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd00

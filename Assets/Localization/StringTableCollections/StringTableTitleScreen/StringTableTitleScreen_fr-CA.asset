@@ -135,7 +135,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8870799638528
-    m_Localized: Le chasseur est en train de choisir qui tuer!
+    m_Localized: Le Chasseur est en train de choisir qui tuer!
     m_Metadata:
       m_Items: []
   - m_Id: 8953955909632
@@ -273,10 +273,34 @@ MonoBehaviour:
     m_Localized: "Vous \xEAtes les Fr\xE8res"
     m_Metadata:
       m_Items: []
+  - m_Id: 53202957105487872
+    m_Localized: "Choisissez qui pourront voter durant la prochaine \xE9x\xE9cution"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53202983135338496
+    m_Localized: "Le {\"Bouc \xC9missaire\":t(RoleName)} est en train de choisir
+      qui pourront voter durant la prochaine \xE9x\xE9cution"
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097793
+  - m_Id: 53232720389988352
+    m_Localized: "Le vote fut une \xE9galit\xE9, donc le {\"Bouc \xC9missaire\":t(RoleName)}
+      fut \xE9x\xE9cut\xE9"
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097793
+  - m_Id: 53549495245725696
+    m_Localized: "Le vote fut une \xE9galit\xE9, donc vous avez \xE9t\xE9 \xE9x\xE9cut\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53977959291543552
+    m_Localized: "Vous assistez au vote d'ex\xE9cution"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
     - rid: 4972454835144097793
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00805cffefc2030000809c15513e040000805ce506010000
+        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd00

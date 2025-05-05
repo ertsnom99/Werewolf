@@ -168,7 +168,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1081749771419648
-    m_Key: Execution_Vote
+    m_Key: Execution_Voter
     m_Metadata:
       m_Items: []
   - m_Id: 1089443479715840
@@ -257,6 +257,26 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 21429176750170112
     m_Key: ThreeBrothers_Brothers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53202957105487872
+    m_Key: Scapegoat_ChoosePlayers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53202983135338496
+    m_Key: Scapegoat_ChoosingPlayers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53232720389988352
+    m_Key: Scapegoat_RoleReveal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53549495245725696
+    m_Key: Scapegoat_ExecutionDraw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53977959291543552
+    m_Key: Execution_Spectator
     m_Metadata:
       m_Items: []
   m_Metadata:

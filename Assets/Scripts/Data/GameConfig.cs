@@ -206,7 +206,10 @@ namespace Werewolf.Data
 		public float ExecutionDebateDuration { get; private set; }
 
 		[field: SerializeField]
-		public TitleScreenData ExecutionVoteTitleScreen { get; private set; }
+		public TitleScreenData ExecutionVoterTitleScreen { get; private set; }
+
+		[field: SerializeField]
+		public TitleScreenData ExecutionSpectatorTitleScreen { get; private set; }
 
 		[field: SerializeField]
 		public float ExecutionVoteDuration { get; private set; }

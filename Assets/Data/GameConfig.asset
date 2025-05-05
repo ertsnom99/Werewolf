@@ -139,7 +139,9 @@ MonoBehaviour:
   <ExecutionDebateTitleScreen>k__BackingField: {fileID: 11400000, guid: 015a5744b900e334793efd856f37ca18,
     type: 2}
   <ExecutionDebateDuration>k__BackingField: 60
-  <ExecutionVoteTitleScreen>k__BackingField: {fileID: 11400000, guid: 53892f42462ea594a81939044ede6d4f,
+  <ExecutionVoterTitleScreen>k__BackingField: {fileID: 11400000, guid: 53892f42462ea594a81939044ede6d4f,
+    type: 2}
+  <ExecutionSpectatorTitleScreen>k__BackingField: {fileID: 11400000, guid: 64eabbe8b0fbe884f97aabf7580e4ec8,
     type: 2}
   <ExecutionVoteDuration>k__BackingField: 15
   <ExecutionVoteStartedGameHistoryEntry>k__BackingField: {fileID: 11400000, guid: ab1e0143ee69b8b47976aaa1ae876012,

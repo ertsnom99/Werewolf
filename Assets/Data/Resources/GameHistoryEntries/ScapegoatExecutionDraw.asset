@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d1eacae6feb964fb2367c2a8b1e95b, type: 3}
+  m_Name: ScapegoatExecutionDraw
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField:
+    Guid: 0163cdfe-a44d-4943-b879-6f2b9e79b3fd
+    HashCode: 1459193160
+  <DebugName>k__BackingField: ScapegoatExecutionDraw
+  <Image>k__BackingField: {fileID: 21300000, guid: 2bbc21c7b0939cc43b9d83e68a254438,
+    type: 3}
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+    m_TableEntryReference:
+      m_KeyId: 112281149732413440
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables:
+    - name: ScapegoatPlayer
+      variable:
+        rid: 7622956597972828165
+  references:
+    version: 2
+    RefIds:
+    - rid: 7622956597972828165
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: 

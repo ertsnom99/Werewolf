@@ -27,7 +27,8 @@ namespace Werewolf.Managers
 		private readonly Dictionary<PlayerRef, HashSet<PlayerRef>> _immuneFromPlayers = new();
 		private readonly Dictionary<PlayerRef, PlayerRef> _votes = new();
 
-		private int _titleID;
+		private int _voterTitleID;
+		private int _spectatorTitleID;
 		private float _maxDuration;
 		private bool _failingToVoteGivesPenalty;
 		private Dictionary<PlayerRef, int> _modifiers;
@@ -89,14 +90,15 @@ namespace Werewolf.Managers
 		}
 
 		public bool StartVoteForAllPlayers(Action<PlayerRef[]> votesCountedCallback,
-											int titleID,
+											int voterTitleID,
+											int spectatorTitleID,
 											float maxDuration,
 											bool failingToVoteGivesPenalty,
 											ChoicePurpose purpose,
 											PlayerRef[] spectatingPlayers,
 											Dictionary<PlayerRef, int> modifiers = null,
 											bool canVoteForSelf = false,
-											PlayerRef[] ImmunePlayers = null)
+											PlayerRef[] immunePlayers = null)
 		{
 			if (_votesCountedCallback != null)
 			{
@@ -105,7 +107,7 @@ namespace Werewolf.Managers
 
 			_votesCountedCallback = votesCountedCallback;
 
-			PrepareVote(titleID, maxDuration, failingToVoteGivesPenalty, purpose, modifiers);
+			PrepareVote(voterTitleID, spectatorTitleID, maxDuration, failingToVoteGivesPenalty, purpose, modifiers);
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
@@ -123,7 +125,7 @@ namespace Werewolf.Managers
 					}
 				}
 
-				if (playerInfo.Value.IsAlive && (ImmunePlayers == null || !ImmunePlayers.Contains(playerInfo.Key)))
+				if (playerInfo.Value.IsAlive && (immunePlayers == null || !immunePlayers.Contains(playerInfo.Key)))
 				{
 					continue;
 				}
@@ -137,12 +139,14 @@ namespace Werewolf.Managers
 			return true;
 		}
 
-		public bool PrepareVote(int titleID, float maxDuration, bool failingToVoteGivesPenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
+		public bool PrepareVote(int voterTitleID, int spectatorTitleID, float maxDuration, bool failingToVoteGivesPenalty, ChoicePurpose purpose, Dictionary<PlayerRef, int> modifiers = null)
 		{
 			if (_step != Step.NotVoting)
 			{
 				return false;
 			}
+
+			_step = Step.Preparing;
 
 			Voters.Clear();
 			_immune.Clear();
@@ -150,14 +154,14 @@ namespace Werewolf.Managers
 			Spectators.Clear();
 			_votes.Clear();
 
-			_titleID = titleID;
+			_voterTitleID = voterTitleID;
+			_spectatorTitleID = spectatorTitleID > -1 ? spectatorTitleID : voterTitleID;
 			_maxDuration = maxDuration;
 			_failingToVoteGivesPenalty = failingToVoteGivesPenalty;
 			_modifiers = modifiers;
 			_voteCount = 0;
 
 			_purpose = purpose;
-			_step = Step.Preparing;
 
 			return true;
 		}
@@ -170,7 +174,19 @@ namespace Werewolf.Managers
 			}
 
 			Voters.Add(voter);
-			_immuneFromPlayers.Add(voter, new());
+
+			if (!_immuneFromPlayers.ContainsKey(voter))
+			{
+				_immuneFromPlayers.Add(voter, new());
+			}
+		}
+
+		public void ClearVoters()
+		{
+			if (_step == Step.Preparing)
+			{
+				Voters.Clear();
+			}
 		}
 
 		public void AddVoteImmunity(PlayerRef player)
@@ -194,6 +210,14 @@ namespace Werewolf.Managers
 			if (_step == Step.Preparing && !Voters.Contains(spectator))
 			{
 				Spectators.Add(spectator);
+			}
+		}
+
+		public void ClearSpectators()
+		{
+			if (_step == Step.Preparing)
+			{
+				Spectators.Clear();
 			}
 		}
 
@@ -252,7 +276,7 @@ namespace Werewolf.Managers
 								voteModifiers,
 								_immune.ToArray(),
 								_immuneFromPlayers[voter].ToArray(),
-								_titleID,
+								_voterTitleID,
 								_immuneFromPlayers[voter].Count >= _gameManager.PlayerGameInfos.Count,
 								voteDuration);
 			}
@@ -268,7 +292,7 @@ namespace Werewolf.Managers
 									Voters.ToArray(),
 									voteModifiers,
 									_immune.ToArray(),
-									_titleID,
+									_spectatorTitleID,
 									voteDuration);
 			}
 
@@ -291,9 +315,9 @@ namespace Werewolf.Managers
 
 			_UIManager.FadeIn(_UIManager.VoteScreen, _gameConfig.UITransitionNormalDuration);
 
-			if (!_gameplayDataManager.TryGetGameplayData(_titleID, out TitleScreenData titleScreenData))
+			if (!_gameplayDataManager.TryGetGameplayData(_spectatorTitleID, out TitleScreenData titleScreenData))
 			{
-				Debug.LogError($"Could not find the title {_titleID}");
+				Debug.LogError($"Could not find the title {_spectatorTitleID}");
 			}
 
 			_UIManager.VoteScreen.Initialize(titleScreenData.Text, false, voteDuration);
@@ -711,7 +735,7 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		private void RPC_UpdateServerVote(PlayerRef votedFor, RpcInfo info = default)
 		{
-			if (_step != Step.Voting || _votes[info.Source] == votedFor)
+			if (_step != Step.Voting || _immune.Contains(votedFor) || _immuneFromPlayers[info.Source].Contains(votedFor) || _votes[info.Source] == votedFor)
 			{
 				return;
 			}
