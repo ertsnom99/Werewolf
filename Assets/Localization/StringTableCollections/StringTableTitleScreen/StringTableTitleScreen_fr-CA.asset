@@ -135,9 +135,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8870799638528
-    m_Localized: Le Chasseur est en train de choisir qui tuer!
+    m_Localized: Le {"Chasseur":t(RoleName)} est en train de choisir qui tuer!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 4972454835144097793
   - m_Id: 8953955909632
     m_Localized: "Le soleil se couche, le village s'endort\u2026"
     m_Metadata:
@@ -175,7 +176,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1058760967356416
-    m_Localized: '{Role} {Multiple:jouent|joue}...'
+    m_Localized: '{Role:t(RoleName)} {Multiple:jouent|joue}...'
     m_Metadata:
       m_Items:
       - rid: 4972454835144097793
@@ -201,9 +202,10 @@ MonoBehaviour:
       m_Items:
       - rid: 4972454835144097793
   - m_Id: 1194478347780096
-    m_Localized: "La servante a d\xE9cid\xE9 de prendre ce r\xF4le!"
+    m_Localized: "La {\"servante\":t(RoleName)} a d\xE9cid\xE9 de prendre ce r\xF4le!"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 4972454835144097793
   - m_Id: 6123585257463808
     m_Localized: Il n'y a plus d'autres loups-garous
     m_Metadata:
@@ -221,9 +223,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9786050608488448
-    m_Localized: L'ours du Montreur d'Ours grogne!
+    m_Localized: L'ours du {"Montreur d'Ours":t(RoleName)} grogne!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 4972454835144097793
   - m_Id: 10433339337334784
     m_Localized: "Choisi ton mod\xE8le"
     m_Metadata:
@@ -303,4 +306,4 @@ MonoBehaviour:
     - rid: 4972454835144097793
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd00
+        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd0000e045765cc4220000809c295f3e04000080dc6411080000
