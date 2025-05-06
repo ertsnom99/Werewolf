@@ -61,7 +61,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3288390729728
-    m_Localized: "Vous avez \xE9t\xE9 \xE9x\xE9cut\xE9"
+    m_Localized: "Vous avez \xE9t\xE9 ex\xE9cut\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 3540103495680
@@ -274,23 +274,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 53202957105487872
-    m_Localized: "Choisissez qui pourront voter durant la prochaine \xE9x\xE9cution"
+    m_Localized: "Choisissez qui pourront voter durant la prochaine ex\xE9cution"
     m_Metadata:
       m_Items: []
   - m_Id: 53202983135338496
     m_Localized: "Le {\"Bouc \xC9missaire\":t(RoleName)} est en train de choisir
-      qui pourront voter durant la prochaine \xE9x\xE9cution"
+      qui pourront voter durant la prochaine ex\xE9cution"
     m_Metadata:
       m_Items:
       - rid: 4972454835144097793
   - m_Id: 53232720389988352
     m_Localized: "Le vote fut une \xE9galit\xE9, donc le {\"Bouc \xC9missaire\":t(RoleName)}
-      fut \xE9x\xE9cut\xE9"
+      fut ex\xE9cut\xE9"
     m_Metadata:
       m_Items:
       - rid: 4972454835144097793
   - m_Id: 53549495245725696
-    m_Localized: "Le vote fut une \xE9galit\xE9, donc vous avez \xE9t\xE9 \xE9x\xE9cut\xE9"
+    m_Localized: "Le vote fut une \xE9galit\xE9, donc vous avez \xE9t\xE9 ex\xE9cut\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 53977959291543552

@@ -63,7 +63,7 @@ MonoBehaviour:
       m_Items:
       - rid: 4972454835144097792
   - m_Id: 1123097671811072
-    m_Localized: "Le vote d'\xE9x\xE9cution commen\xE7a."
+    m_Localized: "Le vote d'ex\xE9cution commen\xE7a."
     m_Metadata:
       m_Items: []
   - m_Id: 1123262101110784
@@ -72,22 +72,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1123387561132032
     m_Localized: "Le vote fut une \xE9galit\xE9. Le capitaine ({Player:t(PlayerName)})
-      choisit qui \xE9x\xE9cuter."
+      choisit qui ex\xE9cuter."
     m_Metadata:
       m_Items:
       - rid: 4972454835144097792
   - m_Id: 7623024505643008
     m_Localized: "Le vote fut une \xE9galit\xE9 et le capitaine ({Player:t(PlayerName)})
-      ne choisit pas de joueur a \xE9x\xE9cuter."
+      ne choisit pas de joueur a ex\xE9cuter."
     m_Metadata:
       m_Items:
       - rid: 4972454835144097792
   - m_Id: 1124997385338880
-    m_Localized: "Le vote fut \xE0 nouveau une \xE9galit\xE9. Personne ne fut \xE9x\xE9cut\xE9."
+    m_Localized: "Le vote fut \xE0 nouveau une \xE9galit\xE9. Personne ne fut ex\xE9cut\xE9."
     m_Metadata:
       m_Items: []
   - m_Id: 1127826892177408
-    m_Localized: "Le village vota pour \xE9x\xE9cuter {Player:t(PlayerName)}."
+    m_Localized: "Le village vota pour ex\xE9cuter {Player:t(PlayerName)}."
     m_Metadata:
       m_Items:
       - rid: 4972454835144097792
@@ -292,14 +292,14 @@ MonoBehaviour:
       - rid: 4972454835144097792
   - m_Id: 112281149732413440
     m_Localized: "Le vote fut une \xE9galit\xE9, donc le {\"Bouc \xC9missaire\":t(RoleName)}
-      ({ScapegoatPlayer:t(PlayerName)}) fut choisi pour l'\xE9x\xE9cution."
+      ({ScapegoatPlayer:t(PlayerName)}) fut choisi pour l'ex\xE9cution."
     m_Metadata:
       m_Items:
       - rid: 4972454835144097792
   - m_Id: 112283153930248192
     m_Localized: "Le {\"Bouc \xC9missaire\":t(RoleName)} ({ScapegoatPlayer:t(PlayerName)})
       choisit que seul {NextVotersPlayers:list:{:t(PlayerName)}|, | and } pourront
-      voter durant la prochaine \xE9x\xE9cution."
+      voter durant la prochaine ex\xE9cution."
     m_Metadata:
       m_Items:
       - rid: 4972454835144097792
