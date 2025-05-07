@@ -468,6 +468,7 @@ namespace Werewolf.UI
 		private void OnGameSetupReadyChanged()
 		{
 			_gameSpeedDropdown.interactable = !_networkDataManager.GameSetupReady;
+			_playIntroToggle.interactable = _isLocalPlayerLeader && !_networkDataManager.GameSetupReady;
 			EnableDraggableRoleSetups(false);
 		}
 
