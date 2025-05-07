@@ -33,6 +33,7 @@ namespace Werewolf.Gameplay.Role
 
 		private PlayerRef[] _choices;
 		private IEnumerator _startChoiceTimerCoroutine;
+		private IEnumerator _waitToRemoveHighlightCoroutine;
 
 		private GameManager _gameManager;
 		private GameHistoryManager _gameHistoryManager;
@@ -173,7 +174,8 @@ namespace Werewolf.Gameplay.Role
 				_gameManager.SetPlayerCardHighlightVisible(selectedPlayer, true);
 				_gameManager.HideUI();
 #endif
-				StartCoroutine(WaitToRemoveHighlight(selectedPlayer));
+				_waitToRemoveHighlightCoroutine = WaitToRemoveHighlight(selectedPlayer);
+				StartCoroutine(_waitToRemoveHighlightCoroutine);
 				return;
 			}
 
@@ -195,6 +197,8 @@ namespace Werewolf.Gameplay.Role
 		{
 			yield return new WaitForSeconds(_selectedPlayerHighlightDuration * _gameManager.GameSpeedModifier);
 
+			_waitToRemoveHighlightCoroutine = null;
+
 			_gameManager.RPC_SetPlayerCardHighlightVisible(selectedPlayer, false);
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.SetPlayerCardHighlightVisible(selectedPlayer, false);
@@ -204,13 +208,17 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnPostPlayerLeft(PlayerRef deadPlayer)
 		{
-			if (deadPlayer != Player || _startChoiceTimerCoroutine == null)
+			if (deadPlayer != Player || (_startChoiceTimerCoroutine == null && _waitToRemoveHighlightCoroutine == null))
 			{
 				return;
 			}
 
 			_gameManager.WaitForPlayer(Player);
-			SelectRandomPlayer();
+
+			if (_startChoiceTimerCoroutine != null)
+			{
+				SelectRandomPlayer();
+			}
 		}
 
 		public override void OnPlayerChanged() { }

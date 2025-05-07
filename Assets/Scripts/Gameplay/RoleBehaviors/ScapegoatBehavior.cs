@@ -42,6 +42,7 @@ namespace Werewolf.Gameplay.Role
 		private PlayerRef[] _choices;
 		private IEnumerator _startChoiceTimerCoroutine;
 		private PlayerRef[] _nextVoters;
+		private IEnumerator _waitToRemoveHighlightCoroutine;
 
 		private NetworkDataManager _networkDataManager;
 		private GameManager _gameManager;
@@ -230,13 +231,16 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.HideUI();
 #endif
-			StartCoroutine(WaitToRemoveHighlight(selectedPlayers));
+			_waitToRemoveHighlightCoroutine = WaitToRemoveHighlight(selectedPlayers);
+			StartCoroutine(_waitToRemoveHighlightCoroutine);
 			return;
 		}
 
 		private IEnumerator WaitToRemoveHighlight(PlayerRef[] selectedPlayers)
 		{
 			yield return new WaitForSeconds(_selectedPlayersHighlightDuration * _gameManager.GameSpeedModifier);
+
+			_waitToRemoveHighlightCoroutine = null;
 
 			foreach (PlayerRef selectedPlayer in selectedPlayers)
 			{
@@ -291,13 +295,17 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnPostPlayerLeft(PlayerRef deadPlayer)
 		{
-			if (deadPlayer != Player || _startChoiceTimerCoroutine == null)
+			if (deadPlayer != Player || (_startChoiceTimerCoroutine == null && _waitToRemoveHighlightCoroutine == null))
 			{
 				return;
 			}
 
 			_gameManager.WaitForPlayer(Player);
-			SelectRandomPlayer();
+
+			if (_startChoiceTimerCoroutine != null)
+			{
+				SelectRandomPlayer();
+			}
 		}
 
 		public override void OnPlayerChanged()
