@@ -14,16 +14,17 @@ namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{
-		private readonly Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
-		private readonly Dictionary<int, int[]> ReservedRoles = new();
-		private readonly Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
-
 		public struct IndexedReservedRoles
 		{
 			public RoleData[] Roles;
 			public RoleBehavior[] Behaviors;
 			public int reservedRolesIndex;
 		}
+
+		private readonly Dictionary<RoleBehavior, RoleData> _unassignedRoleBehaviors = new();
+		private readonly Dictionary<int, int[]> ReservedRoles = new();
+		private readonly Dictionary<RoleBehavior, IndexedReservedRoles> _reservedRolesByBehavior = new();
+
 #if UNITY_SERVER && UNITY_EDITOR
 		private readonly Dictionary<RoleBehavior, Card[]> _reservedCardsByBehavior = new();
 #endif

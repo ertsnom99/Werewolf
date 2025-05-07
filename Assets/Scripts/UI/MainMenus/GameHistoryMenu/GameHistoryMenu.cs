@@ -12,27 +12,32 @@ namespace Werewolf.UI
 		[Header("Game History Buttons")]
 		[SerializeField]
 		private GameHistoryButton _gameHistoryButtonPrefab;
+
 		[SerializeField]
 		private Transform _gameHistoryButtonsContainer;
 
 		[Header("Game History")]
 		[SerializeField]
 		private GameObject _noHistories;
+
 		[SerializeField]
 		private GameObject _selectToSee;
+
 		[SerializeField]
 		private GameHistory _gameHistory;
+
 		[SerializeField]
 		private Button _deleteButton;
+
 		[SerializeField]
 		private Button _deleteAllButton;
+
+		public event Action ReturnClicked;
 
 		private readonly List<GameHistoryButton> _gameHistoryButtons = new();
 		private GameHistoryButton _selectedGameHistoryButton;
 
 		private GameHistoryManager _gameHistoryManager;
-
-		public event Action ReturnClicked;
 
 		private void Awake()
 		{

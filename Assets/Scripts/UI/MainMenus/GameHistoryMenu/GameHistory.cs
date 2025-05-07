@@ -16,6 +16,7 @@ namespace Werewolf.UI
 		[Header("Game History Entries")]
 		[SerializeField]
 		private GameHistoryEntry _gameHistoryEntryPrefab;
+
 		[SerializeField]
 		private Transform _gameHistoryEntriesContainer;
 

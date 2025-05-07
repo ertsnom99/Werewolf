@@ -15,8 +15,6 @@ namespace Werewolf.Gameplay
 		[field: SerializeField]
 		public float Thickness { get; private set; }
 
-		public Vector3 OriginalPosition { get; private set; }
-
 		[Header("Role")]
 		[SerializeField]
 		private Sprite _lostRole;
@@ -88,6 +86,8 @@ namespace Werewolf.Gameplay
 		[field: SerializeField]
 		[field: ReadOnly]
 		public RoleData Role { get; private set; }
+
+		public Vector3 OriginalPosition { get; private set; }
 
 		public event Action<Card> LeftClicked;
 		public event Action<Card> LeftClickHolded;

@@ -12,16 +12,16 @@ namespace Werewolf.UI
 		[field:SerializeField]
 		public Transform Grid { get; private set; }
 
-		private int _maxDraggableRoleSetups;
-		private bool _multiRoleAllowed;
-		private bool _isDragEnable;
-
 		public event Action DraggableRoleSetupsChanged;
 		public event Action<bool> DraggableRoleSetupDragChanged;
 		public event Action<RoleData, Vector3> DraggableRoleSetupMiddleClicked;
 		public event Action<DraggableRoleSetup, int> DraggableRoleSetupRightClicked;
 
 		public List<DraggableRoleSetup> DraggableRoleSetups { get; private set; }
+
+		private int _maxDraggableRoleSetups;
+		private bool _multiRoleAllowed;
+		private bool _isDragEnable;
 
 		public void Initialize(int maxDraggableRoleSetups, bool multiRoleAllowed)
 		{

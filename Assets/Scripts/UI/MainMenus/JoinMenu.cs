@@ -27,10 +27,10 @@ namespace Werewolf.UI
 		[SerializeField]
 		private LocalizedString _joiningLocalizedString;
 
-		private int _minNicknameCharacterCount;
-
 		public event Action JoinSessionClicked;
 		public event Action ReturnClicked;
+
+		private int _minNicknameCharacterCount;
 
 		public void Initialize(LocalizedString message, int minNicknameCharacterCount)
 		{

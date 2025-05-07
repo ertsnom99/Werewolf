@@ -17,6 +17,7 @@ namespace Werewolf.Managers
 		[Header("Lighting")]
 		[SerializeField]
 		private Light _mainLight;
+
 		[SerializeField]
 		private Light[] _lampLights;
 #if UNITY_EDITOR

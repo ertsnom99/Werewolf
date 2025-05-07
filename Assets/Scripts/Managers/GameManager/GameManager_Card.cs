@@ -15,6 +15,7 @@ namespace Werewolf.Managers
 		private SplineContainer _cardPlacementSpline;
 
 		private readonly Dictionary<PlayerRef, Card> _playerCards = new();
+
 		private Card[][] _reservedRolesCards;
 
 		#region Create Card

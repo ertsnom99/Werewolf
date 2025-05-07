@@ -7,8 +7,6 @@ namespace Werewolf.Managers
 {
 	public partial class GameManager
 	{
-		private readonly List<MarkForDeath> _marksForDeath = new();
-
 		public struct MarkForDeath
 		{
 			public PlayerRef Player;
@@ -16,6 +14,8 @@ namespace Werewolf.Managers
 		}
 
 		public event Action<PlayerRef, MarkForDeathData> MarkForDeathAdded;
+
+		private readonly List<MarkForDeath> _marksForDeath = new();
 
 		public void AddMarkForDeath(PlayerRef player, MarkForDeathData markForDeath)
 		{

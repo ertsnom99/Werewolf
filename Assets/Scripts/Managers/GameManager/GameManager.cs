@@ -50,6 +50,26 @@ namespace Werewolf.Managers
 
 		public static bool HasSpawned { get; private set; }
 
+		// Server events
+		public event Action PreRoleDistribution;
+		public event Action PostRoleDistribution;
+		public event Action PreStartGame;
+		public event Action<GameplayLoopStep> GameplayLoopStepStarts;
+		public event Action RollCallBegin;
+		public event Action StartWaitingForPlayersRollCall;
+		public event Action StartNightCallChangeDelay;
+		public event Action<PlayerRef> PlayerDeathRevealStarted;
+		public event Action<PlayerRef, MarkForDeathData, float> WaitBeforePlayerDeathRevealStarted;
+		public event Action<PlayerRef> WaitBeforePlayerDeathRevealEnded;
+		public event Action<PlayerRef, MarkForDeathData> PlayerDeathRevealEnded;
+		public event Action DeathRevealEnded;
+		public event Action<List<PlayerRef>> FirstExecutionVotesCounted;
+
+		// Client events
+		public event Action<bool> PlayerInitialized;
+
+		public static event Action ManagerSpawned;
+
 		private bool _allPlayersReadyToBeInitialized = false;
 		private bool _startedPlayersInitialization = false;
 		private bool _allPlayersReadyToPlay = false;
@@ -76,26 +96,6 @@ namespace Werewolf.Managers
 		private EmotesManager _emotesManager;
 		private DaytimeManager _daytimeManager;
 		private NetworkDataManager _networkDataManager;
-
-		// Server events
-		public event Action PreRoleDistribution;
-		public event Action PostRoleDistribution;
-		public event Action PreStartGame;
-		public event Action<GameplayLoopStep> GameplayLoopStepStarts;
-		public event Action RollCallBegin;
-		public event Action StartWaitingForPlayersRollCall;
-		public event Action StartNightCallChangeDelay;
-		public event Action<PlayerRef> PlayerDeathRevealStarted;
-		public event Action<PlayerRef, MarkForDeathData, float> WaitBeforePlayerDeathRevealStarted;
-		public event Action<PlayerRef> WaitBeforePlayerDeathRevealEnded;
-		public event Action<PlayerRef, MarkForDeathData> PlayerDeathRevealEnded;
-		public event Action DeathRevealEnded;
-		public event Action<List<PlayerRef>> FirstExecutionVotesCounted;
-
-		// Client events
-		public event Action<bool> PlayerInitialized;
-
-		public static event Action ManagerSpawned;
 
 		protected override void Awake()
 		{

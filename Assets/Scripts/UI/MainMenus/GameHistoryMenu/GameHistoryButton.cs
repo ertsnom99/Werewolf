@@ -12,22 +12,25 @@ namespace Werewolf.UI
 		[Header("Text")]
 		[SerializeField]
 		private TextMeshProUGUI _name;
+
 		[SerializeField]
 		private Color _normalNameColor;
+
 		[SerializeField]
 		private Color _selectedNameColor;
 
 		[Header("Background")]
 		[SerializeField]
 		private Color _oddColor;
+
 		[SerializeField]
 		private Color _evenColor;
 
 		public string FilePath { get; private set; }
 
-		private Image _background;
-
 		public event Action<GameHistoryButton> Clicked;
+
+		private Image _background;
 
 		private void Awake()
 		{

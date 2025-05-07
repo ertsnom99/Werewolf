@@ -19,6 +19,7 @@ namespace Werewolf.UI
 		[Header("Background")]
 		[SerializeField]
 		private Color _oddColor;
+
 		[SerializeField]
 		private Color _evenColor;
 
