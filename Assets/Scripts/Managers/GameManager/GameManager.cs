@@ -1021,9 +1021,11 @@ namespace Werewolf.Managers
 
 			if (showTitle)
 			{
-				RPC_DisplayDeathRevealTitle(hasAnyPlayerDied);
+				int titleID = hasAnyPlayerDied ? GameConfig.DeathRevealSomeoneDiedTitleScreen.ID.HashCode : GameConfig.DeathRevealNoOneDiedTitleScreen.ID.HashCode;
+
+				RPC_DisplayTitle(titleID);
 #if UNITY_SERVER && UNITY_EDITOR
-				DisplayDeathRevealTitle(hasAnyPlayerDied);
+				DisplayTitle(titleID);
 #endif
 				yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 				yield return new WaitForSeconds(GameConfig.DeathRevealHoldDuration * GameSpeedModifier);
@@ -1143,11 +1145,6 @@ namespace Werewolf.Managers
 			}
 
 			StartCoroutine(MoveToNextGameplayLoopStep());
-		}
-
-		private void DisplayDeathRevealTitle(bool hasAnyPlayerDied)
-		{
-			DisplayTitle(hasAnyPlayerDied ? GameConfig.DeathRevealSomeoneDiedTitleScreen.ID.HashCode : GameConfig.DeathRevealNoOneDiedTitleScreen.ID.HashCode);
 		}
 
 		private IEnumerator RevealPlayerDeath(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, MarkForDeathData mark, bool returnFaceDown, Action RevealPlayerCompleted)
@@ -1274,14 +1271,6 @@ namespace Werewolf.Managers
 			}
 #endif
 		}
-
-		#region RPC Calls
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DisplayDeathRevealTitle(bool hasAnyPlayerDied)
-		{
-			DisplayDeathRevealTitle(hasAnyPlayerDied);
-		}
-		#endregion
 		#endregion
 
 		#region Execution
