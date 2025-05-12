@@ -13,7 +13,7 @@ using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Gameplay.Role
 {
-	public class CupidBehavior : RoleBehavior
+	public class CupidBehavior : RoleBehavior, IVoteManagerSubscriber
 	{
 		[Header("Choose Couple")]
 		[SerializeField]
@@ -74,10 +74,10 @@ namespace Werewolf.Gameplay.Role
 			_networkDataManager = NetworkDataManager.Instance;
 			_voteManager = VoteManager.Instance;
 
-			_gameManager.PreSelectPlayers += OnPreChoosePlayers;
-			_voteManager.VoteStarting += OnVoteStarting;
-			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
-			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
+			_gameManager.PreSelectPlayers += OnPreSelectPlayers;
+			_voteManager.Subscribe(this);
+			_gameManager.PlayerDied += OnPlayerDied;
+			_gameManager.PostPlayerDisconnected += OnPostPlayerDisconnected;
 
 			if (NightPriorities.Count < 2)
 			{
@@ -338,7 +338,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPreChoosePlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> choices)
+		private void OnPreSelectPlayers(PlayerRef player, ChoicePurpose purpose, List<PlayerRef> choices)
 		{
 			if (purpose != ChoicePurpose.Kill || _couples.Count <= 0)
 			{
@@ -358,7 +358,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnVoteStarting(ChoicePurpose purpose)
+		void IVoteManagerSubscriber.OnVoteStarting(ChoicePurpose purpose)
 		{
 			if (purpose != ChoicePurpose.Kill || _couples.Count <= 0)
 			{
@@ -373,7 +373,7 @@ namespace Werewolf.Gameplay.Role
 		}
 
 		#region Couple Death
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			IEnumerable<PlayerRef[]> couples = _couples.Where(x => x.Contains(deadPlayer));
 
@@ -467,7 +467,7 @@ namespace Werewolf.Gameplay.Role
 		}
 		#endregion
 
-		private void OnPostPlayerLeft(PlayerRef deadPlayer)
+		private void OnPostPlayerDisconnected(PlayerRef deadPlayer)
 		{
 			if (deadPlayer == Player && _waitToRemoveDeadCoupleHighlightCoroutine != null)
 			{
@@ -508,9 +508,10 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnDestroy()
 		{
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
-			_gameManager.PostPlayerDisconnected -= OnPostPlayerLeft;
-			_voteManager.VoteStarting -= OnVoteStarting;
+			_gameManager.PreSelectPlayers -= OnPreSelectPlayers;
+			_voteManager.Unsubscribe(this);
+			_gameManager.PlayerDied -= OnPlayerDied;
+			_gameManager.PostPlayerDisconnected -= OnPostPlayerDisconnected;
 		}
 	}
 }

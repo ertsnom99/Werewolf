@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
+  m_Name: VillageIdiot
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField:
+    Guid: 984e51fe-2ef8-453b-966a-1d19bbc9f2fd
+    HashCode: -282413945
+  <DebugName>k__BackingField: VillageIdiot
+  <NameSingular>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 113101294696521728
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <NamePlural>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 113101350619176960
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Image>k__BackingField: {fileID: 21300000, guid: 3cb503ee8955f244bab5ec44d63d4a47,
+    type: 3}
+  <SmallImage>k__BackingField: {fileID: 21300000, guid: 1ffe0da868d00c145ade2a2317905772,
+    type: 3}
+  <PrimaryType>k__BackingField: 0
+  <SecondaryType>k__BackingField: 0
+  <CanHaveVariableAmount>k__BackingField: 0
+  <MandatoryAmount>k__BackingField: 1
+  <PlayerGroups>k__BackingField:
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
+  <NightPriorities>k__BackingField: []
+  <Behavior>k__BackingField: {fileID: 1462959326343161174, guid: c02060659507ea64c8d8da1fac110e34,
+    type: 3}
+  references:
+    version: 2
+    RefIds: []

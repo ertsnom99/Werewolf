@@ -35,7 +35,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			base.Initialize();
 
-			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
+			_gameManager.PlayerDied += OnPlayerDied;
 
 			if (PlayerGroupIDs.Count < 2)
 			{
@@ -179,7 +179,7 @@ namespace Werewolf.Gameplay.Role
 			SelectRandomModel();
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player.IsNone
 				|| Player == deadPlayer
@@ -233,7 +233,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			base.OnDestroy();
 
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
+			_gameManager.PlayerDied -= OnPlayerDied;
 		}
 	}
 }

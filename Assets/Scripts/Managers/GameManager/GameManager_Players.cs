@@ -16,6 +16,7 @@ namespace Werewolf.Managers
 	{
 		public RoleData Role;
 		public List<RoleBehavior> Behaviors;
+		public bool IsRoleRevealed;
 		public bool IsAwake;
 		public bool IsAlive;
 	}

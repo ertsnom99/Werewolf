@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d1eacae6feb964fb2367c2a8b1e95b, type: 3}
+  m_Name: PlayerDiedNoRole
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField:
+    Guid: 5c85f60c-dd75-4586-a8d2-81d925364348
+    HashCode: -175098733
+  <DebugName>k__BackingField: PlayerDiedNoRole
+  <Image>k__BackingField: {fileID: 21300000, guid: 4f84494348aa52b428bb6f7494342c56,
+    type: 3}
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+    m_TableEntryReference:
+      m_KeyId: 115994227040968704
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

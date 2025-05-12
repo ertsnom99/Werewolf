@@ -231,6 +231,14 @@ MonoBehaviour:
     m_Key: Scapegoat_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 113101294696521728
+    m_Key: VillageIdiot_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 113101350619176960
+    m_Key: VillageIdiot_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

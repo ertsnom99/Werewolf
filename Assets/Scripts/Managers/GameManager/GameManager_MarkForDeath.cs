@@ -48,6 +48,11 @@ namespace Werewolf.Managers
 			}
 		}
 
+		public void RemoveAllMarksForDeath(PlayerRef player)
+		{
+			_marksForDeath.RemoveAll(x => x.Player == player);
+		}
+
 		public void MoveMarksForDeathToLast(PlayerRef player)
 		{
 			int index = 0;
@@ -80,6 +85,19 @@ namespace Werewolf.Managers
 			}
 
 			return players.ToArray();
+		}
+
+		public bool HasPlayerMarkForDeath(PlayerRef player, MarkForDeathData inMarkForDeath)
+		{
+			foreach (MarkForDeath markForDeath in _marksForDeath)
+			{
+				if (markForDeath.Player == player && markForDeath.Mark == inMarkForDeath)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 }

@@ -61,7 +61,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3288390729728
-    m_Localized: You were executed
+    m_Localized: You were choosen for execution
     m_Metadata:
       m_Items: []
   - m_Id: 3540103495680
@@ -192,7 +192,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1194417882693632
-    m_Localized: 'Your new role is: {Role}'
+    m_Localized: 'Your new role is: {Role:t(RoleName)}'
     m_Metadata:
       m_Items:
       - rid: 4972454616256217094
@@ -287,17 +287,26 @@ MonoBehaviour:
       m_Items:
       - rid: 4972454616256217094
   - m_Id: 53549495245725696
-    m_Localized: The execution was a draw, therefore you were executed
+    m_Localized: The execution was a draw, therefore you were choosen
     m_Metadata:
       m_Items: []
   - m_Id: 53977959291543552
     m_Localized: You are spectating during the execution vote
     m_Metadata:
       m_Items: []
+  - m_Id: 56765968168640512
+    m_Localized: You were choosen for execution, but you will be spared
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56766487121485824
+    m_Localized: The {"Village Idiot":t(RoleName)} will be spare from the execution
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217094
   references:
     version: 2
     RefIds:
     - rid: 4972454616256217094
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd0000e045765cc4220000809c295f3e04000080dc6411080000
+        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd0000e045765cc4220000809c295f3e04000080dc641108000000e005bcd1acc900

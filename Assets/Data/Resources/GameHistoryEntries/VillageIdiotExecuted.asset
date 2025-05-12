@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d1eacae6feb964fb2367c2a8b1e95b, type: 3}
+  m_Name: VillageIdiotExecuted
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField:
+    Guid: 03b86577-a1c7-4dc1-8d01-2fad5d3ed58a
+    HashCode: -1448410577
+  <DebugName>k__BackingField: VillageIdiotExecuted
+  <Image>k__BackingField: {fileID: 21300000, guid: 977a6149e8b5fa14a8308aa0a8ee7da4,
+    type: 3}
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:42fef827aafa1c84b91c2840eb784a8d
+    m_TableEntryReference:
+      m_KeyId: 115850074114088960
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

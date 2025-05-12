@@ -46,8 +46,8 @@ namespace Werewolf.Gameplay.Role
 			_networkDataManager = NetworkDataManager.Instance;
 
 			_gameManager.GameplayLoopStepStarts += OnGameplayLoopStepStarts;
-			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
-			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
+			_gameManager.PlayerDied += OnPlayerDied;
+			_gameManager.PostPlayerDisconnected += OnPostPlayerDisconnected;
 		}
 
 		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
@@ -65,7 +65,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player != deadPlayer || _gameManager.AlivePlayerCount <= 1)
 			{
@@ -73,8 +73,6 @@ namespace Werewolf.Gameplay.Role
 			}
 
 			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
-			choices.Remove(Player);
-
 			_choices = choices.ToArray();
 
 			if (!_gameManager.SelectPlayers(Player,
@@ -206,7 +204,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnPostPlayerLeft(PlayerRef deadPlayer)
+		private void OnPostPlayerDisconnected(PlayerRef deadPlayer)
 		{
 			if (deadPlayer != Player || (_startChoiceTimerCoroutine == null && _waitToRemoveHighlightCoroutine == null))
 			{
@@ -228,8 +226,8 @@ namespace Werewolf.Gameplay.Role
 		private void OnDestroy()
 		{
 			_gameManager.GameplayLoopStepStarts -= OnGameplayLoopStepStarts;
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
-			_gameManager.PostPlayerDisconnected -= OnPostPlayerLeft;
+			_gameManager.PlayerDied -= OnPlayerDied;
+			_gameManager.PostPlayerDisconnected -= OnPostPlayerDisconnected;
 		}
 	}
 }

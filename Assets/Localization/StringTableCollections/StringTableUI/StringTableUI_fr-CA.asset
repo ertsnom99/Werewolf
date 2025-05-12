@@ -30,7 +30,7 @@ MonoBehaviour:
       m_Items:
       - rid: 4972454835144097795
   - m_Id: 802396118482944
-    m_Localized: "Vous avez re\xE7u le r\xF4le de {Role}"
+    m_Localized: "Vous avez re\xE7u le r\xF4le de {Role:t(RoleName)}"
     m_Metadata:
       m_Items:
       - rid: 4972454835144097795

@@ -43,7 +43,7 @@ namespace Werewolf.Gameplay.Role
 			_networkDataManager = NetworkDataManager.Instance;
 
 			_gameManager.MarkForDeathAdded += OnMarkForDeathAdded;
-			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
+			_gameManager.PlayerDied += OnPlayerDied;
 			_gameManager.GameplayLoopStepStarts += OnGameplayLoopStepStarts;
 		}
 
@@ -62,7 +62,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (deadPlayer == Player && _markForDeathToKillWerewolf.Contains(markForDeath) && !_werewolfToKill.IsNone)
 			{
@@ -110,7 +110,7 @@ namespace Werewolf.Gameplay.Role
 		private void OnDestroy()
 		{
 			_gameManager.MarkForDeathAdded -= OnMarkForDeathAdded;
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
+			_gameManager.PlayerDied -= OnPlayerDied;
 			_gameManager.GameplayLoopStepStarts -= OnGameplayLoopStepStarts;
 		}
 	}

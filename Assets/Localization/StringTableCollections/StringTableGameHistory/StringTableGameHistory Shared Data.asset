@@ -219,6 +219,14 @@ MonoBehaviour:
     m_Key: Scapegoat_NextVoters
     m_Metadata:
       m_Items: []
+  - m_Id: 115850074114088960
+    m_Key: VillageIdiot_Executed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 115994227040968704
+    m_Key: Player_DiedNoRole
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -13,10 +13,6 @@ namespace Werewolf.Managers
 {
 	public class GameHistoryManager : MonoSingleton<GameHistoryManager>
 	{
-		private string _saveDirectoryPath;
-
-		private readonly GameHistorySave _gameHistorySave = new();
-
 		[Serializable]
 		public class GameHistorySave
 		{
@@ -49,8 +45,10 @@ namespace Werewolf.Managers
 			Bool
 		}
 
-		private const char VARIABLE_DATA_SEPARATOR = '|';
+		private string _saveDirectoryPath;
+		private readonly GameHistorySave _gameHistorySave = new();
 
+		private const char VARIABLE_DATA_SEPARATOR = '|';
 		private const string SAVE_FOLDER = "GameHistory";
 		private const string SAVE_FILE_EXTENSION = ".json";
 

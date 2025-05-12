@@ -10,7 +10,7 @@ using static Werewolf.Managers.GameManager;
 
 namespace Werewolf.Gameplay.Role
 {
-	public class ScapegoatBehavior : RoleBehavior
+	public class ScapegoatBehavior : RoleBehavior, IVoteManagerSubscriber
 	{
 		[Header("Execution Draw")]
 		[SerializeField]
@@ -57,12 +57,12 @@ namespace Werewolf.Gameplay.Role
 			_voteManager = VoteManager.Instance;
 
 			_gameManager.FirstExecutionVotesCounted += OnFirstExecutionVotesCounted;
-			_gameManager.PlayerDeathRevealStarted += OnPlayerDeathRevealStarted;
-			_gameManager.WaitBeforePlayerDeathRevealEnded += OnWaitBeforePlayerDeathRevealEnded;
-			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
-			_voteManager.VoteStarting += OnVoteStarting;
+			_gameManager.RevealDeadPlayerRoleStarted += OnRevealDeadPlayerRoleStarted;
+			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded += OnWaitBeforeFlipDeadPlayerRoleEnded;
+			_gameManager.PlayerDied += OnPlayerDied;
+			_voteManager.Subscribe(this, 0);
 			_gameManager.GameplayLoopStepStarts += OnGameplayLoopStepStarts;
-			_gameManager.PostPlayerDisconnected += OnPostPlayerLeft;
+			_gameManager.PostPlayerDisconnected += OnPostPlayerDisconnected;
 		}
 
 		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
@@ -95,15 +95,15 @@ namespace Werewolf.Gameplay.Role
 			_executionDrawHappened = true;
 		}
 
-		private void OnPlayerDeathRevealStarted(PlayerRef playerRevealed)
+		private void OnRevealDeadPlayerRoleStarted(PlayerRef playerRevealed)
 		{
-			if (_networkDataManager.PlayerInfos[Player].IsConnected && Player == playerRevealed && _executionDrawHappened)
+			if (Player == playerRevealed && _executionDrawHappened && _networkDataManager.PlayerInfos[Player].IsConnected)
 			{
 				_gameManager.RPC_DisplayTitle(Player, _executionDrawTitleScreen.ID.HashCode);
 			}
 		}
 
-		private void OnWaitBeforePlayerDeathRevealEnded(PlayerRef playerRevealed)
+		private void OnWaitBeforeFlipDeadPlayerRoleEnded(PlayerRef playerRevealed)
 		{
 			if (Player != playerRevealed || !_executionDrawHappened)
 			{
@@ -112,14 +112,14 @@ namespace Werewolf.Gameplay.Role
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
-				if (_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected && playerInfo.Key != Player)
+				if (playerInfo.Key != Player && _networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
 				{
 					_gameManager.RPC_DisplayTitle(playerInfo.Key, _roleRevealTitleScreen.ID.HashCode);
 				}
 			}
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player != deadPlayer || !_executionDrawHappened || _gameManager.AlivePlayerCount <= 1)
 			{
@@ -153,7 +153,7 @@ namespace Werewolf.Gameplay.Role
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
-				if (_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected && playerInfo.Key != Player)
+				if (playerInfo.Key != Player && _networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
 				{
 					_gameManager.RPC_DisplayTitle(playerInfo.Key, _choosingPlayersTitleScreen.ID.HashCode);
 				}
@@ -255,7 +255,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnVoteStarting(ChoicePurpose purpose)
+		void IVoteManagerSubscriber.OnVoteStarting(ChoicePurpose purpose)
 		{
 			if (_gameManager.CurrentGameplayLoopStep != GameplayLoopStep.Execution || _nextVoters == null)
 			{
@@ -293,7 +293,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPostPlayerLeft(PlayerRef deadPlayer)
+		private void OnPostPlayerDisconnected(PlayerRef deadPlayer)
 		{
 			if (deadPlayer != Player || (_startChoiceTimerCoroutine == null && _waitToRemoveHighlightCoroutine == null))
 			{
@@ -319,12 +319,12 @@ namespace Werewolf.Gameplay.Role
 		private void OnDestroy()
 		{
 			_gameManager.FirstExecutionVotesCounted -= OnFirstExecutionVotesCounted;
-			_gameManager.PlayerDeathRevealStarted -= OnPlayerDeathRevealStarted;
-			_gameManager.WaitBeforePlayerDeathRevealEnded -= OnWaitBeforePlayerDeathRevealEnded;
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
-			_gameManager.PostPlayerDisconnected -= OnPostPlayerLeft;
-			_voteManager.VoteStarting -= OnVoteStarting;
+			_gameManager.RevealDeadPlayerRoleStarted -= OnRevealDeadPlayerRoleStarted;
+			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded -= OnWaitBeforeFlipDeadPlayerRoleEnded;
+			_gameManager.PlayerDied -= OnPlayerDied;
+			_voteManager.Unsubscribe(this);
 			_gameManager.GameplayLoopStepStarts -= OnGameplayLoopStepStarts;
+			_gameManager.PostPlayerDisconnected -= OnPostPlayerDisconnected;
 		}
 	}
 }

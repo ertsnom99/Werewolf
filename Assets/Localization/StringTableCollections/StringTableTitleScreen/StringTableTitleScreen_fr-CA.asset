@@ -61,7 +61,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3288390729728
-    m_Localized: "Vous avez \xE9t\xE9 ex\xE9cut\xE9"
+    m_Localized: "Vous avez \xE9t\xE9 choisi pour l'ex\xE9cution"
     m_Metadata:
       m_Items: []
   - m_Id: 3540103495680
@@ -197,7 +197,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1194417882693632
-    m_Localized: "Votre nouveau r\xF4le est: {Role}"
+    m_Localized: "Votre nouveau r\xF4le est: {Role:t(RoleName)}"
     m_Metadata:
       m_Items:
       - rid: 4972454835144097793
@@ -293,17 +293,27 @@ MonoBehaviour:
       m_Items:
       - rid: 4972454835144097793
   - m_Id: 53549495245725696
-    m_Localized: "Le vote fut une \xE9galit\xE9, donc vous avez \xE9t\xE9 ex\xE9cut\xE9"
+    m_Localized: "Le vote fut une \xE9galit\xE9, donc vous avez \xE9t\xE9 choisi"
     m_Metadata:
       m_Items: []
   - m_Id: 53977959291543552
     m_Localized: "Vous assistez au vote d'ex\xE9cution"
     m_Metadata:
       m_Items: []
+  - m_Id: 56765968168640512
+    m_Localized: "Vous avez \xE9t\xE9 choisi pour l'ex\xE9cution, mais vous seras
+      \xE9pargn\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56766487121485824
+    m_Localized: "L'{\"Idiot du Village\":t(RoleName)} sera \xE9pargn\xE9 de l'ex\xE9cution"
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097793
   references:
     version: 2
     RefIds:
     - rid: 4972454835144097793
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd0000e045765cc4220000809c295f3e04000080dc6411080000
+        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd0000e045765cc4220000809c295f3e04000080dc641108000000e005bcd1acc900

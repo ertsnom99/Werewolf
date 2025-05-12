@@ -198,6 +198,9 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public GameHistoryEntryData PlayerDiedGameHistoryEntry { get; private set; }
 
+		[field: SerializeField]
+		public GameHistoryEntryData PlayerDiedNoRoleGameHistoryEntry { get; private set; }
+
 		[field: Header("Execution")]
 		[field: SerializeField]
 		public TitleScreenData ExecutionDebateTitleScreen { get; private set; }

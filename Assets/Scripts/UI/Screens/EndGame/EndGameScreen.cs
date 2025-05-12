@@ -15,7 +15,7 @@ namespace Werewolf.UI
 	{
 		public PlayerRef Player;
 		public int RoleID;
-		public bool IsAlive;
+		public bool IsRoleRevealed;
 		public bool Won;
 	}
 

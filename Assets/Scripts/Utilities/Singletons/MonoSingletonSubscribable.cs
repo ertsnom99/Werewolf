@@ -5,13 +5,26 @@ public class MonoSingletonSubscribable<T, U> : MonoSingleton<U> where U : MonoBe
 {
 	protected List<T> Subscribers = new();
 
-	public virtual void Subscribe(T subscriber)
+	public virtual void Subscribe(T subscriber, int priority = -1)
 	{
-		Subscribers.Add(subscriber);
+		if (!Subscribers.Contains(subscriber))
+		{
+			if (priority > 1 && priority <= Subscribers.Count)
+			{
+				Subscribers.Insert(priority, subscriber);
+			}
+			else
+			{
+				Subscribers.Add(subscriber);
+			}
+		}
 	}
 
 	public virtual void Unsubscribe(T subscriber)
 	{
-		Subscribers.Remove(subscriber);
+		if (Subscribers.Contains(subscriber))
+		{
+			Subscribers.Remove(subscriber);
+		}
 	}
 }

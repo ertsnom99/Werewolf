@@ -42,7 +42,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 802396118482944
-    m_Localized: Your were given the role of {Role}
+    m_Localized: Your were given the role of {Role:t(RoleName)}
     m_Metadata:
       m_Items:
       - rid: 4972454616256217108

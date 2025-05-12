@@ -12,13 +12,12 @@ using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Managers
 {
-	public class VoteManager : NetworkBehaviourSingleton<VoteManager>
+	public class VoteManager : NetworkBehaviourSingletonSubscribable<IVoteManagerSubscriber, VoteManager>
 	{
 		public HashSet<PlayerRef> Voters { get; private set; }
 
 		public HashSet<PlayerRef> Spectators { get; private set; }
 
-		public event Action<ChoicePurpose> VoteStarting;
 		public event Action<Dictionary<PlayerRef, int>> VoteCompleted;
 
 		private GameConfig _gameConfig;
@@ -181,6 +180,14 @@ namespace Werewolf.Managers
 			}
 		}
 
+		public void RemoveVoter(PlayerRef voter)
+		{
+			if (_step == Step.Preparing && Voters.Contains(voter))
+			{
+				Voters.Remove(voter);
+			}
+		}
+
 		public void ClearVoters()
 		{
 			if (_step == Step.Preparing)
@@ -228,7 +235,10 @@ namespace Werewolf.Managers
 				return;
 			}
 
-			VoteStarting?.Invoke(_purpose);
+			foreach (IVoteManagerSubscriber subscriber in Subscribers)
+			{
+				subscriber.OnVoteStarting(_purpose);
+			}
 
 			VoteModifier[] voteModifiers;
 

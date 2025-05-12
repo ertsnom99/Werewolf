@@ -44,8 +44,8 @@ namespace Werewolf.Gameplay.Role
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
 
-			_gameManager.WaitBeforePlayerDeathRevealStarted += OnWaitBeforePlayerDeathRevealStarted;
-			_gameManager.WaitBeforePlayerDeathRevealEnded += OnWaitBeforePlayerDeathRevealEnded;
+			_gameManager.WaitBeforeFlipDeadPlayerRoleStarted += OnWaitBeforeFlipDeadPlayerRoleStarted;
+			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded += OnWaitBeforeFlipDeadPlayerRoleEnded;
 		}
 
 		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
@@ -55,7 +55,7 @@ namespace Werewolf.Gameplay.Role
 			return isWakingUp = false;
 		}
 
-		private void OnWaitBeforePlayerDeathRevealStarted(PlayerRef playerRevealed, MarkForDeathData mark, float revealDuration)
+		private void OnWaitBeforeFlipDeadPlayerRoleStarted(PlayerRef playerRevealed, MarkForDeathData mark, float revealDuration)
 		{
 			if (Player.IsNone
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
@@ -73,7 +73,7 @@ namespace Werewolf.Gameplay.Role
 		private void OnTakeRole(PlayerRef player)
 		{
 			_isWaitingForPromptAnswer = false;
-			_gameManager.StopPlayerDeathReveal();
+			_gameManager.StopDeadPlayerRoleReveal();
 
 			StartCoroutine(ChangeRole());
 		}
@@ -165,12 +165,12 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.PutCardBackDown(previousPlayer, false);
 #endif
 			yield return new WaitForSeconds(_gameManager.GameConfig.MoveToCameraDuration);
-			_gameManager.SetPlayerDeathRevealCompleted();
+			_gameManager.SetDeadPlayerRoleRevealCompleted();
 
 			Destroy(gameObject);
 		}
 
-		private void OnWaitBeforePlayerDeathRevealEnded(PlayerRef playerRevealed)
+		private void OnWaitBeforeFlipDeadPlayerRoleEnded(PlayerRef playerRevealed)
 		{
 			if (_isWaitingForPromptAnswer)
 			{
@@ -184,8 +184,8 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnDestroy()
 		{
-			_gameManager.WaitBeforePlayerDeathRevealStarted -= OnWaitBeforePlayerDeathRevealStarted;
-			_gameManager.WaitBeforePlayerDeathRevealEnded -= OnWaitBeforePlayerDeathRevealEnded;
+			_gameManager.WaitBeforeFlipDeadPlayerRoleStarted -= OnWaitBeforeFlipDeadPlayerRoleStarted;
+			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded -= OnWaitBeforeFlipDeadPlayerRoleEnded;
 		}
 	}
 }

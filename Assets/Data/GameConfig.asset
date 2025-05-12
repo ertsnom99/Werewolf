@@ -136,6 +136,8 @@ MonoBehaviour:
     type: 2}
   <PlayerDiedGameHistoryEntry>k__BackingField: {fileID: 11400000, guid: eba0af5aa0460394ea751c209fb9da06,
     type: 2}
+  <PlayerDiedNoRoleGameHistoryEntry>k__BackingField: {fileID: 11400000, guid: 934c0c93c38282c48b5f4bac39b8a85a,
+    type: 2}
   <ExecutionDebateTitleScreen>k__BackingField: {fileID: 11400000, guid: 015a5744b900e334793efd856f37ca18,
     type: 2}
   <ExecutionDebateDuration>k__BackingField: 60

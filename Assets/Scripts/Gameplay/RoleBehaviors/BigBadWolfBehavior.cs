@@ -45,6 +45,7 @@ namespace Werewolf.Gameplay.Role
 		private UniqueID[] _werewolvesPlayerGroupIDs;
 		private bool _hasPower = true;
 		private IEnumerator _endRoleCallAfterTimeCoroutine;
+		private bool _revealedPlayerIsWerewolf;
 
 		public override void Initialize()
 		{
@@ -52,7 +53,8 @@ namespace Werewolf.Gameplay.Role
 
 			_werewolvesPlayerGroupIDs = GameplayData.GetIDs(_werewolvesPlayerGroups);
 
-			_gameManager.PlayerDeathRevealEnded += OnPlayerDeathRevealEnded;
+			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded += OnWaitBeforeFlipDeadPlayerRoleEnded;
+			_gameManager.PlayerDied += OnPlayerDied;
 
 			if (NightPriorities.Count < 2)
 			{
@@ -220,12 +222,24 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
-		private void OnPlayerDeathRevealEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		private void OnWaitBeforeFlipDeadPlayerRoleEnded(PlayerRef deadPlayer)
+		{
+			if (Player.IsNone
+				|| Player == deadPlayer
+				|| !_gameManager.PlayerGameInfos[Player].IsAlive)
+			{
+				return;
+			}
+
+			_revealedPlayerIsWerewolf = _gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroupIDs);
+		}
+
+		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player.IsNone
 				|| Player == deadPlayer
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
-				|| !_gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroupIDs))
+				|| !_revealedPlayerIsWerewolf)
 			{
 				return;
 			}
@@ -242,7 +256,8 @@ namespace Werewolf.Gameplay.Role
 												}
 										});
 
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
+			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded -= OnWaitBeforeFlipDeadPlayerRoleEnded;
+			_gameManager.PlayerDied -= OnPlayerDied;
 		}
 
 		public override void OnPlayerChanged() { }
@@ -256,7 +271,8 @@ namespace Werewolf.Gameplay.Role
 		{
 			base.OnDestroy();
 
-			_gameManager.PlayerDeathRevealEnded -= OnPlayerDeathRevealEnded;
+			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded -= OnWaitBeforeFlipDeadPlayerRoleEnded;
+			_gameManager.PlayerDied -= OnPlayerDied;
 		}
 	}
 }
