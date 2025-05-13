@@ -5,11 +5,12 @@ using System.Linq;
 using UnityEngine;
 using Utilities.GameplayData;
 using Werewolf.Data;
+using Werewolf.Managers;
 using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Gameplay.Role
 {
-	public class BigBadWolfBehavior : WerewolfBehavior
+	public class BigBadWolfBehavior : WerewolfBehavior, IGameManagerSubscriber
 	{
 		[Header("Big Bad Wolf")]
 		[SerializeField]
@@ -54,7 +55,8 @@ namespace Werewolf.Gameplay.Role
 			_werewolvesPlayerGroupIDs = GameplayData.GetIDs(_werewolvesPlayerGroups);
 
 			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded += OnWaitBeforeFlipDeadPlayerRoleEnded;
-			_gameManager.PlayerDied += OnPlayerDied;
+			_gameManager.Subscribe(this);
+			_gameManager.DeathRevealEnded += OnDeathRevealEnded;
 
 			if (NightPriorities.Count < 2)
 			{
@@ -234,7 +236,7 @@ namespace Werewolf.Gameplay.Role
 			_revealedPlayerIsWerewolf = _gameManager.IsPlayerInPlayerGroups(deadPlayer, _werewolvesPlayerGroupIDs);
 		}
 
-		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		void IGameManagerSubscriber.OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player.IsNone
 				|| Player == deadPlayer
@@ -257,7 +259,17 @@ namespace Werewolf.Gameplay.Role
 										});
 
 			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded -= OnWaitBeforeFlipDeadPlayerRoleEnded;
-			_gameManager.PlayerDied -= OnPlayerDied;
+		}
+
+		private void OnDeathRevealEnded()
+		{
+			if (_hasPower)
+			{
+				return;
+			}
+
+			_gameManager.Unsubscribe(this);
+			_gameManager.DeathRevealEnded -= OnDeathRevealEnded;
 		}
 
 		public override void OnPlayerChanged() { }
@@ -272,7 +284,8 @@ namespace Werewolf.Gameplay.Role
 			base.OnDestroy();
 
 			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded -= OnWaitBeforeFlipDeadPlayerRoleEnded;
-			_gameManager.PlayerDied -= OnPlayerDied;
+			_gameManager.Unsubscribe(this);
+			_gameManager.DeathRevealEnded -= OnDeathRevealEnded;
 		}
 	}
 }

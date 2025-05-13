@@ -13,7 +13,7 @@ using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Gameplay.Role
 {
-	public class CupidBehavior : RoleBehavior, IVoteManagerSubscriber
+	public class CupidBehavior : RoleBehavior, IVoteManagerSubscriber, IGameManagerSubscriber
 	{
 		[Header("Choose Couple")]
 		[SerializeField]
@@ -61,6 +61,7 @@ namespace Werewolf.Gameplay.Role
 		private IEnumerator _waitToRemoveDeadCoupleHighlightCoroutine;
 		private bool _choseCouple;
 		private bool _showedCouple;
+		private readonly List<PlayerRef[]> _couplesPlayersToHighlight = new();
 
 		private GameManager _gameManager;
 		private GameHistoryManager _gameHistoryManager;
@@ -76,7 +77,8 @@ namespace Werewolf.Gameplay.Role
 
 			_gameManager.PreSelectPlayers += OnPreSelectPlayers;
 			_voteManager.Subscribe(this);
-			_gameManager.PlayerDied += OnPlayerDied;
+			_gameManager.PlayerDeathRevealStarted += OnPlayerDeathRevealStarted;
+			_gameManager.Subscribe(this, 0);
 			_gameManager.PostPlayerDisconnected += OnPostPlayerDisconnected;
 
 			if (NightPriorities.Count < 2)
@@ -373,8 +375,13 @@ namespace Werewolf.Gameplay.Role
 		}
 
 		#region Couple Death
-		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		void IGameManagerSubscriber.OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
+			if (_couplesPlayersToHighlight.Any(x => x.Contains(deadPlayer)))
+			{
+				return;
+			}
+
 			IEnumerable<PlayerRef[]> couples = _couples.Where(x => x.Contains(deadPlayer));
 
 			if (couples.Count() <= 0)
@@ -399,58 +406,62 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
-			_gameManager.WaitForPlayer(Player);
-
-			StartCoroutine(WaitToMarkOtherCouplePlayerForDeath(deadPlayer, otherCouplePlayers));
-		}
-
-		private IEnumerator WaitToMarkOtherCouplePlayerForDeath(PlayerRef deadCouplePlayer, HashSet<PlayerRef> otherCouplePlayers)
-		{
-			yield return 0;
-
-			while (_gameManager.PlayersWaitingFor.Count > 1)
-			{
-				yield return 0;
-			}
-
 			foreach (PlayerRef otherCouplePlayer in otherCouplePlayers)
 			{
-				_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 1);
+				_gameManager.AddMarkForDeath(otherCouplePlayer, _markForDeathAddedByCoupleDeath, 0);
+			}
 
+			otherCouplePlayers.Add(deadPlayer);
+			_couplesPlayersToHighlight.Add(otherCouplePlayers.ToArray());
+		}
+
+		private void OnPlayerDeathRevealStarted(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		{
+			if (markForDeath != _markForDeathAddedByCoupleDeath || _couplesPlayersToHighlight.Count <= 0)
+			{
+				return;
+			}
+
+			int couplePlayersToHighlightIndex = _couplesPlayersToHighlight.FindIndex(x => x.Contains(deadPlayer));
+
+			if (couplePlayersToHighlightIndex == -1)
+			{
+				return;
+			}
+
+			PlayerRef[] couplePlayersToHighlight = _couplesPlayersToHighlight[couplePlayersToHighlightIndex];
+
+			for (int i = 0; i < _couplesPlayersToHighlight[couplePlayersToHighlightIndex].Length - 1; i++)
+			{
 				_gameHistoryManager.AddEntry(_coupleDiedGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 											new()
 											{
 												Name = "FirstCouplePlayer",
-												Data = _networkDataManager.PlayerInfos[deadCouplePlayer].Nickname,
+												Data = _networkDataManager.PlayerInfos[couplePlayersToHighlight[couplePlayersToHighlight.Length - 1]].Nickname,
 												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
 											{
 												Name = "SecondCouplePlayer",
-												Data = _networkDataManager.PlayerInfos[otherCouplePlayer].Nickname,
+												Data = _networkDataManager.PlayerInfos[couplePlayersToHighlight[i]].Nickname,
 												Type = GameHistorySaveEntryVariableType.Player
 											}
 											});
 			}
 
-			otherCouplePlayers.Add(deadCouplePlayer);
+			_gameManager.WaitForPlayer(Player);
 
-			HighlightDeadPlayers(otherCouplePlayers.ToArray());
-		}
-
-		private void HighlightDeadPlayers(PlayerRef[] deadPlayers)
-		{
 			_gameManager.RPC_DisplayTitle(_coupleDeathTitleScreen.ID.HashCode);
-			_gameManager.RPC_SetPlayersCardHighlightVisible(deadPlayers, true);
+			_gameManager.RPC_SetPlayersCardHighlightVisible(couplePlayersToHighlight, true);
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayersCardHighlightVisible(deadPlayers, true);
+			_gameManager.SetPlayersCardHighlightVisible(couplePlayersToHighlight, true);
 #endif
-			_waitToRemoveDeadCoupleHighlightCoroutine = WaitToRemoveDeadPlayersHighlight(deadPlayers);
+			_waitToRemoveDeadCoupleHighlightCoroutine = WaitToRemoveDeadPlayersHighlight(couplePlayersToHighlight, couplePlayersToHighlightIndex);
 			StartCoroutine(_waitToRemoveDeadCoupleHighlightCoroutine);
 		}
 
-		private IEnumerator WaitToRemoveDeadPlayersHighlight(PlayerRef[] deadPlayers)
+		private IEnumerator WaitToRemoveDeadPlayersHighlight(PlayerRef[] deadPlayers, int couplePlayersToHighlightIndex)
 		{
 			yield return new WaitForSeconds(_coupleDeathHighlightHoldDuration * _gameManager.GameSpeedModifier);
 
@@ -463,6 +474,8 @@ namespace Werewolf.Gameplay.Role
 			yield return new WaitForSeconds(_gameManager.GameConfig.UITransitionNormalDuration);
 
 			_waitToRemoveDeadCoupleHighlightCoroutine = null;
+			_couplesPlayersToHighlight.RemoveAt(couplePlayersToHighlightIndex);
+
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 		#endregion
@@ -510,7 +523,8 @@ namespace Werewolf.Gameplay.Role
 		{
 			_gameManager.PreSelectPlayers -= OnPreSelectPlayers;
 			_voteManager.Unsubscribe(this);
-			_gameManager.PlayerDied -= OnPlayerDied;
+			_gameManager.PlayerDeathRevealStarted -= OnPlayerDeathRevealStarted;
+			_gameManager.Unsubscribe(this);
 			_gameManager.PostPlayerDisconnected -= OnPostPlayerDisconnected;
 		}
 	}

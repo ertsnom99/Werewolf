@@ -11,7 +11,7 @@ using static Werewolf.Managers.GameManager;
 
 namespace Werewolf.Gameplay.Role
 {
-	public class KnightWithRustySwordBehavior : RoleBehavior
+	public class KnightWithRustySwordBehavior : RoleBehavior, IGameManagerSubscriber
 	{
 		[Header("Kill Werewolf")]
 		[SerializeField]
@@ -43,7 +43,7 @@ namespace Werewolf.Gameplay.Role
 			_networkDataManager = NetworkDataManager.Instance;
 
 			_gameManager.MarkForDeathAdded += OnMarkForDeathAdded;
-			_gameManager.PlayerDied += OnPlayerDied;
+			_gameManager.Subscribe(this);
 			_gameManager.GameplayLoopStepStarts += OnGameplayLoopStepStarts;
 		}
 
@@ -62,7 +62,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		void IGameManagerSubscriber.OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (deadPlayer == Player && _markForDeathToKillWerewolf.Contains(markForDeath) && !_werewolfToKill.IsNone)
 			{
@@ -110,7 +110,7 @@ namespace Werewolf.Gameplay.Role
 		private void OnDestroy()
 		{
 			_gameManager.MarkForDeathAdded -= OnMarkForDeathAdded;
-			_gameManager.PlayerDied -= OnPlayerDied;
+			_gameManager.Unsubscribe(this);
 			_gameManager.GameplayLoopStepStarts -= OnGameplayLoopStepStarts;
 		}
 	}

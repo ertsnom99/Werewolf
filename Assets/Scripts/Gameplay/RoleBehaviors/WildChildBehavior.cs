@@ -4,11 +4,12 @@ using Fusion;
 using UnityEngine;
 using Utilities.GameplayData;
 using Werewolf.Data;
+using Werewolf.Managers;
 using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Gameplay.Role
 {
-	public class WildChildBehavior : WerewolfBehavior
+	public class WildChildBehavior : WerewolfBehavior, IGameManagerSubscriber
 	{
 		[Header("Wild Child")]
 		[SerializeField]
@@ -35,7 +36,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			base.Initialize();
 
-			_gameManager.PlayerDied += OnPlayerDied;
+			_gameManager.Subscribe(this);
 
 			if (PlayerGroupIDs.Count < 2)
 			{
@@ -179,7 +180,7 @@ namespace Werewolf.Gameplay.Role
 			SelectRandomModel();
 		}
 
-		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		void IGameManagerSubscriber.OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player.IsNone
 				|| Player == deadPlayer
@@ -233,7 +234,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			base.OnDestroy();
 
-			_gameManager.PlayerDied -= OnPlayerDied;
+			_gameManager.Unsubscribe(this);
 		}
 	}
 }

@@ -19,7 +19,7 @@ using static Werewolf.Managers.GameHistoryManager;
 
 namespace Werewolf.Managers
 {
-	public partial class GameManager : NetworkBehaviourSingleton<GameManager>, INetworkRunnerCallbacks
+	public partial class GameManager : NetworkBehaviourSingletonSubscribable<IGameManagerSubscriber, GameManager>, INetworkRunnerCallbacks
 	{
 		[field: SerializeField]
 		public GameConfig GameConfig { get; private set; }
@@ -58,10 +58,10 @@ namespace Werewolf.Managers
 		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
 		public event Action StartNightCallChangeDelay;
+		public event Action<PlayerRef, MarkForDeathData> PlayerDeathRevealStarted;
 		public event Action<PlayerRef> RevealDeadPlayerRoleStarted;
 		public event Action<PlayerRef, MarkForDeathData, float> WaitBeforeFlipDeadPlayerRoleStarted;
 		public event Action<PlayerRef> WaitBeforeFlipDeadPlayerRoleEnded;
-		public event Action<PlayerRef, MarkForDeathData> PlayerDied;
 		public event Action DeathRevealEnded;
 		public event Action<List<PlayerRef>> FirstExecutionVotesCounted;
 
@@ -1042,6 +1042,7 @@ namespace Werewolf.Managers
 				while (_marksForDeath.Count > 0)
 				{
 					PlayerRef deadPlayer = _marksForDeath[0].Player;
+					MarkForDeathData markForDeath = _marksForDeath[0].Mark;
 
 					if (!PlayerGameInfos[deadPlayer].IsAlive)
 					{
@@ -1051,13 +1052,20 @@ namespace Werewolf.Managers
 
 					yield return new WaitForSeconds(GameConfig.DelayBeforeRevealingDeadPlayer * GameSpeedModifier);
 
+					PlayerDeathRevealStarted?.Invoke(deadPlayer, markForDeath);
+
+					while (PlayersWaitingFor.Count > 0)
+					{
+						yield return 0;
+					}
+
 					if (!PlayerGameInfos[deadPlayer].IsRoleRevealed)
 					{
 						if (_networkDataManager.PlayerInfos[deadPlayer].IsConnected)
 						{
-							RPC_DisplayTitle(deadPlayer, _marksForDeath[0].Mark == GameConfig.ExecutionMarkForDeath ?
-																	GameConfig.PlayerExecutedTitleScreen.ID.HashCode
-																	: GameConfig.PlayerDiedTitleScreen.ID.HashCode);
+							RPC_DisplayTitle(deadPlayer, markForDeath == GameConfig.ExecutionMarkForDeath ?
+																		GameConfig.PlayerExecutedTitleScreen.ID.HashCode :
+																		GameConfig.PlayerDiedTitleScreen.ID.HashCode);
 						}
 
 						_isDeadPlayerRoleRevealCompleted = false;
@@ -1065,7 +1073,7 @@ namespace Werewolf.Managers
 						_revealDeadPlayerRoleCoroutine = RevealDeadPlayerRole(deadPlayer,
 																			GetPlayersExcluding(deadPlayer),
 																			true,
-																			_marksForDeath[0].Mark,
+																			markForDeath,
 																			false,
 																			OnRevealDeadPlayerRoleEnded);
 						StartCoroutine(_revealDeadPlayerRoleCoroutine);
@@ -1086,7 +1094,7 @@ namespace Werewolf.Managers
 						yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 					}
 
-					if (_marksForDeath.Count > 0 && _marksForDeath[0].Player == deadPlayer)
+					if (_marksForDeath.Count > 0 && _marksForDeath[0].Player == deadPlayer && _marksForDeath[0].Mark == markForDeath)
 					{
 						if (PlayerGameInfos[deadPlayer].Role)
 						{
@@ -1119,13 +1127,13 @@ namespace Werewolf.Managers
 														});
 						}
 
-						SetPlayerDead(deadPlayer, _marksForDeath[0].Mark);
 						_marksForDeath.RemoveAt(0);
-					}
+						SetPlayerDead(deadPlayer, markForDeath);
 
-					while (PlayersWaitingFor.Count > 0)
-					{
-						yield return 0;
+						while (PlayersWaitingFor.Count > 0)
+						{
+							yield return 0;
+						}
 					}
 
 					if (deadPlayer == _captain && !PlayerGameInfos[deadPlayer].IsAlive)
@@ -1291,7 +1299,10 @@ namespace Werewolf.Managers
 				playerCard.DisplayDeadIcon();
 			}
 #endif
-			PlayerDied?.Invoke(deadPlayer, markForDeath);
+			foreach (IGameManagerSubscriber subscriber in Subscribers)
+			{
+				subscriber.OnPlayerDied(deadPlayer, markForDeath);
+			}
 		}
 		#endregion
 

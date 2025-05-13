@@ -10,7 +10,7 @@ using static Werewolf.Managers.GameManager;
 
 namespace Werewolf.Gameplay.Role
 {
-	public class ScapegoatBehavior : RoleBehavior, IVoteManagerSubscriber
+	public class ScapegoatBehavior : RoleBehavior, IGameManagerSubscriber, IVoteManagerSubscriber
 	{
 		[Header("Execution Draw")]
 		[SerializeField]
@@ -59,7 +59,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.FirstExecutionVotesCounted += OnFirstExecutionVotesCounted;
 			_gameManager.RevealDeadPlayerRoleStarted += OnRevealDeadPlayerRoleStarted;
 			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded += OnWaitBeforeFlipDeadPlayerRoleEnded;
-			_gameManager.PlayerDied += OnPlayerDied;
+			_gameManager.Subscribe(this);
 			_voteManager.Subscribe(this, 0);
 			_gameManager.GameplayLoopStepStarts += OnGameplayLoopStepStarts;
 			_gameManager.PostPlayerDisconnected += OnPostPlayerDisconnected;
@@ -119,9 +119,9 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		void IGameManagerSubscriber.OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
-			if (Player != deadPlayer || !_executionDrawHappened || _gameManager.AlivePlayerCount <= 1)
+			if (Player != deadPlayer || !_executionDrawHappened || _gameManager.AlivePlayerCount < 1)
 			{
 				return;
 			}
@@ -321,7 +321,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.FirstExecutionVotesCounted -= OnFirstExecutionVotesCounted;
 			_gameManager.RevealDeadPlayerRoleStarted -= OnRevealDeadPlayerRoleStarted;
 			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded -= OnWaitBeforeFlipDeadPlayerRoleEnded;
-			_gameManager.PlayerDied -= OnPlayerDied;
+			_gameManager.Unsubscribe(this);
 			_voteManager.Unsubscribe(this);
 			_gameManager.GameplayLoopStepStarts -= OnGameplayLoopStepStarts;
 			_gameManager.PostPlayerDisconnected -= OnPostPlayerDisconnected;

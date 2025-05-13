@@ -10,7 +10,7 @@ using static Werewolf.Managers.GameManager;
 
 namespace Werewolf.Gameplay.Role
 {
-	public class HunterBehavior : RoleBehavior
+	public class HunterBehavior : RoleBehavior, IGameManagerSubscriber
 	{
 		[Header("Shoot Player")]
 		[SerializeField]
@@ -46,7 +46,7 @@ namespace Werewolf.Gameplay.Role
 			_networkDataManager = NetworkDataManager.Instance;
 
 			_gameManager.GameplayLoopStepStarts += OnGameplayLoopStepStarts;
-			_gameManager.PlayerDied += OnPlayerDied;
+			_gameManager.Subscribe(this);
 			_gameManager.PostPlayerDisconnected += OnPostPlayerDisconnected;
 		}
 
@@ -65,9 +65,9 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		private void OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
+		void IGameManagerSubscriber.OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
-			if (Player != deadPlayer || _gameManager.AlivePlayerCount <= 1)
+			if (Player != deadPlayer || _gameManager.AlivePlayerCount < 1)
 			{
 				return;
 			}
@@ -165,7 +165,7 @@ namespace Werewolf.Gameplay.Role
 												}
 											});
 
-				_gameManager.AddMarkForDeath(selectedPlayer, _markForDeathAddedByShot, 1);
+				_gameManager.AddMarkForDeath(selectedPlayer, _markForDeathAddedByShot, 0);
 				_gameManager.RPC_SetPlayerCardHighlightVisible(selectedPlayer, true);
 				_gameManager.RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -226,7 +226,7 @@ namespace Werewolf.Gameplay.Role
 		private void OnDestroy()
 		{
 			_gameManager.GameplayLoopStepStarts -= OnGameplayLoopStepStarts;
-			_gameManager.PlayerDied -= OnPlayerDied;
+			_gameManager.Unsubscribe(this);
 			_gameManager.PostPlayerDisconnected -= OnPostPlayerDisconnected;
 		}
 	}
