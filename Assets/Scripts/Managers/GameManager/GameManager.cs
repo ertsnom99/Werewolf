@@ -43,9 +43,11 @@ namespace Werewolf.Managers
 			NightCall,
 			DayTransition,
 			DayDeathReveal,
+			DayWinnerCheck,
 			ExecutionDebate,
 			Execution,
 			ExecutionDeathReveal,
+			ExecutionWinnerCheck,
 		}
 
 		public static bool HasSpawned { get; private set; }
@@ -54,6 +56,7 @@ namespace Werewolf.Managers
 		public event Action PreRoleDistribution;
 		public event Action PostRoleDistribution;
 		public event Action PreStartGame;
+		public event Action PreChangeGameplayLoopStep;
 		public event Action<GameplayLoopStep> GameplayLoopStepStarts;
 		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
@@ -498,6 +501,7 @@ namespace Werewolf.Managers
 			_daytimeManager.Initialize(GameConfig);
 			_voteManager.Initialize(GameConfig);
 			_emotesManager.Initialize(GameConfig);
+			_UIManager.AddPermanentScreen(_UIManager.QuickActionScreen);
 			_UIManager.AddPermanentScreen(_UIManager.RolesScreen);
 			_UIManager.ChoiceScreen.SetConfig(GameConfig);
 			_UIManager.DisconnectedScreen.SetConfig(GameConfig);
@@ -579,7 +583,14 @@ namespace Werewolf.Managers
 		#region Gameplay Loop Steps
 		private IEnumerator MoveToNextGameplayLoopStep()
 		{
-			if (CurrentGameplayLoopStep == GameplayLoopStep.ExecutionDeathReveal)
+			PreChangeGameplayLoopStep?.Invoke();
+
+			while (PlayersWaitingFor.Count > 0)
+			{
+				yield return 0;
+			}
+
+			if (CurrentGameplayLoopStep == GameplayLoopStep.ExecutionWinnerCheck)
 			{
 				CurrentGameplayLoopStep = GameplayLoopStep.NightTransition;
 			}
@@ -621,6 +632,9 @@ namespace Werewolf.Managers
 				case GameplayLoopStep.DayDeathReveal:
 					StartCoroutine(StartDeathReveal(true));
 					break;
+				case GameplayLoopStep.DayWinnerCheck:
+					CheckForWinners();
+					break;
 				case GameplayLoopStep.ExecutionDebate:
 					StartCoroutine(StartDebate(GetPlayersExcluding(GetDeadPlayers().ToArray()), GameConfig.ExecutionDebateTitleScreen.ID.HashCode, GameConfig.ExecutionDebateDuration * GameSpeedModifier));
 					break;
@@ -630,7 +644,15 @@ namespace Werewolf.Managers
 				case GameplayLoopStep.ExecutionDeathReveal:
 					StartCoroutine(StartDeathReveal(false));
 					break;
+				case GameplayLoopStep.ExecutionWinnerCheck:
+					CheckForWinners();
+					break;
 			}
+		}
+
+		public void SetNextGameplayLoopStep(GameplayLoopStep nextGameplayLoopStep)
+		{
+			CurrentGameplayLoopStep = nextGameplayLoopStep - 1;
 		}
 		#endregion
 
@@ -1161,11 +1183,6 @@ namespace Werewolf.Managers
 				}
 			}
 
-			if (CheckForWinners())
-			{
-				yield break;
-			}
-
 			DeathRevealEnded?.Invoke();
 
 			while (PlayersWaitingFor.Count > 0)
@@ -1515,14 +1532,14 @@ namespace Werewolf.Managers
 		#endregion
 
 		#region End Game
-		private bool CheckForWinners()
+		private void CheckForWinners()
 		{
 			if (_playerGroups.Count <= 0)
 			{
 				_gameHistoryManager.AddEntry(GameConfig.EndGameNobodyWonGameHistoryEntry.ID, null);
 
 				PrepareEndGameSequence(new() { ID = default, Priority = -1, Players = new() });
-				return true;
+				return;
 			}
 
 			foreach (PlayerGroup playerGroup in _playerGroups)
@@ -1555,10 +1572,10 @@ namespace Werewolf.Managers
 											playerGroupData.ID);
 
 				PrepareEndGameSequence(playerGroup);
-				return true;
+				return;
 			}
 
-			return false;
+			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
 		private void PrepareEndGameSequence(PlayerGroup winningPlayerGroup)

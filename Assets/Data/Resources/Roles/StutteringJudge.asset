@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
+  m_Name: StutteringJudge
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField:
+    Guid: b57c47a3-4ad5-45d0-a98e-1cf77e992dde
+    HashCode: 1663542380
+  <DebugName>k__BackingField: StutteringJudge
+  <NameSingular>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 114933474833850368
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <NamePlural>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 114933497546006528
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Image>k__BackingField: {fileID: 21300000, guid: a66a13108d6f6cc40b006a68d24faa80,
+    type: 3}
+  <SmallImage>k__BackingField: {fileID: 21300000, guid: f20ed4ad9cd34c84f8bdaf306c74d765,
+    type: 3}
+  <PrimaryType>k__BackingField: 0
+  <SecondaryType>k__BackingField: 0
+  <CanHaveVariableAmount>k__BackingField: 0
+  <MandatoryAmount>k__BackingField: 1
+  <PlayerGroups>k__BackingField:
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
+  <NightPriorities>k__BackingField: []
+  <Behavior>k__BackingField: {fileID: 585116566543292573, guid: 98e85d95d6b12c845973ef714411324b,
+    type: 3}
+  references:
+    version: 2
+    RefIds: []

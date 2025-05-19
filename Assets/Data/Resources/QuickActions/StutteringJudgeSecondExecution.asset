@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79a64194a2137342a9be3c2400125b2, type: 3}
+  m_Name: StutteringJudgeSecondExecution
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField:
+    Guid: c9a7619b-e268-4f22-821b-5621fcbfd29c
+    HashCode: -192814493
+  <DebugName>k__BackingField: StutteringJudgeSecondExecution
+  <Icon>k__BackingField: {fileID: 21300000, guid: 72a6364a6711d2240bfdd267d67c37e4,
+    type: 3}

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6905939984331869741
+--- !u!1 &8628334683997659316
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9074827076772631246}
-  - component: {fileID: 4175925366647570956}
+  - component: {fileID: 4607421912872786512}
+  - component: {fileID: 585116566543292573}
   m_Layer: 0
-  m_Name: GameplayDataManager
+  m_Name: StutteringJudgeBehavior
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9074827076772631246
+--- !u!4 &4607421912872786512
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6905939984331869741}
+  m_GameObject: {fileID: 8628334683997659316}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,27 +32,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4175925366647570956
+--- !u!114 &585116566543292573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6905939984331869741}
+  m_GameObject: {fileID: 8628334683997659316}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 122d1c69c7c56a844bb71a653a015b14, type: 3}
+  m_Script: {fileID: 11500000, guid: 25acaeefd17c3f949a879a1bc4a62a0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _foldersToLoad:
-  - Roles
-  - GameHistoryEntries
-  - PlayerGroups
-  - TitleScreens
-  - ChoiceScreens
-  - QuickActions
-  _prohibitedHashCodes: ffffffff
-  _buildGuidDictionary: 0
-  _buildHashCodeDictionary: 1
-  <IsReady>k__BackingField: 0
-  _logGameplayData: 0
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
+  <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroupIDs>k__BackingField: []
+  <NightPriorities>k__BackingField: []
+  <IsPrimaryBehavior>k__BackingField: 0
+  _secondExecutionQuickActionScreen: {fileID: 11400000, guid: cc4bd57d3a7033c40a9bb844f9ec834d,
+    type: 2}
+  _secondExecutionGameHistoryEntry: {fileID: 11400000, guid: 9d75864cc5a5d3b4a950f694b167f38d,
+    type: 2}
+  _secondExecutionTitleScreen: {fileID: 11400000, guid: f0e4ef96b8bc5214e9915478a55665f9,
+    type: 2}
+  _secondExecutionTitleHoldDuration: 5

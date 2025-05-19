@@ -20,6 +20,9 @@ namespace Werewolf.Managers
 		public VoteScreen VoteScreen { get; private set; }
 
 		[field: SerializeField]
+		public QuickActionScreen QuickActionScreen { get; private set; }
+
+		[field: SerializeField]
 		public RolesScreen RolesScreen { get; private set; }
 
 		[field: SerializeField]
