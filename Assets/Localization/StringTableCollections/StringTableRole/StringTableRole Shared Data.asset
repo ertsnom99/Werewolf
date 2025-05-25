@@ -247,6 +247,14 @@ MonoBehaviour:
     m_Key: StutteringJudge_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 117541445094989824
+    m_Key: VillagerVillager_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 117541461490524160
+    m_Key: VillagerVillager_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

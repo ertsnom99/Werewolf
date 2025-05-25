@@ -244,9 +244,14 @@ namespace Werewolf.Managers
 				{
 					if (unassignedRoleBehavior.Value == rolesData[i])
 					{
-						behaviors[i] = unassignedRoleBehavior.Key;
+						RoleBehavior behavior = unassignedRoleBehavior.Key;
+
+						behaviors[i] = behavior;
 						behaviors[i].SetIsPrimaryBehavior(arePrimaryBehavior);
-						_unassignedRoleBehaviors.Remove(unassignedRoleBehavior.Key);
+						behavior.OnAddedReservedRoleID(roleIDs, i);
+
+						_unassignedRoleBehaviors.Remove(behavior);
+
 						break;
 					}
 				}
@@ -564,7 +569,7 @@ namespace Werewolf.Managers
 			return true;
 		}
 
-		public void FlipCard(PlayerRef cardPlayer, int roleID = -1, Action FlipCompleted = null)
+		public void FlipCard(PlayerRef cardPlayer, float duration, int roleID = -1, Action FlipCompleted = null)
 		{
 			if (roleID == -1)
 			{
@@ -580,7 +585,16 @@ namespace Werewolf.Managers
 				_playerCards[cardPlayer].SetRole(roleData);
 			}
 
-			StartCoroutine(FlipCard(_playerCards[cardPlayer].transform, GameConfig.RoleRevealFlipDuration, FlipCompleted));
+			Transform card = _playerCards[cardPlayer].transform;
+
+			if (duration > 0)
+			{
+				StartCoroutine(FlipCard(card, duration, FlipCompleted));
+			}
+			else
+			{
+				card.transform.rotation = Quaternion.LookRotation(card.forward, -card.up);
+			}
 		}
 
 		private IEnumerator FlipCard(Transform card, float duration, Action FlipCompleted = null)
@@ -668,6 +682,24 @@ namespace Werewolf.Managers
 			return true;
 		}
 
+		public void RevealPlayerRole(PlayerRef revealedPlayer, int roleID)
+		{
+			if (PlayerGameInfos[revealedPlayer].IsRoleRevealed)
+			{
+				return;
+			}
+
+			PlayerGameInfos[revealedPlayer].IsRoleRevealed = true;
+
+			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
+			{
+				if (playerInfo.Key != revealedPlayer && _networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
+				{
+					RPC_RevealPlayerRole(playerInfo.Key, revealedPlayer, roleID);
+				}
+			}
+		}
+
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		private void RPC_RevealPlayerRole([RpcTarget] PlayerRef player, PlayerRef playerRevealed, int roleID, bool waitBeforeReveal, bool returnFaceDown)
@@ -726,13 +758,13 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_FlipCard([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int roleID = -1)
 		{
-			FlipCard(cardPlayer, roleID, () => RPC_FlipCardFinished());
+			FlipCard(cardPlayer, GameConfig.RoleRevealFlipDuration, roleID, () => RPC_FlipCardFinished());
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		public void RPC_FlipCard(PlayerRef cardPlayer, int roleID = -1)
 		{
-			FlipCard(cardPlayer, roleID);
+			FlipCard(cardPlayer, GameConfig.RoleRevealFlipDuration, roleID);
 		}
 
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -789,6 +821,12 @@ namespace Werewolf.Managers
 
 			callback();
 			_putCardBackDownCallbacks.Remove(info.Source);
+		}
+
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		private void RPC_RevealPlayerRole([RpcTarget] PlayerRef player, PlayerRef revealedPlayer, int roleID)
+		{
+			FlipCard(revealedPlayer, 0, roleID);
 		}
 		#endregion
 		#endregion

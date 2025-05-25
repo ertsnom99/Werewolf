@@ -101,6 +101,8 @@ namespace Werewolf.Gameplay.Role
 			OnPlayerChanged();
 		}
 
+		public virtual void OnAddedReservedRoleID(int[] roleIDs, int index) { }
+
 		public abstract void Initialize();
 
 		public abstract void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute);

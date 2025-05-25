@@ -55,16 +55,19 @@ namespace Werewolf.Managers
 		// Server events
 		public event Action PreRoleDistribution;
 		public event Action PostRoleDistribution;
+		public event Action StartedPlayersInitialization;
 		public event Action PreStartGame;
 		public event Action PreChangeGameplayLoopStep;
 		public event Action<GameplayLoopStep> GameplayLoopStepStarts;
 		public event Action RollCallBegin;
 		public event Action StartWaitingForPlayersRollCall;
+		public event Action WaitingForPlayersRollCallEnded;
 		public event Action StartNightCallChangeDelay;
 		public event Action<PlayerRef, MarkForDeathData> PlayerDeathRevealStarted;
 		public event Action<PlayerRef> RevealDeadPlayerRoleStarted;
 		public event Action<PlayerRef, MarkForDeathData, float> WaitBeforeFlipDeadPlayerRoleStarted;
 		public event Action<PlayerRef> WaitBeforeFlipDeadPlayerRoleEnded;
+		public event Action<PlayerRef> RevealDeadPlayerRoleEnded;
 		public event Action DeathRevealEnded;
 		public event Action<List<PlayerRef>> FirstExecutionVotesCounted;
 
@@ -186,6 +189,7 @@ namespace Werewolf.Managers
 				}
 
 				_startedPlayersInitialization = true;
+				StartedPlayersInitialization?.Invoke();
 #if UNITY_SERVER && UNITY_EDITOR
 				CreatePlayerCardsForServer();
 				CreateReservedRoleCardsForServer();
@@ -958,6 +962,9 @@ namespace Werewolf.Managers
 					}
 
 					SetAllPlayersAwake(false);
+
+					WaitingForPlayersRollCallEnded?.Invoke();
+
 					RPC_HideUI();
 					RPC_SetAllPlayersCardHighlightVisible(false);
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1108,6 +1115,8 @@ namespace Werewolf.Managers
 						}
 
 						PlayerGameInfos[deadPlayer].IsRoleRevealed = true;
+
+						RevealDeadPlayerRoleEnded?.Invoke(deadPlayer);
 
 						RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1634,7 +1643,7 @@ namespace Werewolf.Managers
 #if !UNITY_SERVER
 				if (!endGamePlayerInfo.IsRoleRevealed && endGamePlayerInfo.Player != Runner.LocalPlayer)
 				{
-					FlipCard(endGamePlayerInfo.Player, endGamePlayerInfo.RoleID);
+					FlipCard(endGamePlayerInfo.Player, GameConfig.RoleRevealFlipDuration, endGamePlayerInfo.RoleID);
 				}
 #endif
 				if (endGamePlayerInfo.Won)
