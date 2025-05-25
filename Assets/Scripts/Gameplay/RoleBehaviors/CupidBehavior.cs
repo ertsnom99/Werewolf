@@ -455,6 +455,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.RPC_DisplayTitle(_coupleDeathTitleScreen.ID.HashCode);
 			_gameManager.RPC_SetPlayersCardHighlightVisible(couplePlayersToHighlight, true);
 #if UNITY_SERVER && UNITY_EDITOR
+			_gameManager.DisplayTitle(_coupleDeathTitleScreen.ID.HashCode);
 			_gameManager.SetPlayersCardHighlightVisible(couplePlayersToHighlight, true);
 #endif
 			_waitToRemoveDeadCoupleHighlightCoroutine = WaitToRemoveDeadPlayersHighlight(couplePlayersToHighlight, couplePlayersToHighlightIndex);

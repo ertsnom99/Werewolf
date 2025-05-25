@@ -117,6 +117,9 @@ namespace Werewolf.Gameplay.Role
 					_gameManager.RPC_DisplayTitle(playerInfo.Key, _roleRevealTitleScreen.ID.HashCode);
 				}
 			}
+#if UNITY_SERVER && UNITY_EDITOR
+			_gameManager.DisplayTitle(_roleRevealTitleScreen.ID.HashCode);
+#endif
 		}
 
 		void IGameManagerSubscriber.OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)

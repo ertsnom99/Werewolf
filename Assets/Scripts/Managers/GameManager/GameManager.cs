@@ -948,7 +948,11 @@ namespace Werewolf.Managers
 						}
 					}
 #if UNITY_SERVER && UNITY_EDITOR
-					if (!_voteManager.IsPreparingToVote())
+					if (titlesOverrides.Count > 0)
+					{
+						DisplayTitle(titlesOverrides[nightCall.Players.First()]);
+					}
+					else if (!_voteManager.IsPreparingToVote())
 					{
 						DisplayRolePlaying(displayedRoleID);
 					}
