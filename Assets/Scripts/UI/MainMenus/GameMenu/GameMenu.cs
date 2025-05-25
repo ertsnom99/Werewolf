@@ -58,7 +58,7 @@ namespace Werewolf.UI
 			_gameConfig = gameConfig;
 			_localPlayer = localPlayer;
 
-			if (!_networkDataManager || _localPlayer == null)
+			if (!_networkDataManager || _localPlayer.IsNone)
 			{
 				return;
 			}

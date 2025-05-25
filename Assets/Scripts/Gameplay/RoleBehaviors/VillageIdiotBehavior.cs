@@ -90,7 +90,7 @@ namespace Werewolf.Gameplay.Role
 
 		void IVoteManagerSubscriber.OnVoteStarting(ChoicePurpose purpose)
 		{
-			if (Player == null ||
+			if (Player.IsNone ||
 				!_survivedExecution ||
 				_gameManager.CurrentGameplayLoopStep != GameplayLoopStep.Execution ||
 				!_gameManager.PlayerGameInfos[Player].IsAlive)

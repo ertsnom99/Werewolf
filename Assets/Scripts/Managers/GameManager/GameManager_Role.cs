@@ -287,7 +287,7 @@ namespace Werewolf.Managers
 				{
 					RoleBehavior behavior = reservedRoles.Behaviors[specificIndex];
 
-					if (behavior && behavior.Player == null)
+					if (behavior && behavior.Player.IsNone)
 					{
 						Destroy(behavior.gameObject);
 					}
@@ -337,7 +337,7 @@ namespace Werewolf.Managers
 				{
 					RoleBehavior behavior = reservedRoles.Behaviors[i];
 
-					if (behavior && behavior.Player == null)
+					if (behavior && behavior.Player.IsNone)
 					{
 						Destroy(behavior.gameObject);
 					}

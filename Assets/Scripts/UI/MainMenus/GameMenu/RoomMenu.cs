@@ -54,7 +54,7 @@ namespace Werewolf.UI
 
 		private void OnPlayerInfosChanged()
 		{
-			if (!_networkDataManager || _localPlayer == null)
+			if (!_networkDataManager || _localPlayer.IsNone)
 			{
 				return;
 			}
@@ -89,7 +89,7 @@ namespace Werewolf.UI
 
 		private void OnGameSetupReadyChanged()
 		{
-			if (!_networkDataManager || _localPlayer == null)
+			if (!_networkDataManager || _localPlayer.IsNone)
 			{
 				return;
 			}
