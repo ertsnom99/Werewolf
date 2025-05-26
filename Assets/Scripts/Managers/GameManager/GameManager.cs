@@ -716,7 +716,7 @@ namespace Werewolf.Managers
 		{
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
-				PromptPlayer(playerInfo.Key,
+				Prompt(playerInfo.Key,
 							GameConfig.ElectionPromptTitleScreen.ID.HashCode,
 							GameConfig.ElectionPromptDuration * GameSpeedModifier,
 							OnPlayerWantsToBeCaptain,
@@ -729,7 +729,7 @@ namespace Werewolf.Managers
 
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in PlayerGameInfos)
 			{
-				StopPromptingPlayer(playerInfo.Key, false);
+				StopPrompting(playerInfo.Key, false);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_UIManager.FadeOutAll(GameConfig.UITransitionNormalDuration);

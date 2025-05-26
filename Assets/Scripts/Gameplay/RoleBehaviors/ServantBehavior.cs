@@ -61,7 +61,7 @@ namespace Werewolf.Gameplay.Role
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| Player == playerRevealed
 				|| mark != _gameManager.GameConfig.ExecutionMarkForDeath
-				|| !_gameManager.PromptPlayer(Player, _takeRoleTitleScreen.ID.HashCode, revealDuration, OnTakeRole))
+				|| !_gameManager.Prompt(Player, _takeRoleTitleScreen.ID.HashCode, revealDuration, OnTakeRole))
 			{
 				return;
 			}
@@ -174,7 +174,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			if (_isWaitingForPromptAnswer)
 			{
-				_gameManager.StopPromptingPlayer(Player);
+				_gameManager.StopPrompting(Player);
 			}
 		}
 

@@ -658,66 +658,6 @@ namespace Werewolf.Managers
 		#endregion
 		#endregion
 
-		#region Prompt Player
-		public bool PromptPlayer(PlayerRef promptedPlayer, int titleID, float duration, Action<PlayerRef> callback, bool fastFade = true)
-		{
-			if (!_networkDataManager.PlayerInfos[promptedPlayer].IsConnected || _promptPlayerCallbacks.ContainsKey(promptedPlayer))
-			{
-				return false;
-			}
-
-			_promptPlayerCallbacks.Add(promptedPlayer, callback);
-			RPC_PromptPlayer(promptedPlayer, titleID, duration, fastFade);
-
-			return true;
-		}
-
-		private void OnPromptAccepted()
-		{
-			_UIManager.TitleScreen.ConfirmClicked -= OnPromptAccepted;
-			RPC_AcceptPrompt();
-		}
-
-		public void StopPromptingPlayer(PlayerRef player, bool fastFade = true)
-		{
-			if (!_networkDataManager.PlayerInfos[player].IsConnected)
-			{
-				return;
-			}
-
-			_promptPlayerCallbacks.Remove(player);
-			RPC_StopPromptingPlayer(player, fastFade);
-		}
-
-		#region RPC Calls
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_PromptPlayer([RpcTarget] PlayerRef player, int titleID, float duration, bool fastFade)
-		{
-			_UIManager.TitleScreen.ConfirmClicked += OnPromptAccepted;
-			DisplayTitle(titleID, showConfirmButton: true, countdownDuration: duration, fastFade: fastFade);
-		}
-
-		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-		public void RPC_AcceptPrompt(RpcInfo info = default)
-		{
-			if (!_promptPlayerCallbacks.TryGetValue(info.Source, out var callback))
-			{
-				return;
-			}
-
-			_promptPlayerCallbacks[info.Source](info.Source);
-			_promptPlayerCallbacks.Remove(info.Source);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StopPromptingPlayer([RpcTarget] PlayerRef player, bool fastFade)
-		{
-			_UIManager.TitleScreen.ConfirmClicked -= OnPromptAccepted;
-			_UIManager.FadeOut(_UIManager.TitleScreen, fastFade ? GameConfig.UITransitionFastDuration : GameConfig.UITransitionNormalDuration);
-		}
-		#endregion
-		#endregion
-
 		#region Player Disconnection
 		private void OnPlayerDisconnected(PlayerRef player)
 		{

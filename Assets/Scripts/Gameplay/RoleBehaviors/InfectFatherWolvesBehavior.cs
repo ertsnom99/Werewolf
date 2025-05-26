@@ -46,7 +46,7 @@ namespace Werewolf.Gameplay.Role
 				return;
 			}
 
-			_gameManager.PromptPlayer(Player, _infectTitleScreen.ID.HashCode, _commonWerewolvesData.ChoosenVillagerHighlightDuration, OnInfectVillager);
+			_gameManager.Prompt(Player, _infectTitleScreen.ID.HashCode, _commonWerewolvesData.ChoosenVillagerHighlightDuration, OnInfectVillager);
 
 			_endInfectPromptCoroutine = EndInfectPrompt();
 			StartCoroutine(_endInfectPromptCoroutine);
@@ -55,7 +55,7 @@ namespace Werewolf.Gameplay.Role
 		private IEnumerator EndInfectPrompt()
 		{
 			yield return new WaitForSeconds(_commonWerewolvesData.ChoosenVillagerHighlightDuration);
-			_gameManager.StopPromptingPlayer(Player);
+			_gameManager.StopPrompting(Player);
 		}
 
 		private void OnInfectVillager(PlayerRef player)
