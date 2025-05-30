@@ -31,7 +31,8 @@ namespace Werewolf.Gameplay.Role
 		[SerializeField]
 		private float _servantRevealDuration;
 
-		private bool _isWaitingForPromptAnswer;
+		private bool _acceptedPrompt;
+		private bool _readyToTakeRole;
 		private PlayerRef _playerRevealed;
 
 		private GameManager _gameManager;
@@ -44,8 +45,8 @@ namespace Werewolf.Gameplay.Role
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
 
-			_gameManager.WaitBeforeFlipDeadPlayerRoleStarted += OnWaitBeforeFlipDeadPlayerRoleStarted;
-			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded += OnWaitBeforeFlipDeadPlayerRoleEnded;
+			_gameManager.RevealDeadPlayerRoleStarted += OnRevealDeadPlayerRoleStarted;
+			_gameManager.DeadPlayerCardMoveToCameraFinished += OnDeadPlayerCardMoveToCameraFinished;
 		}
 
 		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
@@ -55,27 +56,50 @@ namespace Werewolf.Gameplay.Role
 			return isWakingUp = false;
 		}
 
-		private void OnWaitBeforeFlipDeadPlayerRoleStarted(PlayerRef playerRevealed, MarkForDeathData mark, float revealDuration)
+		private void OnRevealDeadPlayerRoleStarted(PlayerRef playerRevealed, MarkForDeathData mark)
 		{
 			if (Player.IsNone
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| Player == playerRevealed
 				|| mark != _gameManager.GameConfig.ExecutionMarkForDeath
-				|| !_gameManager.Prompt(Player, _takeRoleTitleScreen.ID.HashCode, revealDuration, OnTakeRole))
+				|| !_gameManager.Prompt(Player, _takeRoleTitleScreen.ID.HashCode, -1, OnTakeRole))
 			{
 				return;
 			}
 
-			_isWaitingForPromptAnswer = true;
+			_acceptedPrompt = false;
+			_readyToTakeRole = false;
 			_playerRevealed = playerRevealed;
+
+			if (_gameManager.PlayerGameInfos[playerRevealed].IsRoleRevealed)
+			{
+				_gameManager.RevealDeadPlayerRoleEnded += OnRevealDeadPlayerRoleEnded;
+			}
+			else
+			{
+				_gameManager.WaitBeforeFlipDeadPlayerRoleEnded += OnWaitBeforeFlipDeadPlayerRoleEnded;
+			}
 		}
 
 		private void OnTakeRole(PlayerRef player)
 		{
-			_isWaitingForPromptAnswer = false;
-			_gameManager.StopDeadPlayerRoleReveal();
+			_acceptedPrompt = true;
+			CheckForRoleChange();
+		}
 
-			StartCoroutine(ChangeRole());
+		private void OnDeadPlayerCardMoveToCameraFinished()
+		{
+			_readyToTakeRole = true;
+			CheckForRoleChange();
+		}
+
+		private void CheckForRoleChange()
+		{
+			if (_readyToTakeRole && _acceptedPrompt)
+			{
+				_gameManager.StopDeadPlayerRoleReveal();
+				StartCoroutine(ChangeRole());
+			}
 		}
 
 		private IEnumerator ChangeRole()
@@ -108,6 +132,8 @@ namespace Werewolf.Gameplay.Role
 											}
 										});
 
+			bool isPlayerAlreadyRevealed = _gameManager.PlayerGameInfos[_playerRevealed].IsRoleRevealed;
+
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
 				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
@@ -117,7 +143,11 @@ namespace Werewolf.Gameplay.Role
 
 				if (playerInfo.Key == previousPlayer)
 				{
-					_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.ID.HashCode);
+					if (!isPlayerAlreadyRevealed)
+					{
+						_gameManager.RPC_FlipCard(playerInfo.Key, _playerRevealed, RoleToTake.ID.HashCode);
+					}
+
 					_gameManager.RPC_DisplayTitle(playerInfo.Key, _newRoleTitleScreen.ID.HashCode, RoleToTake.ID.HashCode);
 					continue;
 				}
@@ -143,6 +173,11 @@ namespace Werewolf.Gameplay.Role
 #endif
 			yield return new WaitForSeconds(_servantRevealDuration * _gameManager.GameSpeedModifier);
 
+			if (isPlayerAlreadyRevealed)
+			{
+				_gameManager.PlayerGameInfos[previousPlayer].IsRoleRevealed = true;
+			}
+
 			foreach (KeyValuePair<PlayerRef, PlayerGameInfo> playerInfo in _gameManager.PlayerGameInfos)
 			{
 				if (!_networkDataManager.PlayerInfos[playerInfo.Key].IsConnected)
@@ -158,7 +193,12 @@ namespace Werewolf.Gameplay.Role
 					continue;
 				}
 
-				_gameManager.RPC_PutCardBackDown(playerInfo.Key, previousPlayer, true);
+				if (isPlayerAlreadyRevealed)
+				{
+					_gameManager.RPC_SetRole(playerInfo.Key, previousPlayer, RoleToTake.ID.HashCode);
+				}
+
+				_gameManager.RPC_PutCardBackDown(playerInfo.Key, previousPlayer, !isPlayerAlreadyRevealed);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.ChangePlayerCardRole(previousPlayer, RoleToTake);
@@ -170,12 +210,16 @@ namespace Werewolf.Gameplay.Role
 			Destroy(gameObject);
 		}
 
+		private void OnRevealDeadPlayerRoleEnded(PlayerRef deadPlayer)
+		{
+			_gameManager.RevealDeadPlayerRoleEnded -= OnRevealDeadPlayerRoleEnded;
+			_gameManager.StopPrompting(Player);
+		}
+
 		private void OnWaitBeforeFlipDeadPlayerRoleEnded(PlayerRef playerRevealed)
 		{
-			if (_isWaitingForPromptAnswer)
-			{
-				_gameManager.StopPrompting(Player);
-			}
+			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded -= OnWaitBeforeFlipDeadPlayerRoleEnded;
+			_gameManager.StopPrompting(Player);
 		}
 
 		public override void OnPlayerChanged() { }
@@ -184,7 +228,9 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnDestroy()
 		{
-			_gameManager.WaitBeforeFlipDeadPlayerRoleStarted -= OnWaitBeforeFlipDeadPlayerRoleStarted;
+			_gameManager.RevealDeadPlayerRoleStarted -= OnRevealDeadPlayerRoleStarted;
+			_gameManager.DeadPlayerCardMoveToCameraFinished -= OnDeadPlayerCardMoveToCameraFinished;
+			_gameManager.RevealDeadPlayerRoleEnded -= OnRevealDeadPlayerRoleEnded;
 			_gameManager.WaitBeforeFlipDeadPlayerRoleEnded -= OnWaitBeforeFlipDeadPlayerRoleEnded;
 		}
 	}

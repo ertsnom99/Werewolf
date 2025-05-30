@@ -95,7 +95,7 @@ namespace Werewolf.Gameplay.Role
 			_executionDrawHappened = true;
 		}
 
-		private void OnRevealDeadPlayerRoleStarted(PlayerRef playerRevealed)
+		private void OnRevealDeadPlayerRoleStarted(PlayerRef playerRevealed, MarkForDeathData markForDeath)
 		{
 			if (Player == playerRevealed && _executionDrawHappened && _networkDataManager.PlayerInfos[Player].IsConnected)
 			{

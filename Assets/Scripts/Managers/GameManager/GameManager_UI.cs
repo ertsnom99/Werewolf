@@ -150,7 +150,11 @@ namespace Werewolf.Managers
 		private void RPC_StopPrompting([RpcTarget] PlayerRef player, bool fastFade)
 		{
 			_UIManager.TitleScreen.ConfirmClicked -= OnPromptAccepted;
-			_UIManager.FadeOut(_UIManager.TitleScreen, fastFade ? GameConfig.UITransitionFastDuration : GameConfig.UITransitionNormalDuration);
+			
+			if (_UIManager.TitleScreen.IsConfirmButtonActive())
+			{
+				_UIManager.FadeOut(_UIManager.TitleScreen, fastFade ? GameConfig.UITransitionFastDuration : GameConfig.UITransitionNormalDuration);
+			}
 		}
 		#endregion
 		#endregion

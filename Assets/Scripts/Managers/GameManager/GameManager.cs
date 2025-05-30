@@ -64,8 +64,8 @@ namespace Werewolf.Managers
 		public event Action WaitingForPlayersRollCallEnded;
 		public event Action StartNightCallChangeDelay;
 		public event Action<PlayerRef, MarkForDeathData> PlayerDeathRevealStarted;
-		public event Action<PlayerRef> RevealDeadPlayerRoleStarted;
-		public event Action<PlayerRef, MarkForDeathData, float> WaitBeforeFlipDeadPlayerRoleStarted;
+		public event Action<PlayerRef, MarkForDeathData> RevealDeadPlayerRoleStarted;
+		public event Action DeadPlayerCardMoveToCameraFinished;
 		public event Action<PlayerRef> WaitBeforeFlipDeadPlayerRoleEnded;
 		public event Action<PlayerRef> RevealDeadPlayerRoleEnded;
 		public event Action DeathRevealEnded;
@@ -1092,42 +1092,37 @@ namespace Werewolf.Managers
 						yield return 0;
 					}
 
-					if (!PlayerGameInfos[deadPlayer].IsRoleRevealed)
+					if (_networkDataManager.PlayerInfos[deadPlayer].IsConnected)
 					{
-						if (_networkDataManager.PlayerInfos[deadPlayer].IsConnected)
-						{
-							RPC_DisplayTitle(deadPlayer, markForDeath == GameConfig.ExecutionMarkForDeath ?
-																		GameConfig.PlayerExecutedTitleScreen.ID.HashCode :
-																		GameConfig.PlayerDiedTitleScreen.ID.HashCode);
-						}
-
-						_isDeadPlayerRoleRevealCompleted = false;
-
-						_revealDeadPlayerRoleCoroutine = RevealDeadPlayerRole(deadPlayer,
-																			GetPlayersExcluding(deadPlayer),
-																			true,
-																			markForDeath,
-																			false,
-																			OnRevealDeadPlayerRoleEnded);
-						StartCoroutine(_revealDeadPlayerRoleCoroutine);
-
-						RevealDeadPlayerRoleStarted?.Invoke(deadPlayer);
-
-						while (!_isDeadPlayerRoleRevealCompleted)
-						{
-							yield return 0;
-						}
-
-						PlayerGameInfos[deadPlayer].IsRoleRevealed = true;
-
-						RevealDeadPlayerRoleEnded?.Invoke(deadPlayer);
-
-						RPC_HideUI();
-#if UNITY_SERVER && UNITY_EDITOR
-						HideUI();
-#endif
-						yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
+						RPC_DisplayTitle(deadPlayer, markForDeath == GameConfig.ExecutionMarkForDeath ?
+																	GameConfig.PlayerExecutedTitleScreen.ID.HashCode :
+																	GameConfig.PlayerDiedTitleScreen.ID.HashCode);
 					}
+
+					_isDeadPlayerRoleRevealCompleted = false;
+
+					_revealDeadPlayerRoleCoroutine = RevealDeadPlayerRole(deadPlayer,
+																		GetPlayersExcluding(deadPlayer),
+																		markForDeath,
+																		OnRevealDeadPlayerRoleEnded);
+					StartCoroutine(_revealDeadPlayerRoleCoroutine);
+
+					RevealDeadPlayerRoleStarted?.Invoke(deadPlayer, markForDeath);
+
+					while (!_isDeadPlayerRoleRevealCompleted)
+					{
+						yield return 0;
+					}
+
+					PlayerGameInfos[deadPlayer].IsRoleRevealed = true;
+
+					RevealDeadPlayerRoleEnded?.Invoke(deadPlayer);
+
+					RPC_HideUI();
+#if UNITY_SERVER && UNITY_EDITOR
+					HideUI();
+#endif
+					yield return new WaitForSeconds(GameConfig.UITransitionNormalDuration);
 
 					if (_marksForDeath.Count > 0 && _marksForDeath[0].Player == deadPlayer && _marksForDeath[0].Mark == markForDeath)
 					{
@@ -1206,8 +1201,10 @@ namespace Werewolf.Managers
 			StartCoroutine(MoveToNextGameplayLoopStep());
 		}
 
-		private IEnumerator RevealDeadPlayerRole(PlayerRef playerRevealed, PlayerRef[] revealTo, bool waitBeforeReveal, MarkForDeathData mark, bool returnFaceDown, Action RevealPlayerCompleted)
+		private IEnumerator RevealDeadPlayerRole(PlayerRef deadPlayer, PlayerRef[] revealTo, MarkForDeathData mark, Action RevealDeadPlayerCompleted)
 		{
+			bool isPlayerRevealed = PlayerGameInfos[deadPlayer].IsRoleRevealed;
+
 			foreach (PlayerRef player in revealTo)
 			{
 				if (!_networkDataManager.PlayerInfos[player].IsConnected)
@@ -1217,26 +1214,26 @@ namespace Werewolf.Managers
 
 				PlayersWaitingFor.Add(player);
 				MoveCardToCamera(player,
-								playerRevealed,
-								!waitBeforeReveal,
-								!waitBeforeReveal ? PlayerGameInfos[playerRevealed].Role.ID.HashCode : -1,
+								deadPlayer,
+								isPlayerRevealed,
+								isPlayerRevealed ? PlayerGameInfos[deadPlayer].Role.ID.HashCode : -1,
 								() => StopWaintingForPlayer(player));
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			MoveCardToCamera(playerRevealed, waitBeforeReveal);
+			MoveCardToCamera(deadPlayer, true);
 #endif
 			while (PlayersWaitingFor.Count > 0)
 			{
 				yield return 0;
 			}
 
-			if (waitBeforeReveal)
-			{
-				WaitBeforeFlipDeadPlayerRoleStarted?.Invoke(playerRevealed, mark, GameConfig.RoleRevealWaitDuration * GameSpeedModifier);
+			DeadPlayerCardMoveToCameraFinished?.Invoke();
 
+			if (!isPlayerRevealed)
+			{
 				yield return new WaitForSeconds(GameConfig.RoleRevealWaitDuration * GameSpeedModifier);
 
-				WaitBeforeFlipDeadPlayerRoleEnded?.Invoke(playerRevealed);
+				WaitBeforeFlipDeadPlayerRoleEnded?.Invoke(deadPlayer);
 
 				foreach (PlayerRef player in revealTo)
 				{
@@ -1247,9 +1244,9 @@ namespace Werewolf.Managers
 
 					PlayersWaitingFor.Add(player);
 					FlipCard(player,
-							playerRevealed,
+							deadPlayer,
 							() => StopWaintingForPlayer(player),
-							PlayerGameInfos[playerRevealed].Role.ID.HashCode);
+							PlayerGameInfos[deadPlayer].Role.ID.HashCode);
 				}
 
 				while (PlayersWaitingFor.Count > 0)
@@ -1269,19 +1266,19 @@ namespace Werewolf.Managers
 
 				PlayersWaitingFor.Add(player);
 				PutCardBackDown(player,
-								playerRevealed,
-								returnFaceDown,
+								deadPlayer,
+								false,
 								() => StopWaintingForPlayer(player));
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			PutCardBackDown(playerRevealed, returnFaceDown);
+			PutCardBackDown(deadPlayer, false);
 #endif
 			while (PlayersWaitingFor.Count > 0)
 			{
 				yield return 0;
 			}
 
-			RevealPlayerCompleted?.Invoke();
+			RevealDeadPlayerCompleted?.Invoke();
 		}
 
 		private void OnRevealDeadPlayerRoleEnded()

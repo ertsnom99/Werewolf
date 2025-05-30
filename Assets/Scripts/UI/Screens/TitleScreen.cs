@@ -86,6 +86,11 @@ namespace Werewolf.UI
 			StartCoroutine(_countdownCoroutine);
 		}
 
+		public bool IsConfirmButtonActive()
+		{
+			return _confirmButton.gameObject.activeSelf;
+		}
+
 		public void StopCountdown()
 		{
 			if (_countdownCoroutine != null)

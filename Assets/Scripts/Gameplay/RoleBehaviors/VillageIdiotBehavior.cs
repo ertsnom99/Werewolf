@@ -50,7 +50,7 @@ namespace Werewolf.Gameplay.Role
 			return isWakingUp = false;
 		}
 
-		private void OnRevealDeadPlayerRoleStarted(PlayerRef playerRevealed)
+		private void OnRevealDeadPlayerRoleStarted(PlayerRef playerRevealed, MarkForDeathData markForDeath)
 		{
 			if (Player == playerRevealed && !_survivedExecution && _gameManager.HasPlayerMarkForDeath(Player, _executionMarkForDeath) && _networkDataManager.PlayerInfos[Player].IsConnected)
 			{
