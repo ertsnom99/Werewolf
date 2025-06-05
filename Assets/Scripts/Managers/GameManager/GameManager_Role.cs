@@ -64,7 +64,7 @@ namespace Werewolf.Managers
 #endif
 		}
 
-		public void TransferRole(PlayerRef from, PlayerRef to, bool reInitNewBehavior = false)
+		public void TransferRole(PlayerRef from, PlayerRef to)
 		{
 			RemovePrimaryBehavior(to);
 

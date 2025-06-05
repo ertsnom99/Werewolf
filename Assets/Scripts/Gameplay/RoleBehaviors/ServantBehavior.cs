@@ -17,9 +17,6 @@ namespace Werewolf.Gameplay.Role
 		private TitleScreenData _takeRoleTitleScreen;
 
 		[SerializeField]
-		private RoleData[] _notResettedRoles;
-
-		[SerializeField]
 		private GameHistoryEntryData _tookRoleGameHistoryEntry;
 
 		[SerializeField]
@@ -108,7 +105,7 @@ namespace Werewolf.Gameplay.Role
 			RoleData servantRole = _gameManager.PlayerGameInfos[Player].Role;
 			PlayerRef previousPlayer = Player;
 
-			_gameManager.TransferRole(_playerRevealed, Player, !_notResettedRoles.Contains(RoleToTake));
+			_gameManager.TransferRole(_playerRevealed, Player);
 
 			_gameHistoryManager.AddEntry(_tookRoleGameHistoryEntry.ID,
 										new GameHistorySaveEntryVariable[] {
