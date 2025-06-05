@@ -84,11 +84,11 @@ namespace Werewolf.Gameplay.Role
 										});
 
 			_gameManager.RPC_DisplayTitle(_bearGrowlTitleScreen.ID.HashCode);
-
-			GameConfig gameConfig = _gameManager.GameConfig;
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.DisplayTitle(_bearGrowlTitleScreen.ID.HashCode);
 #endif
+			GameConfig gameConfig = _gameManager.GameConfig;
+
 			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration + _bearGrowlTitleDuration * _gameManager.GameSpeedModifier);
 			
 			_gameManager.RPC_HideUI();
