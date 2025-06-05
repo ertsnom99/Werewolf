@@ -27,7 +27,6 @@ namespace Werewolf.Gameplay.Role
 
 		private bool _canStartSecondExecution = true;
 		private PlayerRef _playerWhenSecondExecutionTriggered;
-		private IEnumerator _waitToHideSecondExecutionTitleCoroutine;
 
 		private VoteManager _voteManager;
 		private GameManager _gameManager;
@@ -100,20 +99,21 @@ namespace Werewolf.Gameplay.Role
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.DisplayTitle(_secondExecutionTitleScreen.ID.HashCode);
 #endif
-			_waitToHideSecondExecutionTitleCoroutine = WaitToHideSecondExecutionTitle();
-			StartCoroutine(_waitToHideSecondExecutionTitleCoroutine);
+			StartCoroutine(WaitToHideSecondExecutionTitle());
 		}
 
 		private IEnumerator WaitToHideSecondExecutionTitle()
 		{
-			yield return new WaitForSeconds(_secondExecutionTitleHoldDuration * _gameManager.GameSpeedModifier);
+			GameConfig gameConfig = _gameManager.GameConfig;
 
-			_waitToHideSecondExecutionTitleCoroutine = null;
+			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration + _secondExecutionTitleHoldDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
 			_gameManager.HideUI();
 #endif
+			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration);
+
 			_gameManager.StopWaintingForPlayer(Player);
 		}
 
