@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6532785717da3ed4ea583707108b49dd, type: 3}
+  m_Name: AngelStartingGameWithExecution
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField:
+    Guid: 6ca29aff-ce5b-4753-8bb4-5d36193f01c7
+    HashCode: -379550822
+  <DebugName>k__BackingField: AngelStartingGameWithExecution
+  <Image>k__BackingField: {fileID: 21300000, guid: c0d89659374ed314790fd527bb9e18be,
+    type: 3}
+  <Text>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:0d1be4a4109b4914b871fb5b3860e3ed
+    m_TableEntryReference:
+      m_KeyId: 65896773025390592
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <PromptButtonText>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

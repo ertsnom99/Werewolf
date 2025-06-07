@@ -255,6 +255,14 @@ MonoBehaviour:
     m_Key: VillagerVillager_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 121397517748658176
+    m_Key: Angel_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 121397825996447744
+    m_Key: Angel_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

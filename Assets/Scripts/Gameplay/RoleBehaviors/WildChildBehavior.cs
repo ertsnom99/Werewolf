@@ -54,7 +54,7 @@ namespace Werewolf.Gameplay.Role
 			return new UniqueID[1] { PlayerGroupIDs[_model.IsNone || _isModelAlive ? 0 : 1] };
 		}
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
+		public override bool OnRoleCall(int priorityIndex, out bool isWakingUp)
 		{
 			if (priorityIndex == NightPriorities[0].index && _model.IsNone)
 			{

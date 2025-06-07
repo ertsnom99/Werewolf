@@ -48,14 +48,14 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
+		public override bool OnRoleCall(int priorityIndex, out bool isWakingUp)
 		{
 			if (priorityIndex == NightPriorities[0].index)
 			{
 				VoteForVillager();
 				return isWakingUp = true;
 			}
-			else if (priorityIndex == NightPriorities[1].index && nightCount % 2 == 0)
+			else if (priorityIndex == NightPriorities[1].index && _gameManager.NightCount % 2 == 0)
 			{
 				isWakingUp = KillWerewolf();
 				return true;

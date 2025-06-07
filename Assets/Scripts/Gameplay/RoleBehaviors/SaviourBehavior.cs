@@ -47,14 +47,14 @@ namespace Werewolf.Gameplay.Role
 
 		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
+		public override bool OnRoleCall(int priorityIndex, out bool isWakingUp)
 		{
-			if (_lastSelectionNightCount + 1 < nightCount)
+			if (_lastSelectionNightCount + 1 < _gameManager.NightCount)
 			{
 				_selectedPlayer = PlayerRef.None;
 			}
 
-			_lastSelectionNightCount = nightCount;
+			_lastSelectionNightCount = _gameManager.NightCount;
 
 			List<PlayerRef> choices = _gameManager.GetAlivePlayers();
 

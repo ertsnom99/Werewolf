@@ -467,10 +467,27 @@ MonoBehaviour:
     m_Localized: Villager-Villager
     m_Metadata:
       m_Items: []
+  - m_Id: 121397517748658176
+    m_Localized: Angel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 121397825996447744
+    m_Localized: 'The muddy life of a village infested with evil creatures disgusts
+      him. He wishes to be a victim of the worst nightmare, to finally wake up peaceful
+      in his cozy bed.
+
+
+      {"When the Angel is in play, the game always begins
+      with the village debate followed by an execution vote, then a first night.
+      If the Angel succeeds in being executed by the villagers or devoured by the
+      Werewolves, he wins the game.":t(RoleDescription)}'
+    m_Metadata:
+      m_Items:
+      - rid: 5699302592880836615
   references:
     version: 2
     RefIds:
     - rid: 5699302592880836615
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb7160100e08548203c860100e0454314d1910100e005366853980100e085225697a101
+        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb7160100e08548203c860100e0454314d1910100e005366853980100e085225697a10100e005f7ad4aaf01

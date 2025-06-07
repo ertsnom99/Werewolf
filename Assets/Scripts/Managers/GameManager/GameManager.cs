@@ -50,6 +50,8 @@ namespace Werewolf.Managers
 			ExecutionWinnerCheck,
 		}
 
+		public int NightCount { get; private set; }
+
 		public static bool HasSpawned { get; private set; }
 
 		// Server events
@@ -67,7 +69,7 @@ namespace Werewolf.Managers
 		public event Action<PlayerRef, MarkForDeathData> RevealDeadPlayerRoleStarted;
 		public event Action DeadPlayerCardMoveToCameraFinished;
 		public event Action<PlayerRef> WaitBeforeFlipDeadPlayerRoleEnded;
-		public event Action<PlayerRef> RevealDeadPlayerRoleEnded;
+		public event Action<PlayerRef, MarkForDeathData> RevealDeadPlayerRoleEnded;
 		public event Action DeathRevealEnded;
 		public event Action<List<PlayerRef>> FirstExecutionVotesCounted;
 
@@ -80,7 +82,7 @@ namespace Werewolf.Managers
 		private bool _startedPlayersInitialization = false;
 		private bool _allPlayersReadyToPlay = false;
 
-		private int _nightCount;
+		private bool _endGameplayLoopStep;
 
 		private readonly List<PlayerRef> _captainCandidates = new();
 
@@ -89,6 +91,8 @@ namespace Werewolf.Managers
 			{ "Role", null },
 			{ "Multiple", new BoolVariable() }
 		};
+
+		private IEnumerator _revealDeathCoroutine;
 
 		private bool _isDeadPlayerRoleRevealCompleted;
 		private IEnumerator _revealDeadPlayerRoleCoroutine;
@@ -612,6 +616,13 @@ namespace Werewolf.Managers
 		{
 			GameplayLoopStepStarts?.Invoke(CurrentGameplayLoopStep);
 
+			if (_endGameplayLoopStep)
+			{
+				_endGameplayLoopStep = false;
+				StartCoroutine(MoveToNextGameplayLoopStep());
+				return;
+			}
+
 			switch (CurrentGameplayLoopStep)
 			{
 				case GameplayLoopStep.RoleGivenReveal:
@@ -627,7 +638,7 @@ namespace Werewolf.Managers
 					StartCoroutine(ChangeDaytime(Daytime.Night));
 					break;
 				case GameplayLoopStep.NightCall:
-					_nightCount++;
+					NightCount++;
 					StartCoroutine(CallRoles());
 					break;
 				case GameplayLoopStep.DayTransition:
@@ -657,6 +668,11 @@ namespace Werewolf.Managers
 		public void SetNextGameplayLoopStep(GameplayLoopStep nextGameplayLoopStep)
 		{
 			CurrentGameplayLoopStep = nextGameplayLoopStep - 1;
+		}
+
+		public void EndGameplayLoopStep()
+		{
+			_endGameplayLoopStep = true;
 		}
 		#endregion
 
@@ -884,7 +900,7 @@ namespace Werewolf.Managers
 
 						if (nightPrioritiesIndexes.Contains(nightCall.PriorityIndex))
 						{
-							skipPlayer = !behavior.OnRoleCall(_nightCount, nightCall.PriorityIndex, out bool isWakingUp);
+							skipPlayer = !behavior.OnRoleCall(nightCall.PriorityIndex, out bool isWakingUp);
 
 							if (skipPlayer)
 							{
@@ -1050,6 +1066,15 @@ namespace Werewolf.Managers
 		#region Death Reveal
 		public IEnumerator StartDeathReveal(bool showTitle)
 		{
+			_revealDeathCoroutine = RevealDeath(showTitle);
+			
+			yield return _revealDeathCoroutine;
+
+			_revealDeathCoroutine = null;
+		}
+
+		private IEnumerator RevealDeath(bool showTitle)
+		{
 			bool hasAnyPlayerDied = _marksForDeath.Count > 0;
 
 			if (showTitle)
@@ -1116,7 +1141,7 @@ namespace Werewolf.Managers
 
 					PlayerGameInfos[deadPlayer].IsRoleRevealed = true;
 
-					RevealDeadPlayerRoleEnded?.Invoke(deadPlayer);
+					RevealDeadPlayerRoleEnded?.Invoke(deadPlayer, markForDeath);
 
 					RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR
@@ -1329,6 +1354,17 @@ namespace Werewolf.Managers
 			foreach (IGameManagerSubscriber subscriber in Subscribers)
 			{
 				subscriber.OnPlayerDied(deadPlayer, markForDeath);
+			}
+		}
+
+		public void StopDeathReveal()
+		{
+			if (_revealDeathCoroutine != null)
+			{
+				StopCoroutine(_revealDeathCoroutine);
+				_revealDeathCoroutine = null;
+
+				StartCoroutine(MoveToNextGameplayLoopStep());
 			}
 		}
 		#endregion
@@ -1544,6 +1580,8 @@ namespace Werewolf.Managers
 		#region End Game
 		private void CheckForWinners()
 		{
+			PlayerGroup winningPlayerGroup = null;
+
 			if (_playerGroups.Count <= 0)
 			{
 				_gameHistoryManager.AddEntry(GameConfig.EndGameNobodyWonGameHistoryEntry.ID, null);
@@ -1551,17 +1589,27 @@ namespace Werewolf.Managers
 				PrepareEndGameSequence(new() { ID = default, Priority = -1, Players = new() });
 				return;
 			}
-
-			foreach (PlayerGroup playerGroup in _playerGroups)
+			else if (_playerGroups.Count == 1)
 			{
-				if (playerGroup.Players.Count < AlivePlayerCount || (!playerGroup.Leader.IsNone && !PlayerGameInfos[playerGroup.Leader].IsAlive))
+				winningPlayerGroup = _playerGroups[0];
+			}
+			else
+			{
+				foreach (PlayerGroup playerGroup in _playerGroups)
 				{
-					continue;
+					if (playerGroup.Players.Count >= AlivePlayerCount && (playerGroup.Leader.IsNone || PlayerGameInfos[playerGroup.Leader].IsAlive))
+					{
+						winningPlayerGroup = playerGroup;
+						break;
+					}
 				}
+			}
 
-				if (!_gameplayDataManager.TryGetGameplayData(playerGroup.ID.HashCode, out PlayerGroupData playerGroupData))
+			if (winningPlayerGroup != null)
+			{
+				if (!_gameplayDataManager.TryGetGameplayData(winningPlayerGroup.ID.HashCode, out PlayerGroupData playerGroupData))
 				{
-					Debug.LogError($"Could not find the player group {playerGroup.ID.HashCode}");
+					Debug.LogError($"Could not find the player group {winningPlayerGroup.ID.HashCode}");
 				}
 
 				_gameHistoryManager.AddEntry(GameConfig.EndGamePlayerGroupWonGameHistoryEntry.ID,
@@ -1569,7 +1617,7 @@ namespace Werewolf.Managers
 												new()
 												{
 													Name = "PlayerGroup",
-													Data = playerGroup.ID.HashCode.ToString(),
+													Data = winningPlayerGroup.ID.HashCode.ToString(),
 													Type = GameHistorySaveEntryVariableType.PlayerGroupeName
 												},
 												new()
@@ -1581,7 +1629,7 @@ namespace Werewolf.Managers
 											},
 											playerGroupData.ID);
 
-				PrepareEndGameSequence(playerGroup);
+				PrepareEndGameSequence(winningPlayerGroup);
 				return;
 			}
 

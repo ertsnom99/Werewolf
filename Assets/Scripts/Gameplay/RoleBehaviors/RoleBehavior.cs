@@ -107,7 +107,7 @@ namespace Werewolf.Gameplay.Role
 
 		public abstract void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute);
 
-		public abstract bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp);
+		public abstract bool OnRoleCall(int priorityIndex, out bool isWakingUp);
 
 		public virtual void GetTitlesOverride(int priorityIndex, ref Dictionary<PlayerRef, int> titlesOverride) { }
 

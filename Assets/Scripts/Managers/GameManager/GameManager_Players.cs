@@ -375,10 +375,15 @@ namespace Werewolf.Managers
 			}
 		}
 
-		public void RemovePlayerFromAllPlayerGroups(PlayerRef player)
+		public void RemovePlayerFromAllPlayerGroups(PlayerRef player, UniqueID[] exceptions = null)
 		{
 			for (int i = _playerGroups.Count - 1; i >= 0; i--)
 			{
+				if (exceptions != null && exceptions.Contains(_playerGroups[i].ID))
+				{
+					continue;
+				}
+
 				_playerGroups[i].Players.Remove(player);
 
 				if (_playerGroups[i].Players.Count <= 0)

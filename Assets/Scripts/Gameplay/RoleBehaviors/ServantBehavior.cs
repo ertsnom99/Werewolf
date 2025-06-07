@@ -48,7 +48,7 @@ namespace Werewolf.Gameplay.Role
 
 		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
+		public override bool OnRoleCall(int priorityIndex, out bool isWakingUp)
 		{
 			return isWakingUp = false;
 		}
@@ -207,7 +207,7 @@ namespace Werewolf.Gameplay.Role
 			Destroy(gameObject);
 		}
 
-		private void OnRevealDeadPlayerRoleEnded(PlayerRef deadPlayer)
+		private void OnRevealDeadPlayerRoleEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			_gameManager.RevealDeadPlayerRoleEnded -= OnRevealDeadPlayerRoleEnded;
 			_gameManager.StopPrompting(Player);

@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 106875e36262e214fa1fdcb1832c9ab1, type: 3}
+  m_Name: Angel
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField:
+    Guid: cfb7a2da-1cc4-445d-b163-c748e6a5e579
+    HashCode: 1997734729
+  <DebugName>k__BackingField: Angel
+  <NameSingular>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 121397517748658176
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <NamePlural>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Description>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
+    m_TableEntryReference:
+      m_KeyId: 121397825996447744
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  <Image>k__BackingField: {fileID: 21300000, guid: ef54ed637f9d18943b366ddd74187df2,
+    type: 3}
+  <SmallImage>k__BackingField: {fileID: 21300000, guid: 2b984abfec69b104aaffeb836d73949d,
+    type: 3}
+  <PrimaryType>k__BackingField: 0
+  <SecondaryType>k__BackingField: 2
+  <CanHaveVariableAmount>k__BackingField: 0
+  <MandatoryAmount>k__BackingField: 1
+  <PlayerGroups>k__BackingField:
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
+  - {fileID: 11400000, guid: b2e48e3cd1a19ae41af2e861bd09c2fa, type: 2}
+  <NightPriorities>k__BackingField: []
+  <Behavior>k__BackingField: {fileID: 841899604396949227, guid: c42ded58ab0c85745b3d0fd15ad48e16,
+    type: 3}
+  references:
+    version: 2
+    RefIds: []

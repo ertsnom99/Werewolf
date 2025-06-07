@@ -31,9 +31,9 @@ namespace Werewolf.Gameplay.Role
 
 		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
+		public override bool OnRoleCall(int priorityIndex, out bool isWakingUp)
 		{
-			if (nightCount % 2 == 0)
+			if (_gameManager.NightCount % 2 == 0)
 			{
 				return isWakingUp = false;
 			}

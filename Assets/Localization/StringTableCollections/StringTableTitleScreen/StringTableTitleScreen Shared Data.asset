@@ -291,6 +291,10 @@ MonoBehaviour:
     m_Key: StutteringJudge_SecondExecution
     m_Metadata:
       m_Items: []
+  - m_Id: 65896773025390592
+    m_Key: Angel_StartingGameWithExecution
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

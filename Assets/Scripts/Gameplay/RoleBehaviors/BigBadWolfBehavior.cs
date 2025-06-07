@@ -64,7 +64,7 @@ namespace Werewolf.Gameplay.Role
 			}
 		}
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
+		public override bool OnRoleCall(int priorityIndex, out bool isWakingUp)
 		{
 			if (priorityIndex == NightPriorities[0].index)
 			{

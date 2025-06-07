@@ -294,7 +294,7 @@ namespace Werewolf.Gameplay.Role
 			_currentRoleBehavior = null;
 		}
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
+		public override bool OnRoleCall(int priorityIndex, out bool isWakingUp)
 		{
 			_reservedRoles = _gameManager.GetReservedRoles(this);
 

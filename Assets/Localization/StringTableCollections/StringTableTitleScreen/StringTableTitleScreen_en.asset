@@ -309,10 +309,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 4972454616256217094
+  - m_Id: 65896773025390592
+    m_Localized: The game will start with an execution debate and vote because of
+      the {"Angel":t(RoleName)}
+    m_Metadata:
+      m_Items:
+      - rid: 4972454616256217094
   references:
     version: 2
     RefIds:
     - rid: 4972454616256217094
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd0000e045765cc4220000809c295f3e04000080dc641108000000e005bcd1acc90000e0850c8415d300
+        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd0000e045765cc4220000809c295f3e04000080dc641108000000e005bcd1acc90000e0850c8415d30000e00514c41cea00

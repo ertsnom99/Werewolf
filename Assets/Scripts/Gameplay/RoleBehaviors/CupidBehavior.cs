@@ -94,7 +94,7 @@ namespace Werewolf.Gameplay.Role
 			return new UniqueID[1] { PlayerGroupIDs[0] };
 		}
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
+		public override bool OnRoleCall(int priorityIndex, out bool isWakingUp)
 		{
 			isWakingUp = false;
 

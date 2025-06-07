@@ -45,12 +45,12 @@ namespace Werewolf.Gameplay.Role
 
 		public override void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute) { }
 
-		public override bool OnRoleCall(int nightCount, int priorityIndex, out bool isWakingUp)
+		public override bool OnRoleCall(int priorityIndex, out bool isWakingUp)
 		{
 			return isWakingUp = false;
 		}
 
-		public void OnVoteStarting(ChoicePurpose purpose)
+		void IVoteManagerSubscriber.OnVoteStarting(ChoicePurpose purpose)
 		{
 			if (!_canStartSecondExecution || _gameManager.CurrentGameplayLoopStep != GameplayLoopStep.Execution)
 			{
@@ -72,7 +72,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnPreChangeGameplayLoopStep()
 		{
-			if (_gameManager.CurrentGameplayLoopStep != GameplayLoopStep.ExecutionDeathReveal || _gameManager.AlivePlayerCount <= 1)
+			if (_gameManager.CurrentGameplayLoopStep != GameplayLoopStep.ExecutionWinnerCheck || _gameManager.AlivePlayerCount <= 1)
 			{
 				return;
 			}
