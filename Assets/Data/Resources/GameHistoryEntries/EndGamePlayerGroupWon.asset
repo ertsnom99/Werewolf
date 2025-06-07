@@ -32,8 +32,16 @@ MonoBehaviour:
     - name: PlayerGroupeHasMultiplePlayers
       variable:
         rid: -2
+    - name: WinningPlayers
+      variable:
+        rid: 4001220850423693312
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 4001220850423693312
+      type: {class: StringListVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Assembly-CSharp}
+      data:
+        Values: []

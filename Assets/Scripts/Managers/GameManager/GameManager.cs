@@ -1625,6 +1625,12 @@ namespace Werewolf.Managers
 													Name = "PluralName",
 													Data = playerGroupData.HasPluralName.ToString(),
 													Type = GameHistorySaveEntryVariableType.Bool
+												},
+												new()
+												{
+													Name = "WinningPlayers",
+													Data = ConcatenatePlayersNickname(winningPlayerGroup.Players.ToArray(), _networkDataManager),
+													Type = GameHistorySaveEntryVariableType.Players
 												}
 											},
 											playerGroupData.ID);
