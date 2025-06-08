@@ -171,10 +171,5 @@ namespace Werewolf.UI
 				_gameHistoryEntries.RemoveAt(0);
 			}
 		}
-
-		private void OnDisable()
-		{
-			ClearGameHistoryEntries();
-		}
 	}
 }
