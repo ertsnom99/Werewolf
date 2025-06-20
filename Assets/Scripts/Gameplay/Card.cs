@@ -11,7 +11,10 @@ namespace Werewolf.Gameplay
 {
 	public class Card : MonoBehaviour, MouseDetectionListener
 	{
-		[field: Header("Card")]
+		[Header("Card")]
+		[SerializeField]
+		private MeshRenderer _meshRenderer;
+
 		[field: SerializeField]
 		public float Thickness { get; private set; }
 
@@ -62,13 +65,7 @@ namespace Werewolf.Gameplay
 		[SerializeField]
 		private GameObject _deathIcon;
 
-		[SerializeField]
-		private Color _deathTint;
-
 		[Header("UI")]
-		[SerializeField]
-		private SpriteRenderer _roleImage;
-
 		[SerializeField]
 		private Canvas _groundCanvas;
 
@@ -93,6 +90,7 @@ namespace Werewolf.Gameplay
 		public event Action<Card> LeftClickHolded;
 		public event Action<Card> RightClicked;
 
+		private Material _material;
 		private IEnumerator _waitForLeftClickHoldCoroutine;
 		private int _voteCount;
 		private IntVariable _voteCountVariable;
@@ -100,14 +98,19 @@ namespace Werewolf.Gameplay
 		private bool _isClickable;
 		private bool _isSelected;
 
+		private const string ROLE_PROPERTY_REFERENCE = "_Role";
+
 		private void Awake()
 		{
-#if UNITY_EDITOR
-			if (!_roleImage)
+			if (_meshRenderer)
 			{
-				Debug.LogError($"{nameof(_roleImage)} of the player {gameObject.name} is null");
+				_material = _meshRenderer.material;
 			}
-#endif
+			else
+			{
+				Debug.LogError($"{nameof(_meshRenderer)} of the card must be set");
+			}
+
 			_voteCountVariable = (IntVariable)_voteCountText.StringReference["Count"];
 
 			if (_voteCountVariable == null)
@@ -129,7 +132,7 @@ namespace Werewolf.Gameplay
 		public void SetRole(RoleData role)
 		{
 			Role = role;
-			_roleImage.sprite = role != null ? role.Image : _lostRole;
+			_material.SetTexture(ROLE_PROPERTY_REFERENCE, role != null ? role.Image.texture : _lostRole.texture);
 		}
 
 		public void SetNickname(string nickname)
@@ -241,7 +244,6 @@ namespace Werewolf.Gameplay
 		public void DisplayDeadIcon()
 		{
 			_deathIcon.SetActive(true);
-			_roleImage.color = _deathTint;
 		}
 
 		#region MouseDetectionListener methods
