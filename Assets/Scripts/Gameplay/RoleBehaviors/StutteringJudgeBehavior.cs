@@ -52,7 +52,7 @@ namespace Werewolf.Gameplay.Role
 
 		void IVoteManagerSubscriber.OnVoteStarting(ChoicePurpose purpose)
 		{
-			if (!_canStartSecondExecution || _gameManager.CurrentGameplayLoopStep != GameplayLoopStep.Execution)
+			if (Player.IsNone || !_canStartSecondExecution || _gameManager.CurrentGameplayLoopStep != GameplayLoopStep.Execution)
 			{
 				return;
 			}
