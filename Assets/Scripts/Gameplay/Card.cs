@@ -20,6 +20,9 @@ namespace Werewolf.Gameplay
 
 		[Header("Role")]
 		[SerializeField]
+		private float _roleTransitionDuration;
+
+		[SerializeField]
 		private Sprite _lostRole;
 
 		[Header("Selection")]
@@ -98,7 +101,10 @@ namespace Werewolf.Gameplay
 		private bool _isClickable;
 		private bool _isSelected;
 
-		private const string ROLE_PROPERTY_REFERENCE = "_Role";
+		private const string BASE_ROLE_PROPERTY_REFERENCE = "_BaseRole";
+		private const string TARGET_ROLE_PROPERTY_REFERENCE = "_TargetRole";
+		private const string DISSOLVE_AMOUNT_PROPERTY_REFERENCE = "_DissolveAmount";
+		private const string DISSOLVE_TO_TARGET_PROPERTY_REFERENCE = "_DissolveToTarget";
 
 		private void Awake()
 		{
@@ -129,10 +135,23 @@ namespace Werewolf.Gameplay
 			Player = player;
 		}
 
-		public void SetRole(RoleData role)
+		public void SetRole(RoleData role, bool useDissolve = false)
 		{
 			Role = role;
-			_material.SetTexture(ROLE_PROPERTY_REFERENCE, role != null ? role.Image.texture : _lostRole.texture);
+			Texture2D roleTexture = role != null ? role.Image.texture : _lostRole.texture;
+
+			if (useDissolve)
+			{
+				_material.SetInt(DISSOLVE_TO_TARGET_PROPERTY_REFERENCE, 1);
+				_material.SetFloat(DISSOLVE_AMOUNT_PROPERTY_REFERENCE, 0);
+				_material.SetTexture(TARGET_ROLE_PROPERTY_REFERENCE, roleTexture);
+
+				StartCoroutine(DissolveRole(1, _roleTransitionDuration, 0, roleTexture));
+			}
+			else
+			{
+				_material.SetTexture(BASE_ROLE_PROPERTY_REFERENCE, roleTexture);
+			}
 		}
 
 		public void SetNickname(string nickname)
@@ -151,6 +170,37 @@ namespace Werewolf.Gameplay
 		{
 			gameObject.SetActive(display);
 			_groundCanvas.gameObject.SetActive(display);
+
+			if (!display)
+			{
+				return;
+			}
+
+			_material.SetInt(DISSOLVE_TO_TARGET_PROPERTY_REFERENCE, 0);
+			_material.SetFloat(DISSOLVE_AMOUNT_PROPERTY_REFERENCE, 1);
+
+			StartCoroutine(DissolveRole(0, _roleTransitionDuration, 0));
+		}
+
+		private IEnumerator DissolveRole(float targetDissolve, float duration, float finalDissolve, Texture2D finalBaseRole = null)
+		{
+			float initialDissolve = _material.GetFloat(DISSOLVE_AMOUNT_PROPERTY_REFERENCE);
+			float elapsedTime = .0f;
+
+			while (elapsedTime < duration)
+			{
+				elapsedTime += Time.deltaTime;
+				_material.SetFloat(DISSOLVE_AMOUNT_PROPERTY_REFERENCE, Mathf.Lerp(initialDissolve, targetDissolve, elapsedTime / duration));
+
+				yield return 0;
+			}
+
+			if (finalBaseRole)
+			{
+				_material.SetTexture(BASE_ROLE_PROPERTY_REFERENCE, finalBaseRole);
+			}
+
+			_material.SetFloat(DISSOLVE_AMOUNT_PROPERTY_REFERENCE, finalDissolve);
 		}
 
 		public void Flip()

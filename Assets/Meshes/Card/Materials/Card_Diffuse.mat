@@ -43,12 +43,24 @@ Material:
         m_Texture: {fileID: 2800000, guid: ef13b31019f0bf5429b1de113480b9f8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BaseRole:
+        m_Texture: {fileID: 2800000, guid: e49a89800030d03408dd630845cce68a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ComposeCardBaseColor_8bfc630a5a9f43c0873c0ea831e920aa_Role_1920965746_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 1874b440e9a338a41a9bd976b9390345, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Normals:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Role:
         m_Texture: {fileID: 2800000, guid: e49a89800030d03408dd630845cce68a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_01bf4769418645578b15e7608ec74783_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: d4c3398f13d332c46bfe6200ef47b821, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_13fcbcc1a5204f7bbeacb340893bfd08_Texture_1_Texture2D:
@@ -65,6 +77,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_a3d7a6981e024ceda18e9771bca4c97a_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 4b40f6b7fda7c2446a51fa4244c2c4e3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TargetRole:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2DAsset_c07ed94891db4047b6f03df43ab2cebb_Out_0_Texture2D:
@@ -94,7 +110,9 @@ Material:
     - _DeathDelta: 0
     - _DissolveAmount: 0
     - _DissolveScale: 40
-    - _DisssolveWidth: 0.02
+    - _DissolveToTarget: 0
+    - _DissolveWidth: 0.03
+    - _DisssolveWidth: 0.06
     - _DstBlend: 0
     - _IsDead: 0
     - _Metallic: 0
@@ -112,7 +130,12 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _DeadTint: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 0}
-    - _DissssolveColor: {r: 0.8867924, g: 0.042094722, b: 0, a: 0}
+    - _DisssolveColor: {r: 0.8867924, g: 0.042094722, b: 0, a: 0}
+    - _DissssolveColor: {r: 1, g: 0.048672564, b: 0, a: 0}
+    - _InnerEnd: {r: 1, g: 0.5686275, b: 0, a: 0}
+    - _InnerStart: {r: 0, g: 0, b: 0, a: 0}
+    - _OuterEnd: {r: 0.9607843, g: 0.07450981, b: 0.06666667, a: 0}
+    - _OuterStart: {r: 1, g: 0.3058824, b: 0, a: 0}
     - _TEST1: {r: 2, g: 2, b: 0, a: 0}
     - _TEST2: {r: 0, g: -1, b: 0, a: 0}
   m_BuildTextureStacks: []

@@ -102,7 +102,7 @@ namespace Werewolf.Managers
 
 		public void ChangePlayerCardRole(PlayerRef player, RoleData roleData)
 		{
-			_playerCards[player].SetRole(roleData);
+			_playerCards[player].SetRole(roleData, useDissolve: true);
 		}
 
 		#region RPC Calls
@@ -780,11 +780,11 @@ namespace Werewolf.Managers
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_SetRole([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int roleID)
+		public void RPC_SetRole([RpcTarget] PlayerRef player, PlayerRef cardPlayer, int roleID, bool useDissolve = false)
 		{
 			if (roleID == -1)
 			{
-				_playerCards[cardPlayer].SetRole(null);
+				_playerCards[cardPlayer].SetRole(null, useDissolve);
 			}
 			else
 			{
@@ -793,7 +793,7 @@ namespace Werewolf.Managers
 					Debug.LogError($"Could not find the role {roleID}");
 				}
 
-				_playerCards[cardPlayer].SetRole(roleData);
+				_playerCards[cardPlayer].SetRole(roleData, useDissolve);
 			}
 		}
 

@@ -184,7 +184,7 @@ namespace Werewolf.Gameplay.Role
 
 				if (playerInfo.Key == previousPlayer)
 				{
-					_gameManager.RPC_SetRole(previousPlayer, _playerRevealed, -1);
+					_gameManager.RPC_SetRole(previousPlayer, _playerRevealed, -1, useDissolve: true);
 					_gameManager.RPC_PutCardBackDown(previousPlayer, _playerRevealed, false);
 
 					continue;
@@ -192,7 +192,7 @@ namespace Werewolf.Gameplay.Role
 
 				if (isPlayerAlreadyRevealed)
 				{
-					_gameManager.RPC_SetRole(playerInfo.Key, previousPlayer, RoleToTake.ID.HashCode);
+					_gameManager.RPC_SetRole(playerInfo.Key, previousPlayer, RoleToTake.ID.HashCode, useDissolve: true);
 				}
 
 				_gameManager.RPC_PutCardBackDown(playerInfo.Key, previousPlayer, !isPlayerAlreadyRevealed);
