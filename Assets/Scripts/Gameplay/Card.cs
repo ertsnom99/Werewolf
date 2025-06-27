@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
+using UnityEngine.UI;
 using Werewolf.Data;
 
 namespace Werewolf.Gameplay
@@ -60,13 +61,21 @@ namespace Werewolf.Gameplay
 		[SerializeField]
 		private GameObject _skip;
 
-		[Header("Werewolf")]
+		[Header("Icons")]
 		[SerializeField]
-		private GameObject _werewolfIcon;
+		private Image _icon;
 
-		[Header("Death")]
 		[SerializeField]
-		private GameObject _deathIcon;
+		private CanvasGroup _iconCanvasGroup;
+
+		[SerializeField]
+		private float _iconFadeDuration;
+
+		[SerializeField]
+		private Sprite _werewolfIcon;
+
+		[SerializeField]
+		private Sprite _deathIcon;
 
 		[Header("UI")]
 		[SerializeField]
@@ -288,14 +297,33 @@ namespace Werewolf.Gameplay
 
 		public void DisplayWerewolfIcon(bool display)
 		{
-			_werewolfIcon.SetActive(display);
+			_icon.sprite = _werewolfIcon;
+			_icon.gameObject.SetActive(display);
+
+			StartCoroutine(FadeIcon(display ? 1 : 0, _iconFadeDuration));
 		}
 
-		public void DisplayDeadIcon()
+		public void DisplayDeadIcon(bool display)
 		{
-			_deathIcon.SetActive(true);
+			_icon.sprite = _deathIcon;
+			_icon.gameObject.SetActive(display);
+
+			StartCoroutine(FadeIcon(display ? 1 : 0, _iconFadeDuration));
 		}
 
+		private IEnumerator FadeIcon(float targetFade, float duration)
+		{
+			float initialFade = _iconCanvasGroup.alpha;
+			float elapsedTime = .0f;
+
+			while (elapsedTime < duration)
+			{
+				elapsedTime += Time.deltaTime;
+				_iconCanvasGroup.alpha = Mathf.Lerp(initialFade, targetFade, elapsedTime / duration);
+
+				yield return 0;
+			}
+		}
 		#region MouseDetectionListener methods
 		public void MouseEntered() { }
 

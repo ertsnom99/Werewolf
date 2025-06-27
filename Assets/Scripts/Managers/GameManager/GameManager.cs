@@ -1348,7 +1348,7 @@ namespace Werewolf.Managers
 #if UNITY_SERVER && UNITY_EDITOR
 			if (_playerCards.TryGetValue(deadPlayer, out Card playerCard) && playerCard)
 			{
-				playerCard.DisplayDeadIcon();
+				playerCard.DisplayDeadIcon(true);
 			}
 #endif
 			foreach (IGameManagerSubscriber subscriber in Subscribers)

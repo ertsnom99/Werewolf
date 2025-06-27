@@ -283,7 +283,7 @@ namespace Werewolf.Managers
 		{
 			if (_playerCards.TryGetValue(deadPlayer, out Card playerCard) && playerCard)
 			{
-				playerCard.DisplayDeadIcon();
+				playerCard.DisplayDeadIcon(true);
 			}
 		}
 		#endregion
