@@ -295,6 +295,14 @@ MonoBehaviour:
     m_Key: Angel_StartingGameWithExecution
     m_Metadata:
       m_Items: []
+  - m_Id: 74656576140861440
+    m_Key: LittleGirl_CaughtPeeking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74656608151789568
+    m_Key: LittleGirl_WerewolvesCaughtPeeking
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

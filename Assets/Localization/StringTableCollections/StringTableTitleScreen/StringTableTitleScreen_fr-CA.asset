@@ -322,10 +322,22 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 4972454835144097793
+  - m_Id: 74656576140861440
+    m_Localized: "Vous avez jet\xE9 un coup d'oeil aux Loups-Garous, mais ils vous
+      ont attrap\xE9"
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097793
+  - m_Id: 74656608151789568
+    m_Localized: "Vous avez attrap\xE9 la {\"Petite Fille\":t(RoleName)} en train
+      de jeta un coup d'oeil \xE0 vous"
+    m_Metadata:
+      m_Items:
+      - rid: 4972454835144097793
   references:
     version: 2
     RefIds:
     - rid: 4972454835144097793
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd0000e045765cc4220000809c295f3e04000080dc641108000000e005bcd1acc90000e0850c8415d30000e00514c41cea00
+        m_Entries: 00805cffefc2030000809c15513e040000805ce50601000000e0458de01ebd0000e0c5ced403bd0000e045765cc4220000809c295f3e04000080dc641108000000e005bcd1acc90000e0850c8415d30000e00514c41cea0000e005adc23b090100e00521ca3b0901

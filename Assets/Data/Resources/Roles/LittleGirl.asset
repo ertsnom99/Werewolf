@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: LittleGirl
   m_EditorClassIdentifier: 
   <ID>k__BackingField:
-    Guid: 
-    HashCode: 0
-  <DebugName>k__BackingField: 
+    Guid: 418a2908-1a7d-49e2-930c-04d2ea07f7aa
+    HashCode: -152173833
+  <DebugName>k__BackingField: LittleGirl
   <NameSingular>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 131172566126944256
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -36,26 +36,26 @@ MonoBehaviour:
     m_LocalVariables: []
   <Description>k__BackingField:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:25402ef7d32c3cb47a782073354eda10
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 131172617813352448
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  <Image>k__BackingField: {fileID: -453538903, guid: bbce9110de612ae49aa0fd57f7c093d2,
+  <Image>k__BackingField: {fileID: 21300000, guid: 3faa3b11be6af6549b6b31604b6cfdf1,
     type: 3}
-  <SmallImage>k__BackingField: {fileID: 0}
+  <SmallImage>k__BackingField: {fileID: 21300000, guid: a5f81067afac9c64593b4be0375fb57a,
+    type: 3}
   <PrimaryType>k__BackingField: 0
   <SecondaryType>k__BackingField: 0
-  <CanHaveMultiples>k__BackingField: 0
-  <MandatoryCount>k__BackingField: 1
+  <CanHaveVariableAmount>k__BackingField: 0
+  <MandatoryAmount>k__BackingField: 1
   <PlayerGroups>k__BackingField:
-  - {fileID: 0}
-  <NightPriorities>k__BackingField:
-  - index: 14
-    alias: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
-  <Behavior>k__BackingField: {fileID: 0}
+  - {fileID: 11400000, guid: e4451ee702fce1249a2d78a90fc2e7ce, type: 2}
+  <NightPriorities>k__BackingField: []
+  <Behavior>k__BackingField: {fileID: 6214755477027389227, guid: dd8ff06a979bd424eb41ca611499f650,
+    type: 3}
   references:
     version: 2
     RefIds: []

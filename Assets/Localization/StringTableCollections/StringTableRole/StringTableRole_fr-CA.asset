@@ -440,10 +440,28 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 5699302592880836616
+  - m_Id: 131172617813352448
+    m_Localized: "La Petite Fille peut espionner les Loups-Garous pendant leur r\xE9veil.
+      Si elle se fait surprendre par un des Loups-Garous, elle sera d\xE9vor\xE9e
+      \xE0 la place de la victime d\xE9sign\xE9e.\n\n{\"Durant le vote des Loups-Garous,
+      elle peut utiliser son pouvoir pour voir qui sont les Loups-Garous. Lorsqu'elle
+      utilise son pouvoir, il y a une chance sur deux que son pouvoir se retourne
+      contre elle. Dans ce cas, Le vote des Loups-Garous est imm\xE9diatement annul\xE9,
+      puis l'identit\xE9 de la Petite Fille leur sera r\xE9v\xE9l\xE9. Elle deviendra
+      finalement la victime s\xE9lectionn\xE9e par les Loups-Garous pour cette nuit.
+      Durant le vote des Loups-Garous, un bouton en bas \xE0 gauche de l'\xE9cran
+      apparaitra lorsque la Petite Fille pourra utiliser son pouvoir.\":t(RoleDescription)}"
+    m_Metadata:
+      m_Items:
+      - rid: 5699302592880836616
+  - m_Id: 131172566126944256
+    m_Localized: Petite Fille
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
     - rid: 5699302592880836616
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb7160100e08548203c860100e0454314d1910100e005366853980100e085225697a10100e005f7ad4aaf01
+        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb7160100e08548203c860100e0454314d1910100e005366853980100e085225697a10100e005f7ad4aaf0100e00509cd04d201

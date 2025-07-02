@@ -263,6 +263,14 @@ MonoBehaviour:
     m_Key: Angel_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 131172566126944256
+    m_Key: LittleGirl_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 131172617813352448
+    m_Key: LittleGirl_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

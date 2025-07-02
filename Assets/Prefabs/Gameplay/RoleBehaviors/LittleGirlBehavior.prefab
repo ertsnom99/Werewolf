@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2473867276163888157
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 213106827551275502}
+  - component: {fileID: 6214755477027389227}
+  m_Layer: 0
+  m_Name: LittleGirlBehavior
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &213106827551275502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2473867276163888157}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6214755477027389227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2473867276163888157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 844c59cc5356d264daccca823f3b46b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
+  <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroupIDs>k__BackingField: []
+  <NightPriorities>k__BackingField: []
+  <IsPrimaryBehavior>k__BackingField: 0
+  _peekQuickActionScreen: {fileID: 11400000, guid: 727e0d140712db44585eb38422413c1f,
+    type: 2}
+  _peekedGameHistoryEntry: {fileID: 11400000, guid: ead0a9e89345a6b4491b87eff9524fb4,
+    type: 2}
+  _caughtPeekingGameHistoryEntry: {fileID: 11400000, guid: 2fe35ec546847a8408e9776404b4b180,
+    type: 2}
+  _caughtPeekingTitleScreen: {fileID: 11400000, guid: d74130034279d284281b7d87961be762,
+    type: 2}
+  _werewolvesCaughtPeekingTitleScreen: {fileID: 11400000, guid: b0ef79094795a9d419c3ea02caaa034e,
+    type: 2}

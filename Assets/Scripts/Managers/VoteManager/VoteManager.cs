@@ -604,6 +604,65 @@ namespace Werewolf.Managers
 			VoteCompleted = null;
 		}
 
+		public void EndVote(PlayerRef playerVotedFor)
+		{
+			if (_step != Step.Voting || _voteCoroutine == null)
+			{
+				return;
+			}
+
+			Dictionary<PlayerRef, int> totalVotes = new();
+
+			foreach (PlayerRef voter in Voters)
+			{
+				if (_networkDataManager.PlayerInfos[voter].IsConnected)
+				{
+					RPC_VoteEnded(voter);
+				}
+
+				int voteValue = (_modifiers != null && _modifiers.TryGetValue(voter, out int modifier)) ? modifier : 1;
+
+				if (totalVotes.ContainsKey(playerVotedFor))
+				{
+					totalVotes[playerVotedFor] += voteValue;
+					continue;
+				}
+
+				totalVotes.Add(playerVotedFor, voteValue);
+			}
+
+			foreach (PlayerRef spectator in Spectators)
+			{
+				if (_networkDataManager.PlayerInfos[spectator].IsConnected)
+				{
+					RPC_VoteEnded(spectator);
+				}
+			}
+#if UNITY_SERVER && UNITY_EDITOR
+			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
+			{
+				if (!playerCard.Value)
+				{
+					continue;
+				}
+				
+				playerCard.Value.DisplayVoteCount(false);
+				playerCard.Value.DisplayVote(false);
+			}
+
+			_UIManager.SetFade(_UIManager.TitleScreen, .0f);
+			_UIManager.VoteScreen.SetConfirmVoteDelayActive(false);
+			_UIManager.FadeOut(_UIManager.VoteScreen, _gameConfig.UITransitionNormalDuration);
+#endif
+			StopCoroutine(_voteCoroutine);
+			_voteCoroutine = null;
+
+			_step = Step.NotVoting;
+
+			VoteCompleted?.Invoke(totalVotes);
+			VoteCompleted = null;
+		}
+
 		private void OnAllPlayersVoteEnded(Dictionary<PlayerRef, int> votes)
 		{
 			VoteCompleted -= OnAllPlayersVoteEnded;
