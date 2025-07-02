@@ -149,13 +149,13 @@ MonoBehaviour:
       - rid: 4972454835144097792
   - m_Id: 1147394884812800
     m_Localized: Le {"Renard":t(RoleName)} ({FoxPlayer:t(PlayerName)}) sentit {SniffedPlayers:list:{:t(PlayerName)}|,
-      | et }, et trouva un {"Loup-garous":t(RoleName)} parmis ce groupe.
+      | et }, et trouva un {"Loup-garou":t(RoleName)} parmis ce groupe.
     m_Metadata:
       m_Items:
       - rid: 4972454835144097792
   - m_Id: 1147428170809344
     m_Localized: Le {"Renard":t(RoleName)} ({FoxPlayer:t(PlayerName)}) sentit {SniffedPlayers:list:{:t(PlayerName)}|,
-      | et }, ne trouva pas de {"Loup-garous":t(RoleName)} parmis ce groupe et perdit
+      | et }, ne trouva pas de {"Loups-garous":t(RoleName)} parmis ce groupe et perdit
       son pouvoir.
     m_Metadata:
       m_Items:

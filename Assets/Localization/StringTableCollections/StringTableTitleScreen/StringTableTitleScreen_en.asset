@@ -118,11 +118,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8087697915904
-    m_Localized: There is no werewolf in this group! You lost your power!
+    m_Localized: There is no Werewolf in this group! You lost your power!
     m_Metadata:
       m_Items: []
   - m_Id: 8209857019904
-    m_Localized: There is one or more werewolf in this group!
+    m_Localized: There is one or more Werewolf in this group!
     m_Metadata:
       m_Items: []
   - m_Id: 8656277766144
@@ -202,11 +202,11 @@ MonoBehaviour:
       m_Items:
       - rid: 4972454616256217094
   - m_Id: 6123585257463808
-    m_Localized: There isn't any other werewolves left
+    m_Localized: There isn't any other Werewolves left
     m_Metadata:
       m_Items: []
   - m_Id: 6125516872867840
-    m_Localized: Choose a werewolf to kill
+    m_Localized: Choose a Werewolf to kill
     m_Metadata:
       m_Items: []
   - m_Id: 7688451105611776
@@ -316,7 +316,7 @@ MonoBehaviour:
       m_Items:
       - rid: 4972454616256217094
   - m_Id: 74656576140861440
-    m_Localized: You peeked at the werewolves, but they caught you
+    m_Localized: You peeked at the Werewolves, but they caught you
     m_Metadata:
       m_Items:
       - rid: 4972454616256217094

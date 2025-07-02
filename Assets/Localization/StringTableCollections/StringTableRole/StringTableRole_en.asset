@@ -443,7 +443,7 @@ MonoBehaviour:
       {"Once during
       the game, he can decide that there will be two consecutive execution votes.
       There will be no debate for the second vote. During the vote, a button at the
-      bottom left of the screen will appear when the judge can use his power.":t(RoleDescription)}'
+      bottom left of the screen will appear when the Judge can use his power.":t(RoleDescription)}'
     m_Metadata:
       m_Items:
       - rid: 5699302592880836615

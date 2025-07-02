@@ -43,7 +43,7 @@ MonoBehaviour:
       deux villageois tomber en amour.\n\n{\"Durant la premi\xE8re nuit, il choisi
       deux villageois qui deviendront amoureux. Il peut \xEAtre un des amoureux.
       Si un amoureux meurt, l'autre meurt de tristesse imm\xE9diatement. Un amoureux
-      ne peut jamais tenter de tuer l'autre amoureux. Si un amoureux est un loup-garous
+      ne peut jamais tenter de tuer l'autre amoureux. Si un amoureux est un loup-garou
       et l'autre est un villageois, ils devront \xEAtre les seuls villageois en vie
       pour gagner.\":t(RoleDescription)}"
     m_Metadata:
@@ -152,7 +152,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 7364653006848
     m_Localized: "Une b\xEAte de la for\xEAt. Il agit comme un villageois durant
-      le jour, mais devient un tueur la nuit.\n\n{\"Chaque nuit, tout les Loup-Garous
+      le jour, mais devient un tueur la nuit.\n\n{\"Chaque nuit, tout les Loups-Garous
       devront voter ensemble pour un villageois a d\xE9vorer. Le vote doit \xEAtre
       unanime ou aucun villageois sera \xE9limin\xE9 cette nuit.\":t(RoleDescription)}"
     m_Metadata:
@@ -306,7 +306,7 @@ MonoBehaviour:
       quelques si\xE8cles. Heureusement pour nos anc\xEAtres r\xE9cents, il s'\xE9tait
       depuis longtemps assoupi. Cependant, l'Infect P\xE8re des Loups vient juste
       de se r\xE9veiller d'un long sommeil et il a tr\xE8s faim!\r\n\n{\"Chaque nuit,
-      il se r\xE9veille et d\xE9vore avec les autres loups-garous. Une fois durant
+      il se r\xE9veille et d\xE9vore avec les autres Loups-Garous. Une fois durant
       la partie, au moment o\xF9 les Loups-Garous ont choisi leur victime, l'Infect
       P\xE8re des Loups peut infect\xE9e la victime au lieu de la d\xE9vorer. La
       victime gardera son pouvoir, se r\xE9veillera toujours avec les Loups-Garous
@@ -405,7 +405,7 @@ MonoBehaviour:
       de juge itin\xE9rant. \r\n\n{\"Une fois durant la partie, il peut d\xE9cider
       qu'il y aura deux votes d\u2019ex\xE9cution cons\xE9cutifs. Il n'y aura pas
       de d\xE9bat pour le second vote. Durant le vote, un bouton en bas \xE0 gauche
-      de l'\xE9cran apparaitra lorsque le juge pourra utiliser son pouvoir.\":t(RoleDescription)}"
+      de l'\xE9cran apparaitra lorsque le Juge pourra utiliser son pouvoir.\":t(RoleDescription)}"
     m_Metadata:
       m_Items:
       - rid: 5699302592880836616
@@ -436,7 +436,7 @@ MonoBehaviour:
       enfin paisible dans son lit douillet.\n\n{\"Quand l'Ange est en jeu, la partie
       d\xE9bute toujours par le d\xE9bat du village suivi d'un vote d'ex\xE9cution,
       puis d'une premi\xE8re nuit. Si l'Ange r\xE9ussit \xE0 se faire ex\xE9cuter
-      par les villageois ou d\xE9vorer par les Loup-Garous, il gagne la partie.\":t(RoleDescription)}"
+      par les villageois ou d\xE9vorer par les Loups-Garous, il gagne la partie.\":t(RoleDescription)}"
     m_Metadata:
       m_Items:
       - rid: 5699302592880836616
