@@ -51,11 +51,11 @@ MonoBehaviour:
   <PlayerGroupIDs>k__BackingField: []
   <NightPriorities>k__BackingField: []
   <IsPrimaryBehavior>k__BackingField: 0
-  _angelStartingGameWithExecutionGameHistoryEntry: {fileID: 11400000, guid: c7a446687240e5041b27d55ae3ebfa1c,
+  _startingGameWithExecutionGameHistoryEntry: {fileID: 11400000, guid: c7a446687240e5041b27d55ae3ebfa1c,
     type: 2}
-  _angelStartingGameWithExecutionTitleScreen: {fileID: 11400000, guid: 12afeeae8412eef41a7e729c0776b211,
+  _startingGameWithExecutionTitleScreen: {fileID: 11400000, guid: 12afeeae8412eef41a7e729c0776b211,
     type: 2}
-  _angelStartingGameWithExecutionTitleHoldDuration: 5
+  _startingGameWithExecutionTitleHoldDuration: 5
   _marksForDeathToWin:
   - {fileID: 11400000, guid: 4870c56c78cb3eb4d89e4668e43faffb, type: 2}
   - {fileID: 11400000, guid: 6b3db20462b9f694b8d3b68f9c0d6579, type: 2}

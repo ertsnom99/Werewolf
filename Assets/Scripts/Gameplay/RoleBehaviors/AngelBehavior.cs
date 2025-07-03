@@ -16,13 +16,13 @@ namespace Werewolf.Gameplay.Role
 	{
 		[Header("Starting Execution")]
 		[SerializeField]
-		private GameHistoryEntryData _angelStartingGameWithExecutionGameHistoryEntry;
+		private GameHistoryEntryData _startingGameWithExecutionGameHistoryEntry;
 
 		[SerializeField]
-		private TitleScreenData _angelStartingGameWithExecutionTitleScreen;
+		private TitleScreenData _startingGameWithExecutionTitleScreen;
 
 		[SerializeField]
-		private float _angelStartingGameWithExecutionTitleHoldDuration;
+		private float _startingGameWithExecutionTitleHoldDuration;
 
 		[Header("Win Condition")]
 		[SerializeField]
@@ -65,7 +65,7 @@ namespace Werewolf.Gameplay.Role
 			{
 				_gameManager.SetNextGameplayLoopStep(GameplayLoopStep.ExecutionDebate);
 
-				_gameHistoryManager.AddEntry(_angelStartingGameWithExecutionGameHistoryEntry.ID,
+				_gameHistoryManager.AddEntry(_startingGameWithExecutionGameHistoryEntry.ID,
 											new GameHistorySaveEntryVariable[] {
 											new()
 											{
@@ -77,7 +77,7 @@ namespace Werewolf.Gameplay.Role
 
 				_gameManager.WaitForPlayer(Player);
 
-				_gameManager.RPC_DisplayTitle(_angelStartingGameWithExecutionTitleScreen.ID.HashCode);
+				_gameManager.RPC_DisplayTitle(_startingGameWithExecutionTitleScreen.ID.HashCode);
 #if UNITY_SERVER && UNITY_EDITOR
 				_gameManager.DisplayTitle(_angelStartingGameWithExecutionTitleScreen.ID.HashCode);
 #endif
@@ -97,7 +97,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			GameConfig gameConfig = _gameManager.GameConfig;
 
-			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration + _angelStartingGameWithExecutionTitleHoldDuration * _gameManager.GameSpeedModifier);
+			yield return new WaitForSeconds(gameConfig.UITransitionNormalDuration + _startingGameWithExecutionTitleHoldDuration * _gameManager.GameSpeedModifier);
 
 			_gameManager.RPC_HideUI();
 #if UNITY_SERVER && UNITY_EDITOR

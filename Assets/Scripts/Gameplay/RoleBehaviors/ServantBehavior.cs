@@ -26,7 +26,7 @@ namespace Werewolf.Gameplay.Role
 		private TitleScreenData _tookThisRoleTitleScreen;
 
 		[SerializeField]
-		private float _servantRevealDuration;
+		private float _revealDuration;
 
 		private bool _acceptedPrompt;
 		private bool _readyToTakeRole;
@@ -168,7 +168,7 @@ namespace Werewolf.Gameplay.Role
 			_gameManager.MoveCardToCamera(previousPlayer, true);
 			_gameManager.DisplayTitle(_tookThisRoleTitleScreen.ID.HashCode);
 #endif
-			yield return new WaitForSeconds(_servantRevealDuration * _gameManager.GameSpeedModifier);
+			yield return new WaitForSeconds(_revealDuration * _gameManager.GameSpeedModifier);
 
 			if (isPlayerAlreadyRevealed)
 			{
