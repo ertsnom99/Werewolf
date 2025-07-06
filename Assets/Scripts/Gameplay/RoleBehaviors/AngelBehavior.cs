@@ -79,7 +79,7 @@ namespace Werewolf.Gameplay.Role
 
 				_gameManager.RPC_DisplayTitle(_startingGameWithExecutionTitleScreen.ID.HashCode);
 #if UNITY_SERVER && UNITY_EDITOR
-				_gameManager.DisplayTitle(_angelStartingGameWithExecutionTitleScreen.ID.HashCode);
+				_gameManager.DisplayTitle(_startingGameWithExecutionTitleScreen.ID.HashCode);
 #endif
 				StartCoroutine(WaitToHideAngelStartingGameWithExecutionTitle());
 			}
