@@ -334,6 +334,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 4972454835144097793
+  - m_Id: 77141026867109888
+    m_Localized: "Choisissez un villageois qui commencera avec deux voix suppl\xE9mentaires
+      lors de la prochaine ex\xE9cution"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

@@ -57,7 +57,7 @@ MonoBehaviour:
   <NightPriorities>k__BackingField:
   - index: 10
     alias: {fileID: 0}
-  - index: 14
+  - index: 13
     alias: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
   <Behavior>k__BackingField: {fileID: 2516247377651852745, guid: 4b0ead8318e504f4c905f1a413ea0c41,
     type: 3}

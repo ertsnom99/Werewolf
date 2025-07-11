@@ -48,9 +48,8 @@ MonoBehaviour:
   <CardPrefab>k__BackingField: {fileID: 2092366821852372363, guid: f1a13b5e49102a4489154c427ff896be,
     type: 3}
   <ReservedRolesSpacing>k__BackingField: 2.5
-  <CaptainCardPrefab>k__BackingField: {fileID: 4242641526295142619, guid: d00483e34f2d91c43a011de8c4cbb2e5,
+  <MarkerPrefab>k__BackingField: {fileID: 3738939636888606628, guid: d00483e34f2d91c43a011de8c4cbb2e5,
     type: 3}
-  <CaptainCardOffset>k__BackingField: {x: -1, y: 0, z: 0}
   <AvailableRolesMaxAttemptCount>k__BackingField: 100
   <PlayerGivenRoleGameHistoryEntry>k__BackingField: {fileID: 11400000, guid: be4791a4430f2a746a4ebd55fe03bc2c,
     type: 2}
@@ -188,6 +187,9 @@ MonoBehaviour:
     type: 2}
   <EndGameHoldDuration>k__BackingField: 5
   <ReturnToLobbyCountdownDuration>k__BackingField: 5
+  <CaptainMarkerData>k__BackingField: {fileID: 11400000, guid: e3a74f5faf0c2f2418c0718ad8cf8db4,
+    type: 2}
+  <CaptainMarkerOffset>k__BackingField: {x: -1, y: 0, z: 0}
   <CaptainChangedGameHistoryEntry>k__BackingField: {fileID: 11400000, guid: edf45f39ac996ac4ba3d9ad0e9703dc1,
     type: 2}
   <CaptainRevealDuration>k__BackingField: 3
@@ -200,8 +202,8 @@ MonoBehaviour:
   <CaptainChoiceDuration>k__BackingField: 10
   <OldCaptainChoosingTitleScreen>k__BackingField: {fileID: 11400000, guid: 3f2690e4424810b469df95f7341fdd09,
     type: 2}
-  <CaptainCardMovementDuration>k__BackingField: 0.5
-  <CaptainCardMovementXY>k__BackingField:
+  <CaptainMarkerMovementDuration>k__BackingField: 0.5
+  <CaptainMarkerMovementXY>k__BackingField:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -225,7 +227,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <CaptainCardMovementYOffset>k__BackingField:
+  <CaptainMarkerMovementYOffset>k__BackingField:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3

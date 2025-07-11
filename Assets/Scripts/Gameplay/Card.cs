@@ -110,8 +110,8 @@ namespace Werewolf.Gameplay
 		private bool _isClickable;
 		private bool _isSelected;
 
-		private const string BASE_ROLE_PROPERTY_REFERENCE = "_BaseRole";
-		private const string TARGET_ROLE_PROPERTY_REFERENCE = "_TargetRole";
+		private const string BASE_IMAGE_PROPERTY_REFERENCE = "_BaseImage";
+		private const string TARGET_IMAGE_PROPERTY_REFERENCE = "_TargetImage";
 		private const string DISSOLVE_AMOUNT_PROPERTY_REFERENCE = "_DissolveAmount";
 		private const string DISSOLVE_TO_TARGET_PROPERTY_REFERENCE = "_DissolveToTarget";
 
@@ -153,13 +153,13 @@ namespace Werewolf.Gameplay
 			{
 				_material.SetInt(DISSOLVE_TO_TARGET_PROPERTY_REFERENCE, 1);
 				_material.SetFloat(DISSOLVE_AMOUNT_PROPERTY_REFERENCE, 0);
-				_material.SetTexture(TARGET_ROLE_PROPERTY_REFERENCE, roleTexture);
+				_material.SetTexture(TARGET_IMAGE_PROPERTY_REFERENCE, roleTexture);
 
 				StartCoroutine(DissolveRole(1, _roleTransitionDuration, 0, roleTexture));
 			}
 			else
 			{
-				_material.SetTexture(BASE_ROLE_PROPERTY_REFERENCE, roleTexture);
+				_material.SetTexture(BASE_IMAGE_PROPERTY_REFERENCE, roleTexture);
 			}
 		}
 
@@ -206,7 +206,7 @@ namespace Werewolf.Gameplay
 
 			if (finalBaseRole)
 			{
-				_material.SetTexture(BASE_ROLE_PROPERTY_REFERENCE, finalBaseRole);
+				_material.SetTexture(BASE_IMAGE_PROPERTY_REFERENCE, finalBaseRole);
 			}
 
 			_material.SetFloat(DISSOLVE_AMOUNT_PROPERTY_REFERENCE, finalDissolve);

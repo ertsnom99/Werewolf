@@ -303,6 +303,10 @@ MonoBehaviour:
     m_Key: LittleGirl_WerewolvesCaughtPeeking
     m_Metadata:
       m_Items: []
+  - m_Id: 77141026867109888
+    m_Key: Crow_ChoosePlayer
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

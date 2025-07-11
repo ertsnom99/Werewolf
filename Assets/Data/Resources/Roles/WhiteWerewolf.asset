@@ -54,9 +54,9 @@ MonoBehaviour:
   <PlayerGroups>k__BackingField:
   - {fileID: 11400000, guid: 4518bd88add254f4f900e3d3ef8d90d5, type: 2}
   <NightPriorities>k__BackingField:
-  - index: 14
+  - index: 13
     alias: {fileID: 11400000, guid: 820b5673164dbc544b3b3a82574fe0e5, type: 2}
-  - index: 15
+  - index: 14
     alias: {fileID: 0}
   <Behavior>k__BackingField: {fileID: 1981575086992350424, guid: 99c1e4869d261e648a1dd5a06a2958c3,
     type: 3}

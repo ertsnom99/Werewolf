@@ -325,6 +325,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 4972454616256217094
+  - m_Id: 77141026867109888
+    m_Localized: Choose a villager that will start with two extra votes during the
+      next execution
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

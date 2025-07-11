@@ -458,10 +458,26 @@ MonoBehaviour:
     m_Localized: Petite Fille
     m_Metadata:
       m_Items: []
+  - m_Id: 133073814426083328
+    m_Localized: "Cet individu adore faire conna\xEEtre secr\xE8tement ses suspicions
+      de culpabilit\xE9, en collant juste avant l'aube, une affiche anonyme pleine
+      de perfides accusations envers le joueur concern\xE9. Son impact est certain
+      malgr\xE9 le manque de courage de notre oiseau!\n\n{\"Chaque fin de nuit, apr\xE8s
+      que les Loups-Garous se sont rendormis, le Corbeau peut d\xE9signer un joueur
+      qu'il suspecte. Au lev\xE9 du jour, un marqueur apparaitra devant le joueur
+      et il aura automatiquement deux voix de plus contre lui durant le prochain
+      vote d'ex\xE9cution.\":t(RoleDescription)}"
+    m_Metadata:
+      m_Items:
+      - rid: 5699302592880836616
+  - m_Id: 133073769089851392
+    m_Localized: Corbeau
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
     - rid: 5699302592880836616
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb7160100e08548203c860100e0454314d1910100e005366853980100e085225697a10100e005f7ad4aaf0100e00509cd04d201
+        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb7160100e08548203c860100e0454314d1910100e005366853980100e085225697a10100e005f7ad4aaf0100e00509cd04d20100e0c5ddedc5d801

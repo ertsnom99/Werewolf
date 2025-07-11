@@ -43,11 +43,9 @@ namespace Werewolf.Data
 		[field: SerializeField]
 		public float ReservedRolesSpacing { get; private set; }
 
+		[field: Header("Markers")]
 		[field: SerializeField]
-		public GameObject CaptainCardPrefab { get; private set; }
-
-		[field: SerializeField]
-		public Vector3 CaptainCardOffset { get; private set; }
+		public Marker MarkerPrefab { get; private set; }
 
 		[field: Header("Role Distribution")]
 		[field: SerializeField]
@@ -280,6 +278,12 @@ namespace Werewolf.Data
 
 		[field: Header("Captain")]
 		[field: SerializeField]
+		public MarkerData CaptainMarkerData { get; private set; }
+
+		[field: SerializeField]
+		public Vector3 CaptainMarkerOffset { get; private set; }
+
+		[field: SerializeField]
 		public GameHistoryEntryData CaptainChangedGameHistoryEntry { get; private set; }
 
 		[field: SerializeField]
@@ -301,13 +305,13 @@ namespace Werewolf.Data
 		public TitleScreenData OldCaptainChoosingTitleScreen { get; private set; }
 
 		[field: SerializeField]
-		public float CaptainCardMovementDuration { get; private set; }
+		public float CaptainMarkerMovementDuration { get; private set; }
 
 		[field: SerializeField]
-		public AnimationCurve CaptainCardMovementXY { get; private set; }
+		public AnimationCurve CaptainMarkerMovementXY { get; private set; }
 
 		[field: SerializeField]
-		public AnimationCurve CaptainCardMovementYOffset { get; private set; }
+		public AnimationCurve CaptainMarkerMovementYOffset { get; private set; }
 
 		[field: Header("Vote")]
 		[field: SerializeField]

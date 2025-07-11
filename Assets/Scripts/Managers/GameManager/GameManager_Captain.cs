@@ -10,7 +10,7 @@ namespace Werewolf.Managers
 	public partial class GameManager
 	{
 		private PlayerRef _captain;
-		private GameObject _captainCard;
+		private GameObject _captainMarker;
 		private IEnumerator _chooseNextCaptainCoroutine;
 		private List<PlayerRef> _captainChoices = new();
 		private bool _isNextCaptainChoiceCompleted;
@@ -40,9 +40,10 @@ namespace Werewolf.Managers
 
 			if (_captainChoices.Count <= 0)
 			{
-				RPC_DestroyCaptainCard();
+				RPC_DestroyCaptainMarker();
 #if UNITY_SERVER && UNITY_EDITOR
-				Destroy(_captainCard);
+				DestroyMarker(GameConfig.CaptainMarkerData.ID.HashCode);
+				_captainMarker = null;
 #endif
 				_chooseNextCaptainCoroutine = null;
 				_isNextCaptainChoiceCompleted = true;
@@ -128,20 +129,20 @@ namespace Werewolf.Managers
 			_isNextCaptainChoiceCompleted = true;
 		}
 
-		private IEnumerator ShowCaptain(bool createCard)
+		private IEnumerator ShowCaptain(bool createMarker)
 		{
-			if (createCard)
+			if (createMarker)
 			{
-				RPC_InstantiateCaptainCard(_captain);
+				RPC_InstantiateCaptainMarker(_captain);
 #if UNITY_SERVER && UNITY_EDITOR
-				_captainCard = Instantiate(GameConfig.CaptainCardPrefab, _playerCards[_captain].transform.position + GameConfig.CaptainCardOffset, Quaternion.identity);
+				_captainMarker = InstantiateMarker(GameConfig.CaptainMarkerData.ID.HashCode, _playerCards[_captain].transform.position + GameConfig.CaptainMarkerOffset);
 #endif
 			}
 			else
 			{
-				RPC_MoveCaptainCard(_captain);
+				RPC_MoveCaptainMarker(_captain);
 #if UNITY_SERVER && UNITY_EDITOR
-				StartCoroutine(MoveCaptainCard(_playerCards[_captain].transform.position + GameConfig.CaptainCardOffset));
+				StartCoroutine(MoveCaptainMarker(_playerCards[_captain].transform.position + GameConfig.CaptainMarkerOffset));
 #endif
 			}
 
@@ -150,40 +151,41 @@ namespace Werewolf.Managers
 			yield return DisplayTitleForAllPlayers(GameConfig.CaptainRevealTitleScreen.ID.HashCode, titleDuration, playerNickname: _networkDataManager.PlayerInfos[_captain].Nickname);
 		}
 
-		private IEnumerator MoveCaptainCard(Vector3 newPosition)
+		private IEnumerator MoveCaptainMarker(Vector3 newPosition)
 		{
-			Vector3 startingPosition = _captainCard.transform.position;
+			Vector3 startingPosition = _captainMarker.transform.position;
 			float elapsedTime = .0f;
 
-			while (elapsedTime < GameConfig.CaptainCardMovementDuration)
+			while (elapsedTime < GameConfig.CaptainMarkerMovementDuration)
 			{
 				yield return 0;
 
 				elapsedTime += Time.deltaTime;
-				float progress = elapsedTime / GameConfig.CaptainCardMovementDuration;
+				float progress = elapsedTime / GameConfig.CaptainMarkerMovementDuration;
 
-				_captainCard.transform.position = Vector3.Lerp(startingPosition, newPosition, GameConfig.CaptainCardMovementXY.Evaluate(progress))
-				+ Vector3.up * GameConfig.CaptainCardMovementYOffset.Evaluate(progress);
+				_captainMarker.transform.position = Vector3.Lerp(startingPosition, newPosition, GameConfig.CaptainMarkerMovementXY.Evaluate(progress))
+				+ Vector3.up * GameConfig.CaptainMarkerMovementYOffset.Evaluate(progress);
 			}
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_InstantiateCaptainCard(PlayerRef captain)
+		public void RPC_InstantiateCaptainMarker(PlayerRef captain)
 		{
-			_captainCard = Instantiate(GameConfig.CaptainCardPrefab, _playerCards[captain].transform.position + GameConfig.CaptainCardOffset, Quaternion.identity);
+			_captainMarker = InstantiateMarker(GameConfig.CaptainMarkerData.ID.HashCode, _playerCards[captain].transform.position + GameConfig.CaptainMarkerOffset);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_MoveCaptainCard(PlayerRef captain)
+		public void RPC_MoveCaptainMarker(PlayerRef captain)
 		{
-			StartCoroutine(MoveCaptainCard(_playerCards[captain].transform.position + GameConfig.CaptainCardOffset));
+			StartCoroutine(MoveCaptainMarker(_playerCards[captain].transform.position + GameConfig.CaptainMarkerOffset));
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		public void RPC_DestroyCaptainCard()
+		public void RPC_DestroyCaptainMarker()
 		{
-			Destroy(_captainCard);
+			DestroyMarker(GameConfig.CaptainMarkerData.ID.HashCode);
+			_captainMarker = null;
 		}
 		#endregion
 		#endregion

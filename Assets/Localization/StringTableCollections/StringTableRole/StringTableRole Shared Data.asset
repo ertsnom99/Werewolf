@@ -271,6 +271,14 @@ MonoBehaviour:
     m_Key: LittleGirl_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 133073769089851392
+    m_Key: Crow_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 133073814426083328
+    m_Key: Crow_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

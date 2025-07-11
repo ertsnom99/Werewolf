@@ -51,6 +51,7 @@ MonoBehaviour:
   - TitleScreens
   - ChoiceScreens
   - QuickActions
+  - Markers
   _prohibitedHashCodes: ffffffff
   _buildGuidDictionary: 0
   _buildHashCodeDictionary: 1
