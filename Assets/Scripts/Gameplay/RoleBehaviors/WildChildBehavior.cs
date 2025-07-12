@@ -152,7 +152,7 @@ namespace Werewolf.Gameplay.Role
 				_gameManager.RPC_SetPlayerCardHighlightVisible(Player, _model, true);
 			}
 #if UNITY_SERVER && UNITY_EDITOR
-			_gameManager.SetPlayerCardHighlightVisible(_model, false);
+			_gameManager.SetPlayerCardHighlightVisible(_model, true);
 			_gameManager.HideUI();
 #endif
 			yield return new WaitForSeconds(_gameManager.GameConfig.UITransitionNormalDuration + _selectedModelHighlightDuration * _gameManager.GameSpeedModifier);
