@@ -74,6 +74,9 @@ namespace Werewolf.Gameplay.Role
 											OnPlayerSelected))
 			{
 				StartCoroutine(WaitToStopWaitingForPlayer());
+
+				isWakingUp = false;
+				return true;
 			}
 
 			_endRoleCallAfterTimeCoroutine = EndRoleCallAfterTime();
