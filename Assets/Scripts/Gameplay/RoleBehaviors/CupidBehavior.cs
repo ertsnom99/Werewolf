@@ -438,7 +438,7 @@ namespace Werewolf.Gameplay.Role
 											new()
 											{
 												Name = "FirstCouplePlayer",
-												Data = _networkDataManager.PlayerInfos[couplePlayersToHighlight[couplePlayersToHighlight.Length - 1]].Nickname,
+												Data = _networkDataManager.PlayerInfos[couplePlayersToHighlight[^1]].Nickname,
 												Type = GameHistorySaveEntryVariableType.Player
 											},
 											new()
