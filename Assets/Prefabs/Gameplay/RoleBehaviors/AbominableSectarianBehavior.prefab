@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6495446851170203019
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2025911415055852552}
+  - component: {fileID: 4160804764692336370}
+  m_Layer: 0
+  m_Name: AbominableSectarianBehavior
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2025911415055852552
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6495446851170203019}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1043.1036, y: 510.7861, z: -0.3904419}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4160804764692336370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6495446851170203019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f379a8ec44a8ef74f9971fcf73a7a74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
+  <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroupIDs>k__BackingField: []
+  <NightPriorities>k__BackingField: []
+  <IsPrimaryBehavior>k__BackingField: 0
+  _createdGroupGameHistoryEntry: {fileID: 11400000, guid: 8911b43908228c34da5467899d77f678,
+    type: 2}
+  _createdGroupTitleScreen: {fileID: 11400000, guid: 1130e76faddbae54ba7d1af67ba75b78,
+    type: 2}
+  _createdGroupTitleDuration: 5
+  _werewolvesPlayerGroup: {fileID: 11400000, guid: 41ef8e010351d584f86ac12f24903bb0,
+    type: 2}

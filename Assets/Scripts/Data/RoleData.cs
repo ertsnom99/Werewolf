@@ -64,6 +64,9 @@ namespace Werewolf.Data
 		public PlayerGroupData[] PlayerGroups { get; private set; }
 
 		[field: SerializeField]
+		public PlayerGroupData[] PlayerGroupsCantWinWith { get; private set; }
+
+		[field: SerializeField]
 		public Priority[] NightPriorities { get; private set; }
 
 		[field: SerializeField]

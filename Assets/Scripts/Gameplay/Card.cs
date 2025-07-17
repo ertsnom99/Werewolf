@@ -77,6 +77,19 @@ namespace Werewolf.Gameplay
 		[SerializeField]
 		private Sprite _deathIcon;
 
+		[Header("Group")]
+		[SerializeField]
+		private Image _groupBackground;
+
+		[SerializeField]
+		private TMP_Text _groupText;
+
+		[SerializeField]
+		private CanvasGroup _groupCanvasGroup;
+
+		[SerializeField]
+		private float _groupFadeDuration;
+
 		[Header("UI")]
 		[SerializeField]
 		private Canvas _groundCanvas;
@@ -295,12 +308,13 @@ namespace Werewolf.Gameplay
 		}
 		#endregion
 
+		#region Icons
 		public void DisplayWerewolfIcon(bool display)
 		{
 			_icon.sprite = _werewolfIcon;
 			_icon.gameObject.SetActive(display);
 
-			StartCoroutine(FadeIcon(display ? 1 : 0, _iconFadeDuration));
+			StartCoroutine(FadeCanvasGroup(_iconCanvasGroup, display ? 1 : 0, _iconFadeDuration));
 		}
 
 		public void DisplayDeadIcon(bool display)
@@ -308,22 +322,34 @@ namespace Werewolf.Gameplay
 			_icon.sprite = _deathIcon;
 			_icon.gameObject.SetActive(display);
 
-			StartCoroutine(FadeIcon(display ? 1 : 0, _iconFadeDuration));
+			StartCoroutine(FadeCanvasGroup(_iconCanvasGroup, display ? 1 : 0, _iconFadeDuration));
+		}
+		#endregion
+
+		public void DisplayGroup(string text, Color background)
+		{
+			_groupText.text = text;
+			_groupBackground.color = background;
+
+			_groupBackground.gameObject.SetActive(true);
+
+			StartCoroutine(FadeCanvasGroup(_groupCanvasGroup, 1, _groupFadeDuration));
 		}
 
-		private IEnumerator FadeIcon(float targetFade, float duration)
+		private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float targetFade, float duration)
 		{
-			float initialFade = _iconCanvasGroup.alpha;
+			float initialFade = canvasGroup.alpha;
 			float elapsedTime = .0f;
 
 			while (elapsedTime < duration)
 			{
 				elapsedTime += Time.deltaTime;
-				_iconCanvasGroup.alpha = Mathf.Lerp(initialFade, targetFade, elapsedTime / duration);
+				canvasGroup.alpha = Mathf.Lerp(initialFade, targetFade, elapsedTime / duration);
 
 				yield return 0;
 			}
 		}
+
 		#region MouseDetectionListener methods
 		public void MouseEntered() { }
 

@@ -23,6 +23,15 @@ namespace Werewolf.Managers
 
 	public partial class GameManager
 	{
+		[Serializable]
+		public struct NetworkGroupDisplay : INetworkStruct
+		{
+			public PlayerRef Player;
+			[Networked, Capacity(1)]
+			public string Text { get { return default; } readonly set { } }
+			public Color Background;
+		}
+
 		public Dictionary<PlayerRef, PlayerGameInfo> PlayerGameInfos { get; private set; }
 
 		private readonly List<PlayerGroup> _playerGroups = new();
@@ -478,6 +487,17 @@ namespace Werewolf.Managers
 
 			Debug.LogWarning($"Couldn't set {player} as the leader of {playerGroupData.name}");
 		}
+
+		#region RPC Calls
+		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+		public void RPC_DisplayGroup(NetworkGroupDisplay[] networkGroupDisplay)
+		{
+			foreach (NetworkGroupDisplay playerCardGroup in networkGroupDisplay)
+			{
+				_playerCards[playerCardGroup.Player].DisplayGroup(playerCardGroup.Text, playerCardGroup.Background);
+			}
+		}
+		#endregion
 		#endregion
 
 		#region Player Awake

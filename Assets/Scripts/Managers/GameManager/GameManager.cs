@@ -1654,11 +1654,12 @@ namespace Werewolf.Managers
 					Runner.SendReliableDataToPlayer(playerInfo.Key, new ReliableKey(), gameHistoryData);
 				}
 
+				RoleData roleData = playerInfo.Value.Role;
 				int roleID = -1;
 
-				if (playerInfo.Value.Role)
+				if (roleData)
 				{
-					roleID = playerInfo.Value.Role.ID.HashCode;
+					roleID = roleData.ID.HashCode;
 				}
 
 				endGamePlayerInfos.Add(new()
@@ -1669,6 +1670,8 @@ namespace Werewolf.Managers
 					Won = !string.IsNullOrEmpty(winningPlayerGroup.ID.Guid)
 						&& ((winningPlayerGroup.Leader.IsNone && winningPlayerGroup.Players.Contains(playerInfo.Key))
 						|| (!winningPlayerGroup.Leader.IsNone && winningPlayerGroup.Leader == playerInfo.Key))
+						&& roleData
+						&& !roleData.PlayerGroupsCantWinWith.Any(X => X.ID == winningPlayerGroup.ID)
 				});
 #if UNITY_SERVER && UNITY_EDITOR
 				if (endGamePlayerInfos[^1].Won)
