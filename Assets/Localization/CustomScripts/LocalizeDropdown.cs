@@ -76,6 +76,8 @@ namespace UnityEngine.Localization
 		private void OnDestroy()
 		{
 			StopAllCoroutines();
+
+			LocalizationSettings.SelectedLocaleChanged -= ChangedLocale;
 		}
 	}
 }
