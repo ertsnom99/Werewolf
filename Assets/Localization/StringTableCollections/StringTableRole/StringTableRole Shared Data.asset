@@ -287,6 +287,14 @@ MonoBehaviour:
     m_Key: AbominableSectarian_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 138816675826229248
+    m_Key: Ancient_NameSingular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 138816678762242048
+    m_Key: Ancient_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

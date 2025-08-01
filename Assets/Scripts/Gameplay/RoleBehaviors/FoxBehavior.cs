@@ -51,6 +51,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_werewolvesPlayerGroupIDs = GameplayData.GetIDs(_werewolvesPlayerGroups);
 
 			_gameManager = GameManager.Instance;

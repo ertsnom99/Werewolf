@@ -41,6 +41,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
@@ -67,7 +69,7 @@ namespace Werewolf.Gameplay.Role
 
 		void IGameManagerSubscriber.OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
-			if (Player != deadPlayer || _gameManager.AlivePlayerCount < 1)
+			if (Player != deadPlayer || !CanUsePower || _gameManager.AlivePlayerCount < 1)
 			{
 				return;
 			}

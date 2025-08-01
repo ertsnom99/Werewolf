@@ -1,7 +1,6 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Werewolf.Data;
 using Werewolf.Managers;
@@ -38,6 +37,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
@@ -56,6 +57,7 @@ namespace Werewolf.Gameplay.Role
 		private void OnRevealDeadPlayerRoleStarted(PlayerRef playerRevealed, MarkForDeathData mark)
 		{
 			if (Player.IsNone
+				|| !CanUsePower
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| Player == playerRevealed
 				|| mark != _gameManager.GameConfig.ExecutionMarkForDeath

@@ -33,6 +33,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
@@ -52,7 +54,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnRevealDeadPlayerRoleStarted(PlayerRef playerRevealed, MarkForDeathData markForDeath)
 		{
-			if (Player == playerRevealed && !_survivedExecution && _gameManager.HasPlayerMarkForDeath(Player, _executionMarkForDeath) && _networkDataManager.PlayerInfos[Player].IsConnected)
+			if (Player == playerRevealed && CanUsePower && !_survivedExecution && _gameManager.HasPlayerMarkForDeath(Player, _executionMarkForDeath) && _networkDataManager.PlayerInfos[Player].IsConnected)
 			{
 				_gameManager.RPC_DisplayTitle(Player, _executionTitleScreen.ID.HashCode);
 			}
@@ -60,7 +62,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnWaitBeforeFlipDeadPlayerRoleEnded(PlayerRef playerRevealed)
 		{
-			if (Player != playerRevealed || _survivedExecution || !_gameManager.HasPlayerMarkForDeath(Player, _executionMarkForDeath))
+			if (Player != playerRevealed || !CanUsePower || _survivedExecution || !_gameManager.HasPlayerMarkForDeath(Player, _executionMarkForDeath))
 			{
 				return;
 			}
@@ -93,6 +95,7 @@ namespace Werewolf.Gameplay.Role
 		void IVoteManagerSubscriber.OnVoteStarting(ChoicePurpose purpose)
 		{
 			if (Player.IsNone ||
+				!CanUsePower ||
 				!_survivedExecution ||
 				_gameManager.CurrentGameplayLoopStep != GameplayLoopStep.Execution ||
 				!_gameManager.PlayerGameInfos[Player].IsAlive)

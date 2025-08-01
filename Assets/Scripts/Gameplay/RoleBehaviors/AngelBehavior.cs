@@ -34,6 +34,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			if (PlayerGroupIDs.Count < 2)
 			{
 				Debug.LogError($"{nameof(AngelBehavior)} must have two player groups: the first one for the villagers and the second one for the angel");
@@ -61,6 +63,18 @@ namespace Werewolf.Gameplay.Role
 			{
 				return;
 			}
+			else if (_gameManager.CurrentGameplayLoopStep == GameplayLoopStep.DayWinnerCheck)
+			{
+				_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroupIDs[1]);
+
+				_gameManager.PreChangeGameplayLoopStep -= OnPreChangeGameplayLoopStep;
+				_gameManager.GameplayLoopStepStarts -= OnGameplayLoopStepStarts;
+				_gameManager.RevealDeadPlayerRoleEnded -= OnRevealDeadPlayerRoleEnded;
+			}
+			else if (!CanUsePower)
+			{
+				return;
+			}
 			else if (_gameManager.CurrentGameplayLoopStep == GameplayLoopStep.Election)
 			{
 				_gameManager.SetNextGameplayLoopStep(GameplayLoopStep.ExecutionDebate);
@@ -82,14 +96,6 @@ namespace Werewolf.Gameplay.Role
 				_gameManager.DisplayTitle(_startingGameWithExecutionTitleScreen.ID.HashCode);
 #endif
 				StartCoroutine(WaitToHideAngelStartingGameWithExecutionTitle());
-			}
-			else if (_gameManager.CurrentGameplayLoopStep == GameplayLoopStep.DayWinnerCheck)
-			{
-				_gameManager.RemovePlayerFromPlayerGroup(Player, PlayerGroupIDs[1]);
-
-				_gameManager.PreChangeGameplayLoopStep -= OnPreChangeGameplayLoopStep;
-				_gameManager.GameplayLoopStepStarts -= OnGameplayLoopStepStarts;
-				_gameManager.RevealDeadPlayerRoleEnded -= OnRevealDeadPlayerRoleEnded;
 			}
 		}
 
@@ -120,7 +126,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnRevealDeadPlayerRoleEnded(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
-			if (deadPlayer != Player || !_marksForDeathToWin.Contains(markForDeath))
+			if (deadPlayer != Player || !CanUsePower || !_marksForDeathToWin.Contains(markForDeath))
 			{
 				return;
 			}

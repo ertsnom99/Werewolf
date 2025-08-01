@@ -343,6 +343,11 @@ MonoBehaviour:
     m_Localized: "Le village a divis\xE9 en deux groupes"
     m_Metadata:
       m_Items: []
+  - m_Id: 82155174554361856
+    m_Localized: "L'Ancien a \xE9t\xE9 \xE9limin\xE9 par le village et les villageois
+      ont perdu leurs pouvoirs!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

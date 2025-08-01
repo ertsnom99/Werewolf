@@ -311,6 +311,10 @@ MonoBehaviour:
     m_Key: AbominableSectarian_CreatedGroup
     m_Metadata:
       m_Items: []
+  - m_Id: 82155174554361856
+    m_Key: Ancient_VillagersLostPowers
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

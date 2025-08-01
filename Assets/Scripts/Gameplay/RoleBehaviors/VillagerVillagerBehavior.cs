@@ -14,6 +14,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_gameManager = GameManager.Instance;
 
 			_gameManager.StartedPlayersInitialization += OnStartedPlayersInitialization;

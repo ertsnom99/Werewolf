@@ -35,6 +35,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_voteManager = VoteManager.Instance;
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
@@ -52,7 +54,7 @@ namespace Werewolf.Gameplay.Role
 
 		void IVoteManagerSubscriber.OnVoteStarting(ChoicePurpose purpose)
 		{
-			if (Player.IsNone || !_canStartSecondExecution || _gameManager.CurrentGameplayLoopStep != GameplayLoopStep.Execution)
+			if (Player.IsNone || !CanUsePower || !_canStartSecondExecution || _gameManager.CurrentGameplayLoopStep != GameplayLoopStep.Execution)
 			{
 				return;
 			}

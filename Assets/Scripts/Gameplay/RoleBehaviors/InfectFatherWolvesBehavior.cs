@@ -34,7 +34,7 @@ namespace Werewolf.Gameplay.Role
 		{
 			base.OnVoteEnded(votes);
 
-			if (!_infected.IsNone)
+			if (!CanUsePower || !_infected.IsNone)
 			{
 				return;
 			}

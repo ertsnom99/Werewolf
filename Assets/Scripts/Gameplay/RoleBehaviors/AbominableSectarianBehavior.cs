@@ -38,6 +38,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_gameManager = GameManager.Instance;
 			_networkDataManager = NetworkDataManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
@@ -55,7 +57,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnPreChangeGameplayLoopStep()
 		{
-			if (Player.IsNone)
+			if (Player.IsNone || !CanUsePower)
 			{
 				return;
 			}

@@ -183,6 +183,7 @@ namespace Werewolf.Gameplay.Role
 		void IGameManagerSubscriber.OnPlayerDied(PlayerRef deadPlayer, MarkForDeathData markForDeath)
 		{
 			if (Player.IsNone
+				|| !CanUsePower
 				|| Player == deadPlayer
 				|| !_gameManager.PlayerGameInfos[Player].IsAlive
 				|| _model.IsNone

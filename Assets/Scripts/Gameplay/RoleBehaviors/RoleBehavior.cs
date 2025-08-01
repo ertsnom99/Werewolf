@@ -34,6 +34,8 @@ namespace Werewolf.Gameplay.Role
 		[field: ReadOnly]
 		public PlayerRef Player { get; private set; }
 
+		public bool CanUsePower { get; set; }
+
 		public virtual bool IsRolesSetupValid(NetworkArray<NetworkRoleSetup> mandatoryRoles, NetworkArray<NetworkRoleSetup> optionalRoles, GameplayDataManager gameplayDataManager, List<LocalizedString> warnings)
 		{
 			return true;
@@ -103,7 +105,10 @@ namespace Werewolf.Gameplay.Role
 
 		public virtual void OnAddedReservedRoleID(int[] roleIDs, int index) { }
 
-		public abstract void Initialize();
+		public virtual void Initialize()
+		{
+			CanUsePower = true;
+		}
 
 		public abstract void OnSelectedToDistribute(List<RoleSetup> mandatoryRoles, List<RoleSetup> availableRoles, List<RoleData> rolesToDistribute);
 

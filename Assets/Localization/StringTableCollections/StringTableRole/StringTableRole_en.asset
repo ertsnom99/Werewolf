@@ -544,10 +544,29 @@ MonoBehaviour:
     m_Localized: Abominable Sectarian
     m_Metadata:
       m_Items: []
+  - m_Id: 138816675826229248
+    m_Localized: Ancient
+    m_Metadata:
+      m_Items: []
+  - m_Id: 138816678762242048
+    m_Localized: 'He victoriously went through all the terrible trials of life, and
+      acquired extraordinary resistance! The Werewolves will have to attack him twice
+      to devour him.
+
+
+      {"The first time he is devoured by Werewolves he survives.
+      The Ancient is eliminated only the second time he is devoured. The execution
+      vote, the Witch''s poisoning potion and the Hunter''s shot eliminate him on
+      the first try. However, villagers lose their powers until the end of the game.
+      He is not affected by the Infect Father of Wolves if it is the first time he
+      is bitten. If the Ancient is treated by the Witch, he recovers a single life.":t(RoleDescription)}'
+    m_Metadata:
+      m_Items:
+      - rid: 5699302592880836615
   references:
     version: 2
     RefIds:
     - rid: 5699302592880836615
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb7160100e08548203c860100e0454314d1910100e005366853980100e085225697a10100e005f7ad4aaf0100e00509cd04d20100e0c5ddedc5d80100e045c19c5ee501
+        m_Entries: 00e085eee9dc330100e0c5bde23eed0000c086250d01000000c0c6ed4b02000000c086c69303000000c0869efa03000000c0c6c84704000000c0866d7204000000c006cda204000000c046a34005000000c086b7b206000000c046e78c07000000e0c561c4fddd0000e0c5be87abe50000e08518a532ea0000e0c580739eef0000e08543219bf70000e00551986c080100e045b085000c0100e0055116f0140100e085ac2eb7160100e08548203c860100e0454314d1910100e005366853980100e085225697a10100e005f7ad4aaf0100e00509cd04d20100e0c5ddedc5d80100e045c19c5ee50100e085aa082ded01

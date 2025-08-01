@@ -36,6 +36,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_werewolvesPlayerGroupIDs = GameplayData.GetIDs(_werewolvesPlayerGroups);
 
 			_gameManager = GameManager.Instance;
@@ -94,13 +96,15 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnGameplayLoopStepStarts(GameplayLoopStep gameplayLoopStep)
 		{
-			if (gameplayLoopStep == GameplayLoopStep.DayTransition && !_werewolfToKill.IsNone && _killWerewolf)
+			if (!CanUsePower || gameplayLoopStep != GameplayLoopStep.DayTransition || _werewolfToKill.IsNone || !_killWerewolf)
 			{
-				_gameManager.AddMarkForDeath(_werewolfToKill, _markForDeathAddedByStab, 0);
-
-				_werewolfToKill = PlayerRef.None;
-				_killWerewolf = false;
+				return;
 			}
+
+			_gameManager.AddMarkForDeath(_werewolfToKill, _markForDeathAddedByStab, 0);
+
+			_werewolfToKill = PlayerRef.None;
+			_killWerewolf = false;
 		}
 
 		public override void OnPlayerChanged() { }

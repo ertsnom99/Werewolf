@@ -334,6 +334,11 @@ MonoBehaviour:
     m_Localized: The village was divided into two groups
     m_Metadata:
       m_Items: []
+  - m_Id: 82155174554361856
+    m_Localized: The Ancient has been eliminated by the village and the villagers
+      have lost their powers!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

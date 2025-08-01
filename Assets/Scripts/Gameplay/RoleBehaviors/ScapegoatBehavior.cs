@@ -51,6 +51,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_networkDataManager = NetworkDataManager.Instance;
 			_gameManager = GameManager.Instance;
 			_gameHistoryManager = GameHistoryManager.Instance;
@@ -74,7 +76,7 @@ namespace Werewolf.Gameplay.Role
 
 		private void OnFirstExecutionVotesCounted(List<PlayerRef> mostVotedPlayers)
 		{
-			if (Player == PlayerRef.None || !_gameManager.PlayerGameInfos[Player].IsAlive || mostVotedPlayers.Count <= 1)
+			if (Player == PlayerRef.None || !CanUsePower || !_gameManager.PlayerGameInfos[Player].IsAlive || mostVotedPlayers.Count <= 1)
 			{
 				return;
 			}

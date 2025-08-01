@@ -271,6 +271,11 @@ namespace Werewolf.Managers
 			return roles;
 		}
 
+		public IndexedReservedRoles[] GetAllReservedRoles()
+		{
+			return _reservedRolesByBehavior.Values.ToArray();
+		}
+
 		public void RemoveReservedRoles(RoleBehavior ReservedRoleOwner, int[] specificIndexes)
 		{
 			if (!_reservedRolesByBehavior.TryGetValue(ReservedRoleOwner, out IndexedReservedRoles reservedRoles))

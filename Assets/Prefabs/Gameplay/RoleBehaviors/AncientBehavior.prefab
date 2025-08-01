@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7522740128929289866
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4257225679588317198}
+  - component: {fileID: 8184567888251451871}
+  m_Layer: 0
+  m_Name: AncientBehavior
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4257225679588317198
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7522740128929289866}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8184567888251451871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7522740128929289866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6ed5aa834341c84e992b3531b76a1ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <RoleID>k__BackingField:
+    Guid: 
+    HashCode: 0
+  <PrimaryRoleType>k__BackingField: 0
+  <PlayerGroupIDs>k__BackingField: []
+  <NightPriorities>k__BackingField: []
+  <IsPrimaryBehavior>k__BackingField: 0
+  _marksForSurvivingWerewolves:
+  - {fileID: 11400000, guid: 8b7f8d1bd78a65d4eb3e9967492c239e, type: 2}
+  - {fileID: 11400000, guid: 6b3db20462b9f694b8d3b68f9c0d6579, type: 2}
+  _survivedWerewolvesGameHistoryEntry: {fileID: 11400000, guid: baea336200ab6b440ad502fdd67bdad1,
+    type: 2}
+  _marksForVillagersLosingPowers:
+  - {fileID: 11400000, guid: 4870c56c78cb3eb4d89e4668e43faffb, type: 2}
+  - {fileID: 11400000, guid: c15ff9d4da01cac44bed08e5c1197f1d, type: 2}
+  - {fileID: 11400000, guid: fcf4c925b51d47f42a233534b1afdd2a, type: 2}
+  _unaffectVillagerRoles:
+  - {fileID: 11400000, guid: f53662857e66bc04aa69d25c8e3b38b7, type: 2}
+  - {fileID: 11400000, guid: 58c35469e5cab81479af39890c121dd0, type: 2}
+  - {fileID: 11400000, guid: a3e967485adaba141aaac27d5d1a0b7a, type: 2}
+  - {fileID: 11400000, guid: f25bbafd3147e6f44a9760b7cfb588f9, type: 2}
+  - {fileID: 11400000, guid: 7fcc764f3f5c2b645b39c81e27186c99, type: 2}
+  _villagersLostPowersGameHistoryEntry: {fileID: 11400000, guid: d204e572cc8234d4ebfddca845b66195,
+    type: 2}
+  _villagersLostPowersTitleScreen: {fileID: 11400000, guid: 978d23e2c4e28234b9a3360be1ce683e,
+    type: 2}
+  _villagersLostPowersTitleDuration: 5

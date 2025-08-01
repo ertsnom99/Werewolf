@@ -33,6 +33,8 @@ namespace Werewolf.Gameplay.Role
 
 		public override void Initialize()
 		{
+			base.Initialize();
+
 			_werewolvesPlayerGroupIDs = GameplayData.GetIDs(_werewolvesPlayerGroups);
 
 			_gameManager = GameManager.Instance;
@@ -52,6 +54,7 @@ namespace Werewolf.Gameplay.Role
 		private void OnDeathRevealEnded()
 		{
 			if (Player.IsNone
+			|| !CanUsePower
 			|| _gameManager.CurrentGameplayLoopStep != GameManager.GameplayLoopStep.DayDeathReveal
 			|| !_gameManager.PlayerGameInfos[Player].IsAlive)
 			{

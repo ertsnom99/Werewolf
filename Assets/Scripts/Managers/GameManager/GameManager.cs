@@ -893,6 +893,7 @@ namespace Werewolf.Managers
 				foreach (PlayerRef player in nightCall.Players)
 				{
 					bool skipPlayer = false;
+					bool isWakingUp = false;
 
 					foreach (RoleBehavior behavior in PlayerGameInfos[player].Behaviors)
 					{
@@ -900,7 +901,7 @@ namespace Werewolf.Managers
 
 						if (nightPrioritiesIndexes.Contains(nightCall.PriorityIndex))
 						{
-							skipPlayer = !behavior.OnRoleCall(nightCall.PriorityIndex, out bool isWakingUp);
+							skipPlayer = !behavior.CanUsePower || !behavior.OnRoleCall(nightCall.PriorityIndex, out isWakingUp);
 
 							if (skipPlayer)
 							{
