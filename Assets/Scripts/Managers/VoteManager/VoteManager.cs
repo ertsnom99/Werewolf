@@ -18,13 +18,20 @@ namespace Werewolf.Managers
 
 		public HashSet<PlayerRef> Spectators { get; private set; }
 
+		[Networked, Capacity(GameConfig.MAX_PLAYER_COUNT)]
+		public NetworkDictionary<PlayerRef, PlayerRef> Votes { get; }
+
+		[Networked]
+		public int VoteCount { get; private set; }
+
 		public event Action<Dictionary<PlayerRef, int>> VoteCompleted;
+
+		private ChangeDetector _changeDetector;
 
 		private GameConfig _gameConfig;
 		private Dictionary<PlayerRef, Card> _playerCards;
 		private readonly HashSet<PlayerRef> _immune = new();
 		private readonly Dictionary<PlayerRef, HashSet<PlayerRef>> _immuneFromPlayers = new();
-		private readonly Dictionary<PlayerRef, PlayerRef> _votes = new();
 		private Dictionary<PlayerRef, int> _extraVotes = new();
 		private Dictionary<PlayerRef, int> _modifiers;
 
@@ -32,7 +39,6 @@ namespace Werewolf.Managers
 		private int _spectatorTitleID;
 		private float _maxDuration;
 		private bool _failingToVoteGivesPenalty;
-		private int _voteCount;
 		private bool _resetAllVotedElapsedTime;
 		private Step _step;
 		private ChoicePurpose _purpose;
@@ -67,6 +73,25 @@ namespace Werewolf.Managers
 			base.Awake();
 			Voters = new();
 			Spectators = new();
+		}
+
+		public override void Spawned()
+		{
+			_changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+		}
+
+		public override void Render()
+		{
+			foreach (string change in _changeDetector.DetectChanges(this))
+			{
+				switch (change)
+				{
+					case nameof(Votes):
+					case nameof(VoteCount):
+						UpdateVisualFeedback();
+						break;
+				}
+			}
 		}
 
 		public void SetPlayerCards(Dictionary<PlayerRef, Card> playerCards)
@@ -152,7 +177,7 @@ namespace Werewolf.Managers
 			_immune.Clear();
 			_immuneFromPlayers.Clear();
 			Spectators.Clear();
-			_votes.Clear();
+			Votes.Clear();
 			_extraVotes.Clear();
 
 			_voterTitleID = voterTitleID;
@@ -160,7 +185,7 @@ namespace Werewolf.Managers
 			_maxDuration = maxDuration;
 			_failingToVoteGivesPenalty = failingToVoteGivesPenalty;
 			_modifiers = modifiers;
-			_voteCount = 0;
+			VoteCount = 0;
 
 			_purpose = purpose;
 
@@ -262,7 +287,7 @@ namespace Werewolf.Managers
 			VotesByPlayer[] voteModifiers = ConvertToVotesByPlayer(_modifiers);
 			VotesByPlayer[] extraVotes = ConvertToVotesByPlayer(_extraVotes);
 
-			VotesByPlayer[] ConvertToVotesByPlayer(Dictionary<PlayerRef, int> dictionary)
+			static VotesByPlayer[] ConvertToVotesByPlayer(Dictionary<PlayerRef, int> dictionary)
 			{
 				if (dictionary != null)
 				{
@@ -299,15 +324,14 @@ namespace Werewolf.Managers
 
 			foreach (PlayerRef voter in Voters)
 			{
-				_votes.Add(voter, new());
-				
+				Votes.Add(voter, new());
+
 				if (!_networkDataManager.PlayerInfos[voter].IsConnected)
 				{
 					continue;
 				}
 
 				RPC_StartVoting(voter,
-								Voters.ToArray(),
 								voteModifiers,
 								_immune.ToArray(),
 								_immuneFromPlayers[voter].ToArray(),
@@ -325,7 +349,6 @@ namespace Werewolf.Managers
 				}
 
 				RPC_StartSpectating(spectator,
-									Voters.ToArray(),
 									voteModifiers,
 									_immune.ToArray(),
 									extraVotes,
@@ -421,7 +444,7 @@ namespace Werewolf.Managers
 			float elapsedTime = .0f;
 			float allVotedElapsedTime = .0f;
 
-			while (elapsedTime < duration && (_voteCount < Voters.Count || allVotedElapsedTime < _gameConfig.AllVotedDelayToEndVote * _gameManager.GameSpeedModifier))
+			while (elapsedTime < duration && (VoteCount < Voters.Count || allVotedElapsedTime < _gameConfig.AllVotedDelayToEndVote * _gameManager.GameSpeedModifier))
 			{
 				yield return 0;
 
@@ -431,7 +454,7 @@ namespace Werewolf.Managers
 					_resetAllVotedElapsedTime = false;
 				}
 
-				if (_voteCount >= Voters.Count)
+				if (VoteCount >= Voters.Count)
 				{
 					allVotedElapsedTime += Time.deltaTime;
 				}
@@ -463,34 +486,16 @@ namespace Werewolf.Managers
 
 			PlayerRef selectedPlayer = _selectedCard ? _selectedCard.Player : PlayerRef.None;
 
-			_votes[Runner.LocalPlayer] = selectedPlayer;
 			RPC_UpdateServerVote(selectedPlayer);
-		}
-
-		private void UpdateAllClientsVisualFeedback(PlayerRef inVoter, PlayerRef votedFor)
-		{
-#if UNITY_SERVER && UNITY_EDITOR
-			UpdateVisualFeedback();
-#endif
-			foreach (PlayerRef voter in Voters)
-			{
-				if (_networkDataManager.PlayerInfos[voter].IsConnected)
-				{
-					RPC_UpdateClientVote(voter, inVoter, votedFor, _voteCount);
-				}
-			}
-
-			foreach (PlayerRef spectator in Spectators)
-			{
-				if (_networkDataManager.PlayerInfos[spectator].IsConnected)
-				{
-					RPC_UpdateClientVote(spectator, inVoter, votedFor, _voteCount);
-				}
-			}
 		}
 
 		private void UpdateVisualFeedback()
 		{
+			if (Object.HasStateAuthority || _step != Step.Voting)
+			{
+				return;
+			}
+
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
 				if (playerCard.Value)
@@ -500,7 +505,7 @@ namespace Werewolf.Managers
 			}
 
 			// Key: the voter | Value: voted for who
-			foreach (KeyValuePair<PlayerRef, PlayerRef> vote in _votes)
+			foreach (KeyValuePair<PlayerRef, PlayerRef> vote in Votes)
 			{
 				if (vote.Value.IsNone)
 				{
@@ -529,7 +534,7 @@ namespace Werewolf.Managers
 				}
 			}
 
-			_UIManager.VoteScreen.SetConfirmVoteDelayActive(_voteCount >= _votes.Count);
+			_UIManager.VoteScreen.SetConfirmVoteDelayActive(VoteCount >= Votes.Count);
 		}
 
 		private void EndVote()
@@ -541,7 +546,7 @@ namespace Werewolf.Managers
 
 			foreach (PlayerRef voter in Voters)
 			{
-				if (!_votes[voter].IsNone)
+				if (!Votes[voter].IsNone)
 				{
 					_gameHistoryManager.AddEntry(_gameConfig.VoteVotedForGameHistoryEntry.ID,
 												new GameHistorySaveEntryVariable[] {
@@ -554,7 +559,7 @@ namespace Werewolf.Managers
 													new()
 													{
 														Name = "Voted",
-														Data = _networkDataManager.PlayerInfos[_votes[voter]].Nickname,
+														Data = _networkDataManager.PlayerInfos[Votes[voter]].Nickname,
 														Type = GameHistorySaveEntryVariableType.Player
 													}
 												});
@@ -564,7 +569,7 @@ namespace Werewolf.Managers
 
 				if (_failingToVoteGivesPenalty)
 				{
-					_votes[voter] = voter;
+					Votes.Set(voter, voter);
 				}
 
 				_gameHistoryManager.AddEntry(_failingToVoteGivesPenalty ? _gameConfig.VoteDidNotVoteWithPenalityGameHistoryEntry.ID : _gameConfig.VoteDidNotVoteGameHistoryEntry.ID,
@@ -596,7 +601,7 @@ namespace Werewolf.Managers
 
 			Dictionary<PlayerRef, int> totalVotes = new();
 
-			foreach (KeyValuePair<PlayerRef, PlayerRef> vote in _votes)
+			foreach (KeyValuePair<PlayerRef, PlayerRef> vote in Votes)
 			{
 				if (vote.Value.IsNone)
 				{
@@ -746,20 +751,18 @@ namespace Werewolf.Managers
 
 		private void OnPlayerDisconnected(PlayerRef player)
 		{
-			if (_step != Step.Voting || _voteCoroutine == null || !_votes.TryGetValue(player, out PlayerRef vote) || !vote.IsNone)
+			if (_step != Step.Voting || _voteCoroutine == null || !Votes.TryGet(player, out PlayerRef vote) || !vote.IsNone)
 			{
 				return;
 			}
 
-			_voteCount++;
+			VoteCount++;
 			_resetAllVotedElapsedTime = true;
-
-			UpdateAllClientsVisualFeedback(player, PlayerRef.None);
 		}
 
 		#region RPC Calls
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartVoting([RpcTarget] PlayerRef player, PlayerRef[] voters, VotesByPlayer[] voteModifiers, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, VotesByPlayer[] extraVotes, int titleID, bool displayWarning, float maxDuration)
+		private void RPC_StartVoting([RpcTarget] PlayerRef player, VotesByPlayer[] voteModifiers, PlayerRef[] immunePlayers, PlayerRef[] playersImmuneFromLocalPlayer, VotesByPlayer[] extraVotes, int titleID, bool displayWarning, float maxDuration)
 		{
 			if (_playerCards == null || _gameConfig == null)
 			{
@@ -767,13 +770,7 @@ namespace Werewolf.Managers
 				return;
 			}
 
-			_votes.Clear();
-			_voteCount = 0;
-
-			foreach (PlayerRef voter in voters)
-			{
-				_votes.Add(voter, new());
-			}
+			_step = Step.Voting;
 
 			_extraVotes = ConvertToDictionary(extraVotes);
 			_modifiers = ConvertToDictionary(voteModifiers);
@@ -815,7 +812,7 @@ namespace Werewolf.Managers
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, PlayerRef[] voters, VotesByPlayer[] voteModifiers, PlayerRef[] immunePlayers, VotesByPlayer[] extraVotes, int titleID, float maxDuration)
+		private void RPC_StartSpectating([RpcTarget] PlayerRef spectator, VotesByPlayer[] voteModifiers, PlayerRef[] immunePlayers, VotesByPlayer[] extraVotes, int titleID, float maxDuration)
 		{
 			if (_playerCards == null || _gameConfig == null)
 			{
@@ -823,12 +820,7 @@ namespace Werewolf.Managers
 				return;
 			}
 
-			_votes.Clear();
-
-			foreach (PlayerRef voter in voters)
-			{
-				_votes.Add(voter, new());
-			}
+			_step = Step.Voting;
 
 			_extraVotes = ConvertToDictionary(extraVotes);
 			_modifiers = ConvertToDictionary(voteModifiers);
@@ -865,38 +857,29 @@ namespace Werewolf.Managers
 		[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
 		private void RPC_UpdateServerVote(PlayerRef votedFor, RpcInfo info = default)
 		{
-			if (_step != Step.Voting || _immune.Contains(votedFor) || _immuneFromPlayers[info.Source].Contains(votedFor) || _votes[info.Source] == votedFor)
+			if (_step != Step.Voting || _immune.Contains(votedFor) || _immuneFromPlayers[info.Source].Contains(votedFor) || Votes[info.Source] == votedFor)
 			{
 				return;
 			}
 
-			if (_votes[info.Source].IsNone && !votedFor.IsNone)
+			if (Votes[info.Source].IsNone && !votedFor.IsNone)
 			{
-				_voteCount++;
+				VoteCount++;
 			}
-			else if (!_votes[info.Source].IsNone && votedFor.IsNone)
+			else if (!Votes[info.Source].IsNone && votedFor.IsNone)
 			{
-				_voteCount--;
+				VoteCount--;
 			}
 
 			_resetAllVotedElapsedTime = true;
-			_votes[info.Source] = votedFor;
-
-			UpdateAllClientsVisualFeedback(info.Source, votedFor);
-		}
-
-		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
-		private void RPC_UpdateClientVote([RpcTarget] PlayerRef player, PlayerRef voter, PlayerRef votedFor, int totalVoteCount)
-		{
-			_votes[voter] = votedFor;
-			_voteCount = totalVoteCount;
-
-			UpdateVisualFeedback();
+			Votes.Set(info.Source, votedFor);
 		}
 
 		[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
 		private void RPC_VoteEnded([RpcTarget] PlayerRef player)
 		{
+			_step = Step.NotVoting;
+
 			foreach (KeyValuePair<PlayerRef, Card> playerCard in _playerCards)
 			{
 				if (!playerCard.Value)
