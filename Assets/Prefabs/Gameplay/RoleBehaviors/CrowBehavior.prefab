@@ -58,4 +58,4 @@ MonoBehaviour:
     type: 2}
   _choosenPlayerHighlightDuration: 3
   _markerData: {fileID: 11400000, guid: 4b1993e252287124eb73849b76572c37, type: 2}
-  _markerOffset: {x: 1, y: 0, z: 0}
+  _markerOffset: {x: -1, y: 0, z: 0}

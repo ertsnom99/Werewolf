@@ -189,7 +189,7 @@ MonoBehaviour:
   <ReturnToLobbyCountdownDuration>k__BackingField: 5
   <CaptainMarkerData>k__BackingField: {fileID: 11400000, guid: e3a74f5faf0c2f2418c0718ad8cf8db4,
     type: 2}
-  <CaptainMarkerOffset>k__BackingField: {x: -1, y: 0, z: 0}
+  <CaptainMarkerOffset>k__BackingField: {x: 1, y: 0, z: 0}
   <CaptainChangedGameHistoryEntry>k__BackingField: {fileID: 11400000, guid: edf45f39ac996ac4ba3d9ad0e9703dc1,
     type: 2}
   <CaptainRevealDuration>k__BackingField: 3
